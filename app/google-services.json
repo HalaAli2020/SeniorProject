@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "358480053247",
+    "firebase_url": "https://university-social-media.firebaseio.com",
+    "project_id": "university-social-media",
+    "storage_bucket": "university-social-media.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:358480053247:android:7cca1a62cde2dae4719dca",
+        "android_client_info": {
+          "package_name": "com.example.seniorproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "358480053247-62heg94s2fpa46s0fsn3sdj275rilf0b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.seniorproject",
+            "certificate_hash": "aa974ab80d92e5a9599e7726d94c697653abed20"
+          }
+        },
+        {
+          "client_id": "358480053247-b0ij4jnpl3rikrukqbhlj8im1d07jppv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByHqS6AUFBgNDJxOVNuuX-JgkfQ5BXRfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "358480053247-b0ij4jnpl3rikrukqbhlj8im1d07jppv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
