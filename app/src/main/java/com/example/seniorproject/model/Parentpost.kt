@@ -7,7 +7,7 @@ class Parentpost()
     private var txt: String
     private var courseID : Int
     private var commentID : Int?
-   private var PTime: Timestamp
+    private var PTime: Timestamp
     private var userID : Int
     init {
         // backend will initalize values here or set to null if
