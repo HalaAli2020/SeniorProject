@@ -15,7 +15,6 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         dont_have_account_textview.setOnClickListener {
-            Log.d("MainActivity", "show register activity")
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
@@ -23,17 +22,16 @@ class LoginActivity : AppCompatActivity() {
         login_button.setOnClickListener {
             val email = email_Login_editText.text.toString()
             val password = password_login_editText.text.toString()
-
-            Log.d("Login", "trying to long in with email $email" )
+            Log.d("Login", "login with  $email")
 
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email,password)
                 .addOnCompleteListener(this){
                     task ->  if (task.isSuccessful){
-                    Log.d("Debug", "signInWithEmail:success")
+                    Log.d("Debug", "sign in worked")
                 } else {
                     Log.d("Debug", "sign in failed")
                 }}.addOnFailureListener(){
-                    Log.d("Debug", "Failed to create sign in: ${it.message}")
+                    Log.d("Debug", "Error ${it.message}")
                     Toast.makeText(this, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
                 }
         }

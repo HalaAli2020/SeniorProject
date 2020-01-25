@@ -20,7 +20,6 @@ class RegisterActivity : AppCompatActivity() {
 
         }
         already_have_account_textview.setOnClickListener {
-            Log.d("MainActivity", "Try to show login activity")
             val intent = Intent(this,LoginActivity::class.java)
             startActivity(intent)
         }
@@ -36,7 +35,7 @@ class RegisterActivity : AppCompatActivity() {
             return
         }
         Log.d("Debug", "Email: " + email)
-        Log.d("Debug", "pass: $password")
+        Log.d("Debug", "pass: " + password)
 
         //Firebase Authentication
         FirebaseApp.initializeApp(this);
@@ -47,7 +46,6 @@ class RegisterActivity : AppCompatActivity() {
                 Log.d("Debug","NEW USER, uid: ${it.result?.user?.uid}")
             }
             .addOnFailureListener{
-                Log.d("Debug", "Failed to create user: ${it.message}")
                 Toast.makeText(this, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
             }
     }
