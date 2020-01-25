@@ -1,10 +1,13 @@
 package com.example.seniorproject
 
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.google.firebase.auth.FirebaseAuth
+import com.example.seniorproject.model.User
+
 
 class LoginActivity : AppCompatActivity() {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
