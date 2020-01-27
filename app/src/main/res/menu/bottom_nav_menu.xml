@@ -3,12 +3,17 @@
 
     <item
         android:id="@+id/home"
-        android:title="Home"
-        android:icon="@drawable/common_full_open_on_phone"/>
+        android:title="@string/title_home"
+        android:icon="@drawable/ic_home_black_24dp"/>
+
+    <!--<item
+        android:id="@+id/list"
+        android:title="@string/title_list"
+        android:icon="@drawable/ic_create_black_24dp"/>-->
 
     <item
         android:id="@+id/list"
-        android:title="List"
-        android:icon="@drawable/common_full_open_on_phone"/>
+        android:title="@string/title_list"
+        android:icon="@drawable/ic_search_black_24dp"/>
 
 </menu>

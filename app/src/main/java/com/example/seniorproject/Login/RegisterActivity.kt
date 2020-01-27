@@ -1,10 +1,11 @@
-package com.example.seniorproject
+package com.example.seniorproject.Login
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import com.example.seniorproject.R
 import com.example.seniorproject.model.User
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
@@ -63,7 +64,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun saveUserToFirebaseDatabase(){
         Log.d("Debug", "entered firebase database function")
         val uid = FirebaseAuth.getInstance().uid ?: ""
-        val ref = FirebaseDatabase.getInstance().getReference("university-social-media/$uid")
+        val ref = FirebaseDatabase.getInstance().getReference("users/$uid")
         val user = User(username_signup_editext.text.toString(),
             email_signup_editText.text.toString(),password_signup_editTExt.text.toString())
 
