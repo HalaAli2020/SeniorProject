@@ -1,28 +1,34 @@
 package com.example.seniorproject.model
 
 import java.sql.Timestamp
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
-class Parentpost()
+class Posts()
 {
+    private val database = FirebaseDatabase.getInstance()
     private var txt: String
     private var courseID : Int
     private var commentID : Int?
-    private var PTime: Timestamp
-    private var userID : Int
+    private var ptime: Long
+    private var uid : String?
     init {
         // backend will initalize values here or set to null if
         txt = "A"
         courseID = 1
         commentID = null
-        PTime = Timestamp(System.currentTimeMillis())
-        userID = 1
+        ptime = 1
+        ptime = 1
+        uid = "1"
     }
 
-    fun newPost(t: String, CourseID : Int, ID : Int)
+    fun newPost(t: String, CourseID : Int, ID : String?)
     {
         txt = t
-        PTime = Timestamp(System.currentTimeMillis())
-        userID = ID
+        ptime = 1
+        uid = ID
         courseID = CourseID
 
 
@@ -40,13 +46,13 @@ class Parentpost()
     {
         return commentID
     }
-    fun getPtime(): Timestamp
+    fun getPtime(): Long
     {
-        return PTime
+        return ptime
     }
-    fun getuserID(): Int
+    fun getuserID(): String?
     {
-        return userID
+        return uid
     }
     // should include database functions later on to correctly get information to fill class with proper query
 }

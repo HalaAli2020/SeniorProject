@@ -1,24 +1,21 @@
 package com.example.seniorproject.model
 
-class User(private val username: String, private val email: String, private val password: String)
-{
-    private val userID : Int?
+import com.google.firebase.auth.FirebaseUser
 
-    init {
-        userID = backendID()
+data class User(private val username: String?, private val email: String?, private val uid: String?)
+{
+
+
+    fun getUID(): String? {
+        return uid
     }
-    fun getID(): Int? {
-        return userID
-    }
-    fun getUserName(): String{
+    fun getUserName(): String?{
         return username
     }
-    fun getemail(): String{
+    fun getemail(): String?{
         return email
     }
-    fun getpass() : String{
-        return password
-    }
+
     private fun backendID() : Int
     {
         // function will use backend to get user id

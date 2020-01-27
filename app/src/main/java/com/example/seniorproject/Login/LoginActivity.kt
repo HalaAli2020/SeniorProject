@@ -11,12 +11,14 @@ import com.example.seniorproject.MainForum.MainForum
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
 import com.example.seniorproject.model.User
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
 
 
 class LoginActivity : AppCompatActivity() {
 
-
+    // User field to pass the to next fragment
+    private lateinit var user: Any
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -35,6 +37,14 @@ class LoginActivity : AppCompatActivity() {
 
                     if (task.isSuccessful)
                     {
+                        val currentuser = FirebaseAuth.getInstance().currentUser
+                        currentuser?.let {
+                            val username = currentuser.displayName
+                            val email = currentuser.email
+                            val uid = currentuser.uid
+                           user = User(username, email, uid)
+                        }
+
                         Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
                         val intent = Intent(this, MainForum::class.java)
                         intent.flags =
