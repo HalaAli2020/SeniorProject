@@ -10,11 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".LoginActivity"
+        <activity android:name=".Login.LoginActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
 
-        <activity android:name=".RegisterActivity"
+        <activity android:name=".Login.RegisterActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
 

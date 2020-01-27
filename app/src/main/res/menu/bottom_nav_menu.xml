@@ -4,11 +4,11 @@
     <item
         android:id="@+id/home"
         android:title="Home"
-        android:icon="@drawable/common_full_open_on_phone"/>
+        android:icon="@drawable/ic_home_black_24dp"/>
 
     <item
         android:id="@+id/list"
         android:title="List"
-        android:icon="@drawable/common_full_open_on_phone"/>
+        android:icon="@drawable/ic_search_black_24dp"/>
 
 </menu>
