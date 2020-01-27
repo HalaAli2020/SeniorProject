@@ -6,9 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import com.example.seniorproject.MainForum.MainForum
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
 import com.example.seniorproject.model.User
+import com.google.firebase.database.FirebaseDatabase
 
 
 class LoginActivity : AppCompatActivity() {
@@ -27,11 +29,13 @@ class LoginActivity : AppCompatActivity() {
             val email = email_Login_editText.text.toString()
             val password = password_login_editText.text.toString()
             Log.d("Login", "login with  $email")
-
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email,password)
                 .addOnCompleteListener(this){
                     task ->  if (task.isSuccessful){
-                    Log.d("Debug", "sign in worked")
+                    Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, MainForum::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
                 } else {
                     Log.d("Debug", "sign in failed")
                 }}.addOnFailureListener(){
@@ -40,6 +44,6 @@ class LoginActivity : AppCompatActivity() {
                 }
         }
 
-
     }
+
 }
