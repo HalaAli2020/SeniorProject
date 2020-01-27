@@ -64,7 +64,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun saveUserToFirebaseDatabase(){
         Log.d("Debug", "entered firebase database function")
         val uid = FirebaseAuth.getInstance().uid ?: ""
-        val ref = FirebaseDatabase.getInstance().getReference("university-social-media/$uid")
+        val ref = FirebaseDatabase.getInstance().getReference("users/$uid")
         val user = User(username_signup_editext.text.toString(),
             email_signup_editText.text.toString(),password_signup_editTExt.text.toString())
 

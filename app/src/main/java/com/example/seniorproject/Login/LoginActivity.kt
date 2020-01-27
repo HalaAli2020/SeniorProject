@@ -30,16 +30,23 @@ class LoginActivity : AppCompatActivity() {
             val email = email_Login_editText.text.toString()
             val password = password_login_editText.text.toString()
             Log.d("Login", "login with  $email")
-            FirebaseAuth.getInstance().signInWithEmailAndPassword(email,password)
-                .addOnCompleteListener(this){
-                    task ->  if (task.isSuccessful){
-                    Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, MainForum::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                } else {
-                    Log.d("Debug", "sign in failed")
-                }}.addOnFailureListener(){
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
+
+                    if (task.isSuccessful)
+                    {
+                        Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this, MainForum::class.java)
+                        intent.flags =
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                    }
+                    else
+                    {
+                        Log.d("Debug", "sign in failed")
+                    }
+
+                }.addOnFailureListener() {
                     Log.d("Debug", "Error ${it.message}")
                     Toast.makeText(this, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
                 }
