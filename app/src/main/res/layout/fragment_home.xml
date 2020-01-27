@@ -11,4 +11,11 @@
         android:layout_height="match_parent"
         android:text="Home Fragment" />
 
+    <Button
+        android:id="@+id/logout_button"
+        android:layout_width="104dp"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        />
+
 </FrameLayout>
