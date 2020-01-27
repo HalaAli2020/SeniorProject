@@ -5,9 +5,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import com.example.seniorproject.model.User
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_register.*
+import java.util.concurrent.TimeUnit
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -20,8 +23,7 @@ class RegisterActivity : AppCompatActivity() {
 
         }
         already_have_account_textview.setOnClickListener {
-            val intent = Intent(this,LoginActivity::class.java)
-            startActivity(intent)
+            redirectToLogin()
         }
 
     }
@@ -44,10 +46,36 @@ class RegisterActivity : AppCompatActivity() {
                 if (!it.isSuccessful) return@addOnCompleteListener
                 // else if successful
                 Log.d("Debug","NEW USER, uid: ${it.result?.user?.uid}")
+                Toast.makeText(this, "Account Creation successful", Toast.LENGTH_SHORT).show()
+                saveUserToFirebaseDatabase()
+                redirectToLogin()
             }
             .addOnFailureListener{
                 Toast.makeText(this, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
             }
     }
+
+    private fun redirectToLogin(){
+        val intent = Intent(this,LoginActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun saveUserToFirebaseDatabase(){
+        Log.d("Debug", "entered firebase database function")
+        val uid = FirebaseAuth.getInstance().uid ?: ""
+        val ref = FirebaseDatabase.getInstance().getReference("university-social-media/$uid")
+        val user = User(username_signup_editext.text.toString(),
+            email_signup_editText.text.toString(),password_signup_editTExt.text.toString())
+
+        ref.setValue(user).addOnCompleteListener(this){
+                    task ->  if (task.isSuccessful){
+                Log.d("Debug", "saving to database worked")
+            } else {
+                Log.d("Debug", "not saved")
+            }}.addOnFailureListener(){
+                Log.d("Debug", "Error ${it.message}")
+            }
+    }
+
 }
 
