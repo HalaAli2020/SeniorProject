@@ -6,8 +6,10 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class Posts(private val txt: String?,private val courseID: Int?, private val uid: String?)
+data class Post(val title: String, val text: String, val courseID: Int, val uid: String)
 {
+    constructor(): this("","",0,"")
+
     private val database = FirebaseDatabase.getInstance()
     private var ptime: Long
     init {
@@ -17,20 +19,5 @@ class Posts(private val txt: String?,private val courseID: Int?, private val uid
     }
 
 
-
-    fun gettxt() : String?
-    {
-        return txt
-    }
-   
-
-    fun getPtime(): Long
-    {
-        return ptime
-    }
-    fun getuserID(): String?
-    {
-        return uid
-    }
     // should include database functions later on to correctly get information to fill class with proper query
 }
