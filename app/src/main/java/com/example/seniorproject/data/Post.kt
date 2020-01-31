@@ -1,10 +1,6 @@
-package com.example.seniorproject.model
+package com.example.seniorproject.data
 
-import java.sql.Timestamp
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 
 data class Post(val title: String, val text: String, val courseID: Int, val uid: String)
 {

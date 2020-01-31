@@ -1,29 +1,43 @@
 package com.example.seniorproject.Login
-
-
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
+import com.example.seniorproject.AuthenticationListener
+import com.example.seniorproject.AuthenticationViewModel
 import com.example.seniorproject.R
-import com.example.seniorproject.MainForum.MainForum
-import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_login.*
-import com.example.seniorproject.model.User
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.FirebaseDatabase
+import com.example.seniorproject.InjectorUtils
+import com.example.seniorproject.databinding.ActivityLoginBinding
 
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity(), AuthenticationListener{
+    override fun onStarted() {
+        }
+
+    override fun onSuccess() {
+    }
+
+    override fun onFailure(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
 
     // User field to pass the to next fragment
     private lateinit var user: Any
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        Log.d("TAG","test logcat")
+        System.out.println("Some text here")
+     initializeUI()
 
-        dont_have_account_textview.setOnClickListener {
+    }
+
+       /* dont_have_account_textview.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
@@ -60,8 +74,22 @@ class LoginActivity : AppCompatActivity() {
                     Log.d("Debug", "Error ${it.message}")
                     Toast.makeText(this, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
                 }
-        }
+        }*/
+
+
+    private fun initializeUI(){
+
+        val factory = InjectorUtils.provideAuthViewModelFactory()
+
+        val binding: ActivityLoginBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_login)
+        var viewModel: AuthenticationViewModel = ViewModelProviders.of(this, factory).get(AuthenticationViewModel::class.java)
+
+        binding.authViewModel = viewModel
+
+        viewModel.authListener = this
 
     }
+
 
 }

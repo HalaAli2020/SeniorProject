@@ -1,27 +1,18 @@
 package com.example.seniorproject.MainForum
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.seniorproject.Login.LoginActivity
 import com.example.seniorproject.R
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_home.*
-import com.example.seniorproject.model.User
+import com.example.seniorproject.data.User
 import com.google.firebase.database.*
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
-import kotlinx.android.synthetic.main.activity_main_forum.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
-import kotlinx.android.synthetic.main.post_rv.*
 import kotlinx.android.synthetic.main.post_rv.view.*
 import kotlinx.android.synthetic.main.post_rv.view.post_title
 
@@ -61,7 +52,7 @@ class HomeFragment : Fragment() {
 
         reference.addChildEventListener(object: ChildEventListener{
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val newPost = p0.getValue(com.example.seniorproject.model.Post::class.java)
+                val newPost = p0.getValue(com.example.seniorproject.data.Post::class.java)
 
                 if(newPost!=null) {
                     Log.d("ForumACT", newPost?.text)
@@ -124,7 +115,7 @@ class HomeFragment : Fragment() {
                 currentUser = p0.getValue(User::class.java)
                 Log.d("LatestMessages", "Current user ${currentUser?.username}")
                 val usernameForum = currentUser?.username
-                username_forum.text = "Welcome " + usernameForum
+               // username_forum.text = "Welcome " + usernameForum
             }
         })
     }

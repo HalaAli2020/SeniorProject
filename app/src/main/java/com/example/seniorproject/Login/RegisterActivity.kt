@@ -4,32 +4,75 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
-import com.example.seniorproject.R
-import com.example.seniorproject.model.User
-import com.google.firebase.FirebaseApp
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
+import com.example.seniorproject.*
+import com.example.seniorproject.MainForum.MainForum
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
-import kotlinx.android.synthetic.main.activity_register.*
-import java.util.concurrent.TimeUnit
+import kotlinx.android.synthetic.main.activity_login.*
+import com.example.seniorproject.data.User
+import com.example.seniorproject.databinding.ActivityLoginBinding
+import com.example.seniorproject.databinding.ActivityRegisterBinding
+import com.google.api.Authentication
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.kodein
+import org.kodein.di.generic.instance
+import org.kodein.di.android.x.kodein
+import org.kodein.di.generic.factory
 
-class RegisterActivity : AppCompatActivity() {
+class RegisterActivity : AppCompatActivity(), AuthenticationListener{
+
+
+    override fun onStarted() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onSuccess() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onFailure(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register);
-
-        register_button.setOnClickListener {
-        registerUser()
-
-        }
-        already_have_account_textview.setOnClickListener {
-            redirectToLogin()
-        }
+        setContentView(R.layout.activity_register)
+        initializeUI()
+        Log.d("REG","entered register activity")
 
     }
 
-    private fun registerUser(){
+
+
+    private fun initializeUI(){
+
+        val factory = InjectorUtils.provideAuthViewModelFactory()
+
+        val binding: ActivityRegisterBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_register)
+        var viewModel: AuthenticationViewModel = ViewModelProviders.of(this, factory).get(AuthenticationViewModel::class.java)
+
+        binding.authViewModel = viewModel
+
+        viewModel.authListener = this
+
+    }
+
+
+}
+
+        /*register_button.setOnClickListener {
+        //registerUser()
+        }
+
+        already_have_account_textview.setOnClickListener {
+            //redirectToLogin()
+        }*/
+
+   /* private fun registerUser(){
         val email = email_signup_editText.text.toString()
         val password = password_signup_editTExt.text.toString()
 
@@ -76,7 +119,7 @@ class RegisterActivity : AppCompatActivity() {
             }}.addOnFailureListener(){
                 Log.d("Debug", "Error ${it.message}")
             }
-    }
+    }*/
 
-}
+
 

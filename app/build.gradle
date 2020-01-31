@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
@@ -23,6 +24,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+    dataBinding {
+        enabled = true
     }
 }
 
@@ -52,9 +56,18 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:19.2.0'
     implementation "com.xwray:groupie:2.7.0"
     implementation "com.google.android.gms:play-services-base:17.1.0"
+    implementation group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.0.1'
+    implementation group: 'io.reactivex.rxjava2', name: 'rxandroid', version: '2.0.1'
+
+
+    implementation "org.kodein.di:kodein-di-generic-jvm:6.2.1"
+    implementation "org.kodein.di:kodein-di-framework-android-x:6.2.1"
+
+    kapt "android.arch.lifecycle:compiler:1.1.1"
+    kapt "com.android.databinding:compiler:5.4.1"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 
-apply plugin: 'com.google.gms.google-services'
+
