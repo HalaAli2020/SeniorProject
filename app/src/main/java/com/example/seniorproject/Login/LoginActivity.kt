@@ -1,5 +1,4 @@
 package com.example.seniorproject.Login
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -13,7 +12,7 @@ import com.example.seniorproject.InjectorUtils
 import com.example.seniorproject.databinding.ActivityLoginBinding
 
 
-class LoginActivity : AppCompatActivity(), AuthenticationListener{
+class LoginActivity : AppCompatActivity(), AuthenticationListener {
     override fun onStarted() {
         }
 
@@ -83,7 +82,8 @@ class LoginActivity : AppCompatActivity(), AuthenticationListener{
 
         val binding: ActivityLoginBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_login)
-        var viewModel: AuthenticationViewModel = ViewModelProviders.of(this, factory).get(AuthenticationViewModel::class.java)
+        var viewModel: AuthenticationViewModel = ViewModelProviders.of(this, factory).get(
+            AuthenticationViewModel::class.java)
 
         binding.authViewModel = viewModel
 

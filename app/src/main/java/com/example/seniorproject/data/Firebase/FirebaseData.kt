@@ -1,13 +1,19 @@
 package com.example.seniorproject.data.Firebase
 
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.example.seniorproject.Login.RegisterActivity
 import com.example.seniorproject.data.User
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import dagger.Module
 import io.reactivex.Completable
 
+//@Module
+//@Suppress("unused")
+private const val TAG = "MyLogTag"
 class FirebaseData {
 
     private val firebaseAuth: FirebaseAuth by lazy {
@@ -15,9 +21,11 @@ class FirebaseData {
     }
 
     fun CurrentUser() = firebaseAuth.currentUser
+
+
     fun logout() = firebaseAuth.signOut()
 
-    fun RegisterUser(email: String, password: String) = Completable.create { emitter ->
+    fun RegisterUser(username: String,email: String, password: String) = Completable.create { emitter ->
         /* Completable that is an RxJava class.  Completable basically means it holds something that will complete and we can get an indication when it is completed or failed.
          And it is the perfect class to use with FirebaseAuth because auth is a network operation that will complete
         val email = email_signup_editText.text.toString()
@@ -31,8 +39,8 @@ class FirebaseData {
             ).show()
             //unsure about registeractivity in place of context here
         }*/
-        Log.d("Debug", "Entered register user function!!! Email: " + email)
-        Log.d("Debug", "pass: " + password)
+        Log.d(TAG, "Entered register user function!!! Email: " + email)
+        Log.d(TAG, "pass: " + password)
 
         //Firebase Authentication is being performed inside the completeable
         //emitter indicated weather the task was completed
@@ -42,36 +50,16 @@ class FirebaseData {
                 if (!emitter.isDisposed) {
                     if (it.isSuccessful) {
                         emitter.onComplete()
-                        Log.d("Debug", "NEW USER, uid: ${it.result?.user?.uid}")
-                        Toast.makeText(RegisterActivity(), "Account Creation successful", Toast.LENGTH_SHORT).show()
-                        //saveUserToFirebaseDatabase()
-                        //redirectToLogin()
-                    }else {
+                        Log.d(TAG, "NEW USER, uid: ${it.result?.user?.uid}")
+                        saveUserToFirebaseDatabase(username, email, password)
+                    } else {
                         emitter.onError(it.exception!!)
                         //return@addOnCompleteListener
                     }
-                    //.addOnFailureListener {
-                    //Toast.makeText(this, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
-                    //}
                 }
             }
     }
 
-              /*  if (!it.isSuccessful) return@addOnCompleteListener
-                // else if successful
-                Log.d("Debug", "NEW USER, uid: ${it.result?.user?.uid}")
-                Toast.makeText(
-                    RegisterActivity(),
-                    "Account Creation successful",
-                    Toast.LENGTH_SHORT
-                ).show()
-                //saveUserToFirebaseDatabase()
-                //redirectToLogin()
-            }
-            .addOnFailureListener {
-                //Toast.makeText(this, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
-            }
-    }*/
 
     fun LoginUser(email: String, password: String) = Completable.create { emitter ->
 
@@ -79,6 +67,7 @@ class FirebaseData {
             .addOnCompleteListener {
                 if (!emitter.isDisposed) {
                     if (it.isSuccessful) {
+                        Log.d(TAG, "user has logged in")
                         val currentuser = FirebaseAuth.getInstance().currentUser
                         currentuser?.let {
                             val username = currentuser.displayName
@@ -98,8 +87,28 @@ class FirebaseData {
 
     }
 
-    companion object{
-        @Volatile private var instance: FirebaseData? = null
+
+    private fun saveUserToFirebaseDatabase(username: String, email: String, password: String) {
+        Log.d("Debug", "entered firebase database function")
+        val uid = FirebaseAuth.getInstance().uid ?: ""
+        val ref = FirebaseDatabase.getInstance().getReference("users/$uid")
+        val user = User(username, email, password)
+
+        ref.setValue(user).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d(TAG, "saving to database worked")
+            } else {
+                Log.d(TAG, "not saved")
+            }
+        }.addOnFailureListener() {
+            Log.d(TAG, "Error ${it.message}")
+        }
+    }
+
+    companion object {
+        @Volatile
+        private var instance: FirebaseData? = null
+
         //rights to this properties are immediate visible ot other threats
         fun getInstance() =
             instance ?: synchronized(this) {
@@ -107,8 +116,8 @@ class FirebaseData {
             }
         //if the instance is not n
     }
-}
 
+}
 
 
 

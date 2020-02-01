@@ -1,9 +1,7 @@
 package com.example.seniorproject
 
 import android.content.Intent
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.example.seniorproject.Login.LoginActivity
 import com.example.seniorproject.Login.RegisterActivity
@@ -17,6 +15,7 @@ class AuthenticationViewModel(private val repository : UserAuthRepo ) : ViewMode
     //email and password for the input
     var email: String? = null
     var password: String? = null
+    var username: String? = null
 
     //auth listener
     var authListener: AuthenticationListener? = null
@@ -31,14 +30,14 @@ class AuthenticationViewModel(private val repository : UserAuthRepo ) : ViewMode
     }
 
     fun Register(){
-        if (email.isNullOrEmpty() || password.isNullOrEmpty()) {
-            authListener?.onFailure("please enter both your email and a password")
+        if (email.isNullOrEmpty() || password.isNullOrEmpty() || username.isNullOrEmpty()) {
+            authListener?.onFailure("please enter your username, email and a password")
             //Toast.makeText((RegisterActivity()), "Please fill in both Email and Password fields", Toast.LENGTH_SHORT).show()
             return
         }
         authListener?.onStarted()
         //calling login from repository
-        val disposable = repository.register(email!!,password!!)
+        val disposable = repository.register(username!!,email!!,password!!)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         //should this really be the main thread?
             .subscribe({
@@ -86,6 +85,7 @@ class AuthenticationViewModel(private val repository : UserAuthRepo ) : ViewMode
     override fun onCleared() {
         super.onCleared()
         disposables.dispose()
+        //now the register function is no longer being observed
     }
 
 }

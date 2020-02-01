@@ -60,8 +60,9 @@ dependencies {
     implementation group: 'io.reactivex.rxjava2', name: 'rxandroid', version: '2.0.1'
 
 
-    implementation "org.kodein.di:kodein-di-generic-jvm:6.2.1"
-    implementation "org.kodein.di:kodein-di-framework-android-x:6.2.1"
+    implementation 'com.google.dagger:dagger:2.11'
+    kapt 'com.google.dagger:dagger-compiler:2.11'
+    compileOnly "org.glassfish:javax.annotation:3.1.1"
 
     kapt "android.arch.lifecycle:compiler:1.1.1"
     kapt "com.android.databinding:compiler:5.4.1"

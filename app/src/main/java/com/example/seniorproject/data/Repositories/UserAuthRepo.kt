@@ -7,7 +7,7 @@ class UserAuthRepo (
 ){
     fun login(email: String, password: String) = Firebase.LoginUser(email,password)
 
-    fun register(email: String, password: String) = Firebase.RegisterUser(email, password)
+    fun register(username: String, email: String, password: String) = Firebase.RegisterUser(username, email, password)
 
     fun currentUser() = Firebase.CurrentUser()
 
