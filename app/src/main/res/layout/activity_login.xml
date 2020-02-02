@@ -6,7 +6,7 @@
     <data>
     <variable
         name="AuthViewModel"
-        type="com.example.seniorproject.AuthenticationViewModel">
+        type="com.example.seniorproject.viewModels.AuthenticationViewModel">
     </variable>
 
 </data>

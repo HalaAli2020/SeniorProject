@@ -1,4 +1,4 @@
-package com.example.seniorproject
+package com.example.seniorproject.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

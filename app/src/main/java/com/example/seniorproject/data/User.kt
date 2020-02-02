@@ -1,5 +1,7 @@
 package com.example.seniorproject.data
 
+import androidx.lifecycle.LiveData
+
 data class User(val username: String?, val email: String?, val uid: String?)
 {
     constructor(): this("","","")
@@ -10,5 +12,6 @@ data class User(val username: String?, val email: String?, val uid: String?)
         return 1
     }
 
+   // fun getuid() = email as LiveData<String>
 
 }

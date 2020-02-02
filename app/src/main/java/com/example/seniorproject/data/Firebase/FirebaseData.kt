@@ -1,5 +1,6 @@
 package com.example.seniorproject.data.Firebase
 
+import android.app.Application
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
@@ -9,42 +10,37 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import dagger.Module
+import dagger.Provides
+import dagger.Reusable
 import io.reactivex.Completable
+import javax.inject.Singleton
 
-//@Module
-//@Suppress("unused")
 private const val TAG = "MyLogTag"
-class FirebaseData {
+//@Singleton
+@Module
+@Suppress("unused")
+class FirebaseData(private val app: Application) {
 
     private val firebaseAuth: FirebaseAuth by lazy {
         FirebaseAuth.getInstance()
     }
 
+
+   //@Provides
     fun CurrentUser() = firebaseAuth.currentUser
 
 
     fun logout() = firebaseAuth.signOut()
 
+    //@Provides
     fun RegisterUser(username: String,email: String, password: String) = Completable.create { emitter ->
-        /* Completable that is an RxJava class.  Completable basically means it holds something that will complete and we can get an indication when it is completed or failed.
-         And it is the perfect class to use with FirebaseAuth because auth is a network operation that will complete
-        val email = email_signup_editText.text.toString()
-        val password = password_signup_editTExt.text.toString()
-
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(
-                RegisterActivity(),
-                "Please fill in both Email and Password fields",
-                Toast.LENGTH_SHORT
-            ).show()
-            //unsure about registeractivity in place of context here
-        }*/
         Log.d(TAG, "Entered register user function!!! Email: " + email)
         Log.d(TAG, "pass: " + password)
 
         //Firebase Authentication is being performed inside the completeable
         //emitter indicated weather the task was completed
         //double check this code
+        //return livedata objext
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener {
                 if (!emitter.isDisposed) {
@@ -61,6 +57,7 @@ class FirebaseData {
     }
 
 
+    //@Provides
     fun LoginUser(email: String, password: String) = Completable.create { emitter ->
 
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
@@ -88,7 +85,8 @@ class FirebaseData {
     }
 
 
-    private fun saveUserToFirebaseDatabase(username: String, email: String, password: String) {
+
+     fun saveUserToFirebaseDatabase(username: String, email: String, password: String) {
         Log.d("Debug", "entered firebase database function")
         val uid = FirebaseAuth.getInstance().uid ?: ""
         val ref = FirebaseDatabase.getInstance().getReference("users/$uid")
@@ -105,7 +103,7 @@ class FirebaseData {
         }
     }
 
-    companion object {
+   /* companion object {
         @Volatile
         private var instance: FirebaseData? = null
 
@@ -115,7 +113,7 @@ class FirebaseData {
                 instance ?: FirebaseData().also { instance = it }
             }
         //if the instance is not n
-    }
+    }*/
 
 }
 

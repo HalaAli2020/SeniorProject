@@ -5,10 +5,10 @@ import android.util.Log
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
-import com.example.seniorproject.AuthenticationListener
-import com.example.seniorproject.AuthenticationViewModel
+import com.example.seniorproject.Utils.AuthenticationListener
+import com.example.seniorproject.viewModels.AuthenticationViewModel
 import com.example.seniorproject.R
-import com.example.seniorproject.InjectorUtils
+import com.example.seniorproject.Utils.InjectorUtils
 import com.example.seniorproject.databinding.ActivityLoginBinding
 
 
@@ -17,6 +17,9 @@ class LoginActivity : AppCompatActivity(), AuthenticationListener {
         }
 
     override fun onSuccess() {
+        //val myIntent = Intent(this@LoginActivity, MainForum::class.java)
+        //this@LoginActivity.startActivity(myIntent)
+        //cant redirect to main forum
     }
 
     override fun onFailure(message: String) {
@@ -35,45 +38,6 @@ class LoginActivity : AppCompatActivity(), AuthenticationListener {
      initializeUI()
 
     }
-
-       /* dont_have_account_textview.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
-        }
-
-        login_button.setOnClickListener {
-            val email = email_Login_editText.text.toString()
-            val password = password_login_editText.text.toString()
-            Log.d("Login", "login with  $email")
-            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this) { task ->
-
-                    if (task.isSuccessful)
-                    {
-                        val currentuser = FirebaseAuth.getInstance().currentUser
-                        currentuser?.let {
-                            val username = currentuser.displayName
-                            val email = currentuser.email
-                            val uid = currentuser.uid
-                           user = User(username, email, uid)
-                        }
-
-                        Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this, MainForum::class.java)
-                        intent.flags =
-                            Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(intent)
-                    }
-                    else
-                    {
-                        Log.d("Debug", "sign in failed")
-                    }
-
-                }.addOnFailureListener() {
-                    Log.d("Debug", "Error ${it.message}")
-                    Toast.makeText(this, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
-                }
-        }*/
 
 
     private fun initializeUI(){

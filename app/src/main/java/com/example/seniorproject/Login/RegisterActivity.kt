@@ -1,5 +1,4 @@
 package com.example.seniorproject.Login
-
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -7,11 +6,15 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.example.seniorproject.*
-import com.example.seniorproject.AuthenticationListener
-import com.example.seniorproject.AuthenticationViewModel
+import com.example.seniorproject.Utils.AuthenticationListener
+import com.example.seniorproject.viewModels.AuthenticationViewModel
 import com.example.seniorproject.databinding.ActivityRegisterBinding
+import android.content.Intent
+import com.example.seniorproject.Utils.InjectorUtils
 
-class RegisterActivity : AppCompatActivity(), AuthenticationListener {
+
+class RegisterActivity : AppCompatActivity(),
+    AuthenticationListener {
 
 
     override fun onStarted() {
@@ -19,6 +22,8 @@ class RegisterActivity : AppCompatActivity(), AuthenticationListener {
     }
 
     override fun onSuccess() {
+        val myIntent = Intent(this@RegisterActivity, LoginActivity::class.java)
+        this@RegisterActivity.startActivity(myIntent)
     }
 
     override fun onFailure(message: String) {

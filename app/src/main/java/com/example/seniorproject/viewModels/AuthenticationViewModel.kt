@@ -1,16 +1,19 @@
-package com.example.seniorproject
+package com.example.seniorproject.viewModels
 
 import android.content.Intent
 import android.view.View
 import androidx.lifecycle.ViewModel
 import com.example.seniorproject.Login.LoginActivity
 import com.example.seniorproject.Login.RegisterActivity
+import com.example.seniorproject.Utils.AuthenticationListener
 import com.example.seniorproject.data.Repositories.UserAuthRepo
+import dagger.Module
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-
-class AuthenticationViewModel(private val repository : UserAuthRepo ) : ViewModel(){
+import javax.inject.Inject
+@Module
+class AuthenticationViewModel @Inject constructor(private val repository : UserAuthRepo ) : ViewModel(){
 
     //email and password for the input
     var email: String? = null
@@ -25,9 +28,9 @@ class AuthenticationViewModel(private val repository : UserAuthRepo ) : ViewMode
     private val disposables = CompositeDisposable()
 
 
-    val user by lazy {
-        repository.currentUser()
-    }
+    //val user by lazy {
+     //   repository.currentUser()
+   // }
 
     fun Register(){
         if (email.isNullOrEmpty() || password.isNullOrEmpty() || username.isNullOrEmpty()) {
@@ -37,16 +40,17 @@ class AuthenticationViewModel(private val repository : UserAuthRepo ) : ViewMode
         }
         authListener?.onStarted()
         //calling login from repository
-        val disposable = repository.register(username!!,email!!,password!!)
+        val disposable = repository.register(username?:"null",email?:"null",password?:"null")
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         //should this really be the main thread?
             .subscribe({
                 //success callback
                 authListener?.onSuccess()
             }, {
-                authListener?.onFailure(it.message!!)
+                authListener?.onFailure(it.message?:"failure")
             })
         disposables.add(disposable)
+
     }
 
     fun Login(){
@@ -67,6 +71,8 @@ class AuthenticationViewModel(private val repository : UserAuthRepo ) : ViewMode
                 authListener?.onFailure(it.message!!)
             })
         disposables.add(disposable)
+
+
     }
 
      fun redirectToLogin(view: View){
