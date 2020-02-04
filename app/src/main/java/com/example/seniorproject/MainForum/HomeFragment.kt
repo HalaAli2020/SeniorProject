@@ -3,18 +3,27 @@ package com.example.seniorproject.MainForum
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import com.example.seniorproject.InjectorUtils
+import com.example.seniorproject.PostListener
+import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.R
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_home.*
-import com.example.seniorproject.data.User
+import com.example.seniorproject.data.models.User
+///import com.example.seniorproject.databinding.FragmentHomeBinding
+import com.example.seniorproject.viewModels.AuthenticationViewModel
+import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.google.firebase.database.*
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.post_rv.view.*
-import kotlinx.android.synthetic.main.post_rv.view.post_title
 
 
 /**
@@ -22,13 +31,14 @@ import kotlinx.android.synthetic.main.post_rv.view.post_title
  */
 class HomeFragment : Fragment() {
 
-    companion object{
+    companion object {
         var currentUser: User? = null
     }
+
+    private lateinit var viewModel: HomeFragmentViewModel
     val adapter = GroupAdapter<GroupieViewHolder>()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
 
         val view = inflater.inflate(R.layout.fragment_home, container, false)
@@ -37,26 +47,41 @@ class HomeFragment : Fragment() {
         fetchCurrentUser()
         listenForPosts()
 
-
-
         view.new_post_btn.setOnClickListener {
             performNewPost()
+            listenForPosts()
+            view.post_recyclerView.scrollToPosition(0)
         }
 
 
         return view
+
+        /*val factory = InjectorUtils.providePostViewModelFactory()
+        val binding: FragmentHomeBinding = inflate(inflater, R.layout.fragment_home, container, false)
+        viewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
+        viewModel.getSavedPosts()
+
+        binding.homeViewModel = viewModel
+        binding.lifecycleOwner = this
+
+        //viewModel.postListener = this
+
+        return binding.root*/
     }
+
+
+
 
     private fun listenForPosts(){
         val reference = FirebaseDatabase.getInstance().getReference("/posts")
 
         reference.addChildEventListener(object: ChildEventListener{
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val newPost = p0.getValue(com.example.seniorproject.data.Post::class.java)
+                val newPost = p0.getValue(Post::class.java)
 
                 if(newPost!=null) {
                     Log.d("ForumACT", newPost?.text)
-                    adapter.add(PostFrag(newPost.title, newPost.text))
+                    adapter.add(Post(newPost.title, newPost.text, 0, ""))
                 }
             }
 
@@ -84,22 +109,14 @@ class HomeFragment : Fragment() {
         val reference = FirebaseDatabase.getInstance().getReference("/posts").push()
 
         if(title.isNotEmpty() && text.isNotEmpty()) {
-            val post = PostFrag(title, text)
+            val post = Post(title, text, 0, "")
 
             reference.setValue(post).addOnSuccessListener {
                 Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
+                new_post_text.setText("")
+                new_post_title.setText("")
             }
         }
-    }
-
-    private fun dummyData(view: View){
-        val adapter = GroupAdapter<GroupieViewHolder>()
-
-        adapter.add(PostFrag("1", "TEXT1"))
-        adapter.add(PostFrag("2", "TEXT2"))
-        adapter.add(PostFrag("3", "TEXT3"))
-
-        view.post_recyclerView.adapter = adapter
     }
 
 
@@ -115,30 +132,16 @@ class HomeFragment : Fragment() {
                 currentUser = p0.getValue(User::class.java)
                 Log.d("LatestMessages", "Current user ${currentUser?.username}")
                 val usernameForum = currentUser?.username
-               // username_forum.text = "Welcome " + usernameForum
+                username_forum.text = "Welcome " + usernameForum
             }
         })
     }
 
 
 
-}
 
-
-
-data class PostFrag(val title: String, val text: String): Item<GroupieViewHolder>(){
-    constructor(): this("","")
-    override fun getLayout(): Int {
-        return R.layout.post_rv
-    }
-
-    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.post_text.text = text
-        viewHolder.itemView.post_title.text = title
-    }
 
 }
-
 
 
 

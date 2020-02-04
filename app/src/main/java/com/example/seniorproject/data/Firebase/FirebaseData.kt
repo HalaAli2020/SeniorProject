@@ -1,72 +1,67 @@
 package com.example.seniorproject.data.Firebase
 
-import android.content.Context
 import android.util.Log
-import android.widget.Toast
-import com.example.seniorproject.Login.RegisterActivity
-import com.example.seniorproject.data.User
-import com.google.firebase.FirebaseApp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.example.seniorproject.data.models.Post
+import com.example.seniorproject.data.models.User
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
-import dagger.Module
+import com.google.firebase.database.*
 import io.reactivex.Completable
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.ValueEventListener
+
+
 
 //@Module
 //@Suppress("unused")
 private const val TAG = "MyLogTag"
+
 class FirebaseData {
 
     private val firebaseAuth: FirebaseAuth by lazy {
         FirebaseAuth.getInstance()
     }
 
+    var savedPosts: MutableLiveData<List<Post>> = MutableLiveData()
+
     fun CurrentUser() = firebaseAuth.currentUser
 
 
     fun logout() = firebaseAuth.signOut()
 
-    fun RegisterUser(username: String,email: String, password: String) = Completable.create { emitter ->
-        /* Completable that is an RxJava class.  Completable basically means it holds something that will complete and we can get an indication when it is completed or failed.
-         And it is the perfect class to use with FirebaseAuth because auth is a network operation that will complete
-        val email = email_signup_editText.text.toString()
-        val password = password_signup_editTExt.text.toString()
+    fun RegisterUser(username: String, email: String, password: String) =
+        Completable.create { emitter ->
+            Log.d(TAG, "Entered register user function!!! Email: " + email)
+            Log.d(TAG, "pass: " + password)
 
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(
-                RegisterActivity(),
-                "Please fill in both Email and Password fields",
-                Toast.LENGTH_SHORT
-            ).show()
-            //unsure about registeractivity in place of context here
-        }*/
-        Log.d(TAG, "Entered register user function!!! Email: " + email)
-        Log.d(TAG, "pass: " + password)
-
-        //Firebase Authentication is being performed inside the completeable
-        //emitter indicated weather the task was completed
-        //double check this code
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener {
-                if (!emitter.isDisposed) {
-                    if (it.isSuccessful) {
-                        emitter.onComplete()
-                        Log.d(TAG, "NEW USER, uid: ${it.result?.user?.uid}")
-                        saveUserToFirebaseDatabase(username, email, password)
-                    } else {
-                        emitter.onError(it.exception!!)
-                        //return@addOnCompleteListener
+            //Firebase Authentication is being performed inside the completeable
+            //emitter indicated weather the task was completed
+            //double check this code
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener {
+                    if (!emitter.isDisposed) {
+                        if (it.isSuccessful) {
+                            emitter.onComplete()
+                            Log.d(TAG, "NEW USER, uid: ${it.result?.user?.uid}")
+                            saveUserToFirebaseDatabase(username, email, password)
+                        } else {
+                            emitter.onError(it.exception!!)
+                            //return@addOnCompleteListener
+                        }
                     }
                 }
-            }
-    }
+        }
 
 
     fun LoginUser(email: String, password: String) = Completable.create { emitter ->
-
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
             .addOnCompleteListener {
                 if (!emitter.isDisposed) {
                     if (it.isSuccessful) {
+                        emitter.onComplete()
                         Log.d(TAG, "user has logged in")
                         val currentuser = FirebaseAuth.getInstance().currentUser
                         currentuser?.let {
@@ -75,16 +70,12 @@ class FirebaseData {
                             val uid = currentuser.uid
                             val user = User(username, email, uid)
                         }
-
                     } else {
                         emitter.onError(it.exception!!)
                         //should not be using two exclaimation points
                     }
-
                 }
             }
-
-
     }
 
 
@@ -100,10 +91,64 @@ class FirebaseData {
             } else {
                 Log.d(TAG, "not saved")
             }
-        }.addOnFailureListener() {
+        }.addOnFailureListener {
             Log.d(TAG, "Error ${it.message}")
         }
     }
+
+
+    fun saveNewPost(postTitle: String, postText: String) {
+        val reference = FirebaseDatabase.getInstance().getReference("/posts").push()
+
+        if (postTitle.isNotEmpty() && postText.isNotEmpty()) {
+            val post = Post(postTitle, postText, 0, "")
+
+            reference.setValue(post).addOnSuccessListener {
+                Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
+            }.addOnFailureListener {
+                Log.d(TAG, "Error ${it.message}")
+            }
+        }
+    }
+
+
+    fun getSavedPost(): LiveData<List<Post>> {
+        val reference = FirebaseDatabase.getInstance().getReference("/posts")
+
+
+        reference.addChildEventListener(object : ChildEventListener {
+            var savedPostsList: MutableList<Post> = mutableListOf()
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                val newPost = p0.getValue(Post::class.java)
+
+                if (newPost != null) {
+                    Log.d("ACCESSING", newPost?.text)
+                    savedPostsList.add(newPost)
+
+                    //repository.saveNewPost(newPost)
+                    //adapter.add(PostFrag(newPost.title, newPost.text))
+                }
+                savedPosts.value = savedPostsList
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+            }
+
+        })
+        return savedPosts
+
+    }
+
 
     companion object {
         @Volatile

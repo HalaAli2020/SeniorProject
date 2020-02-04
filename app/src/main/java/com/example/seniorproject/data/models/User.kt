@@ -1,4 +1,4 @@
-package com.example.seniorproject.data
+package com.example.seniorproject.data.models
 
 data class User(val username: String?, val email: String?, val uid: String?)
 {

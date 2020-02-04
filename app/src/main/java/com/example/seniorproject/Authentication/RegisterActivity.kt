@@ -1,4 +1,4 @@
-package com.example.seniorproject.Login
+package com.example.seniorproject.Authentication
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,8 +8,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.example.seniorproject.*
 import com.example.seniorproject.AuthenticationListener
-import com.example.seniorproject.AuthenticationViewModel
+import com.example.seniorproject.viewModels.AuthenticationViewModel
 import com.example.seniorproject.databinding.ActivityRegisterBinding
+import com.example.seniorproject.utils.startLoginActivity
 
 class RegisterActivity : AppCompatActivity(), AuthenticationListener {
 
@@ -19,6 +20,7 @@ class RegisterActivity : AppCompatActivity(), AuthenticationListener {
     }
 
     override fun onSuccess() {
+        startLoginActivity()
     }
 
     override fun onFailure(message: String) {

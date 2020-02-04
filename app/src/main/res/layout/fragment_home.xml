@@ -20,19 +20,19 @@
             />
 
         <EditText
-            android:id="@+id/new_post_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Text"
-            android:inputType="text" />
-
-        <EditText
             android:id="@+id/new_post_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Title"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/new_post_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Text"
             android:inputType="text" />
 
         <Button
@@ -47,7 +47,9 @@
             android:id="@+id/post_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:stackFromEnd="true"
+            app:reverseLayout="true"/>
 
     </LinearLayout>
 
