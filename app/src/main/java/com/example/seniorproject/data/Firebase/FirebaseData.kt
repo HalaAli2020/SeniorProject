@@ -64,6 +64,7 @@ class FirebaseData(private val app: Application) {
             .addOnCompleteListener {
                 if (!emitter.isDisposed) {
                     if (it.isSuccessful) {
+                        emitter.onComplete()
                         Log.d(TAG, "user has logged in")
                         val currentuser = FirebaseAuth.getInstance().currentUser
                         currentuser?.let {
