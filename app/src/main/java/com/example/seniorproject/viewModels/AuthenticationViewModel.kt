@@ -26,6 +26,7 @@ class AuthenticationViewModel(private val repository: UserAuthRepo) : ViewModel(
     private val disposables = CompositeDisposable()
 
 
+
     val user by lazy {
         repository.currentUser()
     }

@@ -33,6 +33,7 @@ class HomeFragment : Fragment() {
     // test comment
     companion object {
         var currentUser: User? = null
+
     }
 
     private lateinit var viewModel: HomeFragmentViewModel

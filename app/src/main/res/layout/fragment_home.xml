@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+
         <TextView
             android:id="@+id/username_forum"
             android:layout_width="wrap_content"
