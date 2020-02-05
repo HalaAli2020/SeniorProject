@@ -30,7 +30,7 @@ import kotlinx.android.synthetic.main.post_rv.view.*
  * A simple [Fragment] subclass.
  */
 class HomeFragment : Fragment() {
-
+    // test comment
     companion object {
         var currentUser: User? = null
     }
