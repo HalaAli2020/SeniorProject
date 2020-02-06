@@ -6,8 +6,10 @@ import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.DataBindingUtil.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.seniorproject.InjectorUtils
 import com.example.seniorproject.PostListener
 import com.example.seniorproject.data.models.Post
@@ -15,7 +17,7 @@ import com.example.seniorproject.R
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_home.*
 import com.example.seniorproject.data.models.User
-///import com.example.seniorproject.databinding.FragmentHomeBinding
+import com.example.seniorproject.databinding.FragmentHomeBinding
 import com.example.seniorproject.viewModels.AuthenticationViewModel
 import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.google.firebase.database.*
@@ -36,38 +38,59 @@ class HomeFragment : Fragment() {
 
     }
 
+   private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var viewModel: HomeFragmentViewModel
-    val adapter = GroupAdapter<GroupieViewHolder>()
+    private lateinit var adapter: CustomAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
 
+
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        view.post_recyclerView.adapter = adapter
-        fetchCurrentUser()
-        listenForPosts()
 
-        view.new_post_btn.setOnClickListener {
-            performNewPost()
-            listenForPosts()
-            view.post_recyclerView.scrollToPosition(0)
-        }
-
-
-        return view
-
-        /*val factory = InjectorUtils.providePostViewModelFactory()
+        val factory = InjectorUtils.providePostViewModelFactory()
         val binding: FragmentHomeBinding = inflate(inflater, R.layout.fragment_home, container, false)
         viewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
-        viewModel.getSavedPosts()
+        //viewModel.getSavedPosts().observe(viewLifecycleOwner, Observer {  })
+
+        adapter = CustomAdapter(viewModel.getSavedPosts())
+        view.post_recyclerView.adapter = adapter
+        view.post_recyclerView.layoutManager = LinearLayoutManager(context)
+        view.post_recyclerView.adapter = adapter
+
+
 
         binding.homeViewModel = viewModel
         binding.lifecycleOwner = this
 
+        binding.executePendingBindings()
         //viewModel.postListener = this
 
-        return binding.root*/
+        return view
+
+
+
+
+
+
+        //view.post_recyclerView.layoutManager = LinearLayoutManager(context)
+        //view.post_recyclerView.adapter = adapter
+
+
+        /*fetchCurrentUser()
+        listenForPosts()
+
+        view.new_post_btn.setOnClickListener {
+            performNewPost()
+            //listenForPosts()
+            view.post_recyclerView.scrollToPosition(0)
+        }
+
+        return view
+*/
+
+
     }
 
 
@@ -82,7 +105,7 @@ class HomeFragment : Fragment() {
 
                 if(newPost!=null) {
                     Log.d("ForumACT", newPost?.text)
-                    adapter.add(Post(newPost.title, newPost.text, 0, ""))
+                    //adapter.add(Post(newPost.title, newPost.text, 0, ""))
                 }
             }
 

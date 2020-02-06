@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.seniorproject.MainForum.HomeFragment
 import com.example.seniorproject.PostListener
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.repositories.PostRepository
@@ -22,7 +23,11 @@ class HomeFragmentViewModel(private val repository: PostRepository) : ViewModel(
 
     var postListener: PostListener? = null
 
+    var posts: MutableLiveData<List<Post>> = MutableLiveData()
 
+    //init {
+    //posts = repository.getSavedPosts()
+    //}
 
     fun savePostToDatabase() {
 
@@ -34,7 +39,10 @@ class HomeFragmentViewModel(private val repository: PostRepository) : ViewModel(
         repository.saveNewPost(titlePost!!, textPost!!)
     }
 
-    fun getSavedPosts() = repository.getSavedPosts()
+    fun getSavedPosts(): MutableLiveData<List<Post>> {
+        posts = repository.getSavedPosts()
+        return posts
+    }
 }
 
 

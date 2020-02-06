@@ -12,7 +12,7 @@ import io.reactivex.Completable
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ValueEventListener
-
+import java.util.*
 
 
 //@Module
@@ -112,7 +112,12 @@ class FirebaseData {
     }
 
 
-    fun getSavedPost(): LiveData<List<Post>> {
+    fun getSavedPost(): MutableLiveData<List<Post>> {
+        listenforPosts()
+        return savedPosts
+    }
+
+    private fun listenforPosts() {
         val reference = FirebaseDatabase.getInstance().getReference("/posts")
 
 
@@ -144,10 +149,12 @@ class FirebaseData {
             override fun onChildRemoved(p0: DataSnapshot) {
             }
 
+
         })
-        return savedPosts
 
     }
+
+
 
 
     companion object {

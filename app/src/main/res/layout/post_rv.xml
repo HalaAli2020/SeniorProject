@@ -21,12 +21,14 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:text="BIG MAN"
+            android:ellipsize="end"
             android:paddingTop="2dp"
             android:id="@+id/post_title"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="HERE IS THE POST TEXT"
+            android:ellipsize="end"
             android:paddingTop="2dp"
             android:id="@+id/post_text"/>
 
