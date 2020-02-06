@@ -12,6 +12,7 @@ import com.example.seniorproject.databinding.ActivityRegisterBinding
 import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
 import com.example.seniorproject.Dagger.DaggerAppComponent
+import com.example.seniorproject.Utils.startMainForum
 import javax.inject.Inject
 
 //import com.example.seniorproject.Utils.InjectorUtils
@@ -29,8 +30,9 @@ class RegisterActivity : AppCompatActivity(),
     }
 
     override fun onSuccess() {
-        val myIntent = Intent(this@RegisterActivity, LoginActivity::class.java)
-        this@RegisterActivity.startActivity(myIntent)
+       // val myIntent = Intent(this@RegisterActivity, LoginActivity::class.java)
+        //this@RegisterActivity.startActivity(myIntent)
+        this.startMainForum()
     }
 
     override fun onFailure(message: String) {
