@@ -9,7 +9,6 @@ import javax.inject.Singleton
 
 //private val Firebase: FirebaseData
 @Singleton
-@Module
 class UserAuthRepo @Inject constructor(private val Firebase: FirebaseData) {
 
     fun login(email: String, password: String) = Firebase.LoginUser(email,password)

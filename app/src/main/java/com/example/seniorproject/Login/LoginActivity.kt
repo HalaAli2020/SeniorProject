@@ -5,17 +5,25 @@ import android.util.Log
 import android.widget.Toast
 import android.content.Intent
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.Utils.AuthenticationListener
 import com.example.seniorproject.viewModels.AuthenticationViewModel
 import com.example.seniorproject.R
-import com.example.seniorproject.Utils.InjectorUtils
+//import com.example.seniorproject.Utils.InjectorUtils
 import com.example.seniorproject.databinding.ActivityLoginBinding
 import com.example.seniorproject.MainForum.MainForum
-
+import com.example.seniorproject.viewModels.AuthViewModelFactory
+import javax.inject.Inject
 
 
 class LoginActivity : AppCompatActivity(), AuthenticationListener {
+
+@Inject
+lateinit var factory: ViewModelProvider.Factory
+    lateinit var myViewModel: AuthenticationViewModel
+
     override fun onStarted() {
         }
 
@@ -37,26 +45,17 @@ class LoginActivity : AppCompatActivity(), AuthenticationListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         Log.d("TAG","test logcat")
-        System.out.println("Some text here")
-     initializeUI()
 
-    }
-
-
-    private fun initializeUI(){
-
-        val factory = InjectorUtils.provideAuthViewModelFactory()
-
+        DaggerAppComponent.create().inject(this)
+        myViewModel = ViewModelProviders.of(this,factory).get(AuthenticationViewModel::class.java)
         val binding: ActivityLoginBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_login)
-        var viewModel: AuthenticationViewModel = ViewModelProviders.of(this, factory).get(
-            AuthenticationViewModel::class.java)
+        binding.authViewModel = myViewModel
 
-        binding.authViewModel = viewModel
-
-        viewModel.authListener = this
+        myViewModel.authListener = this
 
     }
+
 
 
 }

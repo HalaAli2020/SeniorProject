@@ -3,14 +3,15 @@ package com.example.seniorproject.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.seniorproject.data.Repositories.UserAuthRepo
+import javax.inject.Inject
+import javax.inject.Provider
 
-@Suppress("UNCHECKED_CAST")
-class AuthViewModelFactory(
-    private val repository: UserAuthRepo
-) : ViewModelProvider.NewInstanceFactory() {
 
+class AuthViewModelFactory @Inject constructor( private val myviewmodelprovider:Provider<AuthenticationViewModel>):ViewModelProvider.Factory {
+
+    @Suppress("UNCHECK_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return AuthenticationViewModel(repository) as T
+        return myviewmodelprovider.get() as T
     }
 
 }

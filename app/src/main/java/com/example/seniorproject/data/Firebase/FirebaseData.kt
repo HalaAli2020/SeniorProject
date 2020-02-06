@@ -13,13 +13,13 @@ import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import io.reactivex.Completable
+import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val TAG = "MyLogTag"
-//@Singleton
-@Module
+@Singleton
 @Suppress("unused")
-class FirebaseData(private val app: Application) {
+class FirebaseData @Inject constructor() {
 
     private val firebaseAuth: FirebaseAuth by lazy {
         FirebaseAuth.getInstance()

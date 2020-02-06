@@ -12,7 +12,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
-@Module
+import javax.inject.Singleton
+
+
 class AuthenticationViewModel @Inject constructor(private val repository : UserAuthRepo ) : ViewModel(){
 
     //email and password for the input
@@ -35,11 +37,9 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
     fun Register(){
         if (email.isNullOrEmpty() || password.isNullOrEmpty() || username.isNullOrEmpty()) {
             authListener?.onFailure("please enter your username, email and a password")
-            //Toast.makeText((RegisterActivity()), "Please fill in both Email and Password fields", Toast.LENGTH_SHORT).show()
             return
         }
         authListener?.onStarted()
-        //calling login from repository
         val disposable = repository.register(username?:"null",email?:"null",password?:"null")
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         //should this really be the main thread?
