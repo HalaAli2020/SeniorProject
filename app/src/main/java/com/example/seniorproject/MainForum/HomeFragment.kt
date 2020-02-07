@@ -8,7 +8,6 @@ import androidx.databinding.DataBindingUtil.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import com.example.seniorproject.InjectorUtils
 import com.example.seniorproject.PostListener
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.R

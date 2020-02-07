@@ -7,7 +7,7 @@ class PostRepository(private val Firebase: FirebaseData) {
 
     fun saveNewPost(Title: String, Text: String) = Firebase.saveNewPost(Title, Text)
 
-    fun getSavedPosts() = Firebase.getSavedPost()
+    fun getSavedPosts() = Firebase.savedPosts
 
     companion object {
         @Volatile
