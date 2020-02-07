@@ -2,8 +2,8 @@ package com.example.seniorproject.Utils
 
 import android.content.Context
 import android.content.Intent
-import com.example.seniorproject.Login.LoginActivity
-import com.example.seniorproject.Login.RegisterActivity
+import com.example.seniorproject.Authentication.LoginActivity
+import com.example.seniorproject.Authentication.RegisterActivity
 import com.example.seniorproject.MainForum.MainForum
 
 fun Context.startRegisterActivity() =

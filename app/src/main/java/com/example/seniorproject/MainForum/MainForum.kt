@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
-import com.example.seniorproject.Login.LoginActivity
+import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth

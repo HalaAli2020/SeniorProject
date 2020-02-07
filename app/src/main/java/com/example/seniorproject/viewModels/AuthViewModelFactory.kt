@@ -2,7 +2,7 @@ package com.example.seniorproject.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.seniorproject.data.Repositories.UserAuthRepo
+import com.example.seniorproject.data.repositories.UserAuthRepo
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -13,5 +13,5 @@ class AuthViewModelFactory @Inject constructor( private val myviewmodelprovider:
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return myviewmodelprovider.get() as T
     }
-
 }
+

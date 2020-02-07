@@ -1,20 +1,17 @@
 package com.example.seniorproject.data.Firebase
-
-import android.app.Application
-import android.content.Context
 import android.util.Log
-import android.widget.Toast
-import com.example.seniorproject.Login.RegisterActivity
-import com.example.seniorproject.data.User
-import com.google.firebase.FirebaseApp
+import com.example.seniorproject.data.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import dagger.Module
-import dagger.Provides
-import dagger.Reusable
 import io.reactivex.Completable
 import javax.inject.Inject
 import javax.inject.Singleton
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.example.seniorproject.data.models.Post
+import com.google.firebase.database.*
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DataSnapshot
 
 private const val TAG = "MyLogTag"
 @Singleton
@@ -25,6 +22,7 @@ class FirebaseData @Inject constructor() {
         FirebaseAuth.getInstance()
     }
 
+    var savedPosts: MutableLiveData<List<Post>> = MutableLiveData()
 
    //@Provides
     fun CurrentUser() = firebaseAuth.currentUser
@@ -88,33 +86,75 @@ class FirebaseData @Inject constructor() {
 
 
      fun saveUserToFirebaseDatabase(username: String, email: String, password: String) {
-        Log.d("Debug", "entered firebase database function")
-        val uid = FirebaseAuth.getInstance().uid ?: ""
-        val ref = FirebaseDatabase.getInstance().getReference("users/$uid")
-        val user = User(username, email, password)
+         Log.d("Debug", "entered firebase database function")
+         val uid = FirebaseAuth.getInstance().uid ?: ""
+         val ref = FirebaseDatabase.getInstance().getReference("users/$uid")
+         val user = User(username, email, password)
 
-        ref.setValue(user).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Log.d(TAG, "saving to database worked")
-            } else {
-                Log.d(TAG, "not saved")
-            }
-        }.addOnFailureListener() {
-            Log.d(TAG, "Error ${it.message}")
-        }
-    }
+         ref.setValue(user).addOnCompleteListener { task ->
+             if (task.isSuccessful) {
+                 Log.d(TAG, "saving to database worked")
+             } else {
+                 Log.d(TAG, "not saved")
+             }
+         }.addOnFailureListener() {
+             Log.d(TAG, "Error ${it.message}")
+         }
+     }
+         fun saveNewPost(postTitle: String, postText: String) {
+             val reference = FirebaseDatabase.getInstance().getReference("/posts").push()
 
-   /* companion object {
-        @Volatile
-        private var instance: FirebaseData? = null
+             if (postTitle.isNotEmpty() && postText.isNotEmpty()) {
+                 val post = Post(postTitle, postText, 0, "")
 
-        //rights to this properties are immediate visible ot other threats
-        fun getInstance() =
-            instance ?: synchronized(this) {
-                instance ?: FirebaseData().also { instance = it }
-            }
-        //if the instance is not n
-    }*/
+                 reference.setValue(post).addOnSuccessListener {
+                     Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
+                 }.addOnFailureListener {
+                     Log.d(TAG, "Error ${it.message}")
+                 }
+             }
+         }
+
+
+         fun getSavedPost(): LiveData<List<Post>> {
+             val reference = FirebaseDatabase.getInstance().getReference("/posts")
+
+
+             reference.addChildEventListener(object : ChildEventListener {
+                 var savedPostsList: MutableList<Post> = mutableListOf()
+                 override fun onCancelled(p0: DatabaseError) {
+
+                 }
+
+                 override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+                 }
+
+                 override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+                 }
+
+                 override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                     val newPost = p0.getValue(Post::class.java)
+
+                     if (newPost != null) {
+                         Log.d("ACCESSING", newPost?.text)
+                         savedPostsList.add(newPost)
+
+                         //repository.saveNewPost(newPost)
+                         //adapter.add(PostFrag(newPost.title, newPost.text))
+                     }
+                     savedPosts.value = savedPostsList
+         }
+
+         override fun onChildRemoved(p0: DataSnapshot) {
+         }
+
+     })
+    return savedPosts
+
+     }
+
+
+
 
 }
 

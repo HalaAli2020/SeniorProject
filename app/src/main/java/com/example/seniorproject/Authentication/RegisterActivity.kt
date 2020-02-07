@@ -1,4 +1,4 @@
-package com.example.seniorproject.Login
+package com.example.seniorproject.Authentication
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +9,6 @@ import com.example.seniorproject.*
 import com.example.seniorproject.Utils.AuthenticationListener
 import com.example.seniorproject.viewModels.AuthenticationViewModel
 import com.example.seniorproject.databinding.ActivityRegisterBinding
-import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.Utils.startMainForum

@@ -3,19 +3,17 @@ package com.example.seniorproject.viewModels
 import android.content.Intent
 import android.view.View
 import androidx.lifecycle.ViewModel
-import com.example.seniorproject.Login.LoginActivity
-import com.example.seniorproject.Login.RegisterActivity
+import com.example.seniorproject.Authentication.LoginActivity
+import com.example.seniorproject.Authentication.RegisterActivity
 import com.example.seniorproject.Utils.AuthenticationListener
-import com.example.seniorproject.data.Repositories.UserAuthRepo
-import dagger.Module
+import com.example.seniorproject.data.repositories.UserAuthRepo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
-import javax.inject.Singleton
 
 
-class AuthenticationViewModel @Inject constructor(private val repository : UserAuthRepo ) : ViewModel(){
+class AuthenticationViewModel @Inject constructor(private val repository : UserAuthRepo) : ViewModel(){
 
     //email and password for the input
     var email: String? = null

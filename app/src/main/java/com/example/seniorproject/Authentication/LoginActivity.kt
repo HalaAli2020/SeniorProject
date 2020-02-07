@@ -1,4 +1,4 @@
-package com.example.seniorproject.Login
+package com.example.seniorproject.Authentication
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -14,7 +14,6 @@ import com.example.seniorproject.R
 //import com.example.seniorproject.Utils.InjectorUtils
 import com.example.seniorproject.databinding.ActivityLoginBinding
 import com.example.seniorproject.MainForum.MainForum
-import com.example.seniorproject.viewModels.AuthViewModelFactory
 import javax.inject.Inject
 
 

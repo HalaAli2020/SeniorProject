@@ -1,4 +1,4 @@
-package com.example.seniorproject.data
+package com.example.seniorproject.data.models
 
 import androidx.lifecycle.LiveData
 

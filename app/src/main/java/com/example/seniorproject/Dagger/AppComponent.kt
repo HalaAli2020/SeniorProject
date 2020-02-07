@@ -1,11 +1,8 @@
 package com.example.seniorproject.Dagger
 
-import com.example.seniorproject.Login.LoginActivity
-import com.example.seniorproject.Login.RegisterActivity
+import com.example.seniorproject.Authentication.LoginActivity
+import com.example.seniorproject.Authentication.RegisterActivity
 import com.example.seniorproject.Utils.authbindingmodule
-import com.example.seniorproject.viewModels.AuthenticationViewModel
-import com.example.seniorproject.data.Firebase.FirebaseData
-import com.example.seniorproject.data.Repositories.UserAuthRepo
 import dagger.Component
 import javax.inject.Singleton
 
