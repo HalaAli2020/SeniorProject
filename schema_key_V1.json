@@ -1,0 +1,51 @@
+{
+    "Users": {
+        "$uid" : {
+            "username": "john",
+            "email" : "@gmail.com",
+            "subs" : [ "$classkey", "$classkey"]
+            
+        }
+     
+    },
+    "Subjects" :  {
+        "Computer Science":
+        {
+            "crn" : [
+                "$classkey", "$classkey"
+            ]
+        }
+    },
+
+    "Classes":{
+        "$classkey":{
+            "Classname": "$classkey",
+            "Subject": "Computer Science",
+            "Members":["$uid", "$uid"],
+            "Posts":["$PostID"]
+        }
+    },
+
+
+    "Posts":{
+        "$PostID":{
+            "text": "post information",
+            "tag": "$classkey",
+            "UserKey": "$uid",
+            "Timestamp":"1/25/2020 12:30",
+            "CommentID": ["$commentkey", "$commentkey"]
+            
+        }
+        
+    },
+    "Comments": {
+        "$commentkey" : {
+            "text": "post information",
+            "parentPost" : "$Postkey",
+            "timestamp" : "1/28/2020 12:30"
+
+
+        }
+
+    }
+}
