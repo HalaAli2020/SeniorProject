@@ -13,11 +13,6 @@ class PostRepository(private val Firebase: FirebaseData) {
 
     fun getSavedPosts() = Firebase.getSavedPost()
 
-    fun listen()
-    {
-      Firebase.loook()
-    }
-
 
     companion object {
         @Volatile

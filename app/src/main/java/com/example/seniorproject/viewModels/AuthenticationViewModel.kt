@@ -10,6 +10,9 @@ import com.example.seniorproject.data.repositories.UserAuthRepo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import com.example.seniorproject.utils.startRegisterActivity
+import com.example.seniorproject.utils.startLoginActivity
+
 
 class AuthenticationViewModel(private val repository: UserAuthRepo) : ViewModel() {
 

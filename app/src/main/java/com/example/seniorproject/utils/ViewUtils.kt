@@ -18,7 +18,7 @@ fun Context.startLoginActivity() =
         startActivity(it)
     }
 
-fun Context.startMainActivity(){
+fun Context.startMainForum(){
     Intent(this, MainForum::class.java).also{
         it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or (Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(it)

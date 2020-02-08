@@ -24,23 +24,20 @@ class CustomAdapter(var savedPosts: PostLiveData) :
     }
 
     override fun getItemCount(): Int {
-       if(savedPosts.value != null)
-        return savedPosts.value!!.size
+        if (savedPosts.value != null)
+            return savedPosts.value!!.size
         else
-           return 1
+            return 0
     }
 
     override fun onBindViewHolder(holder: CustomViewHolders, position: Int) {
-            if(savedPosts.value == null)
-            {
+        if (savedPosts.value == null) {
 
-            }
-        else{
-                val post: Post = savedPosts.value!![position]
-                holder.itemView.post_title.text = post.title
-                holder.itemView.post_text.text = post.text
-            }
-
+        } else {
+            val post: Post = savedPosts.value!![position]
+            holder.itemView.post_title.text = post.title
+            holder.itemView.post_text.text = post.text
+        }
 
 
     }

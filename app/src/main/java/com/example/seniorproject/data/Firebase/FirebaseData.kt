@@ -115,15 +115,11 @@ class FirebaseData {
         }
     }
 
-    /*fun getSavedPost(): MutableLiveData<List<Post>> {
-        listenforPosts()
-        return savedPosts
-    }*/
+
     fun getSavedPost() : PostLiveData{
         listenforPosts()
         return savedPosts
 }
-
 
 
     private fun listenforPosts() {
@@ -164,38 +160,6 @@ class FirebaseData {
         })
 
     }
-     fun loook()  {
-        val reference = FirebaseDatabase.getInstance().getReference("/posts")
-
-        reference.addValueEventListener(object : PostListener
-        {
-            override fun onStarted() {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-
-
-            }
-
-            override fun onSuccess() {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onFailure(message: String) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-        })
-
-    }
-
-
-
-
 
 
     companion object {

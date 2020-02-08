@@ -4,8 +4,8 @@
     <data>
 
         <variable
-            name="HomeViewModel"
-            type="com.example.seniorproject.viewModels.HomeFragmentViewModel"></variable>
+            name="NewPostViewModel"
+            type="com.example.seniorproject.viewModels.NewPostFragmentViewModel"></variable>
 
     </data>
 
@@ -14,7 +14,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainForum.HomeFragment">
+        tools:context=".MainForum.NewPostFragment">
 
 
         <LinearLayout
@@ -35,18 +35,26 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Title"
-                android:text="@={HomeViewModel.titlePost}"
+                android:text="@={NewPostViewModel.titlePost}"
                 android:inputType="text" />
 
+            <EditText
+                android:id="@+id/new_post_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Text"
+                android:text="@={NewPostViewModel.textPost}"
+                android:inputType="text" />
 
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/post_recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:reverseLayout="true"
-                app:stackFromEnd="true" />
+            <Button
+                android:id="@+id/new_post_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_btn"
+                android:text="Add Post"
+                android:onClick="@{() -> NewPostViewModel.savePostToDatabase()}"
+                android:textColor="@color/white" />
 
         </LinearLayout>
 

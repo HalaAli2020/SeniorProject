@@ -10,7 +10,7 @@ import com.example.seniorproject.AuthenticationListener
 import com.example.seniorproject.viewModels.AuthenticationViewModel
 import com.example.seniorproject.R
 import com.example.seniorproject.InjectorUtils
-import com.example.seniorproject.Utils.startMainForum
+import com.example.seniorproject.utils.startMainForum
 import com.example.seniorproject.databinding.ActivityLoginBinding
 //import com.example.seniorproject.utils.startMainActivity
 
