@@ -10,9 +10,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.seniorproject.Dagger.DaggerAppComponent
 //import com.example.seniorproject.MainForum.MainForum
 import com.example.seniorproject.R
-
 import com.example.seniorproject.Utils.AuthenticationListener
-import com.example.seniorproject.databinding.ActivityLoginBinding
+import com.example.seniorproject.databinding.ActivityPasswordResetBinding
 import com.example.seniorproject.viewModels.AuthenticationViewModel
 import javax.inject.Inject
 
@@ -45,7 +44,7 @@ class PasswordResetActivity : AppCompatActivity(), AuthenticationListener {
 
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this,factory).get(AuthenticationViewModel::class.java)
-        val binding: ActivityLoginBinding =
+        val binding: ActivityPasswordResetBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_password_reset)
         binding.authViewModel = myViewModel
 
