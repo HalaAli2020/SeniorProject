@@ -40,7 +40,7 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
         }
         authListener?.onStarted()
         //calling login from repository
-        val disposable = repository.resetPassword(email!!)
+        val disposable = repository.resetUserPassword(email!!)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             //should this really be the main thread?
             .subscribe({
