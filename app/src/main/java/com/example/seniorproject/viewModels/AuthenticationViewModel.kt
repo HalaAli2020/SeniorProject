@@ -32,6 +32,27 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
      //   repository.currentUser()
    // }
 
+    fun ResetPassword(){
+        if (email.isNullOrEmpty()) {
+            authListener?.onFailure("please enter your email")
+            //  Toast.makeText((RegisterActivity()), "Please fill in both Email and Password fields", Toast.LENGTH_SHORT).show()
+            return
+        }
+        authListener?.onStarted()
+        //calling login from repository
+        val disposable = repository.resetPassword(email!!)
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            //should this really be the main thread?
+            .subscribe({
+                //success callback
+                authListener?.onSuccess()
+            }, {
+                authListener?.onFailure(it.message!!)
+            })
+        disposables.add(disposable)
+
+    }
+
     fun Register(){
         if (email.isNullOrEmpty() || password.isNullOrEmpty() || username.isNullOrEmpty()) {
             authListener?.onFailure("please enter your username, email and a password")
