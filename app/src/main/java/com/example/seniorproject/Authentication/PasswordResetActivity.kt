@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.seniorproject.Dagger.DaggerAppComponent
 //import com.example.seniorproject.MainForum.MainForum
 import com.example.seniorproject.R
-
 import com.example.seniorproject.Utils.AuthenticationListener
 import com.example.seniorproject.databinding.ActivityPasswordResetBinding
 import com.example.seniorproject.viewModels.AuthenticationViewModel
