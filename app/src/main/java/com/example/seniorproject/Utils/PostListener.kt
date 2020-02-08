@@ -1,4 +1,4 @@
-package com.example.seniorproject
+package com.example.seniorproject.Utils
 
 interface PostListener {
     fun onStarted()
