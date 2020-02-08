@@ -9,9 +9,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.Post
+import com.example.seniorproject.data.models.PostLiveData
 import kotlinx.android.synthetic.main.post_rv.view.*
+import javax.inject.Inject
 
-class CustomAdapter(var savedPosts: LiveData<List<Post>>) :
+class CustomAdapter(var savedPosts: PostLiveData) :
     RecyclerView.Adapter<CustomViewHolders>() {
 
 
@@ -22,14 +24,24 @@ class CustomAdapter(var savedPosts: LiveData<List<Post>>) :
     }
 
     override fun getItemCount(): Int {
-        return 1
+       if(savedPosts.value != null)
+        return savedPosts.value!!.size
+        else
+           return 1
     }
 
     override fun onBindViewHolder(holder: CustomViewHolders, position: Int) {
+            if(savedPosts.value == null)
+            {
 
-            //val post: Post = savedPosts?.value!![position]
-            //holder.itemView.post_title.text = post.title
-            //holder.itemView.post_text.text = post.text
+            }
+        else{
+                val post: Post = savedPosts.value!![position]
+                holder.itemView.post_title.text = post.title
+                holder.itemView.post_text.text = post.text
+            }
+
+
 
     }
 

@@ -10,8 +10,9 @@ import com.example.seniorproject.AuthenticationListener
 import com.example.seniorproject.viewModels.AuthenticationViewModel
 import com.example.seniorproject.R
 import com.example.seniorproject.InjectorUtils
+import com.example.seniorproject.Utils.startMainForum
 import com.example.seniorproject.databinding.ActivityLoginBinding
-import com.example.seniorproject.utils.startMainActivity
+//import com.example.seniorproject.utils.startMainActivity
 
 
 class LoginActivity : AppCompatActivity(), AuthenticationListener {
@@ -89,7 +90,7 @@ class LoginActivity : AppCompatActivity(), AuthenticationListener {
 
     override fun onSuccess() {
         Toast.makeText(this, "Successfully logged in!", Toast.LENGTH_SHORT).show()
-        startMainActivity()
+        this.startMainForum()
     }
 
     override fun onFailure(message: String) {

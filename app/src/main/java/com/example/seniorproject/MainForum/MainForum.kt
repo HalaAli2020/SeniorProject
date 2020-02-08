@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.fragment.app.Fragment
 import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.R
@@ -37,7 +38,7 @@ class MainForum : AppCompatActivity() {
         replaceFragment(HomeFragment())
         bottom_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
-        loginVerification()
+        //loginVerification()
     }
 
     private fun replaceFragment(fragment: Fragment){

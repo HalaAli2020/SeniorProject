@@ -3,7 +3,9 @@ package com.example.seniorproject.data.Firebase
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.seniorproject.PostListener
 import com.example.seniorproject.data.models.Post
+import com.example.seniorproject.data.models.PostLiveData
 import com.example.seniorproject.data.models.User
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -25,7 +27,9 @@ class FirebaseData {
         FirebaseAuth.getInstance()
     }
 
-    var savedPosts: MutableLiveData<List<Post>> = MutableLiveData()
+   // var savedPosts: MutableLiveData<List<Post>> = MutableLiveData()
+    var savedPosts : PostLiveData = PostLiveData()
+    var changed : Boolean = false
 
     fun CurrentUser() = firebaseAuth.currentUser
 
@@ -101,7 +105,7 @@ class FirebaseData {
         val reference = FirebaseDatabase.getInstance().getReference("/posts").push()
 
         if (postTitle.isNotEmpty() && postText.isNotEmpty()) {
-            val post = Post(postTitle, postText, 0, "")
+            val post = Post(postTitle, postText)
 
             reference.setValue(post).addOnSuccessListener {
                 Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
@@ -111,18 +115,23 @@ class FirebaseData {
         }
     }
 
-
-    fun getSavedPost(): MutableLiveData<List<Post>> {
+    /*fun getSavedPost(): MutableLiveData<List<Post>> {
         listenforPosts()
         return savedPosts
-    }
+    }*/
+    fun getSavedPost() : PostLiveData{
+        listenforPosts()
+        return savedPosts
+}
+
+
 
     private fun listenforPosts() {
         val reference = FirebaseDatabase.getInstance().getReference("/posts")
 
 
         reference.addChildEventListener(object : ChildEventListener {
-            var savedPostsList: MutableList<Post> = mutableListOf()
+           var savedPostsList: MutableList<Post> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
 
             }
@@ -144,15 +153,47 @@ class FirebaseData {
                     //adapter.add(PostFrag(newPost.title, newPost.text))
                 }
                 savedPosts.value = savedPostsList
+
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {
             }
 
 
+
         })
 
     }
+     fun loook()  {
+        val reference = FirebaseDatabase.getInstance().getReference("/posts")
+
+        reference.addValueEventListener(object : PostListener
+        {
+            override fun onStarted() {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+
+
+            }
+
+            override fun onSuccess() {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onFailure(message: String) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
+
+    }
+
+
 
 
 

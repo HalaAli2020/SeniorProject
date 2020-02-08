@@ -8,9 +8,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.example.seniorproject.*
 import com.example.seniorproject.AuthenticationListener
+import com.example.seniorproject.Utils.startLoginActivity
 import com.example.seniorproject.viewModels.AuthenticationViewModel
 import com.example.seniorproject.databinding.ActivityRegisterBinding
-import com.example.seniorproject.utils.startLoginActivity
+
 
 class RegisterActivity : AppCompatActivity(), AuthenticationListener {
 
