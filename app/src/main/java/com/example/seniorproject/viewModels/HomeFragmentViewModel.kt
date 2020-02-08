@@ -13,8 +13,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class HomeFragmentViewModel(private val repository: PostRepository) : ViewModel() {
+class HomeFragmentViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
 
 
     var titlePost: String? = null

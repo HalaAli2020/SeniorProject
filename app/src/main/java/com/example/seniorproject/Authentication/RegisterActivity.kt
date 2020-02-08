@@ -12,7 +12,9 @@ import com.example.seniorproject.databinding.ActivityRegisterBinding
 import androidx.lifecycle.ViewModelProvider
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.Utils.startMainForum
+import dagger.MapKey
 import javax.inject.Inject
+import javax.inject.Named
 
 //import com.example.seniorproject.Utils.InjectorUtils
 
@@ -51,8 +53,6 @@ class RegisterActivity : AppCompatActivity(),
         myViewModel.authListener = this
 
     }
-
-
 
 }
 
