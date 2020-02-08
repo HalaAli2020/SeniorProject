@@ -55,6 +55,33 @@ class FirebaseData @Inject constructor() {
     }
 
 
+    fun resetPassword(email: String) = Completable.create { emitter ->
+
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+            .addOnCompleteListener {
+                if (!emitter.isDisposed) {
+                    if (it.isSuccessful) {
+                        emitter.onComplete()
+                        Log.d(TAG, "Email sent")
+                        val currentuser = FirebaseAuth.getInstance().currentUser
+                        currentuser?.let {
+                            val username = currentuser.displayName
+                            val email = currentuser.email
+                            val uid = currentuser.uid
+                            val user = User(username, email, uid)
+                        }
+
+                    } else {
+                        emitter.onError(it.exception!!)
+                        //should not be using two exclaimation points
+                    }
+
+                }
+            }
+
+
+    }
+
     //@Provides
     fun LoginUser(email: String, password: String) = Completable.create { emitter ->
 

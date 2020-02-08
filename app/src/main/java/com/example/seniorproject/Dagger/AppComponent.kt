@@ -1,6 +1,7 @@
 package com.example.seniorproject.Dagger
 
 import com.example.seniorproject.Authentication.LoginActivity
+import com.example.seniorproject.Authentication.PasswordResetActivity
 import com.example.seniorproject.Authentication.RegisterActivity
 import com.example.seniorproject.Utils.authbindingmodule
 import dagger.Component
@@ -16,5 +17,6 @@ interface AppComponent {
 
     fun inject(activity: RegisterActivity)
     fun inject(activity: LoginActivity)
+    fun inject(activity: PasswordResetActivity)
 
 }
