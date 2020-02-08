@@ -32,7 +32,7 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
      //   repository.currentUser()
    // }
 
-    fun ResetPassword(){
+    fun ResetThePassword(){
         if (email.isNullOrEmpty()) {
             authListener?.onFailure("please enter your email")
             //  Toast.makeText((RegisterActivity()), "Please fill in both Email and Password fields", Toast.LENGTH_SHORT).show()
