@@ -15,6 +15,7 @@ import com.example.seniorproject.R
 import com.example.seniorproject.databinding.ActivityLoginBinding
 import com.example.seniorproject.MainForum.MainForum
 import javax.inject.Inject
+import javax.inject.Named
 
 
 class LoginActivity : AppCompatActivity(), AuthenticationListener {
