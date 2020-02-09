@@ -1,4 +1,4 @@
-package com.example.seniorproject
+package com.example.seniorproject.Utils
 
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ValueEventListener

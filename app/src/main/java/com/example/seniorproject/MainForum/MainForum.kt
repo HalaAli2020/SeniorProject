@@ -43,7 +43,7 @@ class MainForum : AppCompatActivity() {
         replaceFragment(HomeFragment())
         bottom_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
-        //loginVerification()
+        loginVerification()
     }
 
     private fun replaceFragment(fragment: Fragment){

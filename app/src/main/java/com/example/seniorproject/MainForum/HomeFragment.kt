@@ -13,7 +13,8 @@ import androidx.lifecycle.ViewModelProviders
 //import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.seniorproject.InjectorUtils
-import com.example.seniorproject.PostListener
+import com.example.seniorproject.Dagger.DaggerAppComponent
+import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.PostLiveData
@@ -30,13 +31,40 @@ import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.post_rv.view.*
 import kotlinx.coroutines.awaitAll
+//import javax.inject.Inject
 import javax.inject.Inject
+import javax.inject.Named
 
 
 /**
  * A simple [Fragment] subclass.
  */
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), PostListener {
+
+
+    @Inject
+    lateinit var factory: ViewModelProvider.Factory
+    lateinit var myViewModel: HomeFragmentViewModel
+    override fun onStarted() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onSuccess() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onFailure(message: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onCancelled(p0: DatabaseError) {
+
+    }
+
+    override fun onDataChange(p0: DataSnapshot) {
+
+    }
+
     // test comment
     companion object {
         var currentUser: User? = null
@@ -55,7 +83,8 @@ class HomeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val factory = InjectorUtils.providePostViewModelFactory()
-        val binding: FragmentHomeBinding = inflate(inflater, R.layout.fragment_home, container, false)
+        val binding: FragmentHomeBinding =
+            inflate(inflater, R.layout.fragment_home, container, false)
         viewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         postLiveData = viewModel.getSavedPosts()
@@ -69,6 +98,10 @@ class HomeFragment : Fragment() {
         binding.lifecycleOwner = this
 
         binding.executePendingBindings()
+        DaggerAppComponent.create().inject(this)
+        myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
+        myViewModel.getSavedPosts()
+        //myViewModel.postListener = this
 
         while (PostLiveData.get().value != null) {
 
@@ -88,6 +121,7 @@ class HomeFragment : Fragment() {
     }
 
 
+
     /* private fun listenForPosts(){
          val reference = FirebaseDatabase.getInstance().getReference("/posts")
 
@@ -103,55 +137,58 @@ class HomeFragment : Fragment() {
 
              override fun onCancelled(p0: DatabaseError) {
 
-             }
+            }
 
-             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
 
-             }
+            }
 
-             override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
 
-             }
+            }
 
-             override fun onChildRemoved(p0: DataSnapshot) {
+            override fun onChildRemoved(p0: DataSnapshot) {
 
-             }
-         })
-     }
+            }
+        })
+    }
 
-     private fun performNewPost(){
-         val title = new_post_title.text.toString()
-         val text = new_post_text.text.toString()
-         val reference = FirebaseDatabase.getInstance().getReference("/posts").push()
+    private fun performNewPost(){
+        val title = new_post_title.text.toString()
+        val text = new_post_text.text.toString()
+        val reference = FirebaseDatabase.getInstance().getReference("/posts").push()
 
-         if(title.isNotEmpty() && text.isNotEmpty()) {
-             val post = Post(title, text, 0, "")
+        if(title.isNotEmpty() && text.isNotEmpty()) {
+            val post = Post(title, text, 0, "")
 
-             reference.setValue(post).addOnSuccessListener {
-                 Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
-                 new_post_text.setText("")
-                 new_post_title.setText("")
-             }
-         }
-     }
+            reference.setValue(post).addOnSuccessListener {
+                Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
+                new_post_text.setText("")
+                new_post_title.setText("")
+            }
+        }
+    }
 
 
-     private fun fetchCurrentUser(){
-         var uid = FirebaseAuth.getInstance().uid
-         val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
-         ref.addListenerForSingleValueEvent(object: ValueEventListener {
-             override fun onCancelled(p0: DatabaseError) {
+    private fun fetchCurrentUser(){
+        var uid = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
+        ref.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
 
-             }
+            }
 
-             override fun onDataChange(p0: DataSnapshot) {
-                 currentUser = p0.getValue(User::class.java)
-                 Log.d("LatestMessages", "Current user ${currentUser?.username}")
-                 val usernameForum = currentUser?.username
-                 username_forum.text = "Welcome " + usernameForum
-             }
-         })
-     }*/
+            override fun onDataChange(p0: DataSnapshot) {
+                currentUser = p0.getValue(User::class.java)
+                Log.d("LatestMessages", "Current user ${currentUser?.username}")
+                val usernameForum = currentUser?.username
+                username_forum.text = "Welcome " + usernameForum
+            }
+        })
+    }*/
+
+
+
 
 
 }

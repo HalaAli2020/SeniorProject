@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.example.seniorproject.MainForum.HomeFragment
-import com.example.seniorproject.PostListener
+import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.PostLiveData
 import com.example.seniorproject.data.repositories.PostRepository
@@ -21,8 +21,9 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class HomeFragmentViewModel(private val repository: PostRepository) : ViewModel() {
+class HomeFragmentViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
 
 
     var posts: PostLiveData = PostLiveData()

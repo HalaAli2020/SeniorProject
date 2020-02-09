@@ -1,7 +1,7 @@
 package com.example.seniorproject.viewModels
 
 import androidx.lifecycle.ViewModel
-import com.example.seniorproject.AuthenticationListener
+import com.example.seniorproject.Utils.AuthenticationListener
 import io.reactivex.disposables.CompositeDisposable
 
 class PostViewModel : ViewModel() {

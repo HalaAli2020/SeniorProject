@@ -1,27 +1,27 @@
 package com.example.seniorproject.data.Firebase
-
 import android.util.Log
+import com.example.seniorproject.data.models.User
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import io.reactivex.Completable
+import javax.inject.Inject
+import javax.inject.Singleton
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.seniorproject.PostListener
+import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.PostLiveData
-import com.example.seniorproject.data.models.User
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import io.reactivex.Completable
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ValueEventListener
 import java.util.*
 
-
-//@Module
-//@Suppress("unused")
 private const val TAG = "MyLogTag"
-
-class FirebaseData {
+@Singleton
+@Suppress("unused")
+class FirebaseData @Inject constructor() {
 
     private val firebaseAuth: FirebaseAuth by lazy {
         FirebaseAuth.getInstance()
@@ -60,6 +60,34 @@ class FirebaseData {
         }
 
 
+    fun resetPassword(email: String) = Completable.create { emitter ->
+
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+            .addOnCompleteListener {
+                if (!emitter.isDisposed) {
+                    if (it.isSuccessful) {
+                        emitter.onComplete()
+                        Log.d(TAG, "Email sent")
+                        val currentuser = FirebaseAuth.getInstance().currentUser
+                        currentuser?.let {
+                            val username = currentuser.displayName
+                            val email = currentuser.email
+                            val uid = currentuser.uid
+                            val user = User(username, email, uid)
+                        }
+
+                    } else {
+                        emitter.onError(it.exception!!)
+                        //should not be using two exclaimation points
+                    }
+
+                }
+            }
+
+
+    }
+
+    //@Provides
     fun LoginUser(email: String, password: String) = Completable.create { emitter ->
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
             .addOnCompleteListener {
