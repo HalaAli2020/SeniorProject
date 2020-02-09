@@ -1,6 +1,7 @@
 package com.example.seniorproject.Dagger
 
 import com.example.seniorproject.Authentication.LoginActivity
+import com.example.seniorproject.Authentication.PasswordResetActivity
 import com.example.seniorproject.Authentication.RegisterActivity
 import com.example.seniorproject.MainForum.HomeFragment
 import com.example.seniorproject.Utils.multibindingmodule
@@ -18,5 +19,6 @@ interface AppComponent {
     fun inject(activity: RegisterActivity)
     fun inject(activity: LoginActivity)
     fun inject(fragment: HomeFragment)
+    fun inject(activity: PasswordResetActivity)
 
 }
