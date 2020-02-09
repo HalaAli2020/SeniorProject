@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.fragment.app.Fragment
 import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.R
@@ -19,6 +20,11 @@ class MainForum : AppCompatActivity() {
             R.id.home -> {
                 println("home pressed")
                 replaceFragment(HomeFragment())
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.newPost ->{
+                println("list pressed")
+                replaceFragment(NewPostFragment())
                 return@OnNavigationItemSelectedListener true
             }
             R.id.list -> {

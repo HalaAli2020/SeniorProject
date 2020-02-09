@@ -18,6 +18,15 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [
+                        "room.schemaLocation":"$projectDir/schemas".toString(),
+                        "room.incremental":"true",
+                        "room.expandProjection":"true"]
+            }
+        }
     }
     buildTypes {
         release {
@@ -53,15 +62,18 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.0.0'
     implementation 'androidx.navigation:navigation-ui-ktx:2.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    //implementation 'com.google.firebase:firebase-auth:11.4.2'
-    implementation 'com.firebaseui:firebase-ui-auth:4.1.0'
-    implementation 'com.google.firebase:firebase-core:17.2.2'
     implementation 'com.google.firebase:firebase-auth:19.2.0'
+    //implementation 'com.firebaseui:firebase-ui-auth:4.3.0'
+    implementation 'com.google.firebase:firebase-core:17.2.2'
+    implementation 'com.google.firebase:firebase-database:19.2.0'
     implementation "com.xwray:groupie:2.7.0"
     implementation "com.google.android.gms:play-services-base:17.1.0"
     implementation group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.0.1'
     implementation group: 'io.reactivex.rxjava2', name: 'rxandroid', version: '2.0.1'
 
+    implementation 'android.arch.persistence.room:runtime:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
+    kapt 'android.arch.persistence.room:compiler:2.2.0'
 
     implementation 'com.google.dagger:dagger:2.11'
     kapt 'com.google.dagger:dagger-compiler:2.11'
@@ -73,3 +85,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
+
+
