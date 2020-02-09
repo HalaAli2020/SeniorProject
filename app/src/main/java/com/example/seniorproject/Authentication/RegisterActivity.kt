@@ -1,4 +1,5 @@
 package com.example.seniorproject.Authentication
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -11,7 +12,7 @@ import com.example.seniorproject.viewModels.AuthenticationViewModel
 import com.example.seniorproject.databinding.ActivityRegisterBinding
 import androidx.lifecycle.ViewModelProvider
 import com.example.seniorproject.Dagger.DaggerAppComponent
-import com.example.seniorproject.Utils.startMainForum
+//import com.example.seniorproject.Utils.startMainForum
 import dagger.MapKey
 import javax.inject.Inject
 import javax.inject.Named
@@ -31,9 +32,9 @@ class RegisterActivity : AppCompatActivity(),
     }
 
     override fun onSuccess() {
-       // val myIntent = Intent(this@RegisterActivity, LoginActivity::class.java)
-        //this@RegisterActivity.startActivity(myIntent)
-        this.startMainForum()
+        val myIntent = Intent(this@RegisterActivity, LoginActivity::class.java)
+        this@RegisterActivity.startActivity(myIntent)
+        //this.startMainForum()
     }
 
     override fun onFailure(message: String) {

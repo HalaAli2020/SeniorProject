@@ -42,7 +42,7 @@ class PasswordResetActivity : AppCompatActivity(), AuthenticationListener {
         setContentView(R.layout.activity_password_reset)
         Log.d("TAG","test logcat")
 
-        DaggerAppComponent.create().inject(this)
+        //DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this,factory).get(AuthenticationViewModel::class.java)
         val binding: ActivityPasswordResetBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_password_reset)

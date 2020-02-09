@@ -1,5 +1,7 @@
 package com.example.seniorproject.data.models
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import com.example.seniorproject.R
 import com.google.firebase.database.FirebaseDatabase
 import com.xwray.groupie.GroupieViewHolder
@@ -7,9 +9,10 @@ import com.xwray.groupie.Item
 
 import kotlinx.android.synthetic.main.post_rv.view.*
 
-data class Post(val title: String, val text: String, val courseID: Int, val uid: String) : Item<GroupieViewHolder>()
+data class Post(val title: String?, val text: String?)
 {
-    constructor(): this("","",0,"")
+    //val title: String, val text: String, val courseID: Int, val uid: String
+    constructor(): this("","")
 
     private val database = FirebaseDatabase.getInstance()
     private var ptime: Long
@@ -19,14 +22,15 @@ data class Post(val title: String, val text: String, val courseID: Int, val uid:
 
     }
 
-    override fun getLayout(): Int {
+     fun getLayout(): Int {
         return R.layout.post_rv
     }
 
-    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
+     fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.post_text.text = text
         viewHolder.itemView.post_title.text = title
     }
+
 
     // should include database functions later on to correctly get information to fill class with proper query
 }

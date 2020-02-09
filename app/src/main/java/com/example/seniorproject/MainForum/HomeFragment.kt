@@ -6,15 +6,22 @@ import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.DataBindingUtil.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+//import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.seniorproject.InjectorUtils
 import com.example.seniorproject.Dagger.DaggerAppComponent
-import com.example.seniorproject.PostListener
+import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.R
+import com.example.seniorproject.data.models.PostLiveData
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_home.*
 import com.example.seniorproject.data.models.User
+import com.example.seniorproject.databinding.FragmentHomeBinding
 import com.example.seniorproject.viewModels.AuthenticationViewModel
 import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.google.firebase.database.*
@@ -23,6 +30,8 @@ import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.post_rv.view.*
+import kotlinx.coroutines.awaitAll
+//import javax.inject.Inject
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -32,7 +41,7 @@ import javax.inject.Named
  */
 class HomeFragment : Fragment(), PostListener {
 
-    val adapter = GroupAdapter<GroupieViewHolder>()
+
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: HomeFragmentViewModel
@@ -48,66 +57,85 @@ class HomeFragment : Fragment(), PostListener {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun onCancelled(p0: DatabaseError) {
+
+    }
+
+    override fun onDataChange(p0: DataSnapshot) {
+
+    }
+
     // test comment
     companion object {
         var currentUser: User? = null
+
     }
 
+    private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var viewModel: HomeFragmentViewModel
+    private lateinit var adapter: CustomAdapter
+    private lateinit var postLiveData: PostLiveData
 
-
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
-
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
-
-        view.post_recyclerView.adapter = adapter
-        fetchCurrentUser()
-        listenForPosts()
-
-        view.new_post_btn.setOnClickListener {
-            performNewPost()
-            listenForPosts()
-            view.post_recyclerView.scrollToPosition(0)
-        }
-
-        DaggerAppComponent.create().inject(this)
-        myViewModel = ViewModelProviders.of(this,factory).get(HomeFragmentViewModel::class.java)
-        myViewModel.getSavedPosts()
-        myViewModel.postListener = this
-
-        return view
-
-        /*val factory = InjectorUtils.providePostViewModelFactory()
-        val binding: FragmentHomeBinding = inflate(inflater, R.layout.fragment_home, container, false)
+        val factory = InjectorUtils.providePostViewModelFactory()
+        val binding: FragmentHomeBinding =
+            inflate(inflater, R.layout.fragment_home, container, false)
         viewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
-        viewModel.getSavedPosts()
+        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        postLiveData = viewModel.getSavedPosts()
 
+
+        adapter = CustomAdapter(postLiveData)
+        view.post_recyclerView.adapter = adapter
+        view.post_recyclerView.layoutManager = LinearLayoutManager(context)
+        view.post_recyclerView.adapter = adapter
         binding.homeViewModel = viewModel
         binding.lifecycleOwner = this
 
-        //viewModel.postListener = this
+        binding.executePendingBindings()
+        DaggerAppComponent.create().inject(this)
+        myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
+        myViewModel.getSavedPosts()
+        //myViewModel.postListener = this
 
-        return binding.root*/
+        while (PostLiveData.get().value != null) {
+
+            adapter = CustomAdapter(postLiveData)
+            view.post_recyclerView.adapter = adapter
+            view.post_recyclerView.layoutManager = LinearLayoutManager(context)
+            view.post_recyclerView.adapter = adapter
+            binding.homeViewModel = viewModel
+            binding.lifecycleOwner = this
+
+            binding.executePendingBindings()
+        }
+
+
+        return view
+
     }
 
 
 
+    /* private fun listenForPosts(){
+         val reference = FirebaseDatabase.getInstance().getReference("/posts")
 
-    private fun listenForPosts(){
-        val reference = FirebaseDatabase.getInstance().getReference("/posts")
+         reference.addChildEventListener(object: ChildEventListener{
+             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                 val newPost = p0.getValue(Post::class.java)
 
-        reference.addChildEventListener(object: ChildEventListener{
-            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val newPost = p0.getValue(Post::class.java)
+                 if(newPost!=null) {
+                     Log.d("ForumACT", newPost?.text)
+                     //adapter.add(Post(newPost.title, newPost.text, 0, ""))
+                 }
+             }
 
-                if(newPost!=null) {
-                    Log.d("ForumACT", newPost?.text)
-                    adapter.add(Post(newPost.title, newPost.text, 0, ""))
-                }
-            }
-
-            override fun onCancelled(p0: DatabaseError) {
+             override fun onCancelled(p0: DatabaseError) {
 
             }
 
@@ -157,7 +185,7 @@ class HomeFragment : Fragment(), PostListener {
                 username_forum.text = "Welcome " + usernameForum
             }
         })
-    }
+    }*/
 
 
 
