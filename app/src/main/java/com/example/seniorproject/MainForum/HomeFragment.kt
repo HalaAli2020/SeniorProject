@@ -3,31 +3,58 @@ package com.example.seniorproject.MainForum
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import com.example.seniorproject.Dagger.DaggerAppComponent
+import com.example.seniorproject.PostListener
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.R
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_home.*
 import com.example.seniorproject.data.models.User
-///import com.example.seniorproject.databinding.FragmentHomeBinding
+import com.example.seniorproject.viewModels.AuthenticationViewModel
 import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.google.firebase.database.*
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
+import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.fragment_home.view.*
+import kotlinx.android.synthetic.main.post_rv.view.*
+import javax.inject.Inject
+import javax.inject.Named
 
 
 /**
  * A simple [Fragment] subclass.
  */
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), PostListener {
+
+    val adapter = GroupAdapter<GroupieViewHolder>()
+    @Inject
+    lateinit var factory: ViewModelProvider.Factory
+    lateinit var myViewModel: HomeFragmentViewModel
+    override fun onStarted() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onSuccess() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onFailure(message: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     // test comment
     companion object {
         var currentUser: User? = null
     }
 
-    private lateinit var viewModel: HomeFragmentViewModel
-    val adapter = GroupAdapter<GroupieViewHolder>()
+
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -44,6 +71,10 @@ class HomeFragment : Fragment() {
             view.post_recyclerView.scrollToPosition(0)
         }
 
+        DaggerAppComponent.create().inject(this)
+        myViewModel = ViewModelProviders.of(this,factory).get(HomeFragmentViewModel::class.java)
+        myViewModel.getSavedPosts()
+        myViewModel.postListener = this
 
         return view
 
