@@ -1,6 +1,8 @@
 package com.example.seniorproject.viewModels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.seniorproject.utils.startMainForum
 import com.example.seniorproject.PostListener
 import com.example.seniorproject.data.repositories.PostRepository
 
@@ -20,7 +22,10 @@ class NewPostFragmentViewModel(private val repository: PostRepository) : ViewMod
             //Toast.makeText((RegisterActivity()), "Please fill in both Email and Password fields", Toast.LENGTH_SHORT).show()
             return
         }
+        Log.d("BIGMood", titlePost)
         repository.saveNewPost(titlePost!!, textPost!!)
+
+
     }
 
 

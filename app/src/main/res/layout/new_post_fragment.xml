@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
@@ -10,8 +12,6 @@
     </data>
 
     <FrameLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainForum.NewPostFragment">
@@ -23,37 +23,42 @@
             android:orientation="vertical">
 
 
-            <TextView
-                android:id="@+id/username_forum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10" />
-
             <EditText
                 android:id="@+id/new_post_title"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
+                android:maxLength="150"
+                android:gravity="top|left"
                 android:hint="Title"
-                android:text="@={NewPostViewModel.titlePost}"
-                android:inputType="text" />
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:singleLine="true"
+                android:inputType="textMultiLine"
+                android:text="@={NewPostViewModel.titlePost}" />
 
             <EditText
                 android:id="@+id/new_post_text"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight=".75"
                 android:ems="10"
+                android:maxLength="500"
                 android:hint="Text"
-                android:text="@={NewPostViewModel.textPost}"
-                android:inputType="text" />
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:gravity="top|left"
+                android:inputType="textMultiLine"
+                android:text="@={NewPostViewModel.textPost}" />
 
             <Button
                 android:id="@+id/new_post_btn"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="60dp"
+                android:layout_gravity="bottom"
                 android:background="@drawable/rounded_btn"
-                android:text="Add Post"
                 android:onClick="@{() -> NewPostViewModel.savePostToDatabase()}"
+                android:text="Add Post"
                 android:textColor="@color/white" />
 
         </LinearLayout>

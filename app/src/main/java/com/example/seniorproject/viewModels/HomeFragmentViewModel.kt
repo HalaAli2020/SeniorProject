@@ -25,36 +25,22 @@ import kotlinx.coroutines.withContext
 class HomeFragmentViewModel(private val repository: PostRepository) : ViewModel() {
 
 
-    var titlePost: String? = null
-    var textPost: String? = null
+    var posts: PostLiveData = PostLiveData()
+    var postdata: PostLiveData = PostLiveData.get()
 
-    var postListener: PostListener? = null
-   // private val disposables = CompositeDisposable()
-
-   // var posts: MutableLiveData<List<Post>> = PostLiveData()
-   var posts: PostLiveData = PostLiveData()
-    var postdata :PostLiveData = PostLiveData.get()
     init {
 
         posts = repository.getSavedPosts()
     }
 
-    fun savePostToDatabase() {
 
-        if (titlePost.isNullOrEmpty() || textPost.isNullOrEmpty()) {
-            postListener?.onFailure("please enter a title and text!")
-            //Toast.makeText((RegisterActivity()), "Please fill in both Email and Password fields", Toast.LENGTH_SHORT).show()
-            return
-        }
-        repository.saveNewPost(titlePost!!, textPost!!)
-    }
     fun getSavedPosts(): PostLiveData {
 
-       posts = repository.getSavedPosts()
-       return posts
+        posts = repository.getSavedPosts()
+        return posts
     }
-    fun editPost() : PostLiveData
-    {
+
+    fun editPost(): PostLiveData {
         postdata = getSavedPosts()
         return postdata
     }
