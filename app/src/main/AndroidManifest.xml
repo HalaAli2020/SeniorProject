@@ -14,7 +14,8 @@
         android:name="com.example.seniorproject.Dagger.SeniorProjApp"
         >
 
-        <activity android:name="com.example.seniorproject.MainForum.MainForum">
+        <activity android:name="com.example.seniorproject.MainForum.MainForum"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
