@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_home.*
 import com.example.seniorproject.data.models.User
 import com.example.seniorproject.databinding.FragmentHomeBinding
+import com.example.seniorproject.databinding.NewPostFragmentBinding
 import com.example.seniorproject.viewModels.AuthenticationViewModel
 import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.google.firebase.database.*
@@ -33,7 +34,7 @@ import kotlinx.coroutines.awaitAll
 //import javax.inject.Inject
 import javax.inject.Inject
 import javax.inject.Named
-
+import com.example.seniorproject.InjectorUtils
 
 /**
  * A simple [Fragment] subclass.
@@ -80,9 +81,14 @@ class HomeFragment : Fragment(), PostListener {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        DaggerAppComponent.create().inject(this)
+        /*DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this,factory).get(HomeFragmentViewModel::class.java)
         val binding: FragmentHomeBinding = inflate(inflater, R.layout.fragment_home, container, false)
+        val view = inflater.inflate(R.layout.fragment_home, container, false)*/
+
+        val factory = InjectorUtils.providePostViewModelFactory()
+        val binding: FragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         postLiveData = myViewModel.getSavedPosts()
 
@@ -94,8 +100,9 @@ class HomeFragment : Fragment(), PostListener {
         binding.lifecycleOwner = this
 
 
-        DaggerAppComponent.create().inject(this)
-        myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
+        /*DaggerAppComponent.create().inject(this)
+        myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)*/
+
         myViewModel.getSavedPosts()
         //myViewModel.postListener = this
 

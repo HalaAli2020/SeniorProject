@@ -8,9 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import com.example.seniorproject.Dagger.DaggerAppComponent
+//import com.example.seniorproject.InjectorUtils
 import com.example.seniorproject.databinding.NewPostFragmentBinding
-
+import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.R
 import com.example.seniorproject.databinding.FragmentHomeBinding
 import com.example.seniorproject.viewModels.HomeFragmentViewModel
@@ -19,13 +19,15 @@ import javax.inject.Inject
 
 class NewPostFragment : Fragment() {
 
+    @Inject
+    lateinit var factory: ViewModelProvider.Factory
+    lateinit var viewModel: NewPostFragmentViewModel
+
     companion object {
         fun newInstance() = NewPostFragment()
     }
 
-    @Inject
-    lateinit var factory: ViewModelProvider.Factory
-    private lateinit var viewModel: NewPostFragmentViewModel
+    //private lateinit var viewModel: NewPostFragmentViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,6 +38,11 @@ class NewPostFragment : Fragment() {
         val binding: NewPostFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.new_post_fragment, container, false)
         viewModel = ViewModelProviders.of(this, factory).get(NewPostFragmentViewModel::class.java)
         val view = inflater.inflate(R.layout.new_post_fragment, container, false)
+
+        /*val factory = InjectorUtils.provideNewPostViewModelFactory()
+        val binding: NewPostFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.new_post_fragment, container, false)
+        viewModel = ViewModelProviders.of(this, factory).get(NewPostFragmentViewModel::class.java)
+        val view = inflater.inflate(R.layout.new_post_fragment, container, false)*/
 
         binding.newPostViewModel = viewModel
         binding.lifecycleOwner = this

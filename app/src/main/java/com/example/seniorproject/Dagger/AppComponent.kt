@@ -23,5 +23,4 @@ interface AppComponent {
     fun inject(activity: PasswordResetActivity)
     fun inject(fragment: NewPostFragment)
 
-
 }
