@@ -22,4 +22,6 @@ interface AppComponent {
     fun inject(fragment: HomeFragment)
     fun inject(activity: PasswordResetActivity)
     fun inject(fragment: NewPostFragment)
+
+
 }

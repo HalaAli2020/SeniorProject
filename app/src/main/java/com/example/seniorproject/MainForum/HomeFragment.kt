@@ -21,7 +21,6 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_home.*
 import com.example.seniorproject.data.models.User
 import com.example.seniorproject.databinding.FragmentHomeBinding
-//figure out the new name
 import com.example.seniorproject.viewModels.AuthenticationViewModel
 import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.google.firebase.database.*
@@ -45,11 +44,6 @@ class HomeFragment : Fragment(), PostListener {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: HomeFragmentViewModel
-    private lateinit var linearLayoutManager: LinearLayoutManager
-    private lateinit var viewModel: HomeFragmentViewModel
-    private lateinit var adapter: CustomAdapter
-    private lateinit var postLiveData: PostLiveData
-
     override fun onStarted() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -76,32 +70,37 @@ class HomeFragment : Fragment(), PostListener {
 
     }
 
+    private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var adapter: CustomAdapter
+    private lateinit var postLiveData: PostLiveData
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Inflate the layout for this fragment
         DaggerAppComponent.create().inject(this)
-        viewModel = ViewModelProviders.of(this,factory).get(HomeFragmentViewModel::class.java)
-        val binding: FragmentHomeBinding =
-            inflate(inflater, R.layout.fragment_home, container, false)
+        myViewModel = ViewModelProviders.of(this,factory).get(HomeFragmentViewModel::class.java)
+        val binding: FragmentHomeBinding = inflate(inflater, R.layout.fragment_home, container, false)
         val view = inflater.inflate(R.layout.fragment_home, container, false)
-        postLiveData = viewModel.getSavedPosts()
-
+        postLiveData = myViewModel.getSavedPosts()
 
         adapter = CustomAdapter(postLiveData)
         view.post_recyclerView.adapter = adapter
         view.post_recyclerView.layoutManager = LinearLayoutManager(context)
         view.post_recyclerView.adapter = adapter
-        binding.homeFragmentViewModel = viewModel
+        binding.homeFragmentViewModel = myViewModel
         binding.lifecycleOwner = this
 
-        binding.executePendingBindings()
+
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
         myViewModel.getSavedPosts()
         //myViewModel.postListener = this
+
+
+        binding.executePendingBindings()
 
         while (PostLiveData.get().value != null) {
 
@@ -109,7 +108,7 @@ class HomeFragment : Fragment(), PostListener {
             view.post_recyclerView.adapter = adapter
             view.post_recyclerView.layoutManager = LinearLayoutManager(context)
             view.post_recyclerView.adapter = adapter
-            binding.homeFragmentViewModel = viewModel
+            binding.homeFragmentViewModel = myViewModel
             binding.lifecycleOwner = this
 
             binding.executePendingBindings()
@@ -121,6 +120,71 @@ class HomeFragment : Fragment(), PostListener {
     }
 
 
+
+    /* private fun listenForPosts(){
+         val reference = FirebaseDatabase.getInstance().getReference("/posts")
+
+         reference.addChildEventListener(object: ChildEventListener{
+             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                 val newPost = p0.getValue(Post::class.java)
+
+                 if(newPost!=null) {
+                     Log.d("ForumACT", newPost?.text)
+                     //adapter.add(Post(newPost.title, newPost.text, 0, ""))
+                 }
+             }
+
+             override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+
+            }
+        })
+    }
+
+    private fun performNewPost(){
+        val title = new_post_title.text.toString()
+        val text = new_post_text.text.toString()
+        val reference = FirebaseDatabase.getInstance().getReference("/posts").push()
+
+        if(title.isNotEmpty() && text.isNotEmpty()) {
+            val post = Post(title, text, 0, "")
+
+            reference.setValue(post).addOnSuccessListener {
+                Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
+                new_post_text.setText("")
+                new_post_title.setText("")
+            }
+        }
+    }
+
+
+    private fun fetchCurrentUser(){
+        var uid = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
+        ref.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                currentUser = p0.getValue(User::class.java)
+                Log.d("LatestMessages", "Current user ${currentUser?.username}")
+                val usernameForum = currentUser?.username
+                username_forum.text = "Welcome " + usernameForum
+            }
+        })
+    }*/
 
 
 

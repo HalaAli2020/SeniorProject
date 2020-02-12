@@ -30,7 +30,7 @@ class MainForum : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.newPost ->{
-                println("list pressed")
+                println("new post pressed")
                 replaceFragment(NewPostFragment())
                 return@OnNavigationItemSelectedListener true
             }
@@ -41,8 +41,8 @@ class MainForum : AppCompatActivity() {
             }
         }
         false
-
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +55,7 @@ class MainForum : AppCompatActivity() {
         val actionbar: ActionBar? = supportActionBar
         actionbar?.apply {
             setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_menu)
+            setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp)
         }
 
 
@@ -80,6 +80,7 @@ class MainForum : AppCompatActivity() {
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
                 }
+
             }
             true
         }

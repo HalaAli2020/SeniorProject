@@ -35,7 +35,7 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
 
     fun Register(){
         if (email.isNullOrEmpty() || password.isNullOrEmpty() || username.isNullOrEmpty()) {
-            authListener?.onFailure("please enter your username, email and a password")
+            authListener?.onFailure("Please enter your username, email, or password.")
             return
         }
         authListener?.onStarted()
@@ -54,7 +54,7 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
 
     fun Login(){
         if (email.isNullOrEmpty() || password.isNullOrEmpty()) {
-            authListener?.onFailure("please enter both your email and a password")
+            authListener?.onFailure("Please enter both your email and/or password.")
           //  Toast.makeText((RegisterActivity()), "Please fill in both Email and Password fields", Toast.LENGTH_SHORT).show()
             return
         }
@@ -94,7 +94,7 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
 
     fun ResetPassword(){
         if (email.isNullOrEmpty()) {
-            authListener?.onFailure("please enter your email")
+            authListener?.onFailure("Please enter your email.")
             //  Toast.makeText((RegisterActivity()), "Please fill in both Email and Password fields", Toast.LENGTH_SHORT).show()
             return
         }
