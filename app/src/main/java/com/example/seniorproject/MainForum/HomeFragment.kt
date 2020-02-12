@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 //import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.seniorproject.InjectorUtils
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.Post
@@ -72,7 +71,6 @@ class HomeFragment : Fragment(), PostListener {
     }
 
     private lateinit var linearLayoutManager: LinearLayoutManager
-    private lateinit var viewModel: HomeFragmentViewModel
     private lateinit var adapter: CustomAdapter
     private lateinit var postLiveData: PostLiveData
 
@@ -82,26 +80,27 @@ class HomeFragment : Fragment(), PostListener {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val factory = InjectorUtils.providePostViewModelFactory()
-        val binding: FragmentHomeBinding =
-            inflate(inflater, R.layout.fragment_home, container, false)
-        viewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
+        DaggerAppComponent.create().inject(this)
+        myViewModel = ViewModelProviders.of(this,factory).get(HomeFragmentViewModel::class.java)
+        val binding: FragmentHomeBinding = inflate(inflater, R.layout.fragment_home, container, false)
         val view = inflater.inflate(R.layout.fragment_home, container, false)
-        postLiveData = viewModel.getSavedPosts()
-
+        postLiveData = myViewModel.getSavedPosts()
 
         adapter = CustomAdapter(postLiveData)
         view.post_recyclerView.adapter = adapter
         view.post_recyclerView.layoutManager = LinearLayoutManager(context)
         view.post_recyclerView.adapter = adapter
-        binding.homeViewModel = viewModel
+        binding.homeViewModel = myViewModel
         binding.lifecycleOwner = this
 
-        binding.executePendingBindings()
+
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
         myViewModel.getSavedPosts()
         //myViewModel.postListener = this
+
+
+        binding.executePendingBindings()
 
         while (PostLiveData.get().value != null) {
 
@@ -109,7 +108,7 @@ class HomeFragment : Fragment(), PostListener {
             view.post_recyclerView.adapter = adapter
             view.post_recyclerView.layoutManager = LinearLayoutManager(context)
             view.post_recyclerView.adapter = adapter
-            binding.homeViewModel = viewModel
+            binding.homeViewModel = myViewModel
             binding.lifecycleOwner = this
 
             binding.executePendingBindings()

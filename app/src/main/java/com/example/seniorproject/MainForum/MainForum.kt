@@ -23,7 +23,7 @@ class MainForum : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.newPost ->{
-                println("list pressed")
+                println("new post pressed")
                 replaceFragment(NewPostFragment())
                 return@OnNavigationItemSelectedListener true
             }
