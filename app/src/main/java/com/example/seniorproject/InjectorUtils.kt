@@ -6,7 +6,7 @@ import com.example.seniorproject.data.repositories.PostRepository
 import com.example.seniorproject.data.repositories.UserAuthRepo
 import com.example.seniorproject.viewModels.AuthenticationViewModel_Factory
 import com.example.seniorproject.viewModels.HomeFragmentViewModelFactory
-import com.example.seniorproject.viewModels.NewPostFragmentViewModelFactory
+//import com.example.seniorproject.viewModels.NewPostFragmentViewModelFactory
 
 object InjectorUtils {
 
@@ -17,9 +17,9 @@ object InjectorUtils {
         return HomeFragmentViewModelFactory(postrepo)
     }
 
-    fun provideNewPostViewModelFactory(): NewPostFragmentViewModelFactory {
+   /* fun provideNewPostViewModelFactory(): NewPostFragmentViewModelFactory {
         val postrepo: PostRepository = PostRepository.getInstance(FirebaseData())
         return NewPostFragmentViewModelFactory(postrepo)
-    }
+    }*/
 
 }
