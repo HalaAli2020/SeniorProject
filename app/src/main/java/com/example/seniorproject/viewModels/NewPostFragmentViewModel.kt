@@ -7,7 +7,6 @@ import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.repositories.PostRepository
 import javax.inject.Inject
 
-
 class NewPostFragmentViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
 
     var titlePost: String? = null
