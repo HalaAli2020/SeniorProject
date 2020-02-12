@@ -90,7 +90,7 @@ class HomeFragment : Fragment(), PostListener {
         view.post_recyclerView.adapter = adapter
         view.post_recyclerView.layoutManager = LinearLayoutManager(context)
         view.post_recyclerView.adapter = adapter
-        binding.homeViewModel = myViewModel
+        binding.homeFragmentViewModel = myViewModel
         binding.lifecycleOwner = this
 
 
@@ -108,7 +108,7 @@ class HomeFragment : Fragment(), PostListener {
             view.post_recyclerView.adapter = adapter
             view.post_recyclerView.layoutManager = LinearLayoutManager(context)
             view.post_recyclerView.adapter = adapter
-            binding.homeViewModel = myViewModel
+            binding.homeFragmentViewModel = myViewModel
             binding.lifecycleOwner = this
 
             binding.executePendingBindings()
