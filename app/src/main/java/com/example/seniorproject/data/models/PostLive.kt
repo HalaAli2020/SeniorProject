@@ -5,10 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 
+
 class PostLiveData : MutableLiveData<MutableList<Post>>()
 {
 
-    private val  ob = Observer<List<Post>>{
+    private val  ob = Observer<List<Post>> {
 
     }
     private val Listener = {

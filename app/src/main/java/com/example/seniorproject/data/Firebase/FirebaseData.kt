@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ValueEventListener
 import java.util.*
+import kotlin.collections.HashMap
 
 private const val TAG = "MyLogTag"
 @Singleton
@@ -29,9 +30,54 @@ class FirebaseData @Inject constructor() {
 
    // var savedPosts: MutableLiveData<List<Post>> = MutableLiveData()
     var savedPosts : PostLiveData = PostLiveData()
+    var userPosts : PostLiveData = PostLiveData()
     var changed : Boolean = false
+    lateinit var currebntU : User
 
-    fun CurrentUser() = firebaseAuth.currentUser
+    fun CurrentUser() : User
+    {
+        val reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseAuth.uid!!)
+
+
+        reference.addValueEventListener(object : ValueEventListener {
+            //var savedPostsList: MutableList<Post> = mutableListOf()
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+               val username = p0.child("username").getValue(String ::class.java)
+                val email = p0.child("email").getValue(String :: class.java)
+                currebntU = User(username, email, firebaseAuth.uid)
+
+
+
+                if (currebntU != null) {
+                    Log.d("ACCESSING", currebntU?.username)
+                    //savedPostsList.add(newPost)
+
+                    //repository.saveNewPost(newPost)
+                    //adapter.add(PostFrag(newPost.title, newPost.text))
+                }
+
+
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+            }
+
+
+
+        })
+        return currebntU
+    }
+    // = firebaseAuth.currentUser
 
 
     fun logout() = firebaseAuth.signOut()
@@ -127,8 +173,6 @@ class FirebaseData @Inject constructor() {
             Log.d(TAG, "Error ${it.message}")
         }
     }
-
-
     fun saveNewPost(postTitle: String, postText: String) {
         val reference = FirebaseDatabase.getInstance().getReference("/posts").push()
 
@@ -142,6 +186,31 @@ class FirebaseData @Inject constructor() {
             }
         }
     }
+
+
+    // CRN is a placeholder for a class object
+    /*fun saveNewPost(post : Post, crn : CRN) {
+        val subject = crn.subject
+        val ClassID = crn.classID
+        val userID = firebaseAuth.uid
+        val Class_key = FirebaseDatabase.getInstance().getReference(CRN.crn).child("Posts").push().key
+        val User_key = FirebaseDatabase.getInstance().getReference(firebaseAuth.uid!!).child("Posts").push().key
+            // implement in viewmodel
+        //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
+        val dataupdates = HashMap<String, Any>()
+       // val postvalues = post.toMap()
+        dataupdates["$subject/$ClassID/Post/$Class_key"] = postvalues
+        dataupdates["$userID/Posts/$User_key"] = postvalues
+        FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
+
+        /*Class_reference.setValue(post).addOnSuccessListener {
+                Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
+            }.addOnFailureListener {
+                Log.d(TAG, "Error ${it.message}")
+            }
+
+        //}*/
+    }*/
 
 
     fun getSavedPost() : PostLiveData{
