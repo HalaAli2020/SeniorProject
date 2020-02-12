@@ -2,9 +2,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+
         <variable
-            name="HomeFragmentViewModel"
+            name="HomeViewModel"
             type="com.example.seniorproject.viewModels.HomeFragmentViewModel"></variable>
+
     </data>
 
     <FrameLayout
@@ -29,5 +31,6 @@
                 app:stackFromEnd="true" />
 
         </LinearLayout>
+
     </FrameLayout>
 </layout>
