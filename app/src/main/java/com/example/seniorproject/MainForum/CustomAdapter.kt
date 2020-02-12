@@ -4,8 +4,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.Post
@@ -19,6 +21,7 @@ class CustomAdapter(var savedPosts: PostLiveData) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolders {
         val layoutInflater = LayoutInflater.from(parent.context)
+       // val binding : ViewDataBinding = DataBindingUtil.inflate(layoutInflater, viewType, parent, false)
         val cellForRow = layoutInflater.inflate(R.layout.post_rv, parent, false)
         return CustomViewHolders(cellForRow)
     }
