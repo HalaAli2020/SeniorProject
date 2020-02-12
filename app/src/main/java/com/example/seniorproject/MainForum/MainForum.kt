@@ -5,9 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -22,32 +22,35 @@ class MainForum : AppCompatActivity() {
 
     private lateinit var mDrawerLayout: DrawerLayout
 
-    private val mOnNavigationItemSelectedListener =
-        BottomNavigationView.OnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.home -> {
-                    println("home pressed")
-                    replaceFragment(HomeFragment())
-                    return@OnNavigationItemSelectedListener true
-                }
-                R.id.list -> {
-                    println("list pressed")
-                    replaceFragment(ListFragment())
-                    return@OnNavigationItemSelectedListener true
-                }
+    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener {item->
+        when(item.itemId){
+            R.id.home -> {
+                println("home pressed")
+                replaceFragment(HomeFragment())
+                return@OnNavigationItemSelectedListener true
             }
-            false
-
+            R.id.newPost ->{
+                println("list pressed")
+                replaceFragment(NewPostFragment())
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.list -> {
+                println("list pressed")
+                replaceFragment(ListFragment())
+                return@OnNavigationItemSelectedListener true
+            }
         }
+        false
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_forum)
+        replaceFragment(HomeFragment())
         bottom_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         loginVerification()
-        replaceFragment(HomeFragment())
 
-        //nav drawer below
         setSupportActionBar(findViewById(R.id.toolbar))
         val actionbar: ActionBar? = supportActionBar
         actionbar?.apply {
@@ -83,6 +86,7 @@ class MainForum : AppCompatActivity() {
     }
 
 
+
     private fun replaceFragment(fragment: Fragment){
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragmentContainer, fragment)
@@ -114,3 +118,4 @@ class MainForum : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 }
+
