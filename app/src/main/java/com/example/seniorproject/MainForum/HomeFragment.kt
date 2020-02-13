@@ -92,7 +92,7 @@ class HomeFragment : Fragment(), PostListener {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         postLiveData = myViewModel.getSavedPosts()
 
-        adapter = CustomAdapter(postLiveData)
+        adapter = CustomAdapter(view.context, postLiveData)
         view.post_recyclerView.adapter = adapter
         view.post_recyclerView.layoutManager = LinearLayoutManager(context)
         view.post_recyclerView.adapter = adapter
@@ -111,7 +111,7 @@ class HomeFragment : Fragment(), PostListener {
 
         while (PostLiveData.get().value != null) {
 
-            adapter = CustomAdapter(postLiveData)
+            adapter = CustomAdapter(view.context, postLiveData)
             view.post_recyclerView.adapter = adapter
             view.post_recyclerView.layoutManager = LinearLayoutManager(context)
             view.post_recyclerView.adapter = adapter
