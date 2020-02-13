@@ -3,6 +3,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
@@ -45,6 +46,10 @@ class RegisterActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
         //initializeUI()
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
+
         Log.d("REG","entered register activity")
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this,factory).get(AuthenticationViewModel::class.java)

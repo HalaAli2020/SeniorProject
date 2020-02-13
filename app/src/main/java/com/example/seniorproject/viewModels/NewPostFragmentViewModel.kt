@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 //import com.example.seniorproject.Utils.startMainForum
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.repositories.PostRepository
+import javax.inject.Inject
 
-
-class NewPostFragmentViewModel(private val repository: PostRepository) : ViewModel() {
+class NewPostFragmentViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
 
     var titlePost: String? = null
     var textPost: String? = null

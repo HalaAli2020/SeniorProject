@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 //import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.seniorproject.InjectorUtils
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.Post
@@ -22,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_home.*
 import com.example.seniorproject.data.models.User
 import com.example.seniorproject.databinding.FragmentHomeBinding
+import com.example.seniorproject.databinding.NewPostFragmentBinding
 import com.example.seniorproject.viewModels.AuthenticationViewModel
 import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.google.firebase.database.*
@@ -34,7 +34,7 @@ import kotlinx.coroutines.awaitAll
 //import javax.inject.Inject
 import javax.inject.Inject
 import javax.inject.Named
-
+import com.example.seniorproject.InjectorUtils
 
 /**
  * A simple [Fragment] subclass.
@@ -72,7 +72,6 @@ class HomeFragment : Fragment(), PostListener {
     }
 
     private lateinit var linearLayoutManager: LinearLayoutManager
-    private lateinit var viewModel: HomeFragmentViewModel
     private lateinit var adapter: CustomAdapter
     private lateinit var postLiveData: PostLiveData
 
@@ -82,34 +81,41 @@ class HomeFragment : Fragment(), PostListener {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        /*DaggerAppComponent.create().inject(this)
+        myViewModel = ViewModelProviders.of(this,factory).get(HomeFragmentViewModel::class.java)
+        val binding: FragmentHomeBinding = inflate(inflater, R.layout.fragment_home, container, false)
+        val view = inflater.inflate(R.layout.fragment_home, container, false)*/
+
         val factory = InjectorUtils.providePostViewModelFactory()
-        val binding: FragmentHomeBinding =
-            inflate(inflater, R.layout.fragment_home, container, false)
-        viewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
+        val binding: FragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_home, container, false)
-        postLiveData = viewModel.getSavedPosts()
+        postLiveData = myViewModel.getSavedPosts()
 
-
-        adapter = CustomAdapter(postLiveData)
+        adapter = CustomAdapter(view.context, postLiveData)
         view.post_recyclerView.adapter = adapter
         view.post_recyclerView.layoutManager = LinearLayoutManager(context)
         view.post_recyclerView.adapter = adapter
-        binding.homeViewModel = viewModel
+        binding.homeFragmentViewModel = myViewModel
         binding.lifecycleOwner = this
 
-        binding.executePendingBindings()
-        DaggerAppComponent.create().inject(this)
-        myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
+
+        /*DaggerAppComponent.create().inject(this)
+        myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)*/
+
         myViewModel.getSavedPosts()
         //myViewModel.postListener = this
 
+
+        binding.executePendingBindings()
+
         while (PostLiveData.get().value != null) {
 
-            adapter = CustomAdapter(postLiveData)
+            adapter = CustomAdapter(view.context, postLiveData)
             view.post_recyclerView.adapter = adapter
             view.post_recyclerView.layoutManager = LinearLayoutManager(context)
             view.post_recyclerView.adapter = adapter
-            binding.homeViewModel = viewModel
+            binding.homeFragmentViewModel = myViewModel
             binding.lifecycleOwner = this
 
             binding.executePendingBindings()
