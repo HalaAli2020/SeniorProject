@@ -1,9 +1,12 @@
 package com.example.seniorproject.MainForum
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat.startActivity
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,11 +18,11 @@ import com.example.seniorproject.data.models.PostLiveData
 import kotlinx.android.synthetic.main.post_rv.view.*
 import javax.inject.Inject
 
-class CustomAdapter(var savedPosts: PostLiveData) :
+class CustomAdapter(context: Context, var savedPosts: PostLiveData) :
     RecyclerView.Adapter<CustomViewHolders>() {
+    val mContext:Context = context
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolders {
+    override fun onCreateViewHolder( parent: ViewGroup, viewType: Int): CustomViewHolders {
         val layoutInflater = LayoutInflater.from(parent.context)
        // val binding : ViewDataBinding = DataBindingUtil.inflate(layoutInflater, viewType, parent, false)
         val cellForRow = layoutInflater.inflate(R.layout.post_rv, parent, false)
@@ -40,6 +43,14 @@ class CustomAdapter(var savedPosts: PostLiveData) :
             val post: Post = savedPosts.value!![position]
             holder.itemView.post_title.text = post.title
             holder.itemView.post_text.text = post.text
+
+            holder.itemView.setOnClickListener {
+                val intent = Intent(mContext, ClickedPost::class.java)
+                intent.putExtra("Title", post.title)
+                intent.putExtra("Text", post.text)
+                mContext.startActivity(intent)
+            }
+
         }
 
 

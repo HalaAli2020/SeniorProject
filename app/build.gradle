@@ -22,9 +22,9 @@ android {
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = [
-                        "room.schemaLocation":"$projectDir/schemas".toString(),
-                        "room.incremental":"true",
-                        "room.expandProjection":"true"]
+                        "room.schemaLocation"  : "$projectDir/schemas".toString(),
+                        "room.incremental"     : "true",
+                        "room.expandProjection": "true"]
             }
         }
     }
@@ -36,13 +36,13 @@ android {
     }
 
 
-    testOptions{
-        unitTests.returnDefaultValues=true
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
     dataBinding {
         enabled = true
     }
-    kapt{
+    kapt {
         generateStubs = true
     }
 }
@@ -95,5 +95,3 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
-
-

@@ -50,7 +50,8 @@ class FirebaseData @Inject constructor() {
                         if (it.isSuccessful) {
                             emitter.onComplete()
                             Log.d(TAG, "NEW USER, uid: ${it.result?.user?.uid}")
-                            saveUserToFirebaseDatabase(username, email, password)
+                            val uid = FirebaseAuth.getInstance().uid
+                            uid?.let { it1 -> saveUserToFirebaseDatabase(username, email, it1) }
                         } else {
                             emitter.onError(it.exception!!)
                             //return@addOnCompleteListener
