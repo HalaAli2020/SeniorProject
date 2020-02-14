@@ -15,7 +15,6 @@ data class Post (val title: String, val text: String, val courseID: Int, val uid
     init {
         // backend will initalize values here or set to null if
         ptime = 1
-
     }
 
 

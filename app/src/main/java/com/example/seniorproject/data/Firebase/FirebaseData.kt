@@ -9,9 +9,12 @@ import javax.inject.Singleton
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.seniorproject.Utils.PostListener
+import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.PostLiveData
 import com.google.android.gms.tasks.Task
+import com.google.common.collect.Iterables
+import com.google.common.collect.Iterables.size
 import com.google.firebase.database.*
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
@@ -31,56 +34,51 @@ class FirebaseData @Inject constructor() {
    // var savedPosts: MutableLiveData<List<Post>> = MutableLiveData()
     var savedPosts : PostLiveData = PostLiveData()
     var userPosts : PostLiveData = PostLiveData()
-    var changed : Boolean = false
-    lateinit var currebntU : User
+    private lateinit var postlistener : ValueEventListener
+    private lateinit var userprofile : User
+
 
     fun CurrentUser() : User
     {
         val reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseAuth.uid!!)
 
 
-        reference.addValueEventListener(object : ValueEventListener {
-            //var savedPostsList: MutableList<Post> = mutableListOf()
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-               val username = p0.child("username").getValue(String ::class.java)
-                val email = p0.child("email").getValue(String :: class.java)
-                currebntU = User(username, email, firebaseAuth.uid)
+       postlistener = object : ValueEventListener {
+           //var savedPostsList: MutableList<Post> = mutableListOf()
+           override fun onDataChange(p0: DataSnapshot) {
+               val username = p0.child("username").getValue(String::class.java)
+               val email = p0.child("email").getValue(String::class.java)
+               userprofile = User(username, email, firebaseAuth.uid)
 
 
 
-                if (currebntU != null) {
-                    Log.d("ACCESSING", currebntU?.username)
-                    //savedPostsList.add(newPost)
+               if (userprofile != null) {
+                   Log.d("ACCESSING", userprofile?.username)
+                   //savedPostsList.add(newPost)
 
-                    //repository.saveNewPost(newPost)
-                    //adapter.add(PostFrag(newPost.title, newPost.text))
-                }
-
-
-            }
-
-            override fun onChildRemoved(p0: DataSnapshot) {
-            }
+                   //repository.saveNewPost(newPost)
+                   //adapter.add(PostFrag(newPost.title, newPost.text))
+               }
 
 
+           }
+           override fun onCancelled(p0: DatabaseError) {
 
-        })
-        return currebntU
+           }
+
+
+       }
+        reference.addValueEventListener(postlistener)
+        return userprofile
     }
     // = firebaseAuth.currentUser
 
 
-    fun logout() = firebaseAuth.signOut()
+    fun logout()
+    {
+        firebaseAuth.signOut()
+
+    }
 
     fun RegisterUser(username: String, email: String, password: String) =
         Completable.create { emitter ->
@@ -194,6 +192,7 @@ class FirebaseData @Inject constructor() {
         val subject = crn.subject
         val ClassID = crn.classID
         val userID = firebaseAuth.uid
+        post.author = userprofile.username!!
         val Class_key = FirebaseDatabase.getInstance().getReference(CRN.crn).child("Posts").push().key
         val User_key = FirebaseDatabase.getInstance().getReference(firebaseAuth.uid!!).child("Posts").push().key
             // implement in viewmodel
@@ -210,22 +209,23 @@ class FirebaseData @Inject constructor() {
                 Log.d(TAG, "Error ${it.message}")
             }
 
-        //}*/
-    }*/
-
-
+        //}
+    }*/ */
     fun getSavedPost() : PostLiveData{
         listenforPosts()
         return savedPosts
+    }
+
+    fun getSavedPost(crn : String, subject : String) : PostLiveData{
+        listenforPosts(crn, subject)
+        return savedPosts
 }
-
-
-    private fun listenforPosts() {
-        val reference = FirebaseDatabase.getInstance().getReference("/posts")
+    private fun listenforPostsvtwo(crn : String, subject : String) {
+        val reference = FirebaseDatabase.getInstance().getReference("Subjects/$subject/$crn/posts")
 
 
         reference.addChildEventListener(object : ChildEventListener {
-           var savedPostsList: MutableList<Post> = mutableListOf()
+            var savedPostsList: MutableList<Post> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
 
             }
@@ -237,7 +237,7 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val newPost = p0.getValue(Post::class.java)
+                val newPost : Post? = p0.getValue(Post::class.java)
 
                 if (newPost != null) {
                     Log.d("ACCESSING", newPost?.text)
@@ -257,6 +257,106 @@ class FirebaseData @Inject constructor() {
 
         })
 
+    }
+
+
+    private fun listenforPosts(crn : String, subject : String) {
+        val reference = FirebaseDatabase.getInstance().getReference("/posts")
+
+
+        reference.addChildEventListener(object : ChildEventListener {
+           var savedPostsList: MutableList<Post> = mutableListOf()
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                val newPost : Post? = p0.getValue(Post::class.java)
+
+                if (newPost != null) {
+                    Log.d("ACCESSING", newPost?.text)
+                    savedPostsList.add(newPost)
+
+                    //repository.saveNewPost(newPost)
+                    //adapter.add(PostFrag(newPost.title, newPost.text))
+                }
+                savedPosts.value = savedPostsList
+
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+            }
+
+
+
+        })
+
+    }
+
+    private fun getclass(subject :String ,crn : String)
+    {
+        val reference = FirebaseDatabase.getInstance().getReference("Subjects/$subject/$crn/Posts")
+
+
+        reference.addChildEventListener(object : ChildEventListener {
+            var savedPostsList: MutableList<Post> = mutableListOf()
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+               // decide if you want to put comments into post now or load them later if now how to do it?
+
+                var newPost = Post()
+                        //= p0.getValue(Post::class.java)
+
+                var postdetails :Iterable<DataSnapshot> = p0.children
+               for(post in postdetails)
+               {
+                  newPost.title = post.child("title").getValue(String ::class.java)
+                   newPost.text = post.child("text").getValue(String ::class.java)
+                   newPost.author = post.child("author").getValue(String ::class.java)
+                   newPost.crn = post.child("crn").getValue(String ::class.java)
+                   newPost.subject = post.child("subject").getValue(String ::class.java)
+                   newPost.ptime = post.child("Timestamp").getValue(Long ::class.java)
+                   // comments might need to be gotten separatley to properly convert values
+               }
+
+
+                if (newPost != null) {
+                    Log.d("ACCESSING", newPost?.text)
+                   if(savedPostsList.size < 3)
+                   {
+                       savedPostsList.add(newPost)
+                   }
+
+
+
+                    //repository.saveNewPost(newPost)
+                    //adapter.add(PostFrag(newPost.title, newPost.text))
+                }
+                savedPosts.value = savedPostsList
+
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+            }
+
+
+
+        })
     }
 
 
