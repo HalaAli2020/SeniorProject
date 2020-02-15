@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 //import com.example.seniorproject.Utils.startMainForum
 import com.example.seniorproject.Utils.PostListener
+import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.repositories.PostRepository
 import javax.inject.Inject
 
@@ -22,8 +23,9 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
             //Toast.makeText((RegisterActivity()), "Please fill in both Email and Password fields", Toast.LENGTH_SHORT).show()
             return
         }
+        val post = Post(titlePost, textPost)
         Log.d("BIGMood", titlePost)
-        repository.saveNewPost(titlePost!!, textPost!!)
+        repository.saveNewPost(post)
 
 
     }

@@ -11,9 +11,11 @@ import javax.inject.Singleton
 @Singleton
 class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
-    fun saveNewPost(Title: String, Text: String) = Firebase.saveNewPost(Title, Text)
+    fun saveNewPost(post : Post) = Firebase.saveNewPost(post, "1", " 2", "3")
 
     fun getSavedPosts() = Firebase.getSavedPost()
+
+    fun getComments(Key : String) = Firebase.getComments(Key)
 
 
     companion object {

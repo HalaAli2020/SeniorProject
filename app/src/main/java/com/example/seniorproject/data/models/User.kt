@@ -5,13 +5,25 @@ import androidx.lifecycle.LiveData
 data class User(val username: String?, val email: String?, val uid: String?)
 {
     constructor(): this("","","")
+     var Posts  = mutableListOf<Post>()
+    //lateinit var Subscriptions : List<String>
+    var Admin : Boolean = true
+    init {
 
-    private fun backendID() : Int
-    {
-        // function will use backend to get user id
-        return 1
+
     }
 
-   // fun getuid() = email as LiveData<String>
+    fun toMap(): Map<String, Any?> {
+        return mapOf(
+            "Username" to username,
+            "email" to email,
+            "uid" to uid,
+            "Admin" to Admin,
+            //"Subscriptions" to Subscriptions,
+            "Posts" to Posts
+
+        )
+
+    }
 
 }

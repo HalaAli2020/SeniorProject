@@ -13,8 +13,8 @@ data class Post(var title: String?, var text: String?)
 {
     //val title: String, val text: String, val courseID: Int, val uid: String
     constructor(): this("","")
-    private lateinit var comments : MutableList<Comment>
-    private val database = FirebaseDatabase.getInstance()
+    private  var comments : List<Comment> = emptyList()
+    //private val database = FirebaseDatabase.getInstance()
      var author : String? = null
      var subject : String? = null
      var crn : String? = null

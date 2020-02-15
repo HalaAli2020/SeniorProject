@@ -21,7 +21,7 @@ import javax.inject.Named
 class LoginActivity : AppCompatActivity(), AuthenticationListener {
 
 @Inject
-lateinit var factory: ViewModelProvider.Factory
+    lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: AuthenticationViewModel
 
     override fun onStarted() {
