@@ -3,23 +3,37 @@ package com.example.seniorproject.MainForum
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.core.view.GravityCompat
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.example.seniorproject.Authentication.LoginActivity
+import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.R
+import com.example.seniorproject.databinding.SideNavHeaderBinding
+import com.example.seniorproject.databinding.ActivityMainForumBinding
+import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main_forum.*
+import javax.inject.Inject
 
+private const val TAG = "MyLogTag"
 class MainForum : AppCompatActivity() {
 
+    @Inject
+    lateinit var factory: ViewModelProvider.Factory
+    lateinit var myViewModel: HomeFragmentViewModel
     private lateinit var mDrawerLayout: DrawerLayout
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener {item->
@@ -46,7 +60,10 @@ class MainForum : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main_forum)
+        DaggerAppComponent.create().inject(this)
+        myViewModel = ViewModelProviders.of(this,factory).get(HomeFragmentViewModel::class.java)
+        val binding: ActivityMainForumBinding = DataBindingUtil.setContentView(this, R.layout.activity_main_forum)
+
         replaceFragment(HomeFragment())
         bottom_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         loginVerification()
@@ -61,10 +78,16 @@ class MainForum : AppCompatActivity() {
 
         mDrawerLayout = findViewById(R.id.drawer_layout)
         val navigationView: NavigationView = findViewById(R.id.nav_view)
+       // val headerBinding: SideNavHeaderBinding = SideNavHeaderBinding.bind(binding.navView.getHeaderView(0))
+        val sideNavHeaderBinding:SideNavHeaderBinding = DataBindingUtil.inflate(getLayoutInflater(),R.layout.side_nav_header,binding.navView,false)
+        binding.navView.addHeaderView(sideNavHeaderBinding.root)
+        sideNavHeaderBinding.viewmodell = myViewModel
+        //Log.d(TAG,myViewModel.rsomthing())
+        Log.d(TAG,myViewModel.user?.displayName)
+
         navigationView.setNavigationItemSelectedListener { menuItem ->
             menuItem.isChecked = true
             mDrawerLayout.closeDrawers()
-
             when (menuItem.itemId) {
 
                 R.id.nav_profile -> {

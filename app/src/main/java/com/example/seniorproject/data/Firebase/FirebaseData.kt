@@ -12,6 +12,9 @@ import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.PostLiveData
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.UserInfo
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.database.*
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
@@ -32,7 +35,6 @@ class FirebaseData @Inject constructor() {
     var changed : Boolean = false
 
     fun CurrentUser() = firebaseAuth.currentUser
-
 
     fun logout() = firebaseAuth.signOut()
 
@@ -112,11 +114,12 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    private fun saveUserToFirebaseDatabase(username: String, email: String, password: String) {
+    private fun saveUserToFirebaseDatabase(username: String, email: String, password: String){
         Log.d("Debug", "entered firebase database function")
         val uid = FirebaseAuth.getInstance().uid ?: ""
         val ref = FirebaseDatabase.getInstance().getReference("users/$uid")
         val user = User(username, email, password)
+        //profile request here?
 
         ref.setValue(user).addOnCompleteListener { task ->
             if (task.isSuccessful) {
@@ -127,6 +130,7 @@ class FirebaseData @Inject constructor() {
         }.addOnFailureListener {
             Log.d(TAG, "Error ${it.message}")
         }
+
     }
 
 

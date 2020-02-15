@@ -17,7 +17,7 @@ class UserAuthRepo @Inject constructor(private val Firebase: FirebaseData) {
     fun register(username: String, email: String, password: String) =
         Firebase.RegisterUser(username, email, password)
     
-    fun currentUser(Firebase: FirebaseData) {
+    fun currentUser() {
         Firebase.CurrentUser()
     }
 

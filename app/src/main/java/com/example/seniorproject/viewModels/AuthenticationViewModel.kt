@@ -1,7 +1,9 @@
 package com.example.seniorproject.viewModels
 
 import android.content.Intent
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Authentication.PasswordResetActivity
@@ -13,7 +15,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-
+private const val TAG = "MyLogTag"
 class AuthenticationViewModel @Inject constructor(private val repository : UserAuthRepo) : ViewModel(){
 
     //email and password for the input
@@ -29,9 +31,9 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
     private val disposables = CompositeDisposable()
 
 
-    //val user by lazy {
-     //   repository.currentUser()
-   // }
+   val user by lazy {
+      repository.currentUser()
+    }
 
     fun Register(){
         if (email.isNullOrEmpty() || password.isNullOrEmpty() || username.isNullOrEmpty()) {
@@ -55,7 +57,7 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
     fun Login(){
         if (email.isNullOrEmpty() || password.isNullOrEmpty()) {
             authListener?.onFailure("Please enter both your email and/or password.")
-          //  Toast.makeText((RegisterActivity()), "Please fill in both Email and Password fields", Toast.LENGTH_SHORT).show()
+            //Toast.makeText((RegisterActivity()), "Please fill in both Email and Password fields", Toast.LENGTH_SHORT).show()
             return
         }
         authListener?.onStarted()
@@ -70,8 +72,6 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
                 authListener?.onFailure(it.message!!)
             })
         disposables.add(disposable)
-
-
     }
 
      fun redirectToLogin(view: View){
