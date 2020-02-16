@@ -18,6 +18,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun currentUser() = Firebase.CurrentUser()
 
+    fun fetchCurrentUserName() = Firebase.fetchCurrentUserName()
+
     companion object {
         @Volatile
         private var instance: PostRepository? = null

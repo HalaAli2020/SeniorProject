@@ -12,6 +12,11 @@ data class User(val username: String?, val email: String?, val uid: String?)
         return 1
     }
 
-   // fun getuid() = email as LiveData<String>
+    override fun toString(): String {
+        return "User(username=$username)"
+    }
+
+
+    // fun getuid() = email as LiveData<String>
 
 }

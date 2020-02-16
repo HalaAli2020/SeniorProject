@@ -16,6 +16,7 @@ import com.example.seniorproject.R
 //import com.example.seniorproject.Utils.InjectorUtils
 import com.example.seniorproject.databinding.ActivityLoginBinding
 import com.example.seniorproject.MainForum.MainForum
+import java.lang.Thread.sleep
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -32,7 +33,6 @@ lateinit var factory: ViewModelProvider.Factory
     override fun onSuccess() {
         val myIntent = Intent(this@LoginActivity, MainForum::class.java)
         this@LoginActivity.startActivity(myIntent)
-        //cant redirect to main forum
     }
 
     override fun onFailure(message: String) {

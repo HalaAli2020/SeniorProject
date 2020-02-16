@@ -25,13 +25,27 @@ import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_main_forum.*
 import javax.inject.Inject
 
 private const val TAG = "MyLogTag"
-class MainForum : AppCompatActivity() {
+class MainForum : AppCompatActivity(),
+     FirebaseAuth.AuthStateListener {
 
-    @Inject
+        private val firebaseAuth: FirebaseAuth by lazy {
+            FirebaseAuth.getInstance()
+        }
+        override fun onAuthStateChanged(p0: FirebaseAuth) {
+            val currentUser = myViewModel.user
+            if (currentUser != null) {
+                myViewModel.fetchCurrentUserName()
+            } else {
+                Log.d(TAG, "authlistener returned null")
+            }
+        }
+
+            @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: HomeFragmentViewModel
     private lateinit var mDrawerLayout: DrawerLayout
@@ -60,14 +74,14 @@ class MainForum : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this,factory).get(HomeFragmentViewModel::class.java)
         val binding: ActivityMainForumBinding = DataBindingUtil.setContentView(this, R.layout.activity_main_forum)
-
         replaceFragment(HomeFragment())
         bottom_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         loginVerification()
-
+        //here
         setSupportActionBar(findViewById(R.id.toolbar))
         val actionbar: ActionBar? = supportActionBar
         actionbar?.apply {
@@ -78,12 +92,13 @@ class MainForum : AppCompatActivity() {
 
         mDrawerLayout = findViewById(R.id.drawer_layout)
         val navigationView: NavigationView = findViewById(R.id.nav_view)
-       // val headerBinding: SideNavHeaderBinding = SideNavHeaderBinding.bind(binding.navView.getHeaderView(0))
         val sideNavHeaderBinding:SideNavHeaderBinding = DataBindingUtil.inflate(getLayoutInflater(),R.layout.side_nav_header,binding.navView,false)
         binding.navView.addHeaderView(sideNavHeaderBinding.root)
         sideNavHeaderBinding.viewmodell = myViewModel
         //Log.d(TAG,myViewModel.rsomthing())
-        Log.d(TAG,myViewModel.user?.displayName)
+
+        Log.d(TAG,myViewModel.user?.displayName ?: "the displayname in main activity")
+
 
         navigationView.setNavigationItemSelectedListener { menuItem ->
             menuItem.isChecked = true

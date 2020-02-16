@@ -49,9 +49,11 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
         return postdata
     }
 
-     val user by lazy {
-        repository.currentUser()
-     }
+    fun fetchCurrentUserName() = repository.fetchCurrentUserName()
+
+     var user = repository.currentUser()
+
+
 
 }
 

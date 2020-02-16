@@ -12,7 +12,9 @@ import com.example.seniorproject.Utils.AuthenticationListener
 import com.example.seniorproject.data.repositories.UserAuthRepo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.lang.Thread.sleep
 import javax.inject.Inject
 
 private const val TAG = "MyLogTag"
@@ -30,10 +32,7 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
     //disposable to dispose the Completable
     private val disposables = CompositeDisposable()
 
-
-   val user by lazy {
-      repository.currentUser()
-    }
+    val user = repository.currentUser()
 
     fun Register(){
         if (email.isNullOrEmpty() || password.isNullOrEmpty() || username.isNullOrEmpty()) {
@@ -66,8 +65,8 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             //should this really be the main thread?
             .subscribe({
-                //success callback
                 authListener?.onSuccess()
+                Log.d(TAG,repository.currentUser()?.displayName ?: "the displayname auth viewmodel2")
             }, {
                 authListener?.onFailure(it.message!!)
             })
@@ -112,6 +111,8 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
         disposables.add(disposable)
 
     }
+
+
 
     //disposing the disposables
     override fun onCleared() {
