@@ -12,11 +12,16 @@ import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.PostLiveData
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.database.*
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
+import java.lang.Thread.sleep
 import java.util.*
+import java.util.logging.Handler
 
 private const val TAG = "MyLogTag"
 @Singleton
@@ -27,20 +32,47 @@ class FirebaseData @Inject constructor() {
         FirebaseAuth.getInstance()
     }
 
-   // var savedPosts: MutableLiveData<List<Post>> = MutableLiveData()
+
+    // var savedPosts: MutableLiveData<List<Post>> = MutableLiveData()
     var savedPosts : PostLiveData = PostLiveData()
     var changed : Boolean = false
 
     fun CurrentUser() = firebaseAuth.currentUser
 
-
     fun logout() = firebaseAuth.signOut()
+
+    fun fetchCurrentUserName() {
+        var uid = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
+        ref.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+            override fun onDataChange(p0: DataSnapshot) {
+
+                val currentUser = p0.getValue(User::class.java)
+                Log.d(TAG, "Current user fetched ${currentUser?.username}")
+                var usernameForum = currentUser?.username.toString()
+                val user = CurrentUser()
+                val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(usernameForum).build()
+                user?.updateProfile(profileUpdates)
+                    ?.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Log.d(TAG, "profile updated, emitter complete?:  ${CurrentUser()?.displayName} .")
+                        }
+                            else {
+                            Log.d(TAG, "in else in fetch current user")
+                        }
+                    }
+            }
+        })
+    }
+
 
     fun RegisterUser(username: String, email: String, password: String) =
         Completable.create { emitter ->
             Log.d(TAG, "Entered register user function!!! Email: " + email)
             Log.d(TAG, "pass: " + password)
-
             //Firebase Authentication is being performed inside the completeable
             //emitter indicated weather the task was completed
             //double check this code
@@ -94,7 +126,13 @@ class FirebaseData @Inject constructor() {
             .addOnCompleteListener {
                 if (!emitter.isDisposed) {
                     if (it.isSuccessful) {
-                        emitter.onComplete()
+                        fetchCurrentUserName()
+                        Log.d(TAG,CurrentUser()?.displayName ?: "the displayname login1")
+                        runBlocking {
+                            delay(500)
+                            emitter.onComplete()
+                            Log.d(TAG, "im delayed")
+                        }
                         Log.d(TAG, "user has logged in")
                         val currentuser = FirebaseAuth.getInstance().currentUser
                         currentuser?.let {
@@ -103,6 +141,7 @@ class FirebaseData @Inject constructor() {
                             val uid = currentuser.uid
                             val user = User(username, email, uid)
                         }
+                        Log.d(TAG,CurrentUser()?.displayName ?: "the displayname login2")
                     } else {
                         emitter.onError(it.exception!!)
                         //should not be using two exclaimation points
@@ -117,7 +156,8 @@ class FirebaseData @Inject constructor() {
         val uid = FirebaseAuth.getInstance().uid ?: ""
         val ref = FirebaseDatabase.getInstance().getReference("users/$uid")
         val user = User(username, email, password)
-
+        fetchCurrentUserName()
+        //log in and log out user here
         ref.setValue(user).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 Log.d(TAG, "saving to database worked")
@@ -148,7 +188,7 @@ class FirebaseData @Inject constructor() {
     fun getSavedPost() : PostLiveData{
         listenforPosts()
         return savedPosts
-}
+    }
 
 
     private fun listenforPosts() {
@@ -156,7 +196,7 @@ class FirebaseData @Inject constructor() {
 
 
         reference.addChildEventListener(object : ChildEventListener {
-           var savedPostsList: MutableList<Post> = mutableListOf()
+            var savedPostsList: MutableList<Post> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
 
             }
@@ -204,7 +244,6 @@ class FirebaseData @Inject constructor() {
     }
 
 }
-
 
 
 

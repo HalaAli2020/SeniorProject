@@ -121,7 +121,6 @@ class HomeFragment : Fragment(), PostListener {
             binding.executePendingBindings()
         }
 
-
         return view
 
     }
@@ -175,24 +174,7 @@ class HomeFragment : Fragment(), PostListener {
         }
     }
 
-
-    private fun fetchCurrentUser(){
-        var uid = FirebaseAuth.getInstance().uid
-        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
-        ref.addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                currentUser = p0.getValue(User::class.java)
-                Log.d("LatestMessages", "Current user ${currentUser?.username}")
-                val usernameForum = currentUser?.username
-                username_forum.text = "Welcome " + usernameForum
-            }
-        })
-    }*/
-
+*/
 
 
 
