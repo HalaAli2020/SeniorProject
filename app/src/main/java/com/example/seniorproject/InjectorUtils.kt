@@ -1,11 +1,11 @@
 package com.example.seniorproject
 
-import com.example.seniorproject.Auth.AuthViewModelFactory
 import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.data.repositories.PostRepository
-import com.example.seniorproject.data.repositories.UserAuthRepo
 //import com.example.seniorproject.viewModels.AuthenticationViewModelFactory
 import com.example.seniorproject.viewModels.HomeFragmentViewModelFactory
+import com.example.seniorproject.viewModels.ListViewModelFactory
+
 //import com.example.seniorproject.viewModels.NewPostFragmentViewModelFactory
 
 object InjectorUtils {
@@ -15,6 +15,11 @@ object InjectorUtils {
     fun providePostViewModelFactory(): HomeFragmentViewModelFactory {
         val postrepo: PostRepository = PostRepository.getInstance(FirebaseData())
         return HomeFragmentViewModelFactory(postrepo)
+    }
+
+    fun provideListViewModelFactory(): ListViewModelFactory{
+        val postrepo: PostRepository = PostRepository.getInstance(FirebaseData())
+        return ListViewModelFactory(postrepo)
     }
 
    /* fun provideNewPostViewModelFactory(): NewPostFragmentViewModelFactory {

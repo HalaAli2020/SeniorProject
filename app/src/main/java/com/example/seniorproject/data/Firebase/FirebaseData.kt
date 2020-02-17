@@ -36,6 +36,7 @@ class FirebaseData @Inject constructor() {
     // var savedPosts: MutableLiveData<List<Post>> = MutableLiveData()
     var savedPosts : PostLiveData = PostLiveData()
     var changed : Boolean = false
+    var classList: MutableLiveData<List<String>> = MutableLiveData()
 
     fun CurrentUser() = firebaseAuth.currentUser
 
@@ -211,7 +212,7 @@ class FirebaseData @Inject constructor() {
                 val newPost = p0.getValue(Post::class.java)
 
                 if (newPost != null) {
-                    Log.d("ACCESSING", newPost?.text)
+                    //Log.d("ACCESSING", newPost?.text)
                     savedPostsList.add(newPost)
 
                     //repository.saveNewPost(newPost)
@@ -230,6 +231,31 @@ class FirebaseData @Inject constructor() {
 
     }
 
+
+
+    fun listenForClasses() : MutableLiveData<List<String>>{
+
+        val reference = FirebaseDatabase.getInstance().getReference().child("/Subjects")
+
+        reference.addListenerForSingleValueEvent(object : ValueEventListener {
+            var classes: MutableList<String> = mutableListOf()
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                for (datas in dataSnapshot.children) {
+                    val classnames = datas.key
+                    Log.d("BIGMOODS", classnames)
+                    classnames?.let { classes.add(it) }
+                }
+                classList.value = classes
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+
+            }
+        })
+
+        return classList
+    }
 
     companion object {
         @Volatile
