@@ -17,8 +17,7 @@ import com.google.firebase.database.*
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ValueEventListener
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import java.lang.Thread.sleep
 import java.util.*
 import java.util.logging.Handler
@@ -128,12 +127,11 @@ class FirebaseData @Inject constructor() {
                     if (it.isSuccessful) {
                         fetchCurrentUserName()
                         Log.d(TAG,CurrentUser()?.displayName ?: "the displayname login1")
-                        runBlocking {
+                        GlobalScope.launch(Dispatchers.Main){
                             delay(500)
                             emitter.onComplete()
                             Log.d(TAG, "im delayed")
                         }
-                        Log.d(TAG, "user has logged in")
                         val currentuser = FirebaseAuth.getInstance().currentUser
                         currentuser?.let {
                             val username = currentuser.displayName
