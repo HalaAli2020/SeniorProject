@@ -5,10 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.R
@@ -22,12 +25,14 @@ import com.example.seniorproject.viewModels.ClickedPostViewModel
 import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_clicked_post.*
+import kotlinx.android.synthetic.main.activity_clicked_post.view.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ClickedPost : AppCompatActivity() {
 
-    lateinit var Comments : CommentLive
+    var Comments : CommentLive? = null
     private lateinit var adapter: CommentsAdapter
     @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -38,27 +43,43 @@ class ClickedPost : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-         setContentView(R.layout.activity_clicked_post)
+        setContentView(R.layout.activity_clicked_post)
         var context = applicationContext
-
+        var view = window.decorView
+        var bundle = intent.getBundleExtra("Post_bundle")
+        click_post_title.text = bundle?.getString("title")
+        Log.d("post text", bundle?.getString("title")!!)
+        click_post_text.text = bundle?.getString("text")
         DaggerAppComponent.create().inject(this)
-        myViewModel = ViewModelProviders.of(this,factory).get(ClickedPostViewModel::class.java)
-        val binding: ActivityClickedPostBinding
-               = DataBindingUtil.setContentView(this, R.layout.activity_clicked_post)
+        myViewModel = ViewModelProviders.of(this, factory).get(ClickedPostViewModel::class.java)
+        val binding: ActivityClickedPostBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_clicked_post)
         binding.clickedViewModel = myViewModel
-        click_post_title.text = intent.getStringExtra("Title")
-        click_post_text.text = intent.getStringExtra("Text")
-        //Comments = myViewModel.getComments(intent.getStringExtra("Key"))
+        myViewModel.PKey = bundle?.getString("Pkey")
+        Log.d("postkey", myViewModel.PKey!!)
+        //click_post_title.text = intent.getStringExtra("Title")
+        //click_post_text.text = intent.getStringExtra("Text")
+        /* CKEY is for class key */
+        //Comments = myViewModel.getComments(bundle?.getString("CKey")!!)
+        Comments = myViewModel.getComments(myViewModel.PKey!!)
         myViewModel.CommentsList.observe(this, Observer {
-             Log.d("data change", " Data has changed")
-            adapter = CommentsAdapter(context, Comments)
-            this.comment_RecyclerView.adapter = adapter
-            this.comment_RecyclerView.layoutManager = LinearLayoutManager(context)
-           this.comment_RecyclerView.adapter = adapter
-           binding.clickedViewModel = myViewModel
-            binding.lifecycleOwner = this
+            Log.d("data change", " Data has changed")
+
+
+
+
         })
-
-
+        adapter = CommentsAdapter(view.context, myViewModel.CommentsList)
+        view.comment_RecyclerView.adapter = adapter
+        view.comment_RecyclerView.layoutManager = LinearLayoutManager(context)
+        view.comment_RecyclerView.adapter = adapter
+        binding.clickedViewModel = myViewModel
+        binding.lifecycleOwner = this
     }
+   /* coroutines attempt init {
+        lifecycleScope.launch{
+            myViewModel.getComments()
+        }
+    }*/
+
 }

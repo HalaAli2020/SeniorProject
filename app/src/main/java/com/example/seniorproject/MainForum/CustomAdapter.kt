@@ -2,6 +2,7 @@ package com.example.seniorproject.MainForum
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -46,9 +47,18 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData) :
 
             holder.itemView.setOnClickListener {
                 val intent = Intent(mContext, ClickedPost::class.java)
+                //intent.putExtra("Title", post.title)
+                //intent.putExtra("Text", post.text)
+                //intent.putExtra("Key", post.Classkey)
+                //intent.putExtra("post", post.toMap())
+                 var bundle: Bundle = Bundle()
+                bundle.putString("title", post.title)
+                bundle.putString("text", post.text)
                 intent.putExtra("Title", post.title)
-                intent.putExtra("Text", post.text)
-                intent.putExtra("Key", post.Classkey)
+                intent.putExtra("text", post.text)
+               // bundle.putString("Ckey", post.Classkey)
+                bundle.putString("Pkey", post.key)
+                intent.putExtra("Post_bundle", bundle)
                 mContext.startActivity(intent)
             }
 

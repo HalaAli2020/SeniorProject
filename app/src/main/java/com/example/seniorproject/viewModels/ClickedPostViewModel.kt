@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.example.seniorproject.Utils.PostListener
+import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.CommentLive
 import com.example.seniorproject.data.repositories.PostRepository
 import com.example.seniorproject.data.repositories.UserAuthRepo
@@ -14,6 +15,8 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
 
     val CommentListener : PostListener? = null
     var CommentsList : CommentLive = CommentLive()
+    var Comment : String? = null
+    var PKey: String? = null
     private var PostKey : String? = null
 
     fun getComments(PKey: String) : CommentLive
@@ -27,6 +30,11 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
         CommentsList = repository.getComments(PKey)
 
         return CommentsList
+    }
+    fun newComment()
+    {
+
+        repository.newComment(PKey!!,Comment!!)
     }
 
 

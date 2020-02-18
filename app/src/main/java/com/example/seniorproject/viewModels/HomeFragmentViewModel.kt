@@ -40,6 +40,11 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
         posts = repository.getSavedPosts()
         return posts
     }
+    fun getSavedUserPosts(): PostLiveData {
+
+        posts = repository.getSavedUserPosts()
+        return posts
+    }
 
     fun editPost(): PostLiveData {
         postdata = getSavedPosts()

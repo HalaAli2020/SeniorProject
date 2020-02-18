@@ -8,6 +8,7 @@
     <string name="title_newPost">New Post</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_post_details">Post_details</string>
+    <string name="comment">Comment</string>
 
 
 </resources>

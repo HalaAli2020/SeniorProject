@@ -90,7 +90,8 @@ class HomeFragment : Fragment(), PostListener {
         val binding: FragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_home, container, false)
-        postLiveData = myViewModel.getSavedPosts()
+        //postLiveData = myViewModel.getSavedPosts()
+        postLiveData = myViewModel.getSavedUserPosts()
 
         adapter = CustomAdapter(view.context, postLiveData)
         view.post_recyclerView.adapter = adapter
@@ -103,7 +104,7 @@ class HomeFragment : Fragment(), PostListener {
         /*DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)*/
 
-        myViewModel.getSavedPosts()
+        myViewModel.getSavedUserPosts()
         //myViewModel.postListener = this
 
 

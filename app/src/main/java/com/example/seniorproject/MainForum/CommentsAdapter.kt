@@ -12,33 +12,37 @@ import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.CommentLive
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.PostLiveData
+import kotlinx.android.synthetic.main.comment_rv.view.*
 import kotlinx.android.synthetic.main.post_rv.view.*
 
-class CommentsAdapter(context: Context, var Comments: CommentLive) :
+class CommentsAdapter(context: Context, var Comments: CommentLive?) :
     RecyclerView.Adapter<CustomViewHolders>() {
     val mContext: Context = context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolders {
         val layoutInflater = LayoutInflater.from(parent.context)
         // val binding : ViewDataBinding = DataBindingUtil.inflate(layoutInflater, viewType, parent, false)
-        val cellForRow = layoutInflater.inflate(R.layout.post_rv, parent, false)
+        val cellForRow = layoutInflater.inflate(R.layout.comment_rv, parent, false)
         return CustomViewHolders(cellForRow)
     }
 
     override fun getItemCount(): Int {
-        if (Comments.value != null)
-            return Comments.value!!.size
+        if (Comments?.value != null)
+            return Comments?.value!!.size
         else
             return 0
     }
 
     override fun onBindViewHolder(holder: CustomViewHolders, position: Int) {
-        if (Comments.value == null) {
+        if (Comments?.value == null) {
+            holder.itemView.comment_text.text = "No Comments yet"
 
         } else {
-            val comment: Comment = Comments.value!![position]
+            val comment: Comment = Comments?.value!![position]
             //holder.itemView.post_title.text = .title
-            holder.itemView.post_text.text = comment.text
+            holder.itemView.comment_text.text = comment.text
+
+
 
            /* holder.itemView.setOnClickListener {
                 val intent = Intent(mContext, ClickedPost::class.java)

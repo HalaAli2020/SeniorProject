@@ -21,6 +21,7 @@ data class Post(var title: String?, var text: String?)
      var ptime: Long? = null
     var Classkey : String? = null
     var Userkey : String? = null
+    var key : String? = null
     init {
         // backend will initalize values here or set to null if
        // ptime = System.currentTimeMillis()
@@ -46,7 +47,8 @@ data class Post(var title: String?, var text: String?)
             "crn" to crn,
             "comments" to comments,
             "UserKey" to Userkey,
-            "Classkey" to Classkey
+            "Classkey" to Classkey,
+            "Key" to key
 
         )
 

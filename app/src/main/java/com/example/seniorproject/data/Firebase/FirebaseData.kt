@@ -48,6 +48,7 @@ class FirebaseData @Inject constructor() {
                val username = p0.child("Username").getValue(String::class.java)
                val email = p0.child("email").getValue(String::class.java)
                userprofile = User(username, email, firebaseAuth.uid)
+
                 Log.d("USERNAME", username!!)
                 Log.d("USER", userprofile.username!!)
 
@@ -190,7 +191,8 @@ class FirebaseData @Inject constructor() {
     }*/
     fun getComments(Key : String) : CommentLive
     {
-        val reference = FirebaseDatabase.getInstance().getReference("/post/$Key").child("Comments")
+        val uid = FirebaseAuth.getInstance().uid
+        val reference = FirebaseDatabase.getInstance().getReference("users/$uid/Post/$Key").child("Comments")
 
         reference.addChildEventListener(object : ChildEventListener {
             var savedCommentList: MutableList<Comment> = mutableListOf()
@@ -227,25 +229,55 @@ class FirebaseData @Inject constructor() {
             return Comments
     }
 
+    fun saveNewComment(text: String, postID : String) {
+
+
+        //val subject = Subject
+        //val ClassID = Classkey
+        val userID = firebaseAuth.uid
+        val comment = Comment(text,0, userID, "csc495", postID)
+        //FIX userprofile not init post.author = userprofile.username!!
+        //val Class_key = FirebaseDatabase.getInstance().getReference(CRN).child("Posts").push().key
+        //FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID")
+        val User_key = FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID").child("Comments").push().key
+        // implement in viewmodel
+        //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
+        val dataupdates = HashMap<String, Any>()
+        val comementvalues = comment.toMap()
+        //dataupdates["$subject/$ClassID/Post/$Class_key"] = postvalues
+        //dataupdates["$userID/Posts/$User_key"] = postvalues
+        FirebaseDatabase.getInstance().getReference("users/$userID/Post/$postID").child("Comments/$User_key").setValue(comementvalues)
+
+        /*Class_reference.setValue(post).addOnSuccessListener {
+                Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
+            }.addOnFailureListener {
+                Log.d(TAG, "Error ${it.message}")
+            }
+
+         */
+
+        //}
+    }
 
     // CRN is a placeholder for a class object
-    fun saveNewPost(post : Post, Classkey: String, Subject: String, CRN : String) {
-       
+    fun saveNewPost(post : Post, Subject: String, CRN : String) {
+
 
         val subject = Subject
-        val ClassID = Classkey
+       // val ClassID = Classkey
         val userID = firebaseAuth.uid
         //FIX userprofile not init post.author = userprofile.username!!
         //val Class_key = FirebaseDatabase.getInstance().getReference(CRN).child("Posts").push().key
-        FirebaseDatabase.getInstance().getReference("/users/$userID")
-        val User_key = FirebaseDatabase.getInstance().getReference("/users/$userID").push().setValue(post)
+        //FirebaseDatabase.getInstance().getReference("/users/$userID")
+        val User_key = FirebaseDatabase.getInstance().getReference("/users/$userID").child("Posts").push().key
+        post.key = User_key
             // implement in viewmodel
         //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
         val dataupdates = HashMap<String, Any>()
         val postvalues = post.toMap()
         //dataupdates["$subject/$ClassID/Post/$Class_key"] = postvalues
         //dataupdates["$userID/Posts/$User_key"] = postvalues
-        FirebaseDatabase.getInstance().getReference("users").child("$userID").setValue(postvalues)
+       FirebaseDatabase.getInstance().getReference("users/$userID").child("Post/$User_key").setValue(postvalues)
 
         /*Class_reference.setValue(post).addOnSuccessListener {
                 Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
@@ -261,7 +293,10 @@ class FirebaseData @Inject constructor() {
         listenforPosts()
         return savedPosts
     }
-
+    fun getSavedUserPost() : PostLiveData{
+        listenforUserPosts()
+        return savedPosts
+    }
     /*fun getSavedPost(crn : String, subject : String) : PostLiveData{
         listenforPosts()
         return savedPosts
@@ -324,6 +359,55 @@ class FirebaseData @Inject constructor() {
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 val newPost : Post? = p0.getValue(Post::class.java)
+
+                if (newPost != null) {
+                    Log.d("ACCESSING", newPost?.text)
+                    savedPostsList.add(newPost)
+
+                    //repository.saveNewPost(newPost)
+                    //adapter.add(PostFrag(newPost.title, newPost.text))
+                }
+                savedPosts.value = savedPostsList
+
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+            }
+
+
+
+        })
+
+    }
+    private fun listenforUserPosts() {
+       // val userID = FirebaseAuth.getInstance().currentUser
+        val reference = FirebaseDatabase.getInstance().getReference("users/1XN3H62rMJhe6CiCbN4os2TNp5H2").child("Post")
+
+
+        reference.addChildEventListener(object : ChildEventListener {
+            var savedPostsList: MutableList<Post> = mutableListOf()
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                val newPost :Post  = Post()
+                try {
+                    newPost.let {
+                       it.text = p0.child("text").getValue().toString()
+                        it.title = p0.child("title").getValue().toString()
+                        it.key = p0.child("Key").getValue().toString()
+                    }
+                } catch (e: Exception) {
+                    Log.d("Data Error", "error converting to post")
+                    }
+
 
                 if (newPost != null) {
                     Log.d("ACCESSING", newPost?.text)

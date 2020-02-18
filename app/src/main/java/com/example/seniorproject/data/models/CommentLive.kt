@@ -28,11 +28,11 @@ class CommentLive : MutableLiveData<MutableList<Comment>>()
 
 
     companion object {
-        private lateinit var sInstance: PostLiveData
+        private lateinit var sInstance: CommentLive
 
         @MainThread
-        fun get(): PostLiveData {
-            sInstance = if (::sInstance.isInitialized) sInstance else PostLiveData()
+        fun get(): CommentLive {
+            sInstance = if (::sInstance.isInitialized) sInstance else CommentLive()
             return sInstance
         }
     }
