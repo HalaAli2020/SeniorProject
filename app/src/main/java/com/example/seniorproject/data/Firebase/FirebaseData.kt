@@ -33,7 +33,7 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    // var savedPosts: MutableLiveData<List<Post>> = MutableLiveData()
+    //var savedPosts: MutableLiveData<List<Post>> = MutableLiveData()
     var savedPosts : PostLiveData = PostLiveData()
     var changed : Boolean = false
     var classList: MutableLiveData<List<String>> = MutableLiveData()
@@ -224,17 +224,12 @@ class FirebaseData @Inject constructor() {
 
             override fun onChildRemoved(p0: DataSnapshot) {
             }
-
-
-
         })
 
     }
 
 
-
-    fun listenForClasses() : MutableLiveData<List<String>>{
-
+    fun getClasses() : MutableLiveData<List<String>>{
         val reference = FirebaseDatabase.getInstance().getReference().child("/Subjects")
 
         reference.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -250,7 +245,6 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-
             }
         })
 

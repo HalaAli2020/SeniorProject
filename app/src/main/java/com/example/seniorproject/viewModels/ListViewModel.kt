@@ -7,11 +7,14 @@ import javax.inject.Inject
 
 class ListViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
 
-    var listClasses: MutableLiveData<String> = MutableLiveData()
+    private var listClasses: MutableLiveData<List<String>> = MutableLiveData()
 
-    fun getClasses(): MutableLiveData<String>{
+    private fun getClasses(){
         listClasses = repository.getClasses()
-        return listClasses
     }
 
+    fun returnClasses(): MutableLiveData<List<String>>{
+        getClasses()
+        return listClasses
+    }
 }
