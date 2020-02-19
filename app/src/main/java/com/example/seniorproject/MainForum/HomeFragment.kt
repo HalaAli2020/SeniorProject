@@ -36,6 +36,8 @@ import javax.inject.Inject
 import javax.inject.Named
 import com.example.seniorproject.InjectorUtils
 
+
+
 /**
  * A simple [Fragment] subclass.
  */
@@ -94,7 +96,12 @@ class HomeFragment : Fragment(), PostListener {
 
         adapter = CustomAdapter(view.context, postLiveData)
         view.post_recyclerView.adapter = adapter
-        view.post_recyclerView.layoutManager = LinearLayoutManager(context)
+
+        val linearLayoutManager = LinearLayoutManager(context)
+        linearLayoutManager.reverseLayout = true
+        linearLayoutManager.stackFromEnd = true
+        view.post_recyclerView.layoutManager = linearLayoutManager
+
         view.post_recyclerView.adapter = adapter
         binding.homeFragmentViewModel = myViewModel
         binding.lifecycleOwner = this
@@ -113,7 +120,13 @@ class HomeFragment : Fragment(), PostListener {
 
             adapter = CustomAdapter(view.context, postLiveData)
             view.post_recyclerView.adapter = adapter
-            view.post_recyclerView.layoutManager = LinearLayoutManager(context)
+
+            val linearLayoutManager = LinearLayoutManager(context)
+            linearLayoutManager.reverseLayout = true
+            linearLayoutManager.stackFromEnd = true
+
+
+            view.post_recyclerView.layoutManager = linearLayoutManager
             view.post_recyclerView.adapter = adapter
             binding.homeFragmentViewModel = myViewModel
             binding.lifecycleOwner = this

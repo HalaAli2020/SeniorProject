@@ -50,7 +50,6 @@
                     android:id="@+id/toolbar"
                     android:theme="@style/ThemeOverlay.AppCompat.Light"
                     />
-
             </FrameLayout>
         </LinearLayout>
         <com.google.android.material.navigation.NavigationView
@@ -58,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            app:menu="@menu/activity_main_drawer"/>
+            app:menu="@menu/activity_main_drawer" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
 
@@ -67,8 +66,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/background_dark"
-        app:itemIconTint="@color/cardview_light_background"
-        app:itemTextColor="@color/cardview_light_background"
+        app:itemIconTint="@drawable/bottom_navigation_selected"
+        app:itemTextColor="@drawable/bottom_navigation_selected"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_nav_menu"
         tools:layout_editor_absoluteX="206dp" />

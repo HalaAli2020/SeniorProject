@@ -1,6 +1,8 @@
 package com.example.seniorproject.viewModels
 
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
 import androidx.lifecycle.ViewModel
 //import com.example.seniorproject.Utils.startMainForum
 import com.example.seniorproject.Utils.PostListener
@@ -11,19 +13,33 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
 
     var titlePost: String? = null
     var textPost: String? = null
+    var classSpinner: String? = null
+
+
+
+    val clicksListener = object : AdapterView.OnItemSelectedListener {
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+
+        }
+
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            classSpinner = parent?.getItemAtPosition(position) as String
+        }
+    }
+
 
     var postListener: PostListener? = null
 
 
     fun savePostToDatabase() {
 
-        if (titlePost.isNullOrEmpty() || textPost.isNullOrEmpty()) {
+        if (titlePost.isNullOrEmpty() || textPost.isNullOrEmpty() || classSpinner.isNullOrEmpty()) {
             postListener?.onFailure("please enter a title and text!")
             //Toast.makeText((RegisterActivity()), "Please fill in both Email and Password fields", Toast.LENGTH_SHORT).show()
             return
         }
-        Log.d("BIGMood", titlePost)
-        repository.saveNewPost(titlePost!!, textPost!!)
+        Log.d("SELECTED VALUE:", classSpinner)
+        repository.saveNewPost(titlePost!!, textPost!!, classSpinner!!)
 
 
     }

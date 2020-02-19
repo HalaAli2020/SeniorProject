@@ -9,10 +9,10 @@ import com.xwray.groupie.Item
 
 import kotlinx.android.synthetic.main.post_rv.view.*
 
-data class Post(val title: String?, val text: String?)
+data class Post(val title: String?, val text: String?, val subject: String?)
 {
     //val title: String, val text: String, val courseID: Int, val uid: String
-    constructor(): this("","")
+    constructor(): this("","", "CSC1500")
 
     private val database = FirebaseDatabase.getInstance()
     private var ptime: Long

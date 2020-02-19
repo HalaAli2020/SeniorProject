@@ -3,12 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainForum.ListFragment">
+    tools:context=".MainForum.ListFragment"
+    android:layout_marginTop="?attr/actionBarSize"
+    android:layout_marginBottom="?attr/actionBarSize"
+    >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="List Fragment" />
-
+        android:layout_height="match_parent" />
 </FrameLayout>
