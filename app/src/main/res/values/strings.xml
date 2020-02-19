@@ -10,4 +10,11 @@
     <string name="title_activity_post_details">Post_details</string>
 
 
+
+    <string-array name="class_list">
+        <item>CSC1500</item>
+        <item>BIO1500</item>
+    </string-array>
+
+
 </resources>
