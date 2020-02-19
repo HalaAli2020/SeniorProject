@@ -12,7 +12,7 @@ import javax.inject.Singleton
 @Singleton
 class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
-    fun saveNewPost(Title: String, Text: String) = Firebase.saveNewPost(Title, Text)
+    fun saveNewPost(Title: String, Text: String, Subject: String) = Firebase.saveNewPost(Title, Text, Subject)
 
     fun getSavedPosts() = Firebase.getSavedPost()
 
@@ -21,6 +21,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     fun fetchCurrentUserName() = Firebase.fetchCurrentUserName()
 
     fun getClasses() = Firebase.getClasses()
+
+    fun getClassPosts(className: String) = Firebase.getClassPosts(className)
 
     companion object {
         @Volatile

@@ -37,6 +37,7 @@ class FirebaseData @Inject constructor() {
     var savedPosts : PostLiveData = PostLiveData()
     var changed : Boolean = false
     var classList: MutableLiveData<List<String>> = MutableLiveData()
+    var classPostList: PostLiveData = PostLiveData()
 
     fun CurrentUser() = firebaseAuth.currentUser
 
@@ -171,11 +172,11 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    fun saveNewPost(postTitle: String, postText: String) {
-        val reference = FirebaseDatabase.getInstance().getReference("/posts").push()
+    fun saveNewPost(postTitle: String, postText: String, postSubject: String) {
+        val reference = FirebaseDatabase.getInstance().getReference("Subjects/$postSubject/posts").push()
 
         if (postTitle.isNotEmpty() && postText.isNotEmpty()) {
-            val post = Post(postTitle, postText)
+            val post = Post(postTitle, postText, postSubject)
 
             reference.setValue(post).addOnSuccessListener {
                 Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
@@ -227,6 +228,47 @@ class FirebaseData @Inject constructor() {
         })
 
     }
+
+
+
+
+    fun getClassPosts(className: String) : PostLiveData{
+        val reference = FirebaseDatabase.getInstance().getReference("Subjects/$className/posts")
+
+
+        reference.addChildEventListener(object : ChildEventListener {
+            var savedPostsList: MutableList<Post> = mutableListOf()
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                val newPost = p0.getValue(Post::class.java)
+
+                if (newPost != null) {
+                    //Log.d("ACCESSING", newPost?.text)
+                    savedPostsList.add(newPost)
+
+                    //repository.saveNewPost(newPost)
+                    //adapter.add(PostFrag(newPost.title, newPost.text))
+                }
+                classPostList.value = savedPostsList
+
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+            }
+        })
+
+        return classPostList
+    }
+
 
 
     fun getClasses() : MutableLiveData<List<String>>{
