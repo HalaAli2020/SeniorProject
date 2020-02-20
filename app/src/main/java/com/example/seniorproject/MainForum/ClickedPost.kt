@@ -27,6 +27,8 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_clicked_post.*
 import kotlinx.android.synthetic.main.activity_clicked_post.view.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -39,37 +41,30 @@ class ClickedPost : AppCompatActivity() {
     lateinit var myViewModel: ClickedPostViewModel
 
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_clicked_post)
         var context = applicationContext
         var view = window.decorView
         var bundle = intent.getBundleExtra("Post_bundle")
-        click_post_title.text = bundle?.getString("title")
-        Log.d("post text", bundle?.getString("title")!!)
-        click_post_text.text = bundle?.getString("text")
+        //click_post_title.text = bundle?.getString("title")
+        //Log.d("post text", bundle?.getString("title")!!)
+       // click_post_text.text = bundle?.getString("text")
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this, factory).get(ClickedPostViewModel::class.java)
         val binding: ActivityClickedPostBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_clicked_post)
         binding.clickedViewModel = myViewModel
-        myViewModel.PKey = bundle?.getString("Pkey")
-        Log.d("postkey", myViewModel.PKey!!)
+        myViewModel.PKey = intent?.getStringExtra("Pkey")
+        myViewModel.Classkey = intent?.getStringExtra("Classkey")
+        myViewModel.UserID = intent?.getStringExtra("UserID")
+        //Log.d("postkey", intent?.getStringExtra("Pkey"))
         //click_post_title.text = intent.getStringExtra("Title")
         //click_post_text.text = intent.getStringExtra("Text")
         /* CKEY is for class key */
         //Comments = myViewModel.getComments(bundle?.getString("CKey")!!)
-        Comments = myViewModel.getComments(myViewModel.PKey!!)
-        myViewModel.CommentsList.observe(this, Observer {
-            Log.d("data change", " Data has changed")
-
-
-
-
-        })
-        adapter = CommentsAdapter(view.context, myViewModel.CommentsList)
+        myViewModel.getComments()
+        adapter = CommentsAdapter(view.context, myViewModel.getComments())
         view.comment_RecyclerView.adapter = adapter
         view.comment_RecyclerView.layoutManager = LinearLayoutManager(context)
         view.comment_RecyclerView.adapter = adapter

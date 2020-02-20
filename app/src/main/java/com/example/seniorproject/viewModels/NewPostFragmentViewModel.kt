@@ -39,7 +39,7 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
             return
         }
         Log.d("SELECTED VALUE:", classSpinner)
-        repository.saveNewPost(titlePost!!, textPost!!, classSpinner!!)
+        repository.saveNewPost(titlePost!!, textPost!!,"1", classSpinner!!)
 
 
     }

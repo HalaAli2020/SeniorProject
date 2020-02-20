@@ -3,6 +3,7 @@ package com.example.seniorproject.Dagger
 import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Authentication.PasswordResetActivity
 import com.example.seniorproject.Authentication.RegisterActivity
+import com.example.seniorproject.MainForum.ClickedPost
 import com.example.seniorproject.MainForum.HomeFragment
 import com.example.seniorproject.MainForum.MainForum
 import com.example.seniorproject.MainForum.NewPostFragment
@@ -24,5 +25,6 @@ interface AppComponent {
     fun inject(activity: PasswordResetActivity)
     fun inject(fragment: NewPostFragment)
     fun inject(fragment: MainForum)
+    fun inject(activity: ClickedPost)
 
 }
