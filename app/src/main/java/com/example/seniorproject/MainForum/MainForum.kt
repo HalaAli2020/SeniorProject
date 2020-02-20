@@ -30,10 +30,11 @@ import kotlinx.android.synthetic.main.activity_main_forum.*
 import javax.inject.Inject
 
 private const val TAG = "MyLogTag"
-class MainForum : AppCompatActivity(),
-     FirebaseAuth.AuthStateListener {
+class MainForum : AppCompatActivity()
+     //FirebaseAuth.AuthStateListener
+    {
 
-        private val firebaseAuth: FirebaseAuth by lazy {
+       /* private val firebaseAuth: FirebaseAuth by lazy {
             FirebaseAuth.getInstance()
         }
         override fun onAuthStateChanged(p0: FirebaseAuth) {
@@ -43,7 +44,7 @@ class MainForum : AppCompatActivity(),
             } else {
                 Log.d(TAG, "authlistener returned null")
             }
-        }
+        }*/
 
             @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -94,10 +95,10 @@ class MainForum : AppCompatActivity(),
         val navigationView: NavigationView = findViewById(R.id.nav_view)
         val sideNavHeaderBinding:SideNavHeaderBinding = DataBindingUtil.inflate(getLayoutInflater(),R.layout.side_nav_header,binding.navView,false)
         binding.navView.addHeaderView(sideNavHeaderBinding.root)
-        sideNavHeaderBinding.viewmodell = myViewModel
+        //sideNavHeaderBinding.viewmodell = myViewModel
         //Log.d(TAG,myViewModel.rsomthing())
 
-        Log.d(TAG,myViewModel.user?.displayName ?: "the displayname in main activity")
+        //Log.d(TAG,myViewModel.user?.displayName ?: "the displayname in main activity")
 
 
         navigationView.setNavigationItemSelectedListener { menuItem ->

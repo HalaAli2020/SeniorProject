@@ -1,27 +1,27 @@
 package com.example.seniorproject.data.Firebase
 import android.util.Log
-import com.example.seniorproject.data.models.User
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
-import io.reactivex.Completable
-import javax.inject.Inject
-import javax.inject.Singleton
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.example.seniorproject.Utils.PostListener
+import androidx.lifecycle.Observer
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.PostLiveData
-import com.google.android.gms.tasks.Task
+import com.example.seniorproject.data.models.User
+import com.example.seniorproject.data.repositories.PostRepository
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.database.*
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.ValueEventListener
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
-import java.lang.Thread.sleep
-import java.util.*
-import java.util.logging.Handler
+import com.squareup.okhttp.Dispatcher
+import io.reactivex.Completable
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.channels.sendBlocking
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
+import javax.inject.Singleton
+import kotlin.coroutines.suspendCoroutine
+
 
 private const val TAG = "MyLogTag"
 @Singleton
@@ -128,11 +128,16 @@ class FirebaseData @Inject constructor() {
                     if (it.isSuccessful) {
                         fetchCurrentUserName()
                         Log.d(TAG,CurrentUser()?.displayName ?: "the displayname login1")
-                        runBlocking {
+                        GlobalScope.launch(Dispatchers.Main){
                             delay(500)
                             emitter.onComplete()
                             Log.d(TAG, "im delayed")
                         }
+                        /*runBlocking {
+                            delay(500)
+                            emitter.onComplete()
+                            Log.d(TAG, "im delayed")
+                        }*/
                         Log.d(TAG, "user has logged in")
                         val currentuser = FirebaseAuth.getInstance().currentUser
                         currentuser?.let {
@@ -185,13 +190,79 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    fun getSavedPost() : PostLiveData{
-        listenforPosts()
-        return savedPosts
+    fun getSavedPost() : Flow<PostLiveData>{
+        //launch coroutine builder here
+        //listenforPosts()
+
+        //return savedPosts
+        return flowpost
+    }
+
+    /*private suspend fun DatabaseReference.getValue : DataSnapshot{
+        return async(Dispatchers.Default) {
+            suspendCoroutine<DataSnapshot> {continutation -> addChildEventListener()
+
+            }
+        }
+
+
+    }*/
+
+    private val scope = CoroutineScope(Dispatchers.IO)
+
+
+   @ExperimentalCoroutinesApi
+
+    private val flowpost = callbackFlow<PostLiveData>
+    {
+        val databaseReference = FirebaseDatabase.getInstance().getReference("/posts")
+        val eventListener = databaseReference.addChildEventListener(object : ChildEventListener {
+            var savedPostsList: MutableList<Post> = mutableListOf()
+            override fun onChildRemoved(p0: DataSnapshot) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                val newPost = p0.getValue(Post::class.java)
+
+                if (newPost != null) {
+                    Log.d("ACCESSING", newPost?.text)
+                    savedPostsList.add(newPost)
+
+                    //repository.saveNewPost(newPost)
+                    //adapter.add(PostFrag(newPost.title, newPost.text))
+                }
+                savedPosts.value = savedPostsList
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+        }
+        )
+
+        awaitClose {
+            databaseReference.removeEventListener(eventListener)
+        }
     }
 
 
-    private fun listenforPosts() {
+    fun observe() {
+        scope.launch {
+            flowpost.collect { PostLiveData -> }
+        }
+    }
+    //addChildEventListener is no longer needed.
+   /* private suspend fun listenforPosts() {
         val reference = FirebaseDatabase.getInstance().getReference("/posts")
 
 
@@ -228,7 +299,7 @@ class FirebaseData @Inject constructor() {
 
         })
 
-    }
+    }*/
 
 
     companion object {

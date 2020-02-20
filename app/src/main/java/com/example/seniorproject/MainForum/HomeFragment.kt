@@ -6,10 +6,7 @@ import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.DataBindingUtil.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.*
 //import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.seniorproject.Dagger.DaggerAppComponent
@@ -30,11 +27,21 @@ import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.post_rv.view.*
-import kotlinx.coroutines.awaitAll
 //import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Named
 import com.example.seniorproject.InjectorUtils
+import kotlinx.coroutines.flow.flatMapLatest
+import com.google.common.collect.Collections2.transform
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.map
+
+
+private val <T> Flow<T>.asLiveData: T
+    get() {
+        TODO("convert flow into liveData")
+    }
 
 /**
  * A simple [Fragment] subclass.
@@ -73,7 +80,8 @@ class HomeFragment : Fragment(), PostListener {
 
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: CustomAdapter
-    private lateinit var postLiveData: PostLiveData
+    private lateinit var postLiveData: Flow<PostLiveData>
+    private lateinit var postLiveDataValue: PostLiveData
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,25 +99,50 @@ class HomeFragment : Fragment(), PostListener {
         myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         postLiveData = myViewModel.getSavedPosts()
+       // postLiveData = myViewModel.getSavedPosts()
 
-        adapter = CustomAdapter(view.context, postLiveData)
+
+       // adapter = CustomAdapter(view.context, postLiveData.flatMapLatest{myViewModel.getSavedPosts()}.asLiveData)
+        /*adapter = CustomAdapter(view.context, postLiveData.flatMapLatest{
+            coroutineScope { it.map  {
+                // Perform transform in parallel
+                async {
+
+                }
+            }.awaitAll() }.asLiveData*/
+
+        /*
+        this is the last stop for flow. postliveData should be fetchPostLiveData function in viewModel
+        thats the one with viewModelScope and the launchIn. view model will collect the flow and scope will
+        be launched in fetchPostLiveData()
+         */
+        adapter = CustomAdapter(view.context, postLiveData.map{
+            delay(1000)
+            it }
+            .asLiveData)
+
         view.post_recyclerView.adapter = adapter
         view.post_recyclerView.layoutManager = LinearLayoutManager(context)
         view.post_recyclerView.adapter = adapter
         binding.homeFragmentViewModel = myViewModel
         binding.lifecycleOwner = this
 
+        binding.postRecyclerView.adapter = adapter
+
+
+
 
         /*DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)*/
 
-        myViewModel.getSavedPosts()
+        //myViewModel.editPosts()
         //myViewModel.postListener = this
+
 
 
         binding.executePendingBindings()
 
-        while (PostLiveData.get().value != null) {
+       /* while (PostLiveData.get().value != null) {
 
             adapter = CustomAdapter(view.context, postLiveData)
             view.post_recyclerView.adapter = adapter
@@ -119,7 +152,7 @@ class HomeFragment : Fragment(), PostListener {
             binding.lifecycleOwner = this
 
             binding.executePendingBindings()
-        }
+        }*/
 
         return view
 
