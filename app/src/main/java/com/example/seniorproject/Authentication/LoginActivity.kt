@@ -10,14 +10,17 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.Utils.AuthenticationListener
 import com.example.seniorproject.viewModels.AuthenticationViewModel
+import com.example.seniorproject.databinding.SideNavHeaderBinding
+//trying to get username in nacv
 import com.example.seniorproject.R
 //import com.example.seniorproject.Utils.InjectorUtils
 import com.example.seniorproject.databinding.ActivityLoginBinding
 import com.example.seniorproject.MainForum.MainForum
+import java.lang.Thread.sleep
 import javax.inject.Inject
 import javax.inject.Named
 
-
+private const val TAG = "MyLogTag"
 class LoginActivity : AppCompatActivity(), AuthenticationListener {
 
 @Inject
@@ -30,7 +33,6 @@ class LoginActivity : AppCompatActivity(), AuthenticationListener {
     override fun onSuccess() {
         val myIntent = Intent(this@LoginActivity, MainForum::class.java)
         this@LoginActivity.startActivity(myIntent)
-        //cant redirect to main forum
     }
 
     override fun onFailure(message: String) {
@@ -48,10 +50,8 @@ class LoginActivity : AppCompatActivity(), AuthenticationListener {
 
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this,factory).get(AuthenticationViewModel::class.java)
-        val binding: ActivityLoginBinding =
-            DataBindingUtil.setContentView(this, R.layout.activity_login)
+        val binding: ActivityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         binding.authViewModel = myViewModel
-
         myViewModel.authListener = this
 
     }

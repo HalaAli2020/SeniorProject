@@ -10,14 +10,16 @@ import androidx.lifecycle.MutableLiveData
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.*
 import com.google.android.gms.tasks.Task
-import com.google.common.collect.Iterables
-import com.google.common.collect.Iterables.size
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.database.*
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.*
+import java.lang.Thread.sleep
 import kotlinx.coroutines.delay
 import java.util.*
+import java.util.logging.Handler
 import kotlin.collections.HashMap
 
 private const val TAG = "MyLogTag"
@@ -29,7 +31,8 @@ class FirebaseData @Inject constructor() {
         FirebaseAuth.getInstance()
     }
 
-   // var savedPosts: MutableLiveData<List<Post>> = MutableLiveData()
+
+    //var savedPosts: MutableLiveData<List<Post>> = MutableLiveData()
     var savedPosts : PostLiveData = PostLiveData()
     var userPosts : PostLiveData = PostLiveData()
     var Comments : CommentLive = CommentLive()
@@ -41,6 +44,9 @@ class FirebaseData @Inject constructor() {
     {
         val reference = FirebaseDatabase.getInstance().getReference("users").child(firebaseAuth.uid!!)
 
+    var changed : Boolean = false
+    var classList: MutableLiveData<List<String>> = MutableLiveData()
+    var classPostList: PostLiveData = PostLiveData()
 
        postlistener = object : ValueEventListener {
            //var savedPostsList: MutableList<Post> = mutableListOf()
@@ -79,6 +85,34 @@ class FirebaseData @Inject constructor() {
         firebaseAuth.signOut()
 
     }
+
+    fun fetchCurrentUserName() {
+        var uid = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
+        ref.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+            override fun onDataChange(p0: DataSnapshot) {
+
+                val currentUser = p0.getValue(User::class.java)
+                Log.d(TAG, "Current user fetched ${currentUser?.username}")
+                var usernameForum = currentUser?.username.toString()
+                val user = CurrentUser()
+                val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(usernameForum).build()
+                user?.updateProfile(profileUpdates)
+                    ?.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Log.d(TAG, "profile updated, emitter complete?:  ${CurrentUser()?.displayName} .")
+                        }
+                            else {
+                            Log.d(TAG, "in else in fetch current user")
+                        }
+                    }
+            }
+        })
+    }
+
 
     fun RegisterUser(username: String, email: String, password: String) =
         Completable.create { emitter ->
@@ -138,16 +172,21 @@ class FirebaseData @Inject constructor() {
             .addOnCompleteListener {
                 if (!emitter.isDisposed) {
                     if (it.isSuccessful) {
-                        emitter.onComplete()
-                        Log.d(TAG, "user has logged in")
-                        CurrentUser()
-                        /*val currentuser = FirebaseAuth.getInstance().currentUser
+                        fetchCurrentUserName()
+                        Log.d(TAG,CurrentUser()?.displayName ?: "the displayname login1")
+                        GlobalScope.launch(Dispatchers.Main){
+                            delay(500)
+                            emitter.onComplete()
+                            Log.d(TAG, "im delayed")
+                        }
+                        val currentuser = FirebaseAuth.getInstance().currentUser
                         currentuser?.let {
                             val username = currentuser.displayName
                             val email = currentuser.email
                             val uid = currentuser.uid
                             val user = User(username, email, uid)
-                        }*/
+                        }
+                        Log.d(TAG,CurrentUser()?.displayName ?: "the displayname login2")
                     } else {
                         emitter.onError(it.exception!!)
                         //should not be using two exclaimation points
@@ -168,7 +207,6 @@ class FirebaseData @Inject constructor() {
         ref.setValue(userin).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 Log.d(TAG, "saving to database worked")
-                //refP.setValue("Posts")
             } else {
                 Log.d(TAG, "not saved")
             }
@@ -176,11 +214,13 @@ class FirebaseData @Inject constructor() {
             Log.d(TAG, "Error ${it.message}")
         }
     }
-   /* fun saveNewPost(postTitle: String, postText: String) {
+
+
+    fun saveNewPost(postTitle: String, postText: String) {
         val reference = FirebaseDatabase.getInstance().getReference("/posts").push()
 
         if (postTitle.isNotEmpty() && postText.isNotEmpty()) {
-            val post = Post(postTitle, postText)
+            val post = Post(postTitle, postText, postSubject)
 
             reference.setValue(post).addOnSuccessListener {
                 Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
@@ -293,16 +333,10 @@ class FirebaseData @Inject constructor() {
         listenforPosts()
         return savedPosts
     }
-    fun getSavedUserPost() : PostLiveData{
-        listenforUserPosts()
-        return savedPosts
-    }
-    /*fun getSavedPost(crn : String, subject : String) : PostLiveData{
-        listenforPosts()
-        return savedPosts
-}*/
-    private fun listenforPostsvtwo(crn : String, subject : String) {
-        val reference = FirebaseDatabase.getInstance().getReference("Subjects/$subject/$crn/posts")
+
+
+    private fun listenforPosts() {
+        val reference = FirebaseDatabase.getInstance().getReference("/posts")
 
 
         reference.addChildEventListener(object : ChildEventListener {
@@ -321,7 +355,7 @@ class FirebaseData @Inject constructor() {
                 val newPost : Post? = p0.getValue(Post::class.java)
 
                 if (newPost != null) {
-                    Log.d("ACCESSING", newPost?.text)
+                    //Log.d("ACCESSING", newPost?.text)
                     savedPostsList.add(newPost)
 
                     //repository.saveNewPost(newPost)
@@ -333,20 +367,19 @@ class FirebaseData @Inject constructor() {
 
             override fun onChildRemoved(p0: DataSnapshot) {
             }
-
-
-
         })
 
     }
 
 
-    private fun listenforPosts() {
-        val reference = FirebaseDatabase.getInstance().getReference("/posts")
+
+
+    fun getClassPosts(className: String) : PostLiveData{
+        val reference = FirebaseDatabase.getInstance().getReference("Subjects/$className/posts")
 
 
         reference.addChildEventListener(object : ChildEventListener {
-           var savedPostsList: MutableList<Post> = mutableListOf()
+            var savedPostsList: MutableList<Post> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
 
             }
@@ -358,25 +391,34 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val newPost : Post? = p0.getValue(Post::class.java)
+                val newPost = p0.getValue(Post::class.java)
 
                 if (newPost != null) {
-                    Log.d("ACCESSING", newPost?.text)
+                    //Log.d("ACCESSING", newPost?.text)
                     savedPostsList.add(newPost)
 
                     //repository.saveNewPost(newPost)
                     //adapter.add(PostFrag(newPost.title, newPost.text))
                 }
-                savedPosts.value = savedPostsList
+                classPostList.value = savedPostsList
 
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {
             }
-
-
-
         })
+
+        return classPostList
+    }
+
+
+
+    fun getClasses() : MutableLiveData<List<String>>{
+        val reference = FirebaseDatabase.getInstance().getReference().child("/Subjects")
+
+        reference.addListenerForSingleValueEvent(object : ValueEventListener {
+            var classes: MutableList<String> = mutableListOf()
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
 
     }
     private fun listenforUserPosts() {
@@ -488,7 +530,20 @@ class FirebaseData @Inject constructor() {
 
         })
     }
+                for (datas in dataSnapshot.children) {
+                    val classnames = datas.key
+                    Log.d("BIGMOODS", classnames)
+                    classnames?.let { classes.add(it) }
+                }
+                classList.value = classes
+            }
 
+            override fun onCancelled(databaseError: DatabaseError) {
+            }
+        })
+
+        return classList
+    }
 
     companion object {
         @Volatile

@@ -11,4 +11,11 @@
     <string name="comment">Comment</string>
 
 
+
+    <string-array name="class_list">
+        <item>CSC1500</item>
+        <item>BIO1500</item>
+    </string-array>
+
+
 </resources>

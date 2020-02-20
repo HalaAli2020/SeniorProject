@@ -9,6 +9,7 @@ import com.example.seniorproject.MainForum.HomeFragment
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.PostLiveData
+import com.example.seniorproject.data.models.User
 import com.example.seniorproject.data.repositories.PostRepository
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -22,6 +23,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+
+private const val TAG = "MyLogTag"
 
 class HomeFragmentViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
 
@@ -50,6 +53,11 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
         postdata = getSavedPosts()
         return postdata
     }
+
+    fun fetchCurrentUserName() = repository.fetchCurrentUserName()
+
+     var user = repository.currentUser()
+
 
 
 }

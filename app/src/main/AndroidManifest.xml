@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainForum.ClickedPost"></activity>
+        <activity android:name=".MainForum.CommunityPosts"></activity>
+        <activity android:name=".MainForum.ClickedPost" />
         <activity
             android:name=".MainForum.MainForum"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">

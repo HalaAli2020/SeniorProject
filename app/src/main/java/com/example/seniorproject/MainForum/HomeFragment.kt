@@ -36,6 +36,8 @@ import javax.inject.Inject
 import javax.inject.Named
 import com.example.seniorproject.InjectorUtils
 
+
+
 /**
  * A simple [Fragment] subclass.
  */
@@ -95,7 +97,12 @@ class HomeFragment : Fragment(), PostListener {
 
         adapter = CustomAdapter(view.context, postLiveData)
         view.post_recyclerView.adapter = adapter
-        view.post_recyclerView.layoutManager = LinearLayoutManager(context)
+
+        val linearLayoutManager = LinearLayoutManager(context)
+        linearLayoutManager.reverseLayout = true
+        linearLayoutManager.stackFromEnd = true
+        view.post_recyclerView.layoutManager = linearLayoutManager
+
         view.post_recyclerView.adapter = adapter
         binding.homeFragmentViewModel = myViewModel
         binding.lifecycleOwner = this
@@ -114,14 +121,19 @@ class HomeFragment : Fragment(), PostListener {
 
             adapter = CustomAdapter(view.context, postLiveData)
             view.post_recyclerView.adapter = adapter
-            view.post_recyclerView.layoutManager = LinearLayoutManager(context)
+
+            val linearLayoutManager = LinearLayoutManager(context)
+            linearLayoutManager.reverseLayout = true
+            linearLayoutManager.stackFromEnd = true
+
+
+            view.post_recyclerView.layoutManager = linearLayoutManager
             view.post_recyclerView.adapter = adapter
             binding.homeFragmentViewModel = myViewModel
             binding.lifecycleOwner = this
 
             binding.executePendingBindings()
         }
-
 
         return view
 
@@ -176,24 +188,7 @@ class HomeFragment : Fragment(), PostListener {
         }
     }
 
-
-    private fun fetchCurrentUser(){
-        var uid = FirebaseAuth.getInstance().uid
-        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
-        ref.addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                currentUser = p0.getValue(User::class.java)
-                Log.d("LatestMessages", "Current user ${currentUser?.username}")
-                val usernameForum = currentUser?.username
-                username_forum.text = "Welcome " + usernameForum
-            }
-        })
-    }*/
-
+*/
 
 
 

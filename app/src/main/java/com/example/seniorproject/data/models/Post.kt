@@ -9,23 +9,16 @@ import com.xwray.groupie.Item
 
 import kotlinx.android.synthetic.main.post_rv.view.*
 
-data class Post(var title: String?, var text: String?)
+data class Post(val title: String?, val text: String?, val subject: String?)
 {
     //val title: String, val text: String, val courseID: Int, val uid: String
-    constructor(): this("","")
-    private  var comments : List<Comment> = emptyList()
-    //private val database = FirebaseDatabase.getInstance()
-     var author : String? = null
-     var subject : String? = null
-     var crn : String? = null
-     var ptime: Long? = null
-    var Classkey : String? = null
-    var Userkey : String? = null
-    var key : String? = null
+    constructor(): this("","", "CSC1500")
+
+    private val database = FirebaseDatabase.getInstance()
+    private var ptime: Long
     init {
         // backend will initalize values here or set to null if
-       // ptime = System.currentTimeMillis()
-
+        ptime = 1
 
     }
 
@@ -37,21 +30,7 @@ data class Post(var title: String?, var text: String?)
         viewHolder.itemView.post_text.text = text
         viewHolder.itemView.post_title.text = title
     }
-    fun toMap(): Map<String, Any?> {
-        return mapOf(
-            "title" to title,
-            "text" to text,
-            "Time" to ptime,
-            "Author" to author,
-            "subject" to subject,
-            "crn" to crn,
-            "comments" to comments,
-            "UserKey" to Userkey,
-            "Classkey" to Classkey,
-            "Key" to key
 
-        )
 
-    }
     // should include database functions later on to correctly get information to fill class with proper query
 }
