@@ -27,7 +27,7 @@ data class Post(val title: String?, val text: String?, val subject: String?)
     }
 
      fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.post_text.text = text
+
         viewHolder.itemView.post_title.text = title
     }
 
