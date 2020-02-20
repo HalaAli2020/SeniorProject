@@ -42,7 +42,6 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData) :
         } else {
             val post: Post = savedPosts.value!![position]
             holder.itemView.post_title.text = post.title
-            holder.itemView.post_text.text = post.text
 
             holder.itemView.setOnClickListener {
                 val intent = Intent(mContext, ClickedPost::class.java)
@@ -50,10 +49,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData) :
                 intent.putExtra("Text", post.text)
                 mContext.startActivity(intent)
             }
-
         }
-
-
     }
 
 }
