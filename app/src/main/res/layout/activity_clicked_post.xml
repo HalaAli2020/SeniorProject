@@ -30,7 +30,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="15dp"
-            android:text=""
+            android:textColor="@color/TextColor"
             android:textSize="23dp"
             android:textStyle="bold" />
 
@@ -42,13 +42,12 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingBottom="5dp"
-            android:text=""
+            android:textColor="@color/TextColor"
             android:textSize="15dp" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/comment_RecyclerView"
-            android:layout_width="388dp"
-            android:layout_height="434dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp" />
 
