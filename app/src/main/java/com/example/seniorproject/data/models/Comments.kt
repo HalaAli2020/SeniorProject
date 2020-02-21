@@ -5,14 +5,14 @@ import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.comment_rv.view.*
 import kotlinx.android.synthetic.main.post_rv.view.*
 
-class Comment(val text: String, var Ptime : Long?, var PosterID : String?, var Classkey : String?, var Postkey : String?)
+class Comment(val text: String, var Ptime : Long?, var PosterID : String?, var crn : String?, var Postkey : String?)
 {
     constructor() : this("", null,"", "", "")
 
    // var PosterID : String? = null
     //var Ptime : Long? = null
-    //var Classkey : String? = null
-    //var Postkey : String? = null
+    var ClassComkey : String? = null
+    var UserComkey : String? = null
 
 
 
@@ -32,8 +32,10 @@ class Comment(val text: String, var Ptime : Long?, var PosterID : String?, var C
             "text" to text,
             "PosterID" to PosterID,
             "Ptime" to Ptime,
+            "crn" to crn,
             "Postkey" to Postkey,
-            "Classkey" to Classkey
+            "Classkey" to ClassComkey,
+            "UserComkey" to UserComkey
 
         )
 

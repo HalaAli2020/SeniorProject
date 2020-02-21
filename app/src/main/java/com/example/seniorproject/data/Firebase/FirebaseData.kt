@@ -374,16 +374,18 @@ class FirebaseData @Inject constructor() {
         //FIX userprofile not init post.author = userprofile.username!!
         //val Class_key = FirebaseDatabase.getInstance().getReference(CRN).child("Posts").push().key
         //FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID")
-        val User_key = FirebaseDatabase.getInstance().getReference("/Subjects/CSC1500/Posts/$ClassKey").child("Comments").push().key
-        val Class_key = FirebaseDatabase.getInstance().getReference("/users/$UserID/Posts/$postID").child("Comments").push().key
+        val Class_key = FirebaseDatabase.getInstance().getReference("/Subjects/CSC1500/Posts/$ClassKey").child("Comments").push().key
+        val User_key = FirebaseDatabase.getInstance().getReference("/users/$UserID/Posts/$postID").child("Comments").push().key
         // implement in viewmodel
         //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
+        comment.ClassComkey = Class_key
+        comment.UserComkey = User_key
         val dataupdates = HashMap<String, Any>()
         val comementvalues = comment.toMap()
-        dataupdates["Subjects/CSC1500/Posts/Comments/$Class_key"] = comementvalues
-        dataupdates["$UserID/Posts/Comments/$User_key"] = comementvalues
+        dataupdates["Subjects/CSC1500/Posts/$ClassKey/Comments/$Class_key"] = comementvalues
+        dataupdates["users/$UserID/Posts/$postID/Comments/$User_key"] = comementvalues
         //FirebaseDatabase.getInstance().getReference("users/$userID/Post/$postID").child("Comments/$User_key").setValue(comementvalues)
-        FirebaseDatabase.getInstance().reference.updateChildren(comementvalues)
+        FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
         /*Class_reference.setValue(post).addOnSuccessListener {
                 Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
             }.addOnFailureListener {
