@@ -46,8 +46,9 @@
             android:textSize="15dp" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:id="@+id/comment_RecyclerView"
+            android:layout_width="367dp"
+            android:layout_height="428dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp" />
 

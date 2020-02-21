@@ -42,7 +42,7 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
        }
         CommentsLiveList = repository.getComments(PKey!!)
 
-        return CommentsLiveList!!
+        return CommentsLiveList
     }
     fun newComment()
     {

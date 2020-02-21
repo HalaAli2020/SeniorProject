@@ -34,10 +34,10 @@ data class Post(var title: String?, var text: String?, val subject: String?)
         return R.layout.post_rv
     }
 
-    fun bind(viewHolder: GroupieViewHolder, position: Int) {
+   /* fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.post_text.text = text
         viewHolder.itemView.post_title.text = title
-    }
+    }*/
     fun toMap(): Map<String, Any?> {
         return mapOf(
             "title" to title,

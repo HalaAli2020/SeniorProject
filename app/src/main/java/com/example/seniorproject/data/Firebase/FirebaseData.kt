@@ -290,7 +290,7 @@ class FirebaseData @Inject constructor() {
 
     fun getComments(Key : String) : CommentLive  {
         val uid = FirebaseAuth.getInstance().uid
-        val reference = FirebaseDatabase.getInstance().getReference("users/$uid/Post/$Key").child("Comments")
+        val reference = FirebaseDatabase.getInstance().getReference("users/$uid/Posts/$Key").child("Comments")
 
         reference.addChildEventListener(object : ChildEventListener {
             var savedCommentList: MutableList<Comment> = mutableListOf()
