@@ -1,9 +1,9 @@
 package com.example.seniorproject.data.Firebase
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.example.seniorproject.data.models.Post
-import com.example.seniorproject.data.models.PostLiveData
 import com.example.seniorproject.data.models.User
 import com.example.seniorproject.data.repositories.PostRepository
 import com.google.firebase.auth.FirebaseAuth
@@ -12,12 +12,12 @@ import com.google.firebase.database.*
 import com.squareup.okhttp.Dispatcher
 import io.reactivex.Completable
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.sendBlocking
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.suspendCoroutine
@@ -33,8 +33,7 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    // var savedPosts: MutableLiveData<List<Post>> = MutableLiveData()
-    var savedPosts : PostLiveData = PostLiveData()
+    //var savedPosts : MutableLiveData<List<Post>> = MutableLiveData()
     var changed : Boolean = false
 
     fun CurrentUser() = firebaseAuth.currentUser
@@ -190,116 +189,128 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    fun getSavedPost() : Flow<PostLiveData>{
+    fun getSavedPost() : Flow<List<Post>>{
         //launch coroutine builder here
         //listenforPosts()
 
         //return savedPosts
-        return flowpost
+        return getPostsFlow()
     }
 
-    /*private suspend fun DatabaseReference.getValue : DataSnapshot{
-        return async(Dispatchers.Default) {
-            suspendCoroutine<DataSnapshot> {continutation -> addChildEventListener()
-
-            }
-        }
-
-
-    }*/
 
     private val scope = CoroutineScope(Dispatchers.IO)
 
+    @ExperimentalCoroutinesApi
 
-   @ExperimentalCoroutinesApi
-
-    private val flowpost = callbackFlow<PostLiveData>
-    {
+    fun getPostsFlow(): Flow<List<Post>> = channelFlow{
         val databaseReference = FirebaseDatabase.getInstance().getReference("/posts")
+        var savedPostsList: MutableList<Post?> = mutableListOf()
         val eventListener = databaseReference.addChildEventListener(object : ChildEventListener {
-            var savedPostsList: MutableList<Post> = mutableListOf()
             override fun onChildRemoved(p0: DataSnapshot) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
-
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val newPost = p0.getValue(Post::class.java)
+                launch {
+                    val newPost: Post? = p0.getValue(Post::class.java)
 
-                if (newPost != null) {
-                    Log.d("ACCESSING", newPost?.text)
-                    savedPostsList.add(newPost)
+                    if(newPost != null){
+                        Log.d("ACCESSING", newPost?.text)
+                        savedPostsList.add(newPost)
 
-                    //repository.saveNewPost(newPost)
-                    //adapter.add(PostFrag(newPost.title, newPost.text))
+                    }
+
+                    savedPostsList.asFlow()
                 }
-                savedPosts.value = savedPostsList
+
             }
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) = Unit
 
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) = Unit
 
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
+            override fun onCancelled(p0: DatabaseError) = Unit
+    })
 
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
 
-        }
-        )
+        awaitClose {databaseReference.removeEventListener(eventListener) }
 
-        awaitClose {
-            databaseReference.removeEventListener(eventListener)
-        }
     }
 
 
-    fun observe() {
-        scope.launch {
-            flowpost.collect { PostLiveData -> }
-        }
+            // var savedPostsList: MutableList<Post> = mutableListOf()
+     /*       override fun onChildRemoved(p0: DataSnapshot) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-    //addChildEventListener is no longer needed.
-   /* private suspend fun listenforPosts() {
-        val reference = FirebaseDatabase.getInstance().getReference("/posts")
-
-
-        reference.addChildEventListener(object : ChildEventListener {
-            var savedPostsList: MutableList<Post> = mutableListOf()
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-            }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val newPost = p0.getValue(Post::class.java)
+        launch {
+            val newPost = p0.getValue(Post::class.java)
 
-                if (newPost != null) {
-                    Log.d("ACCESSING", newPost?.text)
-                    savedPostsList.add(newPost)
-
-                    //repository.saveNewPost(newPost)
-                    //adapter.add(PostFrag(newPost.title, newPost.text))
-                }
-                savedPosts.value = savedPostsList
-
+            if(newPost != null){
+                Log.d("ACCESSING", newPost?.text)
+                // emitAll(newPost)
             }
+        }
 
-            override fun onChildRemoved(p0: DataSnapshot) {
-            }
+        /*if (newPost != null) {
+            Log.d("ACCESSING", newPost?.text)
+            savedPostsList.add(newPost)
 
+            //repository.saveNewPost(newPost)
+            //adapter.add(PostFrag(newPost.title, newPost.text))
+        }*/
+    }
 
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
-        })
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
-    }*/
+            override fun onCancelled(p0: DatabaseError) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    }
+    )*/
+  /* @ExperimentalCoroutinesApi
+   private val flowpost = com.example.seniorproject.data.models.flowViaChannel<Post>
+   {  val databaseReference = FirebaseDatabase.getInstance().getReference("/posts")
+       val eventListener = databaseReference.addChildEventListener(object : ChildEventListener {
+           var savedPostsList: MutableList<Post> = mutableListOf()
+           override fun onChildRemoved(p0: DataSnapshot) {
+           }
+
+           override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+               val newPost = p0.getValue(Post::class.java)
+
+               if (newPost != null) {
+                   Log.d("ACCESSING", newPost?.text)
+                   savedPostsList.add(newPost)
+
+                   //repository.saveNewPost(newPost)
+                   //adapter.add(PostFrag(newPost.title, newPost.text))
+               }
+               savedPosts.value = savedPostsList
+           }
+
+           override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+           }
+
+           override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+           }
+
+           override fun onCancelled(p0: DatabaseError) {
+           }
+
+       }
+       )
+
+           databaseReference.removeEventListener(eventListener)
+       //potential problem here. wrap removeEventlistener into await?
+        }*/
+
 
 
     companion object {

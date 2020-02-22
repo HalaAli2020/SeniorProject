@@ -1,12 +1,12 @@
 package com.example.seniorproject.viewModels
 
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.seniorproject.MainForum.CustomAdapter
 import com.example.seniorproject.MainForum.HomeFragment
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.Post
-import com.example.seniorproject.data.models.PostLiveData
 import com.example.seniorproject.data.models.User
 import com.example.seniorproject.data.repositories.PostRepository
 import com.google.firebase.database.ChildEventListener
@@ -18,7 +18,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 private const val TAG = "MyLogTag"
@@ -26,34 +26,52 @@ private const val TAG = "MyLogTag"
 class HomeFragmentViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
 
     private lateinit var adapter: CustomAdapter
-    private lateinit var postLiveData: Flow<PostLiveData>
+    private lateinit var listofposts: List<Post>
+
+    //COLLECT VALUES HERE AND DISPLAY THEM IN HOME FRAGMENT
+    //take flow from repository and emit values in view model.
+
+
+    fun fetchCurrentUserName() = repository.fetchCurrentUserName()
+
+    var user = repository.currentUser()
 
 
 
-    fun getSavedPosts(): Flow<PostLiveData> {
+    fun getSavedPosts(): Flow<List<Post>> {
+            return repository.getSavedPosts()
+        }
 
-        return repository.getSavedPosts()
-        //return posts
-    }
 
-    /*var listofposts = object : MutableLiveData<List<Post>>() {
+
+    /*viewModelScope.launch {
+        repository.getSavedPosts().collect {
+
+        }
+
+    }*/
+
+   /* var listofposts = object : MutableLiveData<List<Post>>() {
         override fun onActive() {
             value?.let { return }
 
             viewModelScope.launch {
-                var job: Flow<Unit>? = null
-                    //mini piece
-                repository.getSavedPosts()
+               // var job: Flow<Unit>? = null
+                //mini piece
+                repository.getSavedPosts().collect {
+
+                    //store them in an arraylist
+                }
             }//.launchIn
 
         }*/
 
 
 
-        var posts: PostLiveData = PostLiveData()
-    //var postdata: PostLiveData = PostLiveData.get()
+       // var posts: PostLiveData = PostLiveData()
+        //var postdata: PostLiveData = PostLiveData.get()
 
-    /*var listofposts = object : MutableLiveData<List<Post>>() {
+        /*var listofposts = object : MutableLiveData<List<Post>>() {
         override fun onActive() {
             value?.let { return }
 
@@ -65,43 +83,5 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
 
         }*/
 
-
-       /* init {
-            var listofposts = object : MutableLiveData<List<Post>>() {
-                override fun onActive() {
-                    value?.let { return }
-
-                    viewModelScope.launch {
-                        var job: Flow<Unit>? = null
-
-                        repository.getSavedPosts()
-                    }
-
-                }
-            //FIX: launch viewmodelScope
-            //repository.getSavedPosts()
-        }
-
-
-        fun getSavedPosts(): Flow<PostLiveData> {
-
-            return repository.getSavedPosts()
-            //return posts
-        }*/
-
-        fun editPost(): Flow<PostLiveData> {
-        return getSavedPosts()
-    }
-
-        fun fetchCurrentUserName() = repository.fetchCurrentUserName()
-
-        var user = repository.currentUser()
-
-
-        //launch coroutines builder here and
-        //emit and collect take that collection to home fragment
-
-    }
-
-
+  }
 

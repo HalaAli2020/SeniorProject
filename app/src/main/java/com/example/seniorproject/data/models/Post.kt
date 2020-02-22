@@ -32,5 +32,6 @@ data class Post(val title: String?, val text: String?)
     }
 
 
+
     // should include database functions later on to correctly get information to fill class with proper query
 }
