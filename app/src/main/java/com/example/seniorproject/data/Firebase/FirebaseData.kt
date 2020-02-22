@@ -1,4 +1,6 @@
 package com.example.seniorproject.data.Firebase
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -15,12 +17,14 @@ import com.google.firebase.database.*
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.*
 import java.lang.Thread.sleep
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
+import java.net.URI
 import java.util.*
 import java.util.logging.Handler
 import kotlin.collections.HashMap
@@ -60,7 +64,8 @@ class FirebaseData @Inject constructor() {
            override fun onDataChange(p0: DataSnapshot) {
                val username = p0.child("Username").getValue(String::class.java)
                val email = p0.child("email").getValue(String::class.java)
-               userprofile = User(username, email, firebaseAuth.uid)
+               var profileImageUrl =p0.child("profileImageUrl").getValue(Uri::class.java)
+               userprofile = User(username, email, firebaseAuth.uid, profileImageUrl)
 
                 Log.d("USERNAME", username!!)
                 Log.d("USER", userprofile.username!!)
@@ -93,7 +98,6 @@ class FirebaseData @Inject constructor() {
 
     }
 
-
     fun fetchCurrentUserName() {
         var uid = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
@@ -122,7 +126,7 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    fun RegisterUser(username: String, email: String, password: String) =
+    fun RegisterUser(username: String, email: String, password: String, profileImageUrl: Uri) =
         Completable.create { emitter ->
             Log.d(TAG, "Entered register user function!!! Email: " + email)
             Log.d(TAG, "pass: " + password)
@@ -137,7 +141,7 @@ class FirebaseData @Inject constructor() {
                             emitter.onComplete()
                             Log.d(TAG, "NEW USER, uid: ${it.result?.user?.uid}")
                             val uid = FirebaseAuth.getInstance().uid
-                            uid?.let { it1 -> saveUserToFirebaseDatabase(username, email, it1) }
+                            uid?.let { it1 -> saveUserToFirebaseDatabase(username, email, it1, profileImageUrl)}
                         } else {
                             emitter.onError(it.exception!!)
                             //return@addOnCompleteListener
@@ -160,7 +164,8 @@ class FirebaseData @Inject constructor() {
                             val username = currentuser.displayName
                             val email = currentuser.email
                             val uid = currentuser.uid
-                            val user = User(username, email, uid)
+                            val profileImageUrl = currentuser.photoUrl
+                            val user = User(username, email, uid, profileImageUrl)
                         }
 
                     } else {
@@ -192,7 +197,8 @@ class FirebaseData @Inject constructor() {
                             val username = currentuser.displayName
                             val email = currentuser.email
                             val uid = currentuser.uid
-                            val user = User(username, email, uid)
+                            var profileImageUrl = currentuser.photoUrl
+                            val user = User(username, email, uid, profileImageUrl)
                         }
                         Log.d(TAG,currentuser!!.displayName ?: "the displayname login2")
                     } else {
@@ -204,12 +210,12 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    private fun saveUserToFirebaseDatabase(username: String, email: String, password: String) {
+    private fun saveUserToFirebaseDatabase(username: String, email: String, password: String, profileImageUrl: Uri) {
         Log.d("Debug", "entered firebase database function")
         val uid = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("users/$uid")
         //val refP = FirebaseDatabase.getInstance().getReference("users/$uid")
-        val user = User(username, email, password)
+        val user = User(username, email, password, profileImageUrl)
         val userin = user.toMap()
 
         ref.setValue(userin).addOnCompleteListener { task ->
@@ -556,6 +562,31 @@ class FirebaseData @Inject constructor() {
         return savedPosts
     }
 
+
+    var selectedPhotoUri: Uri? =null
+
+     fun uploadImageToFirebaseStorage(){
+        if(selectedPhotoUri == null) return
+
+        val filename = UUID.randomUUID().toString()
+        val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
+
+        ref.putFile(selectedPhotoUri!!)
+            .addOnSuccessListener {
+                Log.d("Pic", "Successfully loaded picture: ${it.metadata?.path}")
+
+                ref.downloadUrl.addOnSuccessListener {
+                    it.toString()
+
+                    Log.d("Pic", "File location: $it")
+
+
+                   //saveUserToFirebaseDatabase(it.toString())
+
+                }
+            }
+
+    }
 
     private fun listenforUserPosts() {
         // val userID = FirebaseAuth.getInstance().currentUser

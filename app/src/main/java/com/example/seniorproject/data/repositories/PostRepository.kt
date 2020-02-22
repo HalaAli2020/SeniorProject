@@ -65,6 +65,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     }*/
 
 
+    fun fetchUserProfileImage() = Firebase.uploadImageToFirebaseStorage()
 
 
     fun newComment(PKey: String, Comment: String, Classkey: String, UserID: String) = Firebase.saveNewComment(Comment ,PKey, Classkey, UserID)

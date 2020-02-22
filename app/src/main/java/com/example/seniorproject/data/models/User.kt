@@ -1,10 +1,11 @@
 package com.example.seniorproject.data.models
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 
-data class User(val username: String?, val email: String?, val uid: String?)
+data class User(val username: String?, val email: String?, val uid: String?, val profileImageUrl: Uri?)
 {
-    constructor(): this("","","")
+    constructor(): this("","","", Uri.EMPTY)
      var Posts  = mutableListOf<Post>()
     //lateinit var Subscriptions : List<String>
     var Admin : Boolean = true
@@ -18,6 +19,7 @@ data class User(val username: String?, val email: String?, val uid: String?)
             "Username" to username,
             "email" to email,
             "uid" to uid,
+            "profileImage" to profileImageUrl,
             "Admin" to Admin,
             //"Subscriptions" to Subscriptions,
             "Posts" to Posts
