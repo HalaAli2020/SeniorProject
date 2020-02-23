@@ -42,8 +42,9 @@ class FirebaseData @Inject constructor() {
     private lateinit var postlistener : ValueEventListener
     private lateinit var userprofile : User
     var newComments : Comment? = null
-    var classList : MutableLiveData<List<String>> = MutableLiveData()
+    var classList : MutableList<CRN> = mutableListOf()
     var classPostList : PostLiveData = PostLiveData()
+    var UserSUB : MutableList<String>? = null
     fun CurrentUser() = FirebaseAuth.getInstance().currentUser
 
 
@@ -103,9 +104,9 @@ class FirebaseData @Inject constructor() {
             }
             override fun onDataChange(p0: DataSnapshot) {
 
-                val currentUser = p0.getValue(User::class.java)
-                Log.d(TAG, "Current user fetched ${currentUser?.username}")
-                var usernameForum = currentUser?.username.toString()
+                val currentUser = p0.child("Username").getValue(String::class.java)
+                Log.d(TAG, "Current user fetched ${currentUser}")
+                var usernameForum = currentUser
                 val user = CurrentUser()
                 val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(usernameForum).build()
                 user?.updateProfile(profileUpdates)
@@ -471,6 +472,133 @@ class FirebaseData @Inject constructor() {
         })
 
     }
+    fun addUserSub(Classname : String, Subject: String)
+    {
+
+    }
+    fun getUserSub()
+    {
+        val uid = FirebaseAuth.getInstance().uid
+        Log.d("uid", uid!!)
+        val reference = FirebaseDatabase.getInstance().getReference("users/$uid/Subscriptions")
+        reference.addValueEventListener(object : ValueEventListener {
+            val SubList : MutableList<String> = mutableListOf()
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                val size = p0.hasChildren()
+                Log.d("Size", size.toString())
+                //var has :HashMap<String,String>? = hashMapOf()
+                val Sublist = p0.children
+                for(x in Sublist)
+                {
+                    Log.d("usersub", x.getValue(String::class.java)!!)
+                    SubList.add(x.getValue(String ::class.java)!!)
+                }
+                UserSUB = SubList
+            }
+        })
+    }
+
+    fun sendUserSUB() : MutableList<String>?
+    {
+        var sub = UserSUB
+        if(sub == null)
+        {
+            getUserSub()
+            sub = UserSUB
+
+        }
+       return sub
+    }
+    //, Subject: String
+    fun addUserSUB(crn : String)
+    {
+        if(UserSUB == null)
+        {
+            getUserSub()
+        }
+        var SubAdd = HashMap<String, String>()
+        //SubAdd[crn] = Subject
+        val uid = FirebaseAuth.getInstance().uid
+        var ref = FirebaseDatabase.getInstance().getReference("users/$uid").child("Subscriptions")
+        ref.push().setValue(crn)
+        val rref = FirebaseDatabase.getInstance().getReference("Subjects/$crn").child("SubList")
+        rref.push().setValue(uid)
+
+    }
+    fun removeUserSub(crn : String)
+    {
+        val uid = FirebaseAuth.getInstance().uid
+        Log.d("uid", uid!!)
+        val reference = FirebaseDatabase.getInstance().getReference("users/$uid/Subscriptions")
+        reference.addValueEventListener(object : ValueEventListener {
+            val SubList : MutableList<String> = mutableListOf()
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                val size = p0.hasChildren()
+                Log.d("Size", size.toString())
+                //var has :HashMap<String,String>? = hashMapOf()
+                val Sublist = p0.children
+                for(x in Sublist)
+                {
+                    if(crn == x.getValue(String :: class.java))
+                    {
+                        Log.d("Remove", "remove hit")
+                        x.key
+                        reference.child(x.key!!).removeValue()
+                    }
+                    else
+                    {
+                        Log.d("usersub", x.getValue(String::class.java)!!)
+                        SubList.add(x.getValue(String ::class.java)!!)
+                    }
+                }
+
+                UserSUB = SubList
+            }
+        })
+    }
+    fun removeClassSub(crn : String)
+    {
+        val uid = FirebaseAuth.getInstance().uid
+        Log.d("uid", uid!!)
+        val reference = FirebaseDatabase.getInstance().getReference("Subjects/$crn/SubList")
+        reference.addValueEventListener(object : ValueEventListener {
+            val SubList : MutableList<String> = mutableListOf()
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                val size = p0.hasChildren()
+                Log.d("Size", size.toString())
+                //var has :HashMap<String,String>? = hashMapOf()
+                val Sublist = p0.children
+                for(x in Sublist)
+                {
+                    if(uid == x.getValue(String :: class.java))
+                    {
+                        Log.d("Remove", "remove hit")
+
+                        reference.child(x.key!!).removeValue()
+                    }
+                    else
+                    {
+                        Log.d("usersub", x.getValue(String::class.java)!!)
+                        SubList.add(x.getValue(String ::class.java)!!)
+                    }
+                }
+
+                UserSUB = SubList
+            }
+        })
+    }
 
 
 
@@ -531,31 +659,55 @@ class FirebaseData @Inject constructor() {
 
 
 
-    fun getClasses() : MutableLiveData<List<String>>{
-        val reference = FirebaseDatabase.getInstance().getReference().child("/Subjects")
+    fun getClasses(){
+        val reference = FirebaseDatabase.getInstance().reference.child("/Subjects")
 
         reference.addListenerForSingleValueEvent(object : ValueEventListener {
             var classes: MutableList<String> = mutableListOf()
             override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                val Clist : MutableList<CRN> = mutableListOf()
+
                 for (datas in dataSnapshot.children) {
-                    val classnames = datas.key
-                    Log.d("BIGMOODS", classnames)
-                    classnames?.let { classes.add(it) }
-                }
-                classList.value = classes
+                    val classnames = CRN()
+                    val CC :Long = 2
+                    //if(datas.childrenCount == CC)
+                    classnames?.let { x -> x.name = datas.key!!
+                    //x.Subject = datas.child("subject").getValue(String::class.java)
+                        x.SUBLIST = SeparateList(datas.child("SubList"))
+                        }
+                    classList.add(classnames)
+               }
+
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
             }
         })
 
-        return classList
+
     }
     fun getSavedUserPost() : PostLiveData
     {
         return savedPosts
     }
+    fun SeparateList(p0 : DataSnapshot) : List<String>?
+    {
+        var SubList :MutableList<String> = mutableListOf()
+        for(datas in p0.children)
+        {
+           if(datas != null)
+            SubList.add(datas.getValue(String::class.java)!!)
+        }
+        return SubList
+    }
+    fun sendClist() : MutableList<CRN>
+    {
+        if(classList.isEmpty())
+        getClasses()
 
+        return classList
+    }
 
     private fun listenforUserPosts() {
         // val userID = FirebaseAuth.getInstance().currentUser

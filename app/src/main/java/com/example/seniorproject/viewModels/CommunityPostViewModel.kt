@@ -20,6 +20,10 @@ class CommunityPostViewModel @Inject constructor(private val repository: PostRep
         getClasses(className)
         return listClasses
     }
+    fun add_Sub()
+    {
+
+    }
 
 
 

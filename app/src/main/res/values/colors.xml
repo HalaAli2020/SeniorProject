@@ -7,4 +7,6 @@
     <color name="blue_theme">#2b99fd</color>
     <color name="grey">#888888</color>
     <color name="TextColor">#000000</color>
+    <color name="Subscribed">#9acd32</color>
+    <color name="notSub">#0009ff</color>
 </resources>

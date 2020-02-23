@@ -73,9 +73,23 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun fetchCurrentUserName() = Firebase.fetchCurrentUserName()
 
-    fun getClasses() = Firebase.getClasses()
+    fun getClasses() = Firebase.sendClist()
 
     fun getClassPosts(className: String) = Firebase.getClassPosts(className)
+
+    fun getUserSub() : MutableList<String>?  {
+        return Firebase.sendUserSUB()
+
+    }
+    fun addUsersub(crn : String)
+    {
+        Firebase.addUserSUB(crn)
+    }
+    fun remUsersub(crn : String)
+    {
+        Firebase.removeUserSub(crn)
+        Firebase.removeClassSub(crn)
+    }
 
     companion object {
         @Volatile
