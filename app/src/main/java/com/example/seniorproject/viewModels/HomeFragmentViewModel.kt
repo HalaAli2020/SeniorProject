@@ -27,7 +27,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import android.provider.MediaStore
 
 private const val TAG = "MyLogTag"
 
@@ -42,26 +41,9 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
         posts = repository.getSavedPosts()
     }
 
-
     fun fetchUserProfileImage() = repository.fetchUserProfileImage()
 
 
-     //   val intent= Intent.ACTION_PICK
-       // intent.type="image/*"
-        //ActivityCompat.startActivityForResult(intent, requestCode: 0)
-
-
-
-   // override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-     //   super.onActivityResult(requestCode, resultCode, data)
-       // if (requestCode == resultCode == Activity.RESULT_OK && data !=null)
-        //{
-
-          //  val uri = data.data
-
-            //val bitmap= MediaStore.Images.Media.getBitmap(conte, uri)
-        //}
-    //}
 
     fun getSavedPosts(): PostLiveData {
 

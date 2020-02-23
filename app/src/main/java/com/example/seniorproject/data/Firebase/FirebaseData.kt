@@ -200,6 +200,7 @@ class FirebaseData @Inject constructor() {
                             var profileImageUrl = currentuser.photoUrl
                             val user = User(username, email, uid, profileImageUrl)
                         }
+                        uploadImageToFirebaseStorage()
                         Log.d(TAG,currentuser!!.displayName ?: "the displayname login2")
                     } else {
                         emitter.onError(it.exception!!)

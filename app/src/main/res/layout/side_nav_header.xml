@@ -21,8 +21,7 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="25dp"
-            android:paddingRight="10dp"
-            android:src="@{() -> viewmodell.fetchUserProfileImage()}" />
+            android:paddingRight="10dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
