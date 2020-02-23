@@ -1,5 +1,6 @@
 package com.example.seniorproject.data.repositories
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
@@ -65,7 +66,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     }*/
 
 
-    fun fetchUserProfileImage() = Firebase.uploadImageToFirebaseStorage()
+    fun uploadUserProfileImage(selectedPhotoUri: Uri) = Firebase.uploadImageToFirebaseStorage(selectedPhotoUri)
 
 
     fun newComment(PKey: String, Comment: String, Classkey: String, UserID: String) = Firebase.saveNewComment(Comment ,PKey, Classkey, UserID)

@@ -186,9 +186,10 @@ class FirebaseData @Inject constructor() {
                 if (!emitter.isDisposed) {
                     if (it.isSuccessful) {
                         fetchCurrentUserName()
+                     //   uploadImageToFirebaseStorage()
                         Log.d(TAG,CurrentUser()!!.displayName ?: "the displayname login1")
                         GlobalScope.launch(Dispatchers.Main){
-                            delay(500)
+                            delay(1000)
                             emitter.onComplete()
                             Log.d(TAG, "im delayed")
                         }
@@ -197,10 +198,10 @@ class FirebaseData @Inject constructor() {
                             val username = currentuser.displayName
                             val email = currentuser.email
                             val uid = currentuser.uid
+                            //lose photo here. Firebase checks photo, but photo field is not present
                             var profileImageUrl = currentuser.photoUrl
                             val user = User(username, email, uid, profileImageUrl)
                         }
-                        uploadImageToFirebaseStorage()
                         Log.d(TAG,currentuser!!.displayName ?: "the displayname login2")
                     } else {
                         emitter.onError(it.exception!!)
@@ -564,17 +565,20 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    var selectedPhotoUri: Uri? =null
+    //var selectedPhotoUri: Uri? =null
 
-     fun uploadImageToFirebaseStorage(){
-        if(selectedPhotoUri == null) return
+     fun uploadImageToFirebaseStorage(selectedPhotoUri: Uri){
+        if(selectedPhotoUri == null){
+            return
+        }
+
+         Log.d(TAG,"photo url is null")
 
         val filename = UUID.randomUUID().toString()
         val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
-
         ref.putFile(selectedPhotoUri!!)
             .addOnSuccessListener {
-                Log.d("Pic", "Successfully loaded picture: ${it.metadata?.path}")
+                Log.d("Pic", "Successfully uploaded picture: ${it.metadata?.path}")
 
                 ref.downloadUrl.addOnSuccessListener {
                     it.toString()
@@ -582,10 +586,46 @@ class FirebaseData @Inject constructor() {
                     Log.d("Pic", "File location: $it")
 
 
+
+                        var user = CurrentUser()
+
+                        val profileUpdates = UserProfileChangeRequest.Builder().setPhotoUri(it).build()
+                        user?.updateProfile(profileUpdates)
+                            ?.addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    Log.d(
+                                        TAG,
+                                        "profile image updated, emitter complete?:  ${CurrentUser()?.photoUrl} ."
+                                    )
+                                } else {
+                                    Log.d(TAG, "profile image failed to update")
+                                }
+                            }
+
+                     //  uploadImageToFirebaseDatabase(it)
+
                    //saveUserToFirebaseDatabase(it.toString())
 
                 }
             }
+
+    }
+
+    fun uploadImageToFirebaseDatabase(profileImageUrl: Uri){
+        val uid = FirebaseAuth.getInstance().uid ?: ""
+        val username = FirebaseAuth.getInstance().currentUser?.displayName ?: ""
+        val email = FirebaseAuth.getInstance().currentUser?.email ?: ""
+        val useref = FirebaseDatabase.getInstance().getReference("/users/$uid")
+
+        //val user = User(username, email, uid, profileImageUrl)
+        var user = CurrentUser()
+        useref.setValue(user).addOnSuccessListener {
+
+
+            Log.d(TAG, "profile image is added to Firebase Database schema")
+
+        }
+
 
     }
 

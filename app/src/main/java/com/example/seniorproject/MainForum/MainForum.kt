@@ -52,14 +52,14 @@ class MainForum : AppCompatActivity(),
             }
         }
 
-    fun fetchUserProfileImage(){
+    /*fun fetchUserProfileImage(){
         val currentUser = myViewModel.user
         if (currentUser != null) {
             myViewModel.fetchUserProfileImage()
         } else {
             Log.d(TAG, "profile image is not available")
         }
-    }
+    }*/
 
 
     private fun loginVerification(){
@@ -203,7 +203,7 @@ class MainForum : AppCompatActivity(),
             val bitmapDrawable = BitmapDrawable(bitmap)
             profile_image.setBackgroundDrawable(bitmapDrawable)
 
-            fetchUserProfileImage()
+            myViewModel.uploadUserProfileImage(selectedPhotoUri ?: Uri.EMPTY)
 
         }
     }

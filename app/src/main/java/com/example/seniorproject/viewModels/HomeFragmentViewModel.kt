@@ -2,6 +2,7 @@ package com.example.seniorproject.viewModels
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.net.sip.SipErrorCode
 import android.util.Log
 import androidx.core.app.ActivityCompat
@@ -41,7 +42,7 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
         posts = repository.getSavedPosts()
     }
 
-    fun fetchUserProfileImage() = repository.fetchUserProfileImage()
+    fun uploadUserProfileImage(selectedPhotoUri: Uri) = repository.uploadUserProfileImage(selectedPhotoUri)
 
 
 
