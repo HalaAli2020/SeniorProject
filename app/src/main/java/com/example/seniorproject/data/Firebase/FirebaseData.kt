@@ -200,10 +200,12 @@ class FirebaseData @Inject constructor() {
                             val username = currentuser.displayName
                             val email = currentuser.email
                             val uid = currentuser.uid
-                            val profileImageUrl = currentuser.photoUrl  // grabs a null photo
+                            val profileImageUrl = currentuser.photoUrl  // not
+                            //Log.d(TAG,currentuser!!.photoUrl.toString() ?: "the displayname login2")
                             val user = User(username, email, uid, profileImageUrl)
+                            //user not being used
                         }
-                        Log.d(TAG,currentuser!!.displayName ?: "the displayname login2")
+                       Log.d(TAG,FirebaseAuth.getInstance().currentUser?.photoUrl.toString() ?: "the displayname login2")
                     } else {
                         emitter.onError(it.exception!!)
                         //should not be using two exclaimation points
@@ -211,36 +213,6 @@ class FirebaseData @Inject constructor() {
                 }
             }
     }
-
-    /*private fun updateUser() {
-        val uid = FirebaseAuth.getInstance().uid
-        val ref= FirebaseDatabase.getInstance().getReference("users/$uid")
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val currentuser = FirebaseAuth.getInstance().currentUser
-
-                    val username = currentuser?.displayName
-                    val email = currentuser?.email
-                    val password = currentuser?.uid
-                    val profileImageUrl = currentuser?.photoUrl
-                    val user = User(username, email, password, profileImageUrl)
-                    val postValues = user.toMap().toMutableMap()
-                    for (snapshot in dataSnapshot.children) {
-                        postValues[snapshot.key] = snapshot.value
-                    }
-                    postValues["profileImageUrl"] = profileImageUrl
-                    val uid = FirebaseAuth.getInstance().uid
-                    val ref= FirebaseDatabase.getInstance().getReference("users/$uid")
-                    ref.updateChildren(postValues)
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    Log.d("error","database could not be updated")
-                }
-            }
-            )
-    }*/
 
 
 
@@ -520,7 +492,7 @@ class FirebaseData @Inject constructor() {
 
         val filename = UUID.randomUUID().toString()
         val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
-        ref.putFile(selectedPhotoUri!!)
+        ref.putFile(selectedPhotoUri)
             .addOnSuccessListener {
                 Log.d("Pic", "Successfully uploaded picture: ${it.metadata?.path}")
 

@@ -2,7 +2,9 @@ package com.example.seniorproject.MainForum
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,6 +16,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -21,6 +24,9 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.R
@@ -33,6 +39,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_main_forum.*
 import kotlinx.android.synthetic.main.side_nav_header.*
+import java.io.InputStream
+import java.net.URL
 import javax.inject.Inject
 
 private const val TAG = "MyLogTag"
@@ -88,6 +96,7 @@ class MainForum : AppCompatActivity(),
         bottom_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         loginVerification()
         //here
+
         setSupportActionBar(findViewById(R.id.toolbar))
         val actionbar: ActionBar? = supportActionBar
         actionbar?.apply {
@@ -104,8 +113,12 @@ class MainForum : AppCompatActivity(),
         sideNavHeaderBinding.viewmodell = myViewModel
         //Log.d(TAG,myViewModel.rsomthing())
 
-        Log.d(TAG,myViewModel.user?.displayName ?: "the displayname in main activity")
 
+
+
+
+
+        Log.d(TAG,myViewModel.user?.displayName ?: "the displayname in main activity")
 
 
         navigationView.setNavigationItemSelectedListener { menuItem ->
@@ -132,6 +145,18 @@ class MainForum : AppCompatActivity(),
         }
 
         val headerview = navigationView.getHeaderView(0)
+        val imageView = headerview.findViewById<ImageButton>(R.id.profile_image)
+
+        Glide.with(this) //1
+            .load(FirebaseAuth.getInstance().currentUser?.photoUrl)
+            .placeholder(R.drawable.ic_account_circle_black_24dp)
+            .error(R.drawable.ic_log_out)
+            .skipMemoryCache(true) //2
+            .diskCacheStrategy(DiskCacheStrategy.NONE) //3
+            .transform(CircleCrop()) //4
+            .into(imageView)
+
+
         headerview.findViewById<ImageButton>(R.id.profile_image).setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
@@ -178,6 +203,7 @@ class MainForum : AppCompatActivity(),
             //comment so commit will work
         }
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.top_nav_menu, menu)
