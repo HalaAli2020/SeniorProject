@@ -30,6 +30,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         Firebase.saveNewPosttoUser(post, "1", CRN)
     }
 
+    fun uploadUserProfileImage(selectedPhotoUri: Uri) = Firebase.uploadImageToFirebaseStorage(selectedPhotoUri)
+
     fun getSavedPosts() = Firebase.getSavedPost()
     fun getSavedUserPosts() = Firebase.getSavedUserPost()
 
@@ -42,31 +44,26 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     {
         return Firebase.getComments(PKey)
     }
-   /*suspend fun getCommentsCO(PKey: String) : Flow<CommentLive> = flow {
-
-
-        val flo = Firebase.getCommentsCO(PKey)
-       flo.asFlow()
-        /*flo.onCompletion()
-        {
-            flo.collect {
-                value -> CommentList.add(value!!)
-                Log.d("Flow", value.text)
-            }
-
-            CommentL.value = CommentList
-
-        }*/
-        emit(flo)
+    /*suspend fun getCommentsCO(PKey: String) : Flow<CommentLive> = flow {
+         val flo = Firebase.getCommentsCO(PKey)
+        flo.asFlow()
+         /*flo.onCompletion()
+         {
+             flo.collect {
+                 value -> CommentList.add(value!!)
+                 Log.d("Flow", value.text)
+             }
+             CommentL.value = CommentList
+         }*/
+         emit(flo)
 
 
 
 
 
-    }*/
+     }*/
 
 
-    fun uploadUserProfileImage(selectedPhotoUri: Uri) = Firebase.uploadImageToFirebaseStorage(selectedPhotoUri)
 
 
     fun newComment(PKey: String, Comment: String, Classkey: String, UserID: String) = Firebase.saveNewComment(Comment ,PKey, Classkey, UserID)

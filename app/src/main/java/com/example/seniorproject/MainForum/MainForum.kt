@@ -6,10 +6,12 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.core.view.GravityCompat
@@ -30,70 +32,24 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_main_forum.*
-import javax.inject.Inject
-import android.provider.MediaStore
-import android.widget.ImageButton
 import kotlinx.android.synthetic.main.side_nav_header.*
-
+import javax.inject.Inject
 
 private const val TAG = "MyLogTag"
 class MainForum : AppCompatActivity(),
-     FirebaseAuth.AuthStateListener {
+    FirebaseAuth.AuthStateListener {
 
-        private val firebaseAuth: FirebaseAuth by lazy {
-            FirebaseAuth.getInstance()
-        }
-        override fun onAuthStateChanged(p0: FirebaseAuth) {
-            val currentUser = myViewModel.user
-            if (currentUser != null) {
-                myViewModel.fetchCurrentUserName()
-            } else {
-                Log.d(TAG, "authlistener returned null")
-            }
-        }
-
-    /*fun fetchUserProfileImage(){
+    private val firebaseAuth: FirebaseAuth by lazy {
+        FirebaseAuth.getInstance()
+    }
+    override fun onAuthStateChanged(p0: FirebaseAuth) {
         val currentUser = myViewModel.user
         if (currentUser != null) {
-            myViewModel.fetchUserProfileImage()
+            myViewModel.fetchCurrentUserName()
         } else {
-            Log.d(TAG, "profile image is not available")
-        }
-    }*/
-
-
-    private fun loginVerification(){
-        val uid = FirebaseAuth.getInstance().uid
-        if(uid==null){
-            val intent = Intent(this, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-            //comment so commit will work
+            Log.d(TAG, "authlistener returned null")
         }
     }
-
-    private fun replaceFragment(fragment: Fragment){
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.fragmentContainer, fragment)
-        fragmentTransaction.commit()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.top_nav_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item?.itemId){
-            android.R.id.home -> {
-                mDrawerLayout.openDrawer(GravityCompat.START)
-                true
-            }
-
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -122,8 +78,6 @@ class MainForum : AppCompatActivity(),
     }
 
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -143,29 +97,18 @@ class MainForum : AppCompatActivity(),
 
 
 
-
-        mDrawerLayout = findViewById(R.id.drawer_layout)
+            mDrawerLayout = findViewById(R.id.drawer_layout)
         val navigationView: NavigationView = findViewById(R.id.nav_view)
         val sideNavHeaderBinding:SideNavHeaderBinding = DataBindingUtil.inflate(getLayoutInflater(),R.layout.side_nav_header,binding.navView,false)
         binding.navView.addHeaderView(sideNavHeaderBinding.root)
         sideNavHeaderBinding.viewmodell = myViewModel
-
-
-        val headerview = navigationView.getHeaderView(0)
-        headerview.findViewById<ImageButton>(R.id.profile_image).setOnClickListener {
-            val intent= Intent(Intent.ACTION_PICK)
-            intent.type="image/*"
-            startActivityForResult(intent, 0)
-
-
-
-
-        //}
-        // /Log.d(TAG,myViewModel.rsomthing())
+        //Log.d(TAG,myViewModel.rsomthing())
 
         Log.d(TAG,myViewModel.user?.displayName ?: "the displayname in main activity")
 
-            navigationView.setNavigationItemSelectedListener { menuItem ->
+
+
+        navigationView.setNavigationItemSelectedListener { menuItem ->
             menuItem.isChecked = true
             mDrawerLayout.closeDrawers()
             when (menuItem.itemId) {
@@ -187,7 +130,17 @@ class MainForum : AppCompatActivity(),
             }
             true
         }
-    } }
+
+        val headerview = navigationView.getHeaderView(0)
+        headerview.findViewById<ImageButton>(R.id.profile_image).setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startActivityForResult(intent, 0)
+
+
+        }
+
+    }
 
     var selectedPhotoUri: Uri? = null
 
@@ -209,5 +162,39 @@ class MainForum : AppCompatActivity(),
     }
 
 
-}
 
+    private fun replaceFragment(fragment: Fragment){
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.fragmentContainer, fragment)
+        fragmentTransaction.commit()
+    }
+
+    private fun loginVerification(){
+        val uid = FirebaseAuth.getInstance().uid
+        if(uid==null){
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            //comment so commit will work
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.top_nav_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item?.itemId){
+            android.R.id.home -> {
+                mDrawerLayout.openDrawer(GravityCompat.START)
+                true
+            }
+
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+
+
+}

@@ -1,11 +1,7 @@
 package com.example.seniorproject.viewModels
 
-import android.app.Activity
-import android.content.Intent
 import android.net.Uri
-import android.net.sip.SipErrorCode
 import android.util.Log
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -42,9 +38,6 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
         posts = repository.getSavedPosts()
     }
 
-    fun uploadUserProfileImage(selectedPhotoUri: Uri) = repository.uploadUserProfileImage(selectedPhotoUri)
-
-
 
     fun getSavedPosts(): PostLiveData {
 
@@ -62,9 +55,13 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
         return postdata
     }
 
+    fun uploadUserProfileImage(selectedPhotoUri: Uri) = repository.uploadUserProfileImage(selectedPhotoUri)
+
+
     fun fetchCurrentUserName() = repository.fetchCurrentUserName()
 
-     var user = repository.currentUser()
+    var user = repository.currentUser()
+
 
 
 }
