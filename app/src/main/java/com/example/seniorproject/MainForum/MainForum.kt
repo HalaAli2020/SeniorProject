@@ -1,14 +1,22 @@
 package com.example.seniorproject.MainForum
 
+import android.app.Activity
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -16,6 +24,9 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.R
@@ -27,25 +38,28 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_main_forum.*
+import kotlinx.android.synthetic.main.side_nav_header.*
+import java.io.InputStream
+import java.net.URL
 import javax.inject.Inject
 
 private const val TAG = "MyLogTag"
 class MainForum : AppCompatActivity(),
-     FirebaseAuth.AuthStateListener {
+    FirebaseAuth.AuthStateListener {
 
-        private val firebaseAuth: FirebaseAuth by lazy {
-            FirebaseAuth.getInstance()
+    private val firebaseAuth: FirebaseAuth by lazy {
+        FirebaseAuth.getInstance()
+    }
+    override fun onAuthStateChanged(p0: FirebaseAuth) {
+        val currentUser = myViewModel.user
+        if (currentUser != null) {
+            myViewModel.fetchCurrentUserName()
+        } else {
+            Log.d(TAG, "authlistener returned null")
         }
-        override fun onAuthStateChanged(p0: FirebaseAuth) {
-            val currentUser = myViewModel.user
-            if (currentUser != null) {
-                myViewModel.fetchCurrentUserName()
-            } else {
-                Log.d(TAG, "authlistener returned null")
-            }
-        }
+    }
 
-            @Inject
+    @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: HomeFragmentViewModel
     private lateinit var mDrawerLayout: DrawerLayout
@@ -82,6 +96,7 @@ class MainForum : AppCompatActivity(),
         bottom_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         loginVerification()
         //here
+
         setSupportActionBar(findViewById(R.id.toolbar))
         val actionbar: ActionBar? = supportActionBar
         actionbar?.apply {
@@ -90,12 +105,18 @@ class MainForum : AppCompatActivity(),
         }
 
 
-        mDrawerLayout = findViewById(R.id.drawer_layout)
+
+            mDrawerLayout = findViewById(R.id.drawer_layout)
         val navigationView: NavigationView = findViewById(R.id.nav_view)
         val sideNavHeaderBinding:SideNavHeaderBinding = DataBindingUtil.inflate(getLayoutInflater(),R.layout.side_nav_header,binding.navView,false)
         binding.navView.addHeaderView(sideNavHeaderBinding.root)
         sideNavHeaderBinding.viewmodell = myViewModel
         //Log.d(TAG,myViewModel.rsomthing())
+
+
+
+
+
 
         Log.d(TAG,myViewModel.user?.displayName ?: "the displayname in main activity")
 
@@ -122,6 +143,47 @@ class MainForum : AppCompatActivity(),
             }
             true
         }
+
+        val headerview = navigationView.getHeaderView(0)
+        val imageView = headerview.findViewById<ImageButton>(R.id.profile_image)
+
+        Glide.with(this) //1
+            .load(FirebaseAuth.getInstance().currentUser?.photoUrl)
+            .placeholder(R.drawable.ic_account_circle_black_24dp)
+            .error(R.drawable.ic_log_out)
+            .skipMemoryCache(true) //2
+            .diskCacheStrategy(DiskCacheStrategy.NONE) //3
+            .transform(CircleCrop()) //4
+            .into(imageView)
+
+
+        headerview.findViewById<ImageButton>(R.id.profile_image).setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startActivityForResult(intent, 0)
+
+
+        }
+
+    }
+
+    var selectedPhotoUri: Uri? = null
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK && data !=null)
+        {
+
+            selectedPhotoUri= data.data
+
+            val bitmap= MediaStore.Images.Media.getBitmap(contentResolver, selectedPhotoUri)
+
+            val bitmapDrawable = BitmapDrawable(bitmap)
+            profile_image.setBackgroundDrawable(bitmapDrawable)
+
+            myViewModel.uploadUserProfileImage(selectedPhotoUri ?: Uri.EMPTY)
+
+        }
     }
 
 
@@ -142,6 +204,7 @@ class MainForum : AppCompatActivity(),
         }
     }
 
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.top_nav_menu, menu)
         return super.onCreateOptionsMenu(menu)
@@ -157,5 +220,7 @@ class MainForum : AppCompatActivity(),
         }
         return super.onOptionsItemSelected(item)
     }
-}
 
+
+
+}
