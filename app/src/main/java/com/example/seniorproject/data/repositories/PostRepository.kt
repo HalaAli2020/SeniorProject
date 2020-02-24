@@ -1,5 +1,6 @@
 package com.example.seniorproject.data.repositories
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.seniorproject.data.Firebase.FirebaseData
@@ -27,6 +28,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         val post = Post(Title, Text, CRN)
         Firebase.saveNewPosttoUser(post, "1", CRN)
     }
+
+    fun uploadUserProfileImage(selectedPhotoUri: Uri) = Firebase.uploadImageToFirebaseStorage(selectedPhotoUri)
 
     fun getSavedPosts() = Firebase.getSavedPost()
     fun getSavedUserPosts() = Firebase.getSavedUserPost()

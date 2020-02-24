@@ -1,6 +1,7 @@
 package com.example.seniorproject.viewModels
 
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -24,6 +25,7 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
     var email: String? = null
     var password: String? = null
     var username: String? = null
+    var profileImageUrl: Uri? = null
 
     //auth listener
     var authListener: AuthenticationListener? = null
@@ -40,7 +42,7 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
             return
         }
         authListener?.onStarted()
-        val disposable = repository.register(username?:"null",email?:"null",password?:"null")
+        val disposable = repository.register(username?:"null",email?:"null",password?:"null", profileImageUrl?: Uri.EMPTY)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         //should this really be the main thread?
             .subscribe({

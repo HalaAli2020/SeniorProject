@@ -16,13 +16,14 @@
         android:padding="10dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-        <ImageView
+        <ImageButton
             android:id="@+id/profile_image"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="25dp"
-            android:paddingRight="10dp"
-            android:src="@mipmap/ic_launcher_round" />
+            android:background="#314447"
+            android:paddingRight="10dp" />
+
 
         <LinearLayout
             android:layout_width="wrap_content"
