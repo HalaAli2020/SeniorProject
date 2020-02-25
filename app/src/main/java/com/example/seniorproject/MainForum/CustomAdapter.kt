@@ -62,6 +62,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData) :
                 intent.putExtra("Pkey", post.key)
                 intent.putExtra("Classkey", post.Classkey)
                 intent.putExtra("UserID", post.UserID)
+                intent.putExtra("crn", post.crn)
                 intent.putExtra("Post_bundle", bundle)
                 mContext.startActivity(intent)
             }

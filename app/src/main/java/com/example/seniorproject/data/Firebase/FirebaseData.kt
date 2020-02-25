@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import java.util.*
 import java.util.logging.Handler
+import javax.security.auth.Subject
 import kotlin.collections.HashMap
 
 private const val TAG = "MyLogTag"
@@ -289,9 +290,9 @@ class FirebaseData @Inject constructor() {
 
    }
 
-    fun getComments(Key : String) : CommentLive  {
+    fun getComments(Key : String, subject: String) : CommentLive  {
         val uid = FirebaseAuth.getInstance().uid
-        val reference = FirebaseDatabase.getInstance().getReference("users/$uid/Posts/$Key").child("Comments")
+        val reference = FirebaseDatabase.getInstance().getReference("Subjects/$subject/Posts/$Key/Comments")
 
         reference.addChildEventListener(object : ChildEventListener {
             var savedCommentList: MutableList<Comment> = mutableListOf()
@@ -335,13 +336,13 @@ class FirebaseData @Inject constructor() {
 
 
 
-    fun saveNewCommentClass(text: String, postID : String) {
+    fun saveNewCommentC(text: String, postID : String, ClassKey: String, UserID : String, crn: String) {
 
 
         //val subject = Subject
         //val ClassID = Classkey
         val userID = firebaseAuth.uid
-        val comment = Comment(text,0, userID, "csc495", postID)
+        val comment = Comment(text,0, userID, crn, postID)
         //FIX userprofile not init post.author = userprofile.username!!
         //val Class_key = FirebaseDatabase.getInstance().getReference(CRN).child("Posts").push().key
         //FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID")
@@ -365,17 +366,17 @@ class FirebaseData @Inject constructor() {
 
         //}
     }
-    fun saveNewComment(text: String, postID : String, ClassKey: String, UserID : String) {
+    fun saveNewComment(text: String, postID : String, ClassKey: String, UserID : String, crn: String) {
 
 
         //val subject = Subject
         //val ClassID = Classkey
         val userID = firebaseAuth.uid
-        val comment = Comment(text,0, userID, "csc495", postID)
+        val comment = Comment(text,0, userID, crn, postID)
         //FIX userprofile not init post.author = userprofile.username!!
         //val Class_key = FirebaseDatabase.getInstance().getReference(CRN).child("Posts").push().key
         //FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID")
-        val Class_key = FirebaseDatabase.getInstance().getReference("/Subjects/CSC1500/Posts/$ClassKey").child("Comments").push().key
+        val Class_key = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey").child("Comments").push().key
         val User_key = FirebaseDatabase.getInstance().getReference("/users/$UserID/Posts/$postID").child("Comments").push().key
         // implement in viewmodel
         //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
@@ -472,10 +473,7 @@ class FirebaseData @Inject constructor() {
         })
 
     }
-    fun addUserSub(Classname : String, Subject: String)
-    {
 
-    }
     fun getUserSub()
     {
         val uid = FirebaseAuth.getInstance().uid
@@ -621,34 +619,39 @@ class FirebaseData @Inject constructor() {
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 val post = p0.getValue()
-                val newPost = Post()
-                //var postdetails: Iterable<DataSnapshot> = p0.children
+                //val newPost = Post()
+                var postdetails: Iterable<DataSnapshot> = p0.children
+                //for (n in postdetails) {
+                    var newPost = Post()
+                    newPost.let {
 
-                    //Log.d("ACCESSING", newPost?.text)
-                    newPost.title = p0.child("title").getValue(String::class.java)
-                    newPost.text = p0.child("text").getValue(String::class.java)
-                    //newPost.author = pos.child("author").getValue(String::class.java)
-                    newPost.crn = p0.child("crn").getValue(String::class.java)
-                    //newPost.subject = post.child("subject").getValue(String ::class.java)
-                    //newPost.ptime = pos.child("Timestamp").getValue(Long::class.java)
-                    newPost.key = p0.child("key").getValue(String::class.java)
-                    newPost.Classkey = p0.child("Classkey").getValue(String::class.java)
-                    newPost.UserID = p0.child("UserID").getValue(String :: class.java)
-                    // comments might need to be gotten separatley to properly convert values
+                        //Log.d("ACCESSING", newPost?.text)
+                        it.title = p0.child("title").getValue(String::class.java)
+                        it.text = p0.child("text").getValue(String::class.java)
+                        //newPost.author = pos.child("author").getValue(String::class.java)
+                        it.crn = className
+                        Log.d("CRN", p0.key!!)
+                        //newPost.subject = post.child("subject").getValue(String ::class.java)
+                        //newPost.ptime = pos.child("Timestamp").getValue(Long::class.java)
+                        it.key = p0.child("key").getValue(String::class.java)
+                        it.Classkey = p0.child("Classkey").getValue(String::class.java)
+                        it.UserID = p0.child("UserID").getValue(String::class.java)
 
-                    //repository.saveNewPost(newPost)
-                    //adapter.add(PostFrag(newPost.title, newPost.text))
+                        // comments might need to be gotten separatley to properly convert values
 
-                if (newPost != null) {
-                    Log.d("ACCESSING", newPost?.text)
-                    if (savedPostsList.size < 3) {
-                        savedPostsList.add(newPost)
-                    }
-
-                    classPostList.value = savedPostsList
+                    savedPostsList.add(newPost)
 
                 }
+
+                //repository.saveNewPost(newPost)
+                //adapter.add(PostFrag(newPost.title, newPost.text))
+
+
+                classPostList.value = savedPostsList
             }
+
+
+
 
             override fun onChildRemoved(p0: DataSnapshot) {
             }

@@ -30,7 +30,7 @@ class ListAdapter(context: Context, private val classList: MutableList<CRN>, pri
 
     override fun getItemCount(): Int {
 
-        return if(classList != null)
+        return if (classList != null)
             classList.size
         else
             0
@@ -42,37 +42,34 @@ class ListAdapter(context: Context, private val classList: MutableList<CRN>, pri
         val classes: String = classList[position].name
         Log.d("adapter", classes)
         holder.itemView.communityName_TV.text = classes
-        if(classList[position].Subscribed)
-        {
+        if (classList[position].Subscribed) {
             holder.itemView.Subscibe_B.setBackgroundColor(mContext.resources.getColor(R.color.Subscribed))
             holder.itemView.Subscibe_B.text = mContext.resources.getString(R.string.Sub)
-        }
-        else
-        {
+        } else {
             holder.itemView.Subscibe_B.setBackgroundColor(mContext.resources.getColor(R.color.notSub))
             holder.itemView.Subscibe_B.text = mContext.resources.getString(R.string.notSub)
         }
 
         holder.itemView.Subscibe_B.setOnClickListener {
-            var sub = classList[position].Subscribed
-            when(sub) {
-                true -> {
-                    Log.d("subB", "Button pressed")
-                    mViewModel.addSub(classList[position].name)
-                    holder.itemView.Subscibe_B.setBackgroundColor(mContext.resources.getColor(R.color.Subscribed))
-                    holder.itemView.Subscibe_B.text = mContext.resources.getString(R.string.notSub)
-                    classList[position].Subscribed = true
-                }
-                false -> {
-
-                    mViewModel.removeSub(classList[position].name)
-                    holder.itemView.Subscibe_B.setBackgroundColor(mContext.resources.getColor(R.color.notSub))
-                    holder.itemView.Subscibe_B.text = mContext.resources.getString(R.string.notSub)
-                    classList[position].Subscribed = false
-                }
+            val sub = classList[position].Subscribed
+            if (sub) {
+                Log.d("subB", "Button pressed")
+                mViewModel.addSub(classList[position].name)
+                holder.itemView.Subscibe_B.setBackgroundColor(mContext.resources.getColor(R.color.Subscribed))
+                holder.itemView.Subscibe_B.text = mContext.resources.getString(R.string.notSub)
+                classList[position].Subscribed = false
+            }
+            else {
+                mViewModel.removeSub(classList[position].name)
+                holder.itemView.Subscibe_B.setBackgroundColor(mContext.resources.getColor(R.color.notSub))
+                holder.itemView.Subscibe_B.text = mContext.resources.getString(R.string.notSub)
+                classList[position].Subscribed = true
             }
 
         }
+
+
+
 
         holder.itemView.communityName_TV.setOnClickListener{
             val intent = Intent(mContext, CommunityPosts::class.java)

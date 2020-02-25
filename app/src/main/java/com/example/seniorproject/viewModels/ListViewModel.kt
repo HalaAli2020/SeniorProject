@@ -23,6 +23,7 @@ class ListViewModel @Inject constructor(private val repository: PostRepository) 
     }
 
     private fun getClasses(){
+        listClasses.clear()
 
         listClasses = repository.getClasses()
     }

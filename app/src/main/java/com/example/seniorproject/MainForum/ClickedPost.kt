@@ -56,8 +56,10 @@ class ClickedPost : AppCompatActivity() {
             DataBindingUtil.setContentView(this, R.layout.activity_clicked_post)
         binding.clickedViewModel = myViewModel
         myViewModel.PKey = intent?.getStringExtra("Pkey")
+        Log.d("Pkey", myViewModel.PKey!!)
         myViewModel.Classkey = intent?.getStringExtra("Classkey")
         myViewModel.UserID = intent?.getStringExtra("UserID")
+        myViewModel.crn = intent?.getStringExtra("crn")
         //Log.d("postkey", intent?.getStringExtra("Pkey"))
         //click_post_title.text = intent.getStringExtra("Title")
         //click_post_text.text = intent.getStringExtra("Text")

@@ -37,9 +37,9 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     }
 
-    fun getComments( PKey: String)  : CommentLive
+    fun getComments( ClassKey: String, subject : String)  : CommentLive
     {
-        return Firebase.getComments(PKey)
+        return Firebase.getComments(ClassKey, subject)
     }
    /*suspend fun getCommentsCO(PKey: String) : Flow<CommentLive> = flow {
 
@@ -67,7 +67,11 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
 
 
-    fun newComment(PKey: String, Comment: String, Classkey: String, UserID: String) = Firebase.saveNewComment(Comment ,PKey, Classkey, UserID)
+    fun newComment(PKey: String, Comment: String, Classkey: String, UserID: String, crn: String) {
+        Firebase.saveNewComment(Comment ,PKey, Classkey, UserID, crn)
+        //Firebase.saveNewCommentClass(Comment ,PKey, Classkey, UserID, crn)
+    }
+
 
     fun currentUser() = Firebase.CurrentUser()
 
