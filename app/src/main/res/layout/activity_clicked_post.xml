@@ -1,72 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="ClickedViewModel"
-            type="com.example.seniorproject.viewModels.ClickedPostViewModel">
-        </variable>
+            type="com.example.seniorproject.viewModels.ClickedPostViewModel"></variable>
 
     </data>
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainForum.ClickedPost">
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteX="-16dp"
-        tools:layout_editor_absoluteY="-110dp">
+        tools:context=".MainForum.ClickedPost">
+
 
         <TextView
             android:id="@+id/click_post_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="15dp"
-            android:textColor="@color/TextColor"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@={ClickedViewModel.title}"
+            android:textColor="#000000"
             android:textSize="23dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/click_post_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/edittext_bottom_border"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="5dp"
-            android:textColor="@color/TextColor"
-            android:textSize="15dp" />
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="35dp"
+            android:text="@={ClickedViewModel.text}"
+            android:textColor="#000000"
+            android:textSize="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/click_post_title" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/comment_RecyclerView"
-            android:layout_width="367dp"
-            android:layout_height="428dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/Comment_textbox"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/click_post_text" />
 
         <EditText
             android:id="@+id/Comment_textbox"
-            android:layout_width="match_parent"
-            android:text="@={ClickedViewModel.Comment}"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:ems="10"
-            android:inputType="textPersonName" />
+            android:background="@color/grey"
+            android:hint="Add a comment"
+            android:inputType="textPersonName"
+            android:text="@={ClickedViewModel.Comment}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/Comment_button"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/comment_RecyclerView" />
 
         <Button
             android:id="@+id/Comment_button"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/rounded_btn"
             android:onClick="@{() -> ClickedViewModel.newComment()}"
-            android:layout_height="wrap_content"
-            android:text="@string/comment" />
+            android:text="Comment"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/Comment_textbox"
+            app:layout_constraintTop_toBottomOf="@+id/comment_RecyclerView"
+            app:layout_constraintVertical_bias="0.0" />
 
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
