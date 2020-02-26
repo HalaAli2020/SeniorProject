@@ -10,6 +10,7 @@ data class User(val username: String?, val email: String?, val uid: String?, val
     var Posts  = mutableListOf<Post>()
     //lateinit var Subscriptions : List<String>
     var Admin : Boolean = true
+    var Subscriptions : HashMap<String,String> = hashMapOf()
     init {
 
 
@@ -22,7 +23,7 @@ data class User(val username: String?, val email: String?, val uid: String?, val
             "uid" to uid,
             "profileImageUrl" to profileImageUrl,
             "Admin" to Admin,
-            //"Subscriptions" to Subscriptions,
+            "Subscriptions" to Subscriptions,
             "Posts" to Posts
 
         )

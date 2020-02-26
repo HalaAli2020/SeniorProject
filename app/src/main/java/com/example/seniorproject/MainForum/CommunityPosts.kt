@@ -1,7 +1,9 @@
 package com.example.seniorproject.MainForum
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,6 +32,10 @@ class CommunityPosts : AppCompatActivity() {
 
         classes_post_RV.layoutManager = LinearLayoutManager(this)
 
-        classes_post_RV.adapter = CustomAdapter(this, myViewModel.returnClassPosts(className))
+        classes_post_RV.adapter = CustomAdapter(this, myViewModel.returnClassPosts(className!!))
+
     }
+
+
 }
+
