@@ -1,5 +1,5 @@
-
 package com.example.seniorproject.data.repositories
+import android.net.Uri
 import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.data.models.User
 import dagger.Module
@@ -10,12 +10,12 @@ import javax.inject.Singleton
 //private val Firebase: FirebaseData
 @Singleton
 class UserAuthRepo @Inject constructor(private val Firebase: FirebaseData) {
-    
+
     fun login(email: String, password: String) = Firebase.LoginUser(email,password)
     //should user and password be a livedata object??????? return
 
-    fun register(username: String, email: String, password: String) =
-        Firebase.RegisterUser(username, email, password)
+    fun register(username: String, email: String, password: String, profileImageUrl: Uri) =
+        Firebase.RegisterUser(username, email, password, profileImageUrl)
 
     fun currentUser() = Firebase.CurrentUser()
 
