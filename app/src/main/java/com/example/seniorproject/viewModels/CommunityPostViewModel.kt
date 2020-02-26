@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class CommunityPostViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
 
-    private var listClasses: PostLiveData = PostLiveData()
+    private var listClasses : PostLiveData? = null
     private lateinit var className: String
 
     private fun getClasses(className: String){
@@ -18,8 +18,19 @@ class CommunityPostViewModel @Inject constructor(private val repository: PostRep
 
     fun returnClassPosts(className: String): PostLiveData {
         getClasses(className)
-        return listClasses
+        return listClasses!!
     }
+   fun checknull() : Boolean
+   {
+       if (listClasses == null)
+       {
+           return true
+       }
+       else
+       {
+           return false
+       }
+   }
 
 
 

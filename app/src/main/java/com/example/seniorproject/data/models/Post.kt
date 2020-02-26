@@ -13,7 +13,7 @@ import javax.security.auth.Subject
 data class Post(var title: String?, var text: String?, val subject: String?)
 {
     //val title: String, val text: String, val courseID: Int, val uid: String
-    constructor(): this("","", "CSC1500")
+    constructor(): this("","", "")
     private  var comments : List<Comment> = emptyList()
     //private val database = FirebaseDatabase.getInstance()
     var author : String? = null

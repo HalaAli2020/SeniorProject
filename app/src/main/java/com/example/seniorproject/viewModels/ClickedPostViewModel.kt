@@ -24,6 +24,9 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
     var PKey: String? = null
     var UserID : String? = null
     var Classkey : String? = null
+    var crn : String? = null
+    var title: String? = null
+    var text: String? = null
     private var getCommentsJob: Job? = null
     private var PostKey : String? = null
     init {
@@ -40,14 +43,14 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
            CommentListener?.onFailure("Post key not found")
 
        }
-        CommentsLiveList = repository.getComments(PKey!!)
+        CommentsLiveList = repository.getComments(Classkey!!, crn!!)
 
         return CommentsLiveList
     }
     fun newComment()
     {
 
-        repository.newComment(PKey!!,Comment!!, Classkey!!, UserID!!)
+        repository.newComment(PKey!!,Comment!!, Classkey!!, UserID!!, crn!!)
     }
     fun checkcomments() : Boolean
     {

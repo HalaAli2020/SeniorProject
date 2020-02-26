@@ -46,23 +46,14 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData) :
 
             holder.itemView.setOnClickListener {
                 val intent = Intent(mContext, ClickedPost::class.java)
-                //intent.putExtra("Title", post.title)
-                //intent.putExtra("Text", post.text)
-                //intent.putExtra("Key", post.Classkey)
-                //intent.putExtra("post", post.toMap())
-                 var bundle: Bundle = Bundle()
-                //bundle.putString("title", post.title)
-                //bundle.putString("text", post.text)
+
                 intent.putExtra("Title", post.title)
-                intent.putExtra("text", post.text)
-               // bundle.putString("Ckey", post.Classkey)
-               // bundle.putString("Pkey", post.key)
-               // bundle.putString("Classkey", post.Classkey)
-                //bundle.putString("UserID", post.UserID)
+                intent.putExtra("Text", post.text)
                 intent.putExtra("Pkey", post.key)
                 intent.putExtra("Classkey", post.Classkey)
                 intent.putExtra("UserID", post.UserID)
-                intent.putExtra("Post_bundle", bundle)
+                intent.putExtra("crn", post.crn)
+
                 mContext.startActivity(intent)
             }
         }

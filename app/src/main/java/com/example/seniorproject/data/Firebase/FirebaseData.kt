@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import java.util.*
 import java.util.logging.Handler
+import javax.security.auth.Subject
 import kotlin.collections.HashMap
 //import kotlin.reflect.jvm.internal.impl.load.java.lazy.ContextKt.child
 //import javax.swing.UIManager.put
@@ -48,8 +49,9 @@ class FirebaseData @Inject constructor() {
     private lateinit var postlistener : ValueEventListener
     private lateinit var userprofile : User
     var newComments : Comment? = null
-    var classList : MutableLiveData<List<String>> = MutableLiveData()
+    var classList : MutableList<CRN> = mutableListOf()
     var classPostList : PostLiveData = PostLiveData()
+    var UserSUB : MutableList<String>? = null
     fun CurrentUser() = FirebaseAuth.getInstance().currentUser
 
 
@@ -109,9 +111,9 @@ class FirebaseData @Inject constructor() {
             }
             override fun onDataChange(p0: DataSnapshot) {
 
-                val currentUser = p0.getValue(User::class.java)
-                Log.d(TAG, "Current user fetched ${currentUser?.username}")
-                var usernameForum = currentUser?.username.toString()
+                val currentUser = p0.child("Username").getValue(String::class.java)
+                Log.d(TAG, "Current user fetched ${currentUser}")
+                var usernameForum = currentUser
                 val user = CurrentUser()
                 val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(usernameForum).build()
                 user?.updateProfile(profileUpdates)
@@ -241,7 +243,6 @@ class FirebaseData @Inject constructor() {
         if (postTitle.isNotEmpty() && postText.isNotEmpty()) {
             val post = Post(postTitle, postText, postSubject)
 
-
             reference.setValue(post).addOnSuccessListener {
                 Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
             }.addOnFailureListener {
@@ -299,9 +300,9 @@ class FirebaseData @Inject constructor() {
 
     }
 
-    fun getComments(Key : String) : CommentLive  {
+    fun getComments(Key : String, subject: String) : CommentLive  {
         val uid = FirebaseAuth.getInstance().uid
-        val reference = FirebaseDatabase.getInstance().getReference("users/$uid/Posts/$Key").child("Comments")
+        val reference = FirebaseDatabase.getInstance().getReference("Subjects/$subject/Posts/$Key/Comments")
 
         reference.addChildEventListener(object : ChildEventListener {
             var savedCommentList: MutableList<Comment> = mutableListOf()
@@ -345,13 +346,13 @@ class FirebaseData @Inject constructor() {
 
 
 
-    fun saveNewCommentClass(text: String, postID : String) {
+    fun saveNewCommentC(text: String, postID : String, ClassKey: String, UserID : String, crn: String) {
 
 
         //val subject = Subject
         //val ClassID = Classkey
         val userID = firebaseAuth.uid
-        val comment = Comment(text,0, userID, "csc495", postID)
+        val comment = Comment(text,0, userID, crn, postID)
         //FIX userprofile not init post.author = userprofile.username!!
         //val Class_key = FirebaseDatabase.getInstance().getReference(CRN).child("Posts").push().key
         //FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID")
@@ -374,17 +375,19 @@ class FirebaseData @Inject constructor() {
 
         //}
     }
-    fun saveNewComment(text: String, postID : String, ClassKey: String, UserID : String) {
+
+    fun saveNewComment(text: String, postID : String, ClassKey: String, UserID : String, crn: String) {
 
 
         //val subject = Subject
         //val ClassID = Classkey
         val userID = firebaseAuth.uid
-        val comment = Comment(text,0, userID, "csc495", postID)
+        val comment = Comment(text,0, userID, crn, postID)
+        Log.d("BigMoods", crn)
         //FIX userprofile not init post.author = userprofile.username!!
         //val Class_key = FirebaseDatabase.getInstance().getReference(CRN).child("Posts").push().key
         //FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID")
-        val Class_key = FirebaseDatabase.getInstance().getReference("/Subjects/CSC1500/Posts/$ClassKey").child("Comments").push().key
+        val Class_key = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey").child("Comments").push().key
         val User_key = FirebaseDatabase.getInstance().getReference("/users/$UserID/Posts/$postID").child("Comments").push().key
         // implement in viewmodel
         //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
@@ -392,7 +395,7 @@ class FirebaseData @Inject constructor() {
         comment.UserComkey = User_key
         val dataupdates = HashMap<String, Any>()
         val comementvalues = comment.toMap()
-        dataupdates["Subjects/CSC1500/Posts/$ClassKey/Comments/$Class_key"] = comementvalues
+        dataupdates["Subjects/$crn/Posts/$ClassKey/Comments/$Class_key"] = comementvalues
         dataupdates["users/$UserID/Posts/$postID/Comments/$User_key"] = comementvalues
         //FirebaseDatabase.getInstance().getReference("users/$userID/Post/$postID").child("Comments/$User_key").setValue(comementvalues)
         FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
@@ -438,12 +441,11 @@ class FirebaseData @Inject constructor() {
 
         //}
     }
+
     fun getSavedPost() : PostLiveData{
         listenforPosts()
         return savedPosts
     }
-
-
 
     private fun listenforPosts() {
         val reference = FirebaseDatabase.getInstance().getReference("/posts")
@@ -479,6 +481,130 @@ class FirebaseData @Inject constructor() {
             }
         })
 
+    }
+
+    fun getUserSub()
+    {
+        val uid = FirebaseAuth.getInstance().uid
+        Log.d("uid", uid!!)
+        val reference = FirebaseDatabase.getInstance().getReference("users/$uid/Subscriptions")
+        reference.addValueEventListener(object : ValueEventListener {
+            val SubList : MutableList<String> = mutableListOf()
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                val size = p0.hasChildren()
+                Log.d("Size", size.toString())
+                //var has :HashMap<String,String>? = hashMapOf()
+                val Sublist = p0.children
+                for(x in Sublist)
+                {
+                    Log.d("usersub", x.getValue(String::class.java)!!)
+                    SubList.add(x.getValue(String ::class.java)!!)
+                }
+                UserSUB = SubList
+            }
+        })
+    }
+
+    fun sendUserSUB() : MutableList<String>?
+    {
+        var sub = UserSUB
+        if(sub == null)
+        {
+            getUserSub()
+            sub = UserSUB
+
+        }
+       return sub
+    }
+    //, Subject: String
+    fun addUserSUB(crn : String)
+    {
+        if(UserSUB == null)
+        {
+            getUserSub()
+        }
+        var SubAdd = HashMap<String, String>()
+        //SubAdd[crn] = Subject
+        val uid = FirebaseAuth.getInstance().uid
+        var ref = FirebaseDatabase.getInstance().getReference("users/$uid").child("Subscriptions")
+        ref.push().setValue(crn)
+        val rref = FirebaseDatabase.getInstance().getReference("Subjects/$crn").child("SubList")
+        rref.push().setValue(uid)
+
+    }
+    fun removeUserSub(crn : String)
+    {
+        val uid = FirebaseAuth.getInstance().uid
+        Log.d("uid", uid!!)
+        val reference = FirebaseDatabase.getInstance().getReference("users/$uid/Subscriptions")
+        reference.addValueEventListener(object : ValueEventListener {
+            val SubList : MutableList<String> = mutableListOf()
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                val size = p0.hasChildren()
+                Log.d("Size", size.toString())
+                //var has :HashMap<String,String>? = hashMapOf()
+                val Sublist = p0.children
+                for(x in Sublist)
+                {
+                    if(crn == x.getValue(String :: class.java))
+                    {
+                        Log.d("Remove", "remove hit")
+                        x.key
+                        reference.child(x.key!!).removeValue()
+                    }
+                    else
+                    {
+                        Log.d("usersub", x.getValue(String::class.java)!!)
+                        SubList.add(x.getValue(String ::class.java)!!)
+                    }
+                }
+
+                UserSUB = SubList
+            }
+        })
+    }
+    fun removeClassSub(crn : String)
+    {
+        val uid = FirebaseAuth.getInstance().uid
+        Log.d("uid", uid!!)
+        val reference = FirebaseDatabase.getInstance().getReference("Subjects/$crn/SubList")
+        reference.addValueEventListener(object : ValueEventListener {
+            val SubList : MutableList<String> = mutableListOf()
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                val size = p0.hasChildren()
+                Log.d("Size", size.toString())
+                //var has :HashMap<String,String>? = hashMapOf()
+                val Sublist = p0.children
+                for(x in Sublist)
+                {
+                    if(uid == x.getValue(String :: class.java))
+                    {
+                        Log.d("Remove", "remove hit")
+
+                        reference.child(x.key!!).removeValue()
+                    }
+                    else
+                    {
+                        Log.d("usersub", x.getValue(String::class.java)!!)
+                        SubList.add(x.getValue(String ::class.java)!!)
+                    }
+                }
+
+                UserSUB = SubList
+            }
+        })
     }
 
 
@@ -568,34 +694,41 @@ class FirebaseData @Inject constructor() {
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 val post = p0.getValue()
-                val newPost = Post()
-                //var postdetails: Iterable<DataSnapshot> = p0.children
+                //val newPost = Post()
+                var postdetails: Iterable<DataSnapshot> = p0.children
+                //for (n in postdetails) {
+                    var newPost = Post()
+                    newPost.let {
 
-                //Log.d("ACCESSING", newPost?.text)
-                newPost.title = p0.child("title").getValue(String::class.java)
-                newPost.text = p0.child("text").getValue(String::class.java)
-                //newPost.author = pos.child("author").getValue(String::class.java)
-                newPost.crn = p0.child("crn").getValue(String::class.java)
-                //newPost.subject = post.child("subject").getValue(String ::class.java)
-                //newPost.ptime = pos.child("Timestamp").getValue(Long::class.java)
-                newPost.key = p0.child("key").getValue(String::class.java)
-                newPost.Classkey = p0.child("Classkey").getValue(String::class.java)
-                newPost.UserID = p0.child("UserID").getValue(String :: class.java)
-                // comments might need to be gotten separatley to properly convert values
+                        //Log.d("ACCESSING", newPost?.text)
+                        it.title = p0.child("title").getValue(String::class.java)
+                        it.text = p0.child("text").getValue(String::class.java)
+                        //newPost.author = pos.child("author").getValue(String::class.java)
+                        it.crn = className
+                        Log.d("CRN", p0.key!!)
+                        //newPost.subject = post.child("subject").getValue(String ::class.java)
+                        //newPost.ptime = pos.child("Timestamp").getValue(Long::class.java)
+                        it.key = p0.child("key").getValue(String::class.java)
+                        it.Classkey = p0.child("Classkey").getValue(String::class.java)
+                        it.UserID = p0.child("UserID").getValue(String::class.java)
+
+                        // comments might need to be gotten separatley to properly convert values
+
+
+
+                    savedPostsList.add(newPost)
+
+                }
 
                 //repository.saveNewPost(newPost)
                 //adapter.add(PostFrag(newPost.title, newPost.text))
 
-                if (newPost != null) {
-                    Log.d("ACCESSING", newPost?.text)
-                    if (savedPostsList.size < 3) {
-                        savedPostsList.add(newPost)
-                    }
 
-                    classPostList.value = savedPostsList
-
-                }
+                classPostList.value = savedPostsList
             }
+
+
+
 
             override fun onChildRemoved(p0: DataSnapshot) {
             }
@@ -606,31 +739,55 @@ class FirebaseData @Inject constructor() {
 
 
 
-    fun getClasses() : MutableLiveData<List<String>>{
-        val reference = FirebaseDatabase.getInstance().getReference().child("/Subjects")
+    fun getClasses(){
+        val reference = FirebaseDatabase.getInstance().reference.child("/Subjects")
 
         reference.addListenerForSingleValueEvent(object : ValueEventListener {
             var classes: MutableList<String> = mutableListOf()
             override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                val Clist : MutableList<CRN> = mutableListOf()
+
                 for (datas in dataSnapshot.children) {
-                    val classnames = datas.key
-                    Log.d("BIGMOODS", classnames)
-                    classnames?.let { classes.add(it) }
-                }
-                classList.value = classes
+                    val classnames = CRN()
+                    val CC :Long = 2
+                    //if(datas.childrenCount == CC)
+                    classnames?.let { x -> x.name = datas.key!!
+                    //x.Subject = datas.child("subject").getValue(String::class.java)
+                        x.SUBLIST = SeparateList(datas.child("SubList"))
+                        }
+                    classList.add(classnames)
+               }
+
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
             }
         })
 
-        return classList
+
     }
     fun getSavedUserPost() : PostLiveData
     {
         return savedPosts
     }
+    fun SeparateList(p0 : DataSnapshot) : List<String>?
+    {
+        var SubList :MutableList<String> = mutableListOf()
+        for(datas in p0.children)
+        {
+           if(datas != null)
+            SubList.add(datas.getValue(String::class.java)!!)
+        }
+        return SubList
+    }
+    fun sendClist() : MutableList<CRN>
+    {
+        if(classList.isEmpty())
+        getClasses()
 
+        return classList
+    }
 
     private fun listenforUserPosts() {
         // val userID = FirebaseAuth.getInstance().currentUser
