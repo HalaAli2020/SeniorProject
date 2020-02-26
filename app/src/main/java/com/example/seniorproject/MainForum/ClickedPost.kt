@@ -34,7 +34,6 @@ import javax.inject.Inject
 
 class ClickedPost : AppCompatActivity() {
 
-    var Comments : CommentLive? = null
     private lateinit var adapter: CommentsAdapter
     @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -44,39 +43,36 @@ class ClickedPost : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_clicked_post)
-        var context = applicationContext
-        var view = window.decorView
-        var bundle = intent.getBundleExtra("Post_bundle")
-        //click_post_title.text = bundle?.getString("title")
-        //Log.d("post text", bundle?.getString("title")!!)
-       // click_post_text.text = bundle?.getString("text")
+
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this, factory).get(ClickedPostViewModel::class.java)
-        val binding: ActivityClickedPostBinding =
-            DataBindingUtil.setContentView(this, R.layout.activity_clicked_post)
-        binding.clickedViewModel = myViewModel
-        myViewModel.PKey = intent?.getStringExtra("Pkey")
-        Log.d("Pkey", myViewModel.PKey!!)
-        myViewModel.Classkey = intent?.getStringExtra("Classkey")
-        myViewModel.UserID = intent?.getStringExtra("UserID")
-        myViewModel.crn = intent?.getStringExtra("crn")
-        //Log.d("postkey", intent?.getStringExtra("Pkey"))
-        //click_post_title.text = intent.getStringExtra("Title")
-        //click_post_text.text = intent.getStringExtra("Text")
-        /* CKEY is for class key */
-        //Comments = myViewModel.getComments(bundle?.getString("CKey")!!)
-        myViewModel.getComments()
-        adapter = CommentsAdapter(view.context, myViewModel.getComments())
-        view.comment_RecyclerView.adapter = adapter
-        view.comment_RecyclerView.layoutManager = LinearLayoutManager(context)
-        view.comment_RecyclerView.adapter = adapter
+        val binding: ActivityClickedPostBinding = DataBindingUtil.setContentView(this, R.layout.activity_clicked_post)
+
+        myViewModel.PKey = intent.getStringExtra("Pkey")
+        myViewModel.Classkey = intent.getStringExtra("Classkey")
+        myViewModel.UserID = intent.getStringExtra("UserID")
+        myViewModel.crn = intent.getStringExtra("crn")
+        myViewModel.title = intent.getStringExtra("Title")
+        myViewModel.text = intent.getStringExtra("Text")
+
+        adapter = CommentsAdapter(this, myViewModel.getComments())
+        comment_RecyclerView.adapter = adapter
+        comment_RecyclerView.layoutManager = LinearLayoutManager(this)
+
         binding.clickedViewModel = myViewModel
         binding.lifecycleOwner = this
-    }
-   /* coroutines attempt init {
-        lifecycleScope.launch{
-            myViewModel.getComments()
-        }
-    }*/
 
+    }
+
+    /* coroutines attempt init {
+         lifecycleScope.launch{
+             myViewModel.getComments()
+         }
+     }*/
+    /*Log.d("postkey", intent?.getStringExtra("Pkey"))
+    Log.d("Pkey", myViewModel.PKey!!)
+    click_post_title.text = intent.getStringExtra("Title")
+    click_post_text.text = intent.getStringExtra("Text")
+    CKEY is for class key
+    Comments = myViewModel.getComments(bundle?.getString("CKey")!!)*/
 }

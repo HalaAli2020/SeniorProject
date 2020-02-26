@@ -25,6 +25,8 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
     var UserID : String? = null
     var Classkey : String? = null
     var crn : String? = null
+    var title: String? = null
+    var text: String? = null
     private var getCommentsJob: Job? = null
     private var PostKey : String? = null
     init {

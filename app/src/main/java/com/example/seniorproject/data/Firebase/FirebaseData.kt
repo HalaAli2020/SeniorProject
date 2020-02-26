@@ -232,7 +232,6 @@ class FirebaseData @Inject constructor() {
         if (postTitle.isNotEmpty() && postText.isNotEmpty()) {
             val post = Post(postTitle, postText, postSubject)
 
-
             reference.setValue(post).addOnSuccessListener {
                 Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
             }.addOnFailureListener {
@@ -366,6 +365,7 @@ class FirebaseData @Inject constructor() {
 
         //}
     }
+
     fun saveNewComment(text: String, postID : String, ClassKey: String, UserID : String, crn: String) {
 
 
@@ -373,6 +373,7 @@ class FirebaseData @Inject constructor() {
         //val ClassID = Classkey
         val userID = firebaseAuth.uid
         val comment = Comment(text,0, userID, crn, postID)
+        Log.d("BigMoods", crn)
         //FIX userprofile not init post.author = userprofile.username!!
         //val Class_key = FirebaseDatabase.getInstance().getReference(CRN).child("Posts").push().key
         //FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID")
@@ -384,7 +385,7 @@ class FirebaseData @Inject constructor() {
         comment.UserComkey = User_key
         val dataupdates = HashMap<String, Any>()
         val comementvalues = comment.toMap()
-        dataupdates["Subjects/CSC1500/Posts/$ClassKey/Comments/$Class_key"] = comementvalues
+        dataupdates["Subjects/$crn/Posts/$ClassKey/Comments/$Class_key"] = comementvalues
         dataupdates["users/$UserID/Posts/$postID/Comments/$User_key"] = comementvalues
         //FirebaseDatabase.getInstance().getReference("users/$userID/Post/$postID").child("Comments/$User_key").setValue(comementvalues)
         FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
@@ -432,11 +433,11 @@ class FirebaseData @Inject constructor() {
 
         //}
     }
+
     fun getSavedPost() : PostLiveData{
         listenforPosts()
         return savedPosts
     }
-
 
     private fun listenforPosts() {
         val reference = FirebaseDatabase.getInstance().getReference("/posts")
