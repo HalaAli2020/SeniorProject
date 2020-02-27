@@ -27,6 +27,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.load.resource.bitmap.TransformationUtils.circleCrop
+import com.bumptech.glide.request.RequestOptions
 import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.R
@@ -176,10 +178,14 @@ class MainForum : AppCompatActivity(),
 
             selectedPhotoUri= data.data
 
-            val bitmap= MediaStore.Images.Media.getBitmap(contentResolver, selectedPhotoUri)
-
-            val bitmapDrawable = BitmapDrawable(bitmap)
-            profile_image.setBackgroundDrawable(bitmapDrawable)
+            Glide.with(this) //1
+                .load(selectedPhotoUri)
+                .placeholder(R.drawable.ic_account_circle_black_24dp)
+                .error(R.drawable.ic_log_out)
+                .skipMemoryCache(true) //2
+                .diskCacheStrategy(DiskCacheStrategy.NONE) //3
+                .transform(CircleCrop())
+                .into(profile_image)
 
             myViewModel.uploadUserProfileImage(selectedPhotoUri ?: Uri.EMPTY)
 
