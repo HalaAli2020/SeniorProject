@@ -9,6 +9,8 @@
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_post_details">Post_details</string>
     <string name="comment">Comment</string>
+    <string name="Sub">Subscribed</string>
+    <string name="notSub">Subscribe</string>
 
 
 

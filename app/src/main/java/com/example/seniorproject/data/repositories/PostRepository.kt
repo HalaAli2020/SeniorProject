@@ -39,9 +39,9 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     }
 
-    fun getComments( PKey: String)  : CommentLive
+    fun getComments( ClassKey: String, subject : String)  : CommentLive
     {
-        return Firebase.getComments(PKey)
+        return Firebase.getComments(ClassKey, subject)
     }
     /*suspend fun getCommentsCO(PKey: String) : Flow<CommentLive> = flow {
          val flo = Firebase.getCommentsCO(PKey)
@@ -65,15 +65,33 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
 
 
-    fun newComment(PKey: String, Comment: String, Classkey: String, UserID: String) = Firebase.saveNewComment(Comment ,PKey, Classkey, UserID)
+    fun newComment(PKey: String, Comment: String, Classkey: String, UserID: String, crn: String) {
+        Firebase.saveNewComment(Comment ,PKey, Classkey, UserID, crn)
+        //Firebase.saveNewCommentClass(Comment ,PKey, Classkey, UserID, crn)
+    }
+
 
     fun currentUser() = Firebase.CurrentUser()
 
     fun fetchCurrentUserName() = Firebase.fetchCurrentUserName()
 
-    fun getClasses() = Firebase.getClasses()
+    fun getClasses() = Firebase.sendClist()
 
     fun getClassPosts(className: String) = Firebase.getClassPosts(className)
+
+    fun getUserSub() : MutableList<String>?  {
+        return Firebase.sendUserSUB()
+
+    }
+    fun addUsersub(crn : String)
+    {
+        Firebase.addUserSUB(crn)
+    }
+    fun remUsersub(crn : String)
+    {
+        Firebase.removeUserSub(crn)
+        Firebase.removeClassSub(crn)
+    }
 
     companion object {
         @Volatile

@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.fragment_list.view.*
 import javax.inject.Inject
 import androidx.databinding.adapters.TextViewBindingAdapter.setText
 import androidx.lifecycle.*
+//import com.google.common.eventbus.Subscribe
 import com.google.firebase.database.DataSnapshot
 
 
@@ -34,9 +35,13 @@ class ListFragment : Fragment() {
         myViewModel = ViewModelProviders.of(this, factory).get(ListViewModel::class.java)
 
         view.list_recyclerView.layoutManager = LinearLayoutManager(context)
-        view.list_recyclerView.adapter = ListAdapter(view.context, myViewModel.returnClasses())
+        view.list_recyclerView.adapter = ListAdapter(view.context, myViewModel.returnClasses(), myViewModel)
 
         return view
+
+    }
+    fun Subscribe()
+    {
 
     }
 
