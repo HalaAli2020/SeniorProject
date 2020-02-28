@@ -23,10 +23,10 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     val CommentL = CommentLive()
     private var getCommentsJob: Job? = null
 
-    fun saveNewPost(Title: String, Text: String, Subject: String, CRN  : String, postID: String)
+    fun saveNewPost(Title: String, Text: String, Subject: String, CRN  : String)
     {
         val post = Post(Title, Text, CRN)
-        Firebase.saveNewPosttoUser(post, "1", CRN, postID)
+        Firebase.saveNewPosttoUser(post, "1", CRN)
     }
 
     fun uploadUserProfileImage(selectedPhotoUri: Uri) = Firebase.uploadImageToFirebaseStorage(selectedPhotoUri)

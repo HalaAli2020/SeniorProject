@@ -383,7 +383,9 @@ class FirebaseData @Inject constructor() {
         //val subject = Subject
         //val ClassID = Classkey
         val userID = firebaseAuth.uid
+        val author= firebaseAuth.currentUser?.displayName
         val comment = Comment(text,0, userID, crn, postID)
+        comment.author= author
         Log.d("BigMoods", crn)
         //FIX userprofile not init post.author = userprofile.username!!
         //val Class_key = FirebaseDatabase.getInstance().getReference(CRN).child("Posts").push().key
@@ -411,7 +413,7 @@ class FirebaseData @Inject constructor() {
     }
 
     // CRN is a placeholder for a class object
-    fun saveNewPosttoUser(post : Post, Subject: String, CRN : String, postID: String) {
+    fun saveNewPosttoUser(post : Post, Subject: String, CRN : String) {
 
 
         val subject = Subject
