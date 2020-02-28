@@ -12,6 +12,7 @@
         android:layout_height="56dp"
         android:src="@drawable/ic_create_black_24dp"
         android:id="@+id/post_image"/>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,6 +27,12 @@
             android:ellipsize="end"
             android:paddingTop="2dp"
             android:id="@+id/comment_text"/>
+
+        <TextView
+            android:id="@+id/authcom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
     </LinearLayout>
 

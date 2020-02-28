@@ -43,7 +43,7 @@ data class Post(var title: String?, var text: String?, val subject: String?)
             "title" to title,
             "text" to text,
             "Time" to ptime,
-            "Author" to author,
+            "author" to author,
             "subject" to subject,
             "crn" to crn,
             "comments" to comments,
