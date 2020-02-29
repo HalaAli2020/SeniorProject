@@ -847,9 +847,9 @@ class FirebaseData @Inject constructor() {
         })
     }*/
 
-    private fun listenForSubscribedPosts2(sub: MutableList<String>){
+    private fun listenForSubscribedPosts2(sub: MutableList<String>?){
         val reference = FirebaseDatabase.getInstance().getReference("Subjects")
-
+        var sub: MutableList<String>? = sendUserSUB()
         reference.addChildEventListener(object : ChildEventListener {
             var savedPostsList: MutableList<Post> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
@@ -864,13 +864,14 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                if(sub!!.contains(p0.key.toString())) {
+                Log.d("FIRST1-:", p0.key)
+                if(sub!!.contains(p0.key)) {
                     for (p2 in p0.getChildren()) {
-                        Log.d("FIRST2:   ", p2.key)
+                        Log.d("FIRST2---:", p2.key)
                         if(p2.key=="Posts") {
                             var counter = 0
                             for (p3 in p2.getChildren().reversed()) {
-                                Log.d("FIRST3:       ", p3.key)
+                                Log.d("FIRST3-------:", p3.key)
                                 val newPost = Post()
                                 try {
                                     newPost.let {
@@ -889,7 +890,7 @@ class FirebaseData @Inject constructor() {
 
                                 savedPosts.value = savedPostsList
                                 counter++
-                                if(counter==3)break
+                                if(counter==2)break
                             }
                         }
                     }
