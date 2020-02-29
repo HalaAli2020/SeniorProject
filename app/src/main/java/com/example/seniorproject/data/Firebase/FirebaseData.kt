@@ -46,9 +46,17 @@ class FirebaseData @Inject constructor() {
     var savedPosts : PostLiveData = PostLiveData()
     var userPosts : PostLiveData = PostLiveData()
     var Comments : CommentLive = CommentLive()
+    var profilePosts : PostLiveData = PostLiveData()
+
+
     private lateinit var postlistener : ValueEventListener
     private lateinit var userprofile : User
     var newComments : Comment? = null
+
+
+    var newProfilePosts : Post? = null
+
+
     var classList : MutableList<CRN> = mutableListOf()
     var classPostList : PostLiveData = PostLiveData()
     var UserSUB : MutableList<String>? = null
@@ -250,6 +258,74 @@ class FirebaseData @Inject constructor() {
             }
         }
     }
+
+
+
+    fun listenForUserProfilePosts (): PostLiveData{
+        Log.d(TAG, "getUserProfilePosts listener called")
+        val uid = FirebaseAuth.getInstance().uid
+        val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Posts")
+
+        val profilePostListen = reference.addChildEventListener(object : ChildEventListener {
+            var profilePostsList: MutableList<Post> = mutableListOf()
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                val newProfilePost :Post  = Post()
+                try {
+                    newProfilePost.let {
+                        it.text = p0.child("text").getValue().toString()
+                        it.title = p0.child("title").getValue().toString()
+                        it.key = p0.child("Key").getValue().toString()
+                        //need to add the rest of this part isn't needed
+
+                    }
+                } catch (e: Exception) {
+                    Log.d("Data Error", "error converting to post")
+                }
+
+
+                if (newProfilePost != null) {
+                    Log.d(TAG, newProfilePost.title ?: " Accessing profile post title")
+                    Log.d(TAG, newProfilePost.text ?: " Accessing profile post title")
+                    profilePostsList.add(newProfilePost)
+
+                    newProfilePosts = newProfilePost
+
+                }
+                profilePosts.value = profilePostsList
+                //Log.d("TAG", "Comments loaded")
+
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+            }
+
+
+
+
+        })
+        Log.d("Post function return", "Post function return")
+
+        return profilePosts
+    }
+
+    fun getUserProfilePosts() : PostLiveData{
+        Log.d(TAG, "getUserProfilePosts called")
+        listenForUserProfilePosts()
+        return profilePosts
+    }
+
+
+
 
     fun getCommentsCO(Key : String) : CommentLive {
 
@@ -767,10 +843,14 @@ class FirebaseData @Inject constructor() {
 
 
     }
+
+
     fun getSavedUserPost() : PostLiveData
     {
         return savedPosts
     }
+
+
     fun SeparateList(p0 : DataSnapshot) : List<String>?
     {
         var SubList :MutableList<String> = mutableListOf()

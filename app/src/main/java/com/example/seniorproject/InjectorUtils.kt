@@ -1,12 +1,13 @@
 package com.example.seniorproject
 
+import com.example.seniorproject.Profile.ProfileRepository
 import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.data.repositories.PostRepository
-import com.example.seniorproject.viewModels.CommunityPostViewModel
 import com.example.seniorproject.viewModels.CommunityPostViewModelFactory
 //import com.example.seniorproject.viewModels.AuthenticationViewModelFactory
 import com.example.seniorproject.viewModels.HomeFragmentViewModelFactory
 import com.example.seniorproject.viewModels.ListViewModelFactory
+import com.example.seniorproject.viewModels.ProfileViewModelFactory
 
 //import com.example.seniorproject.viewModels.NewPostFragmentViewModelFactory
 
@@ -26,6 +27,13 @@ object InjectorUtils {
         val postrepo: PostRepository = PostRepository.getInstance(FirebaseData())
         return CommunityPostViewModelFactory(postrepo)
     }
+
+    fun provideProfileViewModelFactory() : ProfileViewModelFactory {
+        val profilepostrepo = ProfileRepository.getInstance(FirebaseData())
+        return ProfileViewModelFactory(profilepostrepo)
+    }
+
+
 
    /* fun provideNewPostViewModelFactory(): NewPostFragmentViewModelFactory {
         val postrepo: PostRepository = PostRepository.getInstance(FirebaseData())

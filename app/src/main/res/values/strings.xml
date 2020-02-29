@@ -13,11 +13,13 @@
     <string name="notSub">Subscribe</string>
 
 
-
     <string-array name="class_list">
         <item>CSC1500</item>
         <item>BIO1500</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

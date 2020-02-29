@@ -34,6 +34,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     fun getSavedPosts() = Firebase.getSavedPost()
     fun getSavedUserPosts() = Firebase.getSavedUserPost()
 
+
+
     fun getpostKey(PKey: String)
     {
 

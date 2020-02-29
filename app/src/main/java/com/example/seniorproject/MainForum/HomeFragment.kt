@@ -47,6 +47,7 @@ class HomeFragment : Fragment(), PostListener {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: HomeFragmentViewModel
+
     override fun onStarted() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
