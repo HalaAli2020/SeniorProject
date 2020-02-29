@@ -22,7 +22,6 @@
             android:layout_height="69dp"
             android:layout_marginTop="25dp"
             android:background="#314447"
-            android:src="@drawable/ic_launcher_foreground"
             android:paddingRight="10dp" />
 
         <LinearLayout
