@@ -37,8 +37,8 @@ class ProfileFragment : Fragment() {
 
     }
 
-    private lateinit var adapter: ProfileAdapter
-    private lateinit var postLiveData: PostLiveData
+    private lateinit var adapter: CustomAdapter
+   // private lateinit var postLiveData: PostLiveData
 
 
 
@@ -54,27 +54,25 @@ class ProfileFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_profile2, container, false)
 
         myViewModel.getUserProfilePosts()
-        postLiveData = myViewModel.getUserProfilePosts()
-        Log.d(TAG, postLiveData.value.toString())
+       // postLiveData =
+        //Log.d(TAG, postLiveData.value.toString())
 
-        adapter = ProfileAdapter(view.context, postLiveData)
-        view.profile_recyclerView.adapter = adapter
+        //adapter = CustomAdapter(view.context, postLiveData)
+        view.profile_recyclerView.adapter = CustomAdapter(view.context, myViewModel.getUserProfilePosts())
 
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true
         view.profile_recyclerView.layoutManager = linearLayoutManager
 
-        //view.profile_recyclerView.adapter = adapter
-        //binding.profileViewModel = myViewModel
         binding.lifecycleOwner = this
 
         myViewModel.getUserProfilePosts()
         binding.executePendingBindings()
 
-        while (PostLiveData.get().value != null) {
+        /*while (PostLiveData.get().value != null) {
 
-            adapter = ProfileAdapter(view.context, postLiveData)
+            adapter = CustomAdapter(view.context, postLiveData)
             view.profile_recyclerView.adapter = adapter
 
             val linearLayoutManager = LinearLayoutManager(context)
@@ -88,7 +86,7 @@ class ProfileFragment : Fragment() {
             binding.lifecycleOwner = this
 
             binding.executePendingBindings()
-        }
+        }*/
 
 
 
