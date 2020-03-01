@@ -30,9 +30,7 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
     private var getCommentsJob: Job? = null
     private var PostKey : String? = null
     init {
-        viewModelScope.launch {
 
-        }
     }
 
     fun getComments() : CommentLive

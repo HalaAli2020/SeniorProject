@@ -74,9 +74,6 @@ class HomeFragment : Fragment(), PostListener {
 
     }
 
-    private lateinit var linearLayoutManager: LinearLayoutManager
-    private lateinit var adapter: CustomAdapter
-    private lateinit var postLiveData: PostLiveData
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -94,17 +91,14 @@ class HomeFragment : Fragment(), PostListener {
         myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         //postLiveData = myViewModel.getSavedPosts()
-        postLiveData = myViewModel.getSavedUserPosts()
 
-        adapter = CustomAdapter(view.context, postLiveData)
-        view.post_recyclerView.adapter = adapter
 
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true
         view.post_recyclerView.layoutManager = linearLayoutManager
 
-        view.post_recyclerView.adapter = adapter
+        view.post_recyclerView.adapter = CustomAdapter(view.context, myViewModel.getSubscribedPosts())
         binding.homeFragmentViewModel = myViewModel
         binding.lifecycleOwner = this
 
@@ -112,29 +106,12 @@ class HomeFragment : Fragment(), PostListener {
         /*DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)*/
 
-        myViewModel.getSavedUserPosts()
         //myViewModel.postListener = this
 
 
         binding.executePendingBindings()
 
-        while (PostLiveData.get().value != null) {
 
-            adapter = CustomAdapter(view.context, postLiveData)
-            view.post_recyclerView.adapter = adapter
-
-            val linearLayoutManager = LinearLayoutManager(context)
-            linearLayoutManager.reverseLayout = true
-            linearLayoutManager.stackFromEnd = true
-
-
-            view.post_recyclerView.layoutManager = linearLayoutManager
-            view.post_recyclerView.adapter = adapter
-            binding.homeFragmentViewModel = myViewModel
-            binding.lifecycleOwner = this
-
-            binding.executePendingBindings()
-        }
 
         return view
 
