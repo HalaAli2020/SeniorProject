@@ -46,7 +46,6 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:layout_weight="1"
-            android:onClick="@{() -> ClickedViewModel.deleteComment()}"
             app:srcCompat="@android:drawable/ic_delete" />
 
     </LinearLayout>

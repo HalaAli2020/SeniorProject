@@ -30,9 +30,7 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
     private var getCommentsJob: Job? = null
     private var PostKey : String? = null
     init {
-        viewModelScope.launch {
 
-        }
     }
 
     fun getComments() : CommentLive
@@ -69,7 +67,7 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
             CommentListener?.onFailure("Post key not found")
 
         }
-        repository.deleteComment(Classkey!!, crn!!)
+        repository.getComments(Classkey!!, crn!!)
     }
     /*fun getCommentsCO(PKey: String) : CommentLive? {
         getCommentsJob = viewModelScope.launch {

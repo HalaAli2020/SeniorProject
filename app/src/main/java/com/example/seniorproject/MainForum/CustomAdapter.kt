@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.startActivity
+import androidx.core.os.bundleOf
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -43,7 +44,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData) :
         } else {
             val post: Post = savedPosts.value!![position]
             holder.itemView.post_title.text = post.title
-            holder.itemView.username.text = post.author
+            holder.itemView.username.text = post.crn
             holder.itemView.setOnClickListener {
                 val intent = Intent(mContext, ClickedPost::class.java)
 
@@ -54,6 +55,8 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData) :
                 intent.putExtra("UserID", post.UserID)
                 intent.putExtra("Author", post.author)
                 intent.putExtra("crn", post.crn)
+                //val bundle = bundleOf()
+
 
                 mContext.startActivity(intent)
             }
