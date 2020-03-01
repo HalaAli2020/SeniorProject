@@ -35,6 +35,7 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
 
     var posts: PostLiveData = PostLiveData()
     var postdata: PostLiveData = PostLiveData.get()
+    var p : MutableList<Post>? = null
 
     init {
 
@@ -56,6 +57,11 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
     fun editPost(): PostLiveData {
         postdata = getSavedPosts()
         return postdata
+    }
+
+    fun getSubscribedPosts(): PostLiveData{
+        posts = repository.getSubscribedPosts()
+        return posts
     }
 
     fun uploadUserProfileImage(selectedPhotoUri: Uri) = repository.uploadUserProfileImage(selectedPhotoUri)
