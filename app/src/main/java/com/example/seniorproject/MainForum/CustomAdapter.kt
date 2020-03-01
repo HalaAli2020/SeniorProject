@@ -44,6 +44,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData) :
             val post: Post = savedPosts.value!![position]
             holder.itemView.post_title.text = post.title
             holder.itemView.username.text = post.author
+
             holder.itemView.setOnClickListener {
                 val intent = Intent(mContext, ClickedPost::class.java)
 
