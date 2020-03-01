@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.fragment_list.view.*
 import javax.inject.Inject
 import androidx.databinding.adapters.TextViewBindingAdapter.setText
 import androidx.lifecycle.*
-import com.google.common.eventbus.Subscribe
+//import com.google.common.eventbus.Subscribe
 import com.google.firebase.database.DataSnapshot
 
 

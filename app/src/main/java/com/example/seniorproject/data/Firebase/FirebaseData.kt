@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
+import dagger.multibindings.ClassKey
 import kotlinx.coroutines.*
 import java.lang.Thread.sleep
 import kotlinx.coroutines.delay
@@ -383,7 +384,9 @@ class FirebaseData @Inject constructor() {
         //val subject = Subject
         //val ClassID = Classkey
         val userID = firebaseAuth.uid
+        val author= firebaseAuth.currentUser?.displayName
         val comment = Comment(text,0, userID, crn, postID)
+        comment.author= author
         Log.d("BigMoods", crn)
         //FIX userprofile not init post.author = userprofile.username!!
         //val Class_key = FirebaseDatabase.getInstance().getReference(CRN).child("Posts").push().key
@@ -417,21 +420,25 @@ class FirebaseData @Inject constructor() {
         val subject = Subject
         // val ClassID = Classkey
         val userID = firebaseAuth.uid
+        val author= firebaseAuth.currentUser?.displayName
         post.UserID = userID
+        post.author=author
         //FIX userprofile not init post.author = userprofile.username!!
-        //val Class_key = FirebaseDatabase.getInstance().getReference(CRN).child("Posts").push().key
-        //FirebaseDatabase.getInstance().getReference("/users/$userID")
+
         val User_key = FirebaseDatabase.getInstance().getReference("/users/$userID").child("Posts").push().key
         val Class_key = FirebaseDatabase.getInstance().getReference("/Subjects/$CRN").child("Posts").push().key
         post.key = User_key
         post.Classkey = Class_key
+        //post.author= auth_key
         // implement in viewmodel
         //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
         val dataupdates = HashMap<String, Any>()
         val postvalues = post.toMap()
         dataupdates["/Subjects/$CRN/Posts/$Class_key"] = postvalues
+        //dataupdates["/Subjects/$CRN/Posts/$postID/$author"] = postvalues
         dataupdates["/users/$userID/Posts/$User_key"] = postvalues
-        //FirebaseDatabase.getInstance().getReference("users/$userID").child("Post/$User_key").setValue(postvalues)
+
+       // FirebaseDatabase.getInstance().getReference("users/$userID").child("Post/$User_key").setValue(postvalues)
         FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
         /*Class_reference.setValue(post).addOnSuccessListener {
                 Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
@@ -704,7 +711,6 @@ class FirebaseData @Inject constructor() {
     fun getClassPosts(className: String) : PostLiveData{
         val reference = FirebaseDatabase.getInstance().getReference("Subjects/$className/Posts")
 
-
         reference.addChildEventListener(object : ChildEventListener {
             var savedPostsList: MutableList<Post> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
@@ -736,6 +742,7 @@ class FirebaseData @Inject constructor() {
                         it.key = p0.child("key").getValue(String::class.java)
                         it.Classkey = p0.child("Classkey").getValue(String::class.java)
                         it.UserID = p0.child("UserID").getValue(String::class.java)
+                        it.author= p0.child("author").getValue(String::class.java)
 
                         // comments might need to be gotten separatley to properly convert values
 
