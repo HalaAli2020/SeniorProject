@@ -41,16 +41,15 @@ class CommentsAdapter(context: Context, var Comments: CommentLive?) :
             val comment: Comment = Comments?.value!![position]
             //holder.itemView.post_title.text = .title
             holder.itemView.comment_text.text = comment.text
+            holder.itemView.authcom.text = comment.author
 
-
-
-           /* holder.itemView.setOnClickListener {
-                val intent = Intent(mContext, ClickedPost::class.java)
-                intent.putExtra("Title", post.title)
-                intent.putExtra("Text", post.text)
-                intent.putExtra("Key", post.Classkey)
-                mContext.startActivity(intent)
-            }*/
+            /* holder.itemView.setOnClickListener {
+                 val intent = Intent(mContext, ClickedPost::class.java)
+                 intent.putExtra("Title", post.title)
+                 intent.putExtra("Text", post.text)
+                 intent.putExtra("Key", post.Classkey)
+                 mContext.startActivity(intent)
+             }*/
 
         }
 

@@ -115,8 +115,9 @@ class MainForum : AppCompatActivity(),
 
                 R.id.nav_profile -> {
                     Toast.makeText(this, "redirecting to profile", Toast.LENGTH_LONG).show()
-                    replaceFragment(ProfileFragment())
-                    //return@OnNavigationItemSelectedListener true
+                    val intent = Intent(this, UserProfileActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
                 }
                 R.id.nav_allClasses -> {
                     Toast.makeText(this, "show all classes", Toast.LENGTH_LONG).show()

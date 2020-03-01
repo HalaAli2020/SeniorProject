@@ -23,6 +23,6 @@ interface AppComponent {
     fun inject(fragment: NewPostFragment)
     fun inject(fragment: MainForum)
     fun inject(activity: ClickedPost)
-    fun inject(fragment: ProfileFragment)
+    fun inject(fragment: UserProfileActivity)
 
 }
