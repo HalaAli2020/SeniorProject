@@ -902,9 +902,15 @@ class FirebaseData @Inject constructor() {
                                 val newPost = Post()
                                 try {
                                     newPost.let {
-                                        it.text = p3.child("text").getValue().toString()
-                                        it.title = p3.child("title").getValue().toString()
-                                        it.key = p3.child("Key").getValue().toString()
+                                        it.text = p3.child("text").value.toString()
+                                        it.title = p3.child("title").value.toString()
+                                        it.key = p3.child("Key").value.toString()
+                                        // class key is key for this post
+                                        it.Classkey = p3.child("Classkey").value.toString()
+                                        // user who posted id
+                                        it.UserID = p3.child("UserID").value.toString()
+                                        // need to change this later subject should be subject crn should be different
+                                        it.crn = p3.child("Subject").value.toString()
                                     }
                                 } catch (e: Exception) {
                                     Log.d("Data Error", "error converting to post")
