@@ -216,8 +216,6 @@ class FirebaseData @Inject constructor() {
             }
     }
 
-
-
     private fun saveUserToFirebaseDatabase(username: String, email: String, password: String, profileImageUrl: Uri) {
         Log.d("Debug", "entered firebase database function")
         val uid = FirebaseAuth.getInstance().uid
@@ -774,6 +772,7 @@ class FirebaseData @Inject constructor() {
 
 
     }
+
     fun getSavedUserPost() : PostLiveData
     {
         return savedPosts

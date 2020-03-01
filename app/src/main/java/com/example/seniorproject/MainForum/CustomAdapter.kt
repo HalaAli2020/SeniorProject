@@ -62,10 +62,3 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData) :
 
 }
 
-class CustomViewHolders(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener {
-
-    override fun onClick(v: View) {
-        Log.d("RecyclerView", "CLICK!")
-    }
-
-}
