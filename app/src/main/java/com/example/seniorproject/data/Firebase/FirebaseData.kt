@@ -1,5 +1,4 @@
 package com.example.seniorproject.data.Firebase
-
 import android.net.Uri
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
@@ -37,6 +36,7 @@ import com.example.seniorproject.data.models.User
 //import javax.swing.UIManager.put
 
 
+
 private const val TAG = "MyLogTag"
 
 @Singleton
@@ -49,15 +49,16 @@ class FirebaseData @Inject constructor() {
 
 
     //var savedPosts: MutableLiveData<List<Post>> = MutableLiveData()
-    var savedPosts: PostLiveData = PostLiveData()
-    var userPosts: PostLiveData = PostLiveData()
-    var Comments: CommentLive = CommentLive()
-    private lateinit var postlistener: ValueEventListener
-    private lateinit var userprofile: User
-    var newComments: Comment? = null
-    var classList: MutableList<CRN> = mutableListOf()
-    var classPostList: PostLiveData = PostLiveData()
-    var UserSUB: MutableList<String>? = null
+    var savedPosts : PostLiveData = PostLiveData()
+    var userPosts : PostLiveData = PostLiveData()
+    var Comments : CommentLive = CommentLive()
+    private lateinit var postlistener : ValueEventListener
+    private lateinit var userprofile : User
+    var newComments : Comment? = null
+    var classList : MutableList<CRN> = mutableListOf()
+    var classPostList : PostLiveData = PostLiveData()
+    var MainPosts : MutableList<Post> = mutableListOf()
+    var UserSUB : MutableList<String>? = null
     fun CurrentUser() = FirebaseAuth.getInstance().currentUser
 
 
@@ -318,6 +319,8 @@ class FirebaseData @Inject constructor() {
             }
 
 
+
+
         })
         Log.d("Comment return", "comment return")
         return Comments
@@ -539,6 +542,29 @@ class FirebaseData @Inject constructor() {
             }
         })
     }
+    /*private fun listenForSubscribedPosts2(sub: MutableList<String>){
+        var count = 0
+       for (n in sub.iterator())
+       {
+           var start = count
+           var ref = FirebaseDatabase.getInstance().getReference("Subject/$n/Posts").limitToFirst(2)
+
+           ref.addListenerForSingleValueEvent(object : ValueEventListener {
+               override fun onDataChange(p0: DataSnapshot) {
+
+               }
+
+               override fun onCancelled(p0: DatabaseError) {
+                   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+               }
+           })
+          while (count != (start + 2))
+          {
+              Log.d("waiting", "")
+          }
+       }
+
+    }*/
 
     fun sendUserSUB(): MutableList<String>? {
         getUserSub()
@@ -554,9 +580,9 @@ class FirebaseData @Inject constructor() {
         var SubAdd = HashMap<String, String>()
         //SubAdd[crn] = Subject
         val uid = FirebaseAuth.getInstance().uid
-        var ref = FirebaseDatabase.getInstance().getReference("users/$uid").child("Subscriptions")
+        var ref = FirebaseDatabase.getInstance().getReference("users/$uid/Subscriptions")
         ref.push().setValue(crn)
-        val rref = FirebaseDatabase.getInstance().getReference("Subjects/$crn").child("SubList")
+        val rref = FirebaseDatabase.getInstance().getReference("Subjects/$crn/SubList")
         rref.push().setValue(uid)
 
     }
@@ -621,6 +647,7 @@ class FirebaseData @Inject constructor() {
                 UserSUB = SubList
             }
         })
+
     }
 
 
@@ -729,6 +756,7 @@ class FirebaseData @Inject constructor() {
                     // comments might need to be gotten separatley to properly convert values
 
 
+
                     savedPostsList.add(newPost)
 
                 }
@@ -739,6 +767,8 @@ class FirebaseData @Inject constructor() {
 
                 classPostList.value = savedPostsList
             }
+
+
 
 
             override fun onChildRemoved(p0: DataSnapshot) {
@@ -872,9 +902,15 @@ class FirebaseData @Inject constructor() {
                                 val newPost = Post()
                                 try {
                                     newPost.let {
-                                        it.text = p3.child("text").getValue().toString()
-                                        it.title = p3.child("title").getValue().toString()
-                                        it.key = p3.child("Key").getValue().toString()
+                                        it.text = p3.child("text").value.toString()
+                                        it.title = p3.child("title").value.toString()
+                                        it.key = p3.child("Key").value.toString()
+                                        // class key is key for this post
+                                        it.Classkey = p3.child("Classkey").value.toString()
+                                        // user who posted id
+                                        it.UserID = p3.child("UserID").value.toString()
+                                        // need to change this later subject should be subject crn should be different
+                                        it.crn = p3.child("subject").value.toString()
                                     }
                                 } catch (e: Exception) {
                                     Log.d("Data Error", "error converting to post")
@@ -957,6 +993,7 @@ class FirebaseData @Inject constructor() {
             }
 
 
+
         })
 
     }
@@ -1020,6 +1057,7 @@ class FirebaseData @Inject constructor() {
 
         })
     }*/
+
 
 
     companion object {
