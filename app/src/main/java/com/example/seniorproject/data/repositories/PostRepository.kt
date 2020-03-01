@@ -18,29 +18,28 @@ import javax.inject.Singleton
 
 @Singleton
 class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
-    val post : Post? = null
-    val CommentList : MutableList<Comment> = mutableListOf()
+    val post: Post? = null
+    val CommentList: MutableList<Comment> = mutableListOf()
     val CommentL = CommentLive()
     private var getCommentsJob: Job? = null
 
-    fun saveNewPost(Title: String, Text: String, Subject: String, CRN  : String)
-    {
+    fun saveNewPost(Title: String, Text: String, Subject: String, CRN: String) {
         val post = Post(Title, Text, CRN)
         Firebase.saveNewPosttoUser(post, "1", CRN)
     }
 
-    fun uploadUserProfileImage(selectedPhotoUri: Uri) = Firebase.uploadImageToFirebaseStorage(selectedPhotoUri)
+    fun uploadUserProfileImage(selectedPhotoUri: Uri) =
+        Firebase.uploadImageToFirebaseStorage(selectedPhotoUri)
 
     fun getSavedPosts() = Firebase.getSavedPost()
     fun getSavedUserPosts() = Firebase.getSavedUserPost()
+    fun getSubscribedPosts() = Firebase.getSubscribedPosts()
 
-    fun getpostKey(PKey: String)
-    {
+    fun getpostKey(PKey: String) {
 
     }
 
-    fun getComments( ClassKey: String, subject : String)  : CommentLive
-    {
+    fun getComments(ClassKey: String, subject: String): CommentLive {
         return Firebase.getComments(ClassKey, subject)
     }
     /*suspend fun getCommentsCO(PKey: String) : Flow<CommentLive> = flow {
@@ -63,10 +62,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
      }*/
 
 
-
-
     fun newComment(PKey: String, Comment: String, Classkey: String, UserID: String, crn: String) {
-        Firebase.saveNewComment(Comment ,PKey, Classkey, UserID, crn)
+        Firebase.saveNewComment(Comment, PKey, Classkey, UserID, crn)
         //Firebase.saveNewCommentClass(Comment ,PKey, Classkey, UserID, crn)
     }
 
@@ -79,16 +76,16 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun getClassPosts(className: String) = Firebase.getClassPosts(className)
 
-    fun getUserSub() : MutableList<String>?  {
+    fun getUserSub(): MutableList<String>? {
         return Firebase.sendUserSUB()
 
     }
-    fun addUsersub(crn : String)
-    {
+
+    fun addUsersub(crn: String) {
         Firebase.addUserSUB(crn)
     }
-    fun remUsersub(crn : String)
-    {
+
+    fun remUsersub(crn: String) {
         Firebase.removeUserSub(crn)
         Firebase.removeClassSub(crn)
     }
