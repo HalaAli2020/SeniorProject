@@ -50,7 +50,7 @@ class ListAdapter(
 
         if (classList[position].Subscribed) {
             Log.d("subB", "true")
-            holder.itemView.Subscibe_B.setBackgroundColor(mContext.resources.getColor(R.color.grey))
+            holder.itemView.Subscibe_B.setBackgroundColor(mContext.resources.getColor(R.color.Subscribed))
             holder.itemView.Subscibe_B.text = mContext.resources.getString(R.string.Sub)
         } else {
             Log.d("subB", "false")
@@ -71,7 +71,7 @@ class ListAdapter(
                 Log.d("subB", "ifffffff")
                 mViewModel.addSub(classList[position].name)
                 holder.itemView.Subscibe_B.setBackgroundColor(mContext.resources.getColor(R.color.Subscribed))
-                holder.itemView.Subscibe_B.text = mContext.resources.getString(R.string.notSub)
+                holder.itemView.Subscibe_B.text = mContext.resources.getString(R.string.Sub)
                 classList[position].Subscribed = true
             }
 
