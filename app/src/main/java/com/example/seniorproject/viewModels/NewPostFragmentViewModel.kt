@@ -14,7 +14,7 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
     var titlePost: String? = null
     var textPost: String? = null
     var classSpinner: String? = null
-
+    //var author: String? = repository.currentUser()?.displayName
 
 
     val clicksListener = object : AdapterView.OnItemSelectedListener {
@@ -40,7 +40,6 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
         }
         Log.d("SELECTED VALUE:", classSpinner)
         repository.saveNewPost(titlePost!!, textPost!!,"1", classSpinner!!)
-
 
     }
 

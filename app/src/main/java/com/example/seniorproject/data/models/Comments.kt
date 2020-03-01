@@ -13,6 +13,7 @@ class Comment(val text: String, var Ptime : Long?, var PosterID : String?, var c
     //var Ptime : Long? = null
     var ClassComkey : String? = null
     var UserComkey : String? = null
+    var author : String? = null
 
 
 
@@ -31,6 +32,7 @@ class Comment(val text: String, var Ptime : Long?, var PosterID : String?, var c
         return mapOf(
             "text" to text,
             "PosterID" to PosterID,
+            "author" to author,
             "Ptime" to Ptime,
             "crn" to crn,
             "Postkey" to Postkey,
