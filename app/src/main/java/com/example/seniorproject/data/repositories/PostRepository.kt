@@ -9,6 +9,7 @@ import com.example.seniorproject.data.models.CommentLive
 import com.example.seniorproject.data.models.Post
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
+import dagger.multibindings.ClassKey
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.util.*
@@ -63,7 +64,11 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
      }*/
 
 
-
+    fun deleteComment(Key : String, subject: String)
+    {
+        //Firebase.deleteComment(PKey, crn, ClassKey, UserComkey)
+        Firebase.deleteComment(Key, subject)
+    }
 
     fun newComment(PKey: String, Comment: String, Classkey: String, UserID: String, crn: String) {
         Firebase.saveNewComment(Comment ,PKey, Classkey, UserID, crn)

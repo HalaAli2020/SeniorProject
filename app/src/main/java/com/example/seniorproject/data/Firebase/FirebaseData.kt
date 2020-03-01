@@ -332,9 +332,19 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {
+
+                val newComment = p0.getValue(Comment::class.java)
+
+                if (newComment != null) {
+                    Log.d("ACCESSING", newComment?.text)
+                    savedCommentList.remove(newComment)
+
+                    //repository.saveNewPost(newPost)
+                    //adapter.add(PostFrag(newPost.title, newPost.text))
+                }
+                Comments.value = savedCommentList
+
             }
-
-
 
 
         })
@@ -343,7 +353,45 @@ class FirebaseData @Inject constructor() {
     }
 
 
+    fun deleteComment(Key : String, subject: String)
+    {
+        val uid = FirebaseAuth.getInstance().uid
+        val reference = FirebaseDatabase.getInstance().getReference("Subjects/$subject/Posts/$Key/Comments")
 
+        reference.addChildEventListener(object : ChildEventListener {
+            var savedCommentList: MutableList<Comment> = mutableListOf()
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+
+                val newComment = p0.getValue(Comment::class.java)
+
+                if (newComment != null) {
+                    Log.d("ACCESSING", newComment?.text)
+                    savedCommentList.remove(newComment)
+
+                    //repository.saveNewPost(newPost)
+                    //adapter.add(PostFrag(newPost.title, newPost.text))
+                }
+                Comments.value = savedCommentList
+
+            }
+
+
+        })
+
+    }
 
 
 
@@ -778,6 +826,7 @@ class FirebaseData @Inject constructor() {
     {
         return savedPosts
     }
+
     fun SeparateList(p0 : DataSnapshot) : List<String>?
     {
         var SubList :MutableList<String> = mutableListOf()
@@ -788,6 +837,8 @@ class FirebaseData @Inject constructor() {
         }
         return SubList
     }
+
+
     fun sendClist() : MutableList<CRN>
     {
         if(classList.isEmpty())

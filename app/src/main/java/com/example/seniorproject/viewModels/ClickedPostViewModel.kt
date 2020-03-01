@@ -60,6 +60,17 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
         }
         return false
     }
+
+    fun deleteComment()
+    {
+        if(PKey.isNullOrEmpty())
+        {
+            PostKey = PKey
+            CommentListener?.onFailure("Post key not found")
+
+        }
+        repository.deleteComment(Classkey!!, crn!!)
+    }
     /*fun getCommentsCO(PKey: String) : CommentLive? {
         getCommentsJob = viewModelScope.launch {
             repository.getCommentsCO(PKey).collect {
