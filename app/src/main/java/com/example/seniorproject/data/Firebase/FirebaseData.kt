@@ -516,6 +516,7 @@ class FirebaseData @Inject constructor() {
     }
 
     fun getUserSub() {
+
         val uid = FirebaseAuth.getInstance().uid
         Log.d("uid", uid!!)
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid/Subscriptions")
@@ -540,12 +541,8 @@ class FirebaseData @Inject constructor() {
     }
 
     fun sendUserSUB(): MutableList<String>? {
+        getUserSub()
         var sub = UserSUB
-        if (sub == null) {
-            getUserSub()
-            sub = UserSUB
-
-        }
         return sub
     }
 
@@ -568,7 +565,7 @@ class FirebaseData @Inject constructor() {
         val uid = FirebaseAuth.getInstance().uid
         Log.d("uid", uid!!)
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid/Subscriptions")
-        reference.addValueEventListener(object : ValueEventListener {
+        reference.addListenerForSingleValueEvent(object : ValueEventListener {
             val SubList: MutableList<String> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
 
@@ -599,7 +596,7 @@ class FirebaseData @Inject constructor() {
         val uid = FirebaseAuth.getInstance().uid
         Log.d("uid", uid!!)
         val reference = FirebaseDatabase.getInstance().getReference("Subjects/$crn/SubList")
-        reference.addValueEventListener(object : ValueEventListener {
+        reference.addListenerForSingleValueEvent(object : ValueEventListener {
             val SubList: MutableList<String> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
 
@@ -895,20 +892,18 @@ class FirebaseData @Inject constructor() {
                         }
                     }
                 }
-
             }
-
             override fun onChildRemoved(p0: DataSnapshot) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
-
         })
-
     }
+
+
 
     fun getSubscribedPosts(): PostLiveData {
         var sub: MutableList<String>? = sendUserSUB()
-        if (sub != null) {
+        if(sub!=null) {
             listenForSubscribedPosts2(sub)
         }
         return savedPosts
