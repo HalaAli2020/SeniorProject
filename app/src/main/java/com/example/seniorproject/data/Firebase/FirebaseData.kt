@@ -45,6 +45,7 @@ class FirebaseData @Inject constructor() {
     var newComments : Comment? = null
     var classList : MutableList<CRN> = mutableListOf()
     var classPostList : PostLiveData = PostLiveData()
+    var MainPosts : MutableList<Post> = mutableListOf()
     var UserSUB : MutableList<String>? = null
     fun CurrentUser() = FirebaseAuth.getInstance().currentUser
 
@@ -500,6 +501,29 @@ class FirebaseData @Inject constructor() {
             }
         })
     }
+    /*private fun listenForSubscribedPosts2(sub: MutableList<String>){
+        var count = 0
+       for (n in sub.iterator())
+       {
+           var start = count
+           var ref = FirebaseDatabase.getInstance().getReference("Subject/$n/Posts").limitToFirst(2)
+
+           ref.addListenerForSingleValueEvent(object : ValueEventListener {
+               override fun onDataChange(p0: DataSnapshot) {
+
+               }
+
+               override fun onCancelled(p0: DatabaseError) {
+                   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+               }
+           })
+          while (count != (start + 2))
+          {
+              Log.d("waiting", "")
+          }
+       }
+
+    }*/
 
     fun sendUserSUB() : MutableList<String>?
     {
@@ -522,9 +546,9 @@ class FirebaseData @Inject constructor() {
         var SubAdd = HashMap<String, String>()
         //SubAdd[crn] = Subject
         val uid = FirebaseAuth.getInstance().uid
-        var ref = FirebaseDatabase.getInstance().getReference("users/$uid").child("Subscriptions")
+        var ref = FirebaseDatabase.getInstance().getReference("users/$uid/Subscriptions")
         ref.push().setValue(crn)
-        val rref = FirebaseDatabase.getInstance().getReference("Subjects/$crn").child("SubList")
+        val rref = FirebaseDatabase.getInstance().getReference("Subjects/$crn/SubList")
         rref.push().setValue(uid)
 
     }
@@ -533,7 +557,7 @@ class FirebaseData @Inject constructor() {
         val uid = FirebaseAuth.getInstance().uid
         Log.d("uid", uid!!)
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid/Subscriptions")
-        reference.addValueEventListener(object : ValueEventListener {
+        reference.addListenerForSingleValueEvent(object : ValueEventListener {
             val SubList : MutableList<String> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
 
@@ -550,7 +574,7 @@ class FirebaseData @Inject constructor() {
                     {
                         Log.d("Remove", "remove hit")
                         x.key
-                        reference.child(x.key!!).removeValue()
+                        reference.child(x.key.toString()!!).removeValue()
                     }
                     else
                     {
@@ -568,7 +592,7 @@ class FirebaseData @Inject constructor() {
         val uid = FirebaseAuth.getInstance().uid
         Log.d("uid", uid!!)
         val reference = FirebaseDatabase.getInstance().getReference("Subjects/$crn/SubList")
-        reference.addValueEventListener(object : ValueEventListener {
+        val listener = reference.addListenerForSingleValueEvent(object : ValueEventListener {
             val SubList : MutableList<String> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
 
@@ -585,7 +609,7 @@ class FirebaseData @Inject constructor() {
                     {
                         Log.d("Remove", "remove hit")
 
-                        reference.child(x.key!!).removeValue()
+                        reference.child(x.key.toString()!!).removeValue()
                     }
                     else
                     {
@@ -597,6 +621,7 @@ class FirebaseData @Inject constructor() {
                 UserSUB = SubList
             }
         })
+
     }
 
 
