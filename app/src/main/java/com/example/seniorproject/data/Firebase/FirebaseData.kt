@@ -279,18 +279,21 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val newProfilePost :Post  = Post()
-                try {
+                val newProfilePost :Post?  = p0.getValue(Post::class.java)
+                //val newProfilePost :Post  = Post()
+                /*try {
                     newProfilePost.let {
                         it.text = p0.child("text").getValue().toString()
                         it.title = p0.child("title").getValue().toString()
                         it.key = p0.child("Key").getValue().toString()
+
+
                         //need to add the rest of this part isn't needed
 
                     }
                 } catch (e: Exception) {
                     Log.d("Data Error", "error converting to post")
-                }
+                }*/
 
 
                 if (newProfilePost != null) {

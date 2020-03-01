@@ -41,12 +41,14 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
        {
            PostKey = PKey
            CommentListener?.onFailure("Post key not found")
-
        }
         CommentsLiveList = repository.getComments(Classkey!!, crn!!)
 
         return CommentsLiveList
     }
+
+
+
     fun newComment()
     {
 
