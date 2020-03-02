@@ -10,13 +10,11 @@ import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 //import com.example.seniorproject.InjectorUtils
-import com.example.seniorproject.databinding.NewPostFragmentBinding
+import com.example.seniorproject.databinding.FragmentNewPostBinding
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.R
-import com.example.seniorproject.databinding.FragmentHomeBinding
-import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.example.seniorproject.viewModels.NewPostFragmentViewModel
-import kotlinx.android.synthetic.main.new_post_fragment.view.*
+import kotlinx.android.synthetic.main.fragment_new_post.view.*
 import javax.inject.Inject
 
 class NewPostFragment : Fragment() {
@@ -34,18 +32,18 @@ class NewPostFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         DaggerAppComponent.create().inject(this)
-        val binding: NewPostFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.new_post_fragment, container, false)
+        val binding: FragmentNewPostBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_post, container, false)
         viewModel = ViewModelProviders.of(this, factory).get(NewPostFragmentViewModel::class.java)
-        val view = inflater.inflate(R.layout.new_post_fragment, container, false)
+        val view = inflater.inflate(R.layout.fragment_new_post, container, false)
 
         /*val factory = InjectorUtils.provideNewPostViewModelFactory()
-        val binding: NewPostFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.new_post_fragment, container, false)
+        val binding: NewPostFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_post, container, false)
         viewModel = ViewModelProviders.of(this, factory).get(NewPostFragmentViewModel::class.java)
-        val view = inflater.inflate(R.layout.new_post_fragment, container, false)*/
+        val view = inflater.inflate(R.layout.fragment_new_post, container, false)*/
 
 
         val adapter = ArrayAdapter.createFromResource(view.context, R.array.class_list, android.R.layout.simple_spinner_item)
-        // Specify the layout to use when the list of choices appears
+        // Specify the layout to use when the subscriptions of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         // Apply the adapter to the spinner
         view.spinner2.adapter = adapter

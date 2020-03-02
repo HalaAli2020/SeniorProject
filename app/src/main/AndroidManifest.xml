@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.seniorproject">
 
-    <uses-permission android:name="android.Manifest.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.Manifest.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -15,8 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainForum.UserProfileActivity"></activity>
         <activity android:name=".MainForum.CommunityPosts" />
+        <activity android:name=".MainForum.UserProfileActivity"></activity>
         <activity android:name=".MainForum.ClickedPost" />
         <activity
             android:name=".MainForum.MainForum"

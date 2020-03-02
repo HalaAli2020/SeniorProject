@@ -29,12 +29,14 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 private const val TAG = "MyLogTag"
-class HomeFragmentViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
+
+class HomeFragmentViewModel @Inject constructor(private val repository: PostRepository) :
+    ViewModel() {
 
 
     var posts: PostLiveData = PostLiveData()
     var postdata: PostLiveData = PostLiveData.get()
-    var p : MutableList<Post>? = null
+    var p: MutableList<Post>? = null
 
     init {
 
@@ -47,32 +49,30 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
         posts = repository.getSavedPosts()
         return posts
     }
+
     fun getSavedUserPosts(): PostLiveData {
 
         posts = repository.getSavedUserPosts()
         return posts
     }
 
-
     fun editPost(): PostLiveData {
         postdata = getSavedPosts()
         return postdata
     }
 
-    fun getSubscribedPosts(): PostLiveData{
+    fun getSubscribedPosts(): PostLiveData {
         posts = repository.getSubscribedPosts()
         return posts
     }
 
-    fun uploadUserProfileImage(selectedPhotoUri: Uri) = repository.uploadUserProfileImage(selectedPhotoUri)
+    fun uploadUserProfileImage(selectedPhotoUri: Uri) =
+        repository.uploadUserProfileImage(selectedPhotoUri)
 
 
     fun fetchCurrentUserName() = repository.fetchCurrentUserName()
 
     var user = repository.currentUser()
-
-
-
 
 
 }

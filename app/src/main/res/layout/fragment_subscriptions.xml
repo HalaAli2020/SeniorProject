@@ -5,10 +5,10 @@
     android:layout_height="match_parent"
     android:layout_marginTop="?attr/actionBarSize"
     android:layout_marginBottom="?attr/actionBarSize"
-    tools:context=".MainForum.ListFragment">
+    tools:context=".MainForum.SubscriptionsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/list_recyclerView"
+        android:id="@+id/subs_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </FrameLayout>

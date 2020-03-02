@@ -2,18 +2,15 @@ package com.example.seniorproject.MainForum
 
 import android.content.Context
 import android.content.Intent
-import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.CRN
 import com.example.seniorproject.viewModels.ListViewModel
-import kotlinx.android.synthetic.main.list_rv.view.*
+import kotlinx.android.synthetic.main.rv_list.view.*
 
 class ListAdapter(
     context: Context,
@@ -27,7 +24,7 @@ class ListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val cellForRow = layoutInflater.inflate(R.layout.list_rv, parent, false)
+        val cellForRow = layoutInflater.inflate(R.layout.rv_list, parent, false)
 
         return ListHolder(cellForRow)
     }
@@ -46,15 +43,17 @@ class ListAdapter(
         val classes: String = classList[position].name
         holder.itemView.communityName_TV.text = classes
 
-        Log.d("subB", "ERROR: " +  classList[position].Subscribed)
+        Log.d("subB", "ERROR: " + classList[position].Subscribed)
 
         if (classList[position].Subscribed) {
             Log.d("subB", "true")
-            holder.itemView.Subscibe_B.setBackgroundColor(mContext.resources.getColor(R.color.Subscribed))
+            holder.itemView.Subscibe_B.setBackgroundResource(R.drawable.sub_button)
+            holder.itemView.Subscibe_B.setTextColor(mContext.resources.getColor(R.color.white))
             holder.itemView.Subscibe_B.text = mContext.resources.getString(R.string.Sub)
         } else {
             Log.d("subB", "false")
-            holder.itemView.Subscibe_B.setBackgroundColor(mContext.resources.getColor(R.color.notSub))
+            holder.itemView.Subscibe_B.setBackgroundResource(R.drawable.circle_border)
+            holder.itemView.Subscibe_B.setTextColor(mContext.resources.getColor(R.color.blue_theme))
             holder.itemView.Subscibe_B.text = mContext.resources.getString(R.string.notSub)
         }
 
@@ -64,13 +63,15 @@ class ListAdapter(
             if (sub) {
                 Log.d("subB", "else")
                 mViewModel.removeSub(classList[position].name)
-                holder.itemView.Subscibe_B.setBackgroundColor(mContext.resources.getColor(R.color.notSub))
+                holder.itemView.Subscibe_B.setBackgroundResource(R.drawable.circle_border)
+                holder.itemView.Subscibe_B.setTextColor(mContext.resources.getColor(R.color.blue_theme))
                 holder.itemView.Subscibe_B.text = mContext.resources.getString(R.string.notSub)
                 classList[position].Subscribed = false
             } else {
                 Log.d("subB", "ifffffff")
                 mViewModel.addSub(classList[position].name)
-                holder.itemView.Subscibe_B.setBackgroundColor(mContext.resources.getColor(R.color.Subscribed))
+                holder.itemView.Subscibe_B.setBackgroundResource(R.drawable.sub_button)
+                holder.itemView.Subscibe_B.setTextColor(mContext.resources.getColor(R.color.white))
                 holder.itemView.Subscibe_B.text = mContext.resources.getString(R.string.Sub)
                 classList[position].Subscribed = true
             }

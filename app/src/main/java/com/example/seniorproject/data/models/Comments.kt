@@ -2,8 +2,7 @@ package com.example.seniorproject.data.models
 
 import com.example.seniorproject.R
 import com.xwray.groupie.GroupieViewHolder
-import kotlinx.android.synthetic.main.comment_rv.view.*
-import kotlinx.android.synthetic.main.post_rv.view.*
+import kotlinx.android.synthetic.main.rv_post_comment.view.*
 
 class Comment(val text: String, var Ptime : Long?, var PosterID : String?, var crn : String?, var Postkey : String?)
 {
@@ -21,7 +20,7 @@ class Comment(val text: String, var Ptime : Long?, var PosterID : String?, var c
         Ptime = System.currentTimeMillis()
     }
     fun getLayout(): Int {
-        return R.layout.comment_rv
+        return R.layout.rv_post_comment
     }
 
     fun bind(viewHolder: GroupieViewHolder, position: Int) {

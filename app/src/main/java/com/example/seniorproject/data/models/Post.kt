@@ -1,14 +1,6 @@
 package com.example.seniorproject.data.models
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
 import com.example.seniorproject.R
-import com.google.firebase.database.FirebaseDatabase
-import com.xwray.groupie.GroupieViewHolder
-import com.xwray.groupie.Item
-
-import kotlinx.android.synthetic.main.post_rv.view.*
-import javax.security.auth.Subject
 
 data class Post(var title: String?, var text: String?, val subject: String?)
 {
@@ -31,7 +23,7 @@ data class Post(var title: String?, var text: String?, val subject: String?)
     }
 
     fun getLayout(): Int {
-        return R.layout.post_rv
+        return R.layout.rv_post
     }
 
    /* fun bind(viewHolder: GroupieViewHolder, position: Int) {
