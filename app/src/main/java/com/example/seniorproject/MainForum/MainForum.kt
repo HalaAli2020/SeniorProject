@@ -2,23 +2,30 @@ package com.example.seniorproject.MainForum
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.load.resource.bitmap.TransformationUtils.circleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Dagger.DaggerAppComponent
@@ -29,17 +36,22 @@ import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_main_forum.*
 import kotlinx.android.synthetic.main.side_nav_header.*
+import java.io.InputStream
+import java.net.URL
 import javax.inject.Inject
 
 private const val TAG = "MyLogTag"
+
 class MainForum : AppCompatActivity(),
     FirebaseAuth.AuthStateListener {
 
     private val firebaseAuth: FirebaseAuth by lazy {
         FirebaseAuth.getInstance()
     }
+
     override fun onAuthStateChanged(p0: FirebaseAuth) {
         val currentUser = myViewModel.user
         if (currentUser != null) {
@@ -54,39 +66,51 @@ class MainForum : AppCompatActivity(),
     lateinit var myViewModel: HomeFragmentViewModel
     private lateinit var mDrawerLayout: DrawerLayout
 
-    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener {item->
-        when(item.itemId){
-            R.id.home -> {
-                println("home pressed")
-                replaceFragment(HomeFragment())
-                return@OnNavigationItemSelectedListener true
+    private val mOnNavigationItemSelectedListener =
+        BottomNavigationView.OnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.home -> {
+                    FAB.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.black)))
+                    FAB.setImageResource(R.drawable.ic_create_black_24dp)
+                    replaceFragment(HomeFragment())
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.subscriptions -> {
+                    FAB.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.black)))
+                    FAB.setImageResource(R.drawable.ic_create_black_24dp)
+                    replaceFragment(SubscriptionsFragment())
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.newPost -> {
+                    FAB.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue_theme)))
+                    FAB.setImageResource(R.drawable.ic_create_blue_24dp)
+                    replaceFragment(NewPostFragment())
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.list -> {
+                    FAB.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.black)))
+                    FAB.setImageResource(R.drawable.ic_create_black_24dp)
+                    replaceFragment(ListFragment())
+                    return@OnNavigationItemSelectedListener true
+                }
             }
-            R.id.newPost ->{
-                println("new post pressed")
-                replaceFragment(NewPostFragment())
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.list -> {
-                println("list pressed")
-                replaceFragment(ListFragment())
-                return@OnNavigationItemSelectedListener true
-            }
+            false
         }
-        false
-    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         DaggerAppComponent.create().inject(this)
-        myViewModel = ViewModelProviders.of(this,factory).get(HomeFragmentViewModel::class.java)
-        val binding : ActivityMainForumBinding = DataBindingUtil.setContentView(this, R.layout.activity_main_forum)
+        myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
+        val binding: ActivityMainForumBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_main_forum)
         replaceFragment(HomeFragment())
         bottom_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         loginVerification()
         //here
 
+        FAB.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.black)))
         setSupportActionBar(findViewById(R.id.toolbar))
         val actionbar: ActionBar? = supportActionBar
         actionbar?.apply {
@@ -96,16 +120,20 @@ class MainForum : AppCompatActivity(),
 
 
 
-            mDrawerLayout = findViewById(R.id.drawer_layout)
+        mDrawerLayout = findViewById(R.id.drawer_layout)
         val navigationView: NavigationView = findViewById(R.id.nav_view)
-        val sideNavHeaderBinding:SideNavHeaderBinding = DataBindingUtil.inflate(getLayoutInflater(),R.layout.side_nav_header,binding.navView,false)
+        val sideNavHeaderBinding: SideNavHeaderBinding = DataBindingUtil.inflate(
+            getLayoutInflater(),
+            R.layout.side_nav_header,
+            binding.navView,
+            false
+        )
         binding.navView.addHeaderView(sideNavHeaderBinding.root)
         sideNavHeaderBinding.viewmodell = myViewModel
         //Log.d(TAG,myViewModel.rsomthing())
 
 
-
-        Log.d(TAG,myViewModel.user?.displayName ?: "the displayname in main activity")
+        Log.d(TAG, myViewModel.user?.displayName ?: "the displayname in main activity")
 
 
         navigationView.setNavigationItemSelectedListener { menuItem ->
@@ -116,7 +144,6 @@ class MainForum : AppCompatActivity(),
                 R.id.nav_profile -> {
                     Toast.makeText(this, "redirecting to profile", Toast.LENGTH_LONG).show()
                     val intent = Intent(this, UserProfileActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
                 }
                 R.id.nav_allClasses -> {
@@ -163,10 +190,9 @@ class MainForum : AppCompatActivity(),
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 0 && resultCode == Activity.RESULT_OK && data !=null)
-        {
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
 
-            selectedPhotoUri= data.data
+            selectedPhotoUri = data.data
 
             Glide.with(this) //1
                 .load(selectedPhotoUri)
@@ -180,21 +206,19 @@ class MainForum : AppCompatActivity(),
             myViewModel.uploadUserProfileImage(selectedPhotoUri ?: Uri.EMPTY)
 
 
-
         }
     }
 
 
-
-    private fun replaceFragment(fragment: Fragment){
+    private fun replaceFragment(fragment: Fragment) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragmentContainer, fragment)
         fragmentTransaction.commit()
     }
 
-    private fun loginVerification(){
+    private fun loginVerification() {
         val uid = FirebaseAuth.getInstance().uid
-        if(uid==null){
+        if (uid == null) {
             val intent = Intent(this, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
@@ -209,7 +233,7 @@ class MainForum : AppCompatActivity(),
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item?.itemId){
+        when (item?.itemId) {
             android.R.id.home -> {
                 mDrawerLayout.openDrawer(GravityCompat.START)
                 true
@@ -218,7 +242,6 @@ class MainForum : AppCompatActivity(),
         }
         return super.onOptionsItemSelected(item)
     }
-
 
 
 }

@@ -33,6 +33,8 @@ class CommunityPosts : AppCompatActivity() {
 
         val className = intent.getStringExtra("ClassName")
 
+        post_list_community_name_TV.text = className
+
         val factory = InjectorUtils.provideCommunityPostViewModelFacotry()
         myViewModel = ViewModelProviders.of(this,factory).get(CommunityPostViewModel::class.java)
 

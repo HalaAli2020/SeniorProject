@@ -2,23 +2,16 @@ package com.example.seniorproject.MainForum
 
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.startActivity
-import androidx.core.os.bundleOf
-import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.PostLiveData
-import kotlinx.android.synthetic.main.post_rv.view.*
-import javax.inject.Inject
+import kotlinx.android.synthetic.main.activity_community_posts.view.*
+import kotlinx.android.synthetic.main.rv_post.view.*
 
 class CustomAdapter(context: Context, var savedPosts: PostLiveData) :
     RecyclerView.Adapter<CustomViewHolders>() {
@@ -27,7 +20,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData) :
     override fun onCreateViewHolder( parent: ViewGroup, viewType: Int): CustomViewHolders {
         val layoutInflater = LayoutInflater.from(parent.context)
        // val binding : ViewDataBinding = DataBindingUtil.inflate(layoutInflater, viewType, parent, false)
-        val cellForRow = layoutInflater.inflate(R.layout.post_rv, parent, false)
+        val cellForRow = layoutInflater.inflate(R.layout.rv_post, parent, false)
         return CustomViewHolders(cellForRow)
     }
 
@@ -40,12 +33,15 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData) :
 
     override fun onBindViewHolder(holder: CustomViewHolders, position: Int) {
         if (savedPosts.value == null) {
-
+            holder.itemView.post_title.text="LOADING"
         } else {
             val post: Post = savedPosts.value!![position]
             holder.itemView.post_title.text = post.title
-            holder.itemView.username.text = post.crn
-            //holder.itemView.username.text = post.author
+            holder.itemView.username.text = post.author
+
+            if(post.author.isNullOrEmpty()){
+                holder.itemView.username.text = post.crn
+            }
 
             holder.itemView.setOnClickListener {
                 val intent = Intent(mContext, ClickedPost::class.java)
@@ -57,14 +53,18 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData) :
                 intent.putExtra("UserID", post.UserID)
                 intent.putExtra("Author", post.author)
                 intent.putExtra("crn", post.crn)
-                //val bundle = bundleOf()
 
-
-
-                    mContext.startActivity(intent)
+                mContext.startActivity(intent)
             }
         }
     }
 
 }
 
+class CustomViewHolders(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener {
+
+    override fun onClick(v: View) {
+        Log.d("RecyclerView", "CLICK!")
+    }
+
+}
