@@ -77,7 +77,7 @@ class UserProfileActivity : AppCompatActivity() {
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true
         user_profile_recyclerView.layoutManager = linearLayoutManager
-        user_profile_recyclerView.adapter = CustomAdapter(this, myViewModel.getUserProfilePosts())
+        user_profile_recyclerView.adapter = CustomAdapter(this, myViewModel.getUserProfilePosts(),1)
 
 
     }

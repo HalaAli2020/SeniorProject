@@ -13,7 +13,7 @@ import com.example.seniorproject.data.models.PostLiveData
 import kotlinx.android.synthetic.main.activity_community_posts.view.*
 import kotlinx.android.synthetic.main.rv_post.view.*
 
-class CustomAdapter(context: Context, var savedPosts: PostLiveData) :
+class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int ) :
     RecyclerView.Adapter<CustomViewHolders>() {
     val mContext:Context = context
 
@@ -39,7 +39,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData) :
             holder.itemView.post_title.text = post.title
             holder.itemView.username.text = post.author
 
-            if(post.author.isNullOrEmpty()){
+            if(type==0){
                 holder.itemView.username.text = post.crn
             }
 

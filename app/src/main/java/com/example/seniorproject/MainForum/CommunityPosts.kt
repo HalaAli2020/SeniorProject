@@ -42,12 +42,11 @@ class CommunityPosts : AppCompatActivity() {
 
         classes_post_RV.layoutManager = LinearLayoutManager(this)
 
-        adapter = CustomAdapter(this, myViewModel.returnClassPosts(className!!))
-        classes_post_RV.adapter = adapter
+
+        classes_post_RV.adapter = CustomAdapter(this, myViewModel.returnClassPosts(className!!),1)
+      
         obse = Observer< MutableList<Post> > {
             Log.d("obser", " blah")
-
-
 
         }
 
