@@ -91,12 +91,23 @@ class CommentsAdapter(
 
     }
 
+   /* fun removeItem(customViewHolders: CustomViewHolders, position: Int): String {
+        val comment: Comment = Comments?.value!![customViewHolders.adapterPosition]
+        val commentkey: String?= comment.UserComkey
+
+       notifyItemRemoved(customViewHolders.adapterPosition)
+
+        return commentkey!!
+    }*/
+
+
+
     class CustomViewHolders(v: View) : RecyclerView.ViewHolder(v) {
 
     }
 
 
-    class CustomViewHoldersHeader(v: View) : RecyclerView.ViewHolder(v) {
+  class CustomViewHoldersHeader(v: View) : RecyclerView.ViewHolder(v) {
 
     }
 

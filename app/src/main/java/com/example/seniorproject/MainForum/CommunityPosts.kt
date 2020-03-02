@@ -8,8 +8,10 @@ import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.ItemTouchHelper
 //import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.InjectorUtils
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.Post
@@ -42,12 +44,39 @@ class CommunityPosts : AppCompatActivity() {
 
 
         classes_post_RV.adapter = CustomAdapter(this, myViewModel.returnClassPosts(className!!),1)
+      
         obse = Observer< MutableList<Post> > {
             Log.d("obser", " blah")
 
+        }
 
+        val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT )
+        {
+            override fun onSwiped(viewHolders: RecyclerView.ViewHolder, position: Int) {
+                val postkey: String? =adapter.removeItem(viewHolders as CustomViewHolders, position)
+
+                //.getStringExtra("Classkey")
+                //val postkey = intent.getStringExtra("author")
+                myViewModel.deletePost(postkey!!,className)
+                //myViewModel.deletePost()
+
+                //  obse.onChanged(pos)
+            }
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
 
         }
+
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(classes_post_RV)
+
+    }
         //myViewModel.listClasses?.observe(this, obse)
 
 
@@ -55,5 +84,5 @@ class CommunityPosts : AppCompatActivity() {
 
 
 
-}
+
 
