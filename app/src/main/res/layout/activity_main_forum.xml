@@ -51,6 +51,17 @@
             android:layout_height="match_parent"
             tools:context=".MainForum.MainForum">
 
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottom_navigation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/background_dark"
+                app:itemIconTint="@drawable/bottom_navigation_selected"
+                app:itemTextColor="@drawable/bottom_navigation_selected"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:menu="@menu/bottom_nav_menu"
+                tools:layout_editor_absoluteX="206dp" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.navigation.NavigationView
@@ -63,16 +74,6 @@
 
     </androidx.drawerlayout.widget.DrawerLayout>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/background_dark"
-        app:itemIconTint="@drawable/bottom_navigation_selected"
-        app:itemTextColor="@drawable/bottom_navigation_selected"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/bottom_nav_menu"
-        tools:layout_editor_absoluteX="206dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -35,7 +35,9 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     fun getSavedUserPosts() = Firebase.getSavedUserPost()
     fun getSubscribedPosts() = Firebase.getSubscribedPosts()
 
-    fun getpostKey(PKey: String) {
+
+    fun getpostKey(PKey: String)
+    {
 
     }
 
@@ -89,6 +91,11 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         Firebase.removeUserSub(crn)
         Firebase.removeClassSub(crn)
     }
+
+
+    fun getUserProfilePosts() = Firebase.getUserProfilePosts()
+
+
 
     companion object {
         @Volatile
