@@ -81,7 +81,7 @@ class MainForum : AppCompatActivity(),
 
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this,factory).get(HomeFragmentViewModel::class.java)
-        val binding: ActivityMainForumBinding = DataBindingUtil.setContentView(this, R.layout.activity_main_forum)
+        val binding : ActivityMainForumBinding = DataBindingUtil.setContentView(this, R.layout.activity_main_forum)
         replaceFragment(HomeFragment())
         bottom_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         loginVerification()

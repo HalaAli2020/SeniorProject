@@ -13,21 +13,21 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/in_profile_username"
-            android:text="@{ProfileViewModell.user.email}"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/in_profile_image" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/in_profile_email"
-            android:text="@{ProfileViewModell.user.email}"/>
+            android:text="@{ProfileViewModell.user.displayName}"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/in_profile_image"/>
+            android:id="@+id/in_profile_username"
+            android:text="@{ProfileViewModell.user.email}"/>
 
 
         <androidx.recyclerview.widget.RecyclerView

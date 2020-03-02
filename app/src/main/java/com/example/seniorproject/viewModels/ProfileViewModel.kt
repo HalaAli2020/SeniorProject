@@ -6,7 +6,7 @@ import com.example.seniorproject.data.models.PostLiveData
 import com.example.seniorproject.data.repositories.PostRepository
 import javax.inject.Inject
 
-private const val TAG = "MyLogTag"
+
 
 class ProfileViewModel @Inject constructor(private val repository: PostRepository) : ViewModel(){
 
@@ -22,4 +22,6 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     fun fetchCurrentUserName() = repository.fetchCurrentUserName()
 
     fun currentUser() = repository.currentUser()
+
+    var user = repository.currentUser()
 }
