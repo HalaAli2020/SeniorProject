@@ -32,5 +32,9 @@ abstract fun bindviewmodelFactory(factory:DaggerViewModelFactory):ViewModelProvi
     @ViewModelKey(ClickedPostViewModel::class)
     abstract fun bindClickedPostViewModel(viewModel: ClickedPostViewModel): ViewModel
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(ProfileViewModel::class)
+    abstract fun bindProfileFragmentViewModel(viewModel: ProfileViewModel): ViewModel
 
 }
