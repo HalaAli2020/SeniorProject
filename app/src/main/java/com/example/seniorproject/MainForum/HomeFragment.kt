@@ -105,7 +105,7 @@ class HomeFragment : Fragment(), PostListener {
 
         if(FirebaseAuth.getInstance().uid!=null) {
             view.post_recyclerView.adapter =
-                CustomAdapter(view.context, myViewModel.getSubscribedPosts())
+                CustomAdapter(view.context, myViewModel.getSubscribedPosts(),0)
         }
         binding.homeFragmentViewModel = myViewModel
         binding.lifecycleOwner = this
