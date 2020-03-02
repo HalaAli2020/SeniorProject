@@ -40,13 +40,6 @@
             android:paddingTop="2dp"
             android:id="@+id/comment_text"/>
 
-        <ImageButton
-            android:id="@+id/deletecomment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:layout_weight="1"
-            app:srcCompat="@android:drawable/ic_delete" />
 
     </LinearLayout>
 

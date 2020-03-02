@@ -12,6 +12,10 @@ class CommunityPostViewModel @Inject constructor(private val repository: PostRep
     private var listClasses : PostLiveData? = null
     private lateinit var className: String
 
+    var Classkey : String? = null
+    var crn : String? = null
+    var subject: String? = null
+
     private fun getClasses(className: String){
         listClasses = repository.getClassPosts(className)
     }
@@ -20,6 +24,14 @@ class CommunityPostViewModel @Inject constructor(private val repository: PostRep
         getClasses(className)
         return listClasses!!
     }
+
+   // fun deletePost(Classkey: String, crn: String)
+    fun deletePost(Classkey: String, crn: String)
+    {
+
+        repository.deleteNewPost(Classkey, crn)
+    }
+
    fun checknull() : Boolean
    {
        if (listClasses == null)

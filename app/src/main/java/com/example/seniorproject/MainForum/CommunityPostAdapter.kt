@@ -20,7 +20,7 @@ import com.example.seniorproject.data.models.PostLiveData
 import kotlinx.android.synthetic.main.post_rv.view.*
 import javax.inject.Inject
 
-class CustomAdapter(context: Context, var savedPosts: PostLiveData) :
+class CommunityPostAdapter(context: Context, var savedPosts: PostLiveData) :
     RecyclerView.Adapter<CustomViewHolders>() {
     val mContext:Context = context
 
@@ -44,9 +44,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData) :
         } else {
             val post: Post = savedPosts.value!![position]
             holder.itemView.post_title.text = post.title
-            holder.itemView.username.text = post.crn
-            //holder.itemView.username.text = post.author
-
+            holder.itemView.username.text = post.author
             holder.itemView.setOnClickListener {
                 val intent = Intent(mContext, ClickedPost::class.java)
 
@@ -54,12 +52,10 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData) :
                 intent.putExtra("Text", post.text)
                 intent.putExtra("Pkey", post.key)
                 intent.putExtra("Classkey", post.Classkey)
-
                 intent.putExtra("UserID", post.UserID)
                 intent.putExtra("Author", post.author)
                 intent.putExtra("crn", post.crn)
                 //val bundle = bundleOf()
-
 
 
                 mContext.startActivity(intent)
@@ -67,32 +63,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData) :
         }
     }
 
-    fun removeItem(customViewHolders: CustomViewHolders, position: Int) {
-        notifyItemRemoved(customViewHolders.adapterPosition)
 
-        //val post: Post = savedPosts.value!![position]
-        //val intent = Intent(mContext, CommunityPosts::class.java)
-
-        //post.Classkey=intent.dataString
-        //intent.getStringExtra("Classkey")
-
-        //mContext.startActivity(intent)
-        // val post: Post = savedPosts.value!![position]
-        /* var grabclassKey: String? = post.Classkey
-         var grabcrn: String? = post.crn
-
-         myViewModel.deletePost(grabclassKey!!, grabcrn!!)*/
-
-        notifyItemRemoved(customViewHolders.adapterPosition)
-        //from adapter position, pull post key
-    }
 
 }
 
-class CustomViewHolders(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener {
-
-    override fun onClick(v: View) {
-        Log.d("RecyclerView", "CLICK!")
-    }
-
-}

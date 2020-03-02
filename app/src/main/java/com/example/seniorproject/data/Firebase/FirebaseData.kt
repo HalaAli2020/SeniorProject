@@ -29,7 +29,8 @@ import java.util.logging.Handler
 import javax.security.auth.Subject
 import kotlin.collections.HashMap
 import com.example.seniorproject.data.models.User
-
+import com.google.firebase.database.Query
+import kotlinx.android.synthetic.main.post_rv.*
 
 
 //import kotlin.reflect.jvm.internal.impl.load.java.lazy.ContextKt.child
@@ -351,7 +352,6 @@ class FirebaseData @Inject constructor() {
                 if (newComment != null) {
                     Log.d("ACCESSING", newComment?.text)
                     savedCommentList.add(newComment)
-
                     //repository.saveNewPost(newPost)
                     //adapter.add(PostFrag(newPost.title, newPost.text))
                 }
@@ -364,6 +364,7 @@ class FirebaseData @Inject constructor() {
 
 
         })
+
         return Comments
 
     }
@@ -400,6 +401,60 @@ class FirebaseData @Inject constructor() {
          */
 
         //}
+    }
+
+    fun deleteNewPost(postKey: String, crn: String)
+    {
+        val refkey2 = FirebaseDatabase.getInstance().getReference("/Subjects/$crn")
+
+        val query: Query = refkey2.child("Posts").orderByChild("Classkey").equalTo(postKey)
+
+        //  val refkey = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey")
+        query.addListenerForSingleValueEvent( object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                if(p0.exists()){
+                    for(post in p0.children){
+                        // val refc= comment.getValue(Comment::class.java)
+                        post.ref.removeValue()
+                        //refkey.child("/Subjects/$crn/Posts/$ClassKey/Comments/-M1MwaJ6UaXu2fdByTCU").removeValue()
+                    }
+                }
+
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
+
+    }
+
+
+
+    fun deleteNewComment(postKey: String, crn: String, comKey: String)
+    {
+        val refkey2 = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$postKey")
+
+        val query: Query = refkey2.child("Comments").orderByChild("Classkey").equalTo(comKey)
+
+       // val refkey = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey/Comments")
+        query.addListenerForSingleValueEvent( object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                if(p0.exists()){
+                    for(comment in p0.children){
+                       // val refc= comment.getValue(Comment::class.java)
+                        comment.ref.removeValue()
+                        //refkey.child("/Subjects/$crn/Posts/$ClassKey/Comments/-M1MwaJ6UaXu2fdByTCU").removeValue()
+                    }
+                }
+
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
+
     }
 
     fun saveNewComment(text: String, postID: String, ClassKey: String, UserID: String, crn: String
@@ -761,6 +816,7 @@ class FirebaseData @Inject constructor() {
 
 
             override fun onChildRemoved(p0: DataSnapshot) {
+
             }
         })
 

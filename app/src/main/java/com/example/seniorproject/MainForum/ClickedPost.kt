@@ -11,7 +11,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.PostListener
@@ -47,9 +49,10 @@ class ClickedPost : AppCompatActivity() {
         myViewModel = ViewModelProviders.of(this, factory).get(ClickedPostViewModel::class.java)
         val binding: ActivityClickedPostBinding = DataBindingUtil.setContentView(this, R.layout.activity_clicked_post)
 
-        myViewModel.PKey = intent.getStringExtra("Pkey")
+        val postkey: String = intent.getStringExtra("Pkey") //pkey and classkey both ref to post key id
         myViewModel.Classkey = intent.getStringExtra("Classkey")
         myViewModel.UserID = intent.getStringExtra("UserID")
+        val crn: String = intent.getStringExtra("crn")
         myViewModel.crn = intent.getStringExtra("crn")
         myViewModel.title = intent.getStringExtra("Title")
         myViewModel.text = intent.getStringExtra("Text")
@@ -61,7 +64,30 @@ class ClickedPost : AppCompatActivity() {
         binding.clickedViewModel = myViewModel
         binding.lifecycleOwner = this
 
+        val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT )
+        {
+            override fun onSwiped(viewHolders: RecyclerView.ViewHolder, position: Int) {
+
+                adapter.removeItem(viewHolders as CustomViewHolders)
+                //myViewModel.deleteComment(postkey,crn,myViewModel.Classkey!!)
+
+            }
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+        }
+
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(comment_RecyclerView)
+
     }
+
 
     /* coroutines attempt init {
          lifecycleScope.launch{

@@ -42,7 +42,17 @@ class CommentsAdapter(context: Context, var Comments: CommentLive?) :
             //holder.itemView.post_title.text = .title
             holder.itemView.comment_text.text = comment.text
             holder.itemView.authcom.text = comment.author
+            //val intent = Intent(mContext, ClickedPost::class.java)
 
+            //intent.putExtra("Classkey", comment.ClassComkey)
+
+            //intent.putExtra("subject", post.subject).toString()
+
+
+            //val bundle = bundleOf()
+
+
+            //mContext.startActivity(intent)
             /* holder.itemView.setOnClickListener {
                  val intent = Intent(mContext, ClickedPost::class.java)
                  intent.putExtra("Title", post.title)
@@ -53,6 +63,11 @@ class CommentsAdapter(context: Context, var Comments: CommentLive?) :
 
         }
 
+
+    }
+
+    fun removeItem(holder: CustomViewHolders) {
+        notifyItemRemoved(holder.adapterPosition)
 
     }
 
