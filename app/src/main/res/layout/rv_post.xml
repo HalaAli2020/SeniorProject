@@ -33,12 +33,4 @@
     </LinearLayout>
 
 
-    <ImageView
-        android:id="@+id/post_image"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="right"
-        android:layout_marginLeft="10dp"
-        android:src="@color/blue_theme" />
-
 </LinearLayout>
