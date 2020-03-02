@@ -9,13 +9,28 @@
     </data>
 
     <LinearLayout
-        android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:id="@+id/in_profile_image" />
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:padding="5dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/in_profile_image"
+            android:background="@color/white"/>
+
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    android:layout_toRightOf="@+id/in_profile_image"
+    android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
@@ -28,7 +43,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/in_profile_username"
             android:text="@{ProfileViewModell.user.email}"/>
+</LinearLayout>
 
+    </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/user_profile_recyclerView"

@@ -1,5 +1,6 @@
 package com.example.seniorproject.viewModels
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 
 import com.example.seniorproject.data.models.PostLiveData
@@ -18,8 +19,7 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
         return posts
     }
 
-
-    fun fetchCurrentUserName() = repository.fetchCurrentUserName()
+    fun uploadUserProfileImage(selectedPhotoUri: Uri) = repository.uploadUserProfileImage(selectedPhotoUri)
 
     fun currentUser() = repository.currentUser()
 

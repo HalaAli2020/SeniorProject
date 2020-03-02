@@ -1,9 +1,12 @@
 package com.example.seniorproject.MainForum
 
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
@@ -53,7 +56,7 @@ class UserProfileActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
 
 
-        val imageView : ImageView = findViewById(R.id.in_profile_image)
+        val image : ImageButton = findViewById(R.id.in_profile_image)
 
         Glide.with(this) //1
             .load(FirebaseAuth.getInstance().currentUser?.photoUrl)
@@ -62,7 +65,12 @@ class UserProfileActivity : AppCompatActivity() {
             .skipMemoryCache(true) //2
             .diskCacheStrategy(DiskCacheStrategy.NONE) //3
             .apply(RequestOptions().circleCrop())//4
-            .into(imageView)
+            .into(image)
+
+        image.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startActivityForResult(intent, 0)}
 
         myViewModel.getUserProfilePosts()
         val linearLayoutManager = LinearLayoutManager(this)
@@ -72,9 +80,28 @@ class UserProfileActivity : AppCompatActivity() {
         user_profile_recyclerView.adapter = CustomAdapter(this, myViewModel.getUserProfilePosts())
 
 
+    }
 
+    var selectedPhotoUri: Uri? = null
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK && data !=null)
+        {
 
+            selectedPhotoUri= data.data
 
+            Glide.with(this) //1
+                .load(selectedPhotoUri)
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_log_out)
+                .skipMemoryCache(true) //2
+                .diskCacheStrategy(DiskCacheStrategy.NONE) //3
+                .apply(RequestOptions().circleCrop())//4
+                .into(in_profile_image)
+
+            myViewModel.uploadUserProfileImage(selectedPhotoUri ?: Uri.EMPTY)
+
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
