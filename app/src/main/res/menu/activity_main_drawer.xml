@@ -4,7 +4,7 @@
     tools:showIn="navigation_view">
     <group android:checkableBehavior="single">
         <item
-            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:icon="@drawable/ic_create_blue_24dp"
             android:id="@+id/nav_profile"
             android:title="Profile" />
         <item

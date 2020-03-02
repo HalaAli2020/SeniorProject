@@ -7,13 +7,23 @@
         android:title="@string/title_home" />
 
     <item
+        android:id="@+id/subscriptions"
+        android:icon="@drawable/ic_view_list_black_24dp"
+        android:title="@string/title_subs" />
+
+    <item
         android:id="@+id/newPost"
-        android:title="@string/title_newPost"
-        android:icon="@drawable/ic_create_black_24dp"/>
+        android:title="@string/title_newPost" />
 
     <item
         android:id="@+id/list"
         android:icon="@drawable/ic_search_black_24dp"
         android:title="@string/title_list" />
+
+    <item
+        android:id="@+id/messages"
+        android:icon="@drawable/ic_chat_black_24dp"
+        android:title="@string/title_messages" />
+
 
 </menu>

@@ -435,8 +435,10 @@ class FirebaseData @Inject constructor() {
 
                 if (newComment != null) {
                     Log.d("ACCESSING", newComment?.text)
+                    if(savedCommentList.isNullOrEmpty()) {
+                        savedCommentList.add(newComment)
+                    }
                     savedCommentList.add(newComment)
-
                     //repository.saveNewPost(newPost)
                     //adapter.add(PostFrag(newPost.title, newPost.text))
                 }
@@ -501,11 +503,8 @@ class FirebaseData @Inject constructor() {
         //FIX userprofile not init post.author = userprofile.username!!
         //val Class_key = FirebaseDatabase.getInstance().getReference(CRN).child("Posts").push().key
         //FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID")
-        val Class_key =
-            FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey")
-                .child("Comments").push().key
-        val User_key = FirebaseDatabase.getInstance().getReference("/users/$UserID/Posts/$postID")
-            .child("Comments").push().key
+        val Class_key = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey").child("Comments").push().key
+        val User_key = FirebaseDatabase.getInstance().getReference("/users/$UserID/Posts/$postID").child("Comments").push().key
         // implement in viewmodel
         //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
         comment.ClassComkey = Class_key
@@ -976,39 +975,44 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                Log.d("FIRST1-:", p0.key)
-                if(sub!!.contains(p0.key)) {
-                    for (p2 in p0.getChildren()) {
-                        Log.d("FIRST2---:", p2.key)
-                        if(p2.key=="Posts") {
-                            var counter = 0
-                            for (p3 in p2.getChildren().reversed()) {
-                                Log.d("FIRST3-------:", p3.key)
-                                val newPost = Post()
-                                try {
-                                    newPost.let {
-                                        it.text = p3.child("text").value.toString()
-                                        it.title = p3.child("title").value.toString()
-                                        it.key = p3.child("Key").value.toString()
-                                        // class key is key for this post
-                                        it.Classkey = p3.child("Classkey").value.toString()
-                                        // user who posted id
-                                        it.UserID = p3.child("UserID").value.toString()
-                                        // need to change this later subject should be subject crn should be different
-                                        it.crn = p3.child("subject").value.toString()
+                if(sub.isNullOrEmpty()){
+                    savedPosts.value = savedPostsList
+                }
+                else {
+                    Log.d("FIRST1-:", p0.key)
+                    if (sub!!.contains(p0.key)) {
+                        for (p2 in p0.getChildren()) {
+                            Log.d("FIRST2---:", p2.key)
+                            if (p2.key == "Posts") {
+                                var counter = 0
+                                for (p3 in p2.getChildren().reversed()) {
+                                    Log.d("FIRST3-------:", p3.key)
+                                    val newPost = Post()
+                                    try {
+                                        newPost.let {
+                                            it.text = p3.child("text").value.toString()
+                                            it.title = p3.child("title").value.toString()
+                                            it.key = p3.child("Key").value.toString()
+                                            // class key is key for this post
+                                            it.Classkey = p3.child("Classkey").value.toString()
+                                            // user who posted id
+                                            it.UserID = p3.child("UserID").value.toString()
+                                            // need to change this later subject should be subject crn should be different
+                                            it.crn = p3.child("subject").value.toString()
+                                        }
+                                    } catch (e: Exception) {
+                                        Log.d("Data Error", "error converting to post")
                                     }
-                                } catch (e: Exception) {
-                                    Log.d("Data Error", "error converting to post")
-                                }
 
-                                if (newPost != null) {
-                                    Log.d("ACCESSING", newPost?.text)
-                                    savedPostsList.add(newPost)
-                                }
+                                    if (newPost != null) {
+                                        Log.d("ACCESSING", newPost?.text)
+                                        savedPostsList.add(newPost)
+                                    }
 
-                                savedPosts.value = savedPostsList
-                                counter++
-                                if(counter==2)break
+                                    savedPosts.value = savedPostsList
+                                    counter++
+                                    if (counter == 2) break
+                                }
                             }
                         }
                     }

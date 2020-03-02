@@ -1,5 +1,6 @@
 package com.example.seniorproject.MainForum
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 //import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.Post
@@ -21,7 +23,6 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_home.*
 import com.example.seniorproject.data.models.User
 import com.example.seniorproject.databinding.FragmentHomeBinding
-import com.example.seniorproject.databinding.NewPostFragmentBinding
 import com.example.seniorproject.viewModels.AuthenticationViewModel
 import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.google.firebase.database.*
@@ -29,12 +30,14 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.fragment_home.view.*
-import kotlinx.android.synthetic.main.post_rv.view.*
+import kotlinx.android.synthetic.main.rv_post.view.*
 import kotlinx.coroutines.awaitAll
 //import javax.inject.Inject
 import javax.inject.Inject
 import javax.inject.Named
 import com.example.seniorproject.InjectorUtils
+
+
 
 
 
@@ -86,6 +89,8 @@ class HomeFragment : Fragment(), PostListener {
         val binding: FragmentHomeBinding = inflate(inflater, R.layout.fragment_home, container, false)
         val view = inflater.inflate(R.layout.fragment_home, container, false)*/
 
+        LoginVerification()
+
         val factory = InjectorUtils.providePostViewModelFactory()
         val binding: FragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
@@ -98,7 +103,10 @@ class HomeFragment : Fragment(), PostListener {
         linearLayoutManager.stackFromEnd = true
         view.post_recyclerView.layoutManager = linearLayoutManager
 
-        view.post_recyclerView.adapter = CustomAdapter(view.context, myViewModel.getSubscribedPosts())
+        if(FirebaseAuth.getInstance().uid!=null) {
+            view.post_recyclerView.adapter =
+                CustomAdapter(view.context, myViewModel.getSubscribedPosts())
+        }
         binding.homeFragmentViewModel = myViewModel
         binding.lifecycleOwner = this
 
@@ -118,6 +126,12 @@ class HomeFragment : Fragment(), PostListener {
     }
 
 
+    private fun LoginVerification(){
+        if(FirebaseAuth.getInstance().uid==null){
+            val intent = Intent(activity, LoginActivity::class.java)
+            startActivity(intent)
+        }
+    }
 
     /* private fun listenForPosts(){
          val reference = FirebaseDatabase.getInstance().getReference("/posts")

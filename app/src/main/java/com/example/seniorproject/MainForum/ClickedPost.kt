@@ -47,14 +47,19 @@ class ClickedPost : AppCompatActivity() {
         myViewModel = ViewModelProviders.of(this, factory).get(ClickedPostViewModel::class.java)
         val binding: ActivityClickedPostBinding = DataBindingUtil.setContentView(this, R.layout.activity_clicked_post)
 
+        val title: String = intent.getStringExtra("Title")
+        val text: String = intent.getStringExtra("Text")
+        val crn: String = intent.getStringExtra("crn")
+        val author: String = intent.getStringExtra("Author")
+
         myViewModel.PKey = intent.getStringExtra("Pkey")
         myViewModel.Classkey = intent.getStringExtra("Classkey")
         myViewModel.UserID = intent.getStringExtra("UserID")
-        myViewModel.crn = intent.getStringExtra("crn")
-        myViewModel.title = intent.getStringExtra("Title")
-        myViewModel.text = intent.getStringExtra("Text")
+        myViewModel.title = title
+        myViewModel.text = text
+        myViewModel.crn = crn
 
-        adapter = CommentsAdapter(this, myViewModel.getComments())
+        adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn)
         comment_RecyclerView.adapter = adapter
         comment_RecyclerView.layoutManager = LinearLayoutManager(this)
 
