@@ -11,11 +11,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.CommentLive
+import com.example.seniorproject.MainForum.CommentsAdapter.CustomViewHoldersHeader
 import com.example.seniorproject.databinding.ActivityClickedPostBinding
 import com.example.seniorproject.databinding.ActivityLoginBinding
 import com.example.seniorproject.databinding.FragmentHomeBinding
@@ -65,6 +68,34 @@ class ClickedPost : AppCompatActivity() {
 
         binding.clickedViewModel = myViewModel
         binding.lifecycleOwner = this
+
+        /*val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT )
+        {
+            override fun onSwiped(viewHolders: RecyclerView.ViewHolder, position: Int) {
+                //val commentkey: String? =adapter.removeItem(viewHolders as CommentsAdapter.CustomViewHoldersHeader, position)
+                //val commentkey: String? =adapter.removeItem(viewHolders as CommentsAdapter.CustomViewHolders, position)
+              //  val commentkeyheader: String? =adapter.removeItemHead(viewHolders as , position)
+
+
+                //adapter.removeItem(viewHolders as CustomViewHolders)
+                myViewModel.deleteComment(intent.getStringExtra("Classkey"), intent.getStringExtra("crn"),commentkey!!)
+              //  myViewModel.deleteComment(intent.getStringExtra("Classkey"), intent.getStringExtra("crn"),commentkeyheader!!)
+
+            }
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+        }
+
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(comment_RecyclerView)*/
+
 
     }
 

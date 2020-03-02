@@ -59,6 +59,19 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData) :
         }
     }
 
+    fun removeItem(customViewHolders: CustomViewHolders, position: Int): String {
+
+        //position=customViewHolders.adapterPosition
+
+       // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val postkey: String?= post.Classkey
+
+        notifyItemRemoved(customViewHolders.adapterPosition)
+
+        return postkey!!
+    }
+
 }
 
 class CustomViewHolders(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener {
