@@ -1,9 +1,13 @@
 package com.example.seniorproject.MainForum
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.AttributeSet
 import android.util.Log
 import android.view.*
+import android.widget.Adapter
+import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.DataBindingUtil.*
 import androidx.fragment.app.Fragment
@@ -13,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 //import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.Utils.PostListener
@@ -39,8 +44,6 @@ import com.example.seniorproject.InjectorUtils
 
 
 
-
-
 /**
  * A simple [Fragment] subclass.
  */
@@ -50,7 +53,8 @@ class HomeFragment : Fragment(), PostListener {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: HomeFragmentViewModel
-
+     var obse : Observer<in MutableList<Post>>? = null
+    lateinit var ada : PostAdapter
     override fun onStarted() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -96,6 +100,8 @@ class HomeFragment : Fragment(), PostListener {
         myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         //postLiveData = myViewModel.getSavedPosts()
+        ada = PostAdapter(view.context, myViewModel)
+
 
 
         val linearLayoutManager = LinearLayoutManager(context)
@@ -103,18 +109,18 @@ class HomeFragment : Fragment(), PostListener {
         linearLayoutManager.stackFromEnd = true
         view.post_recyclerView.layoutManager = linearLayoutManager
 
-        if(FirebaseAuth.getInstance().uid!=null) {
-            view.post_recyclerView.adapter =
-                CustomAdapter(view.context, myViewModel.getSubscribedPosts())
-        }
+        view.post_recyclerView.adapter = ada
         binding.homeFragmentViewModel = myViewModel
         binding.lifecycleOwner = this
+        Obse()
+        myViewModel.posts.observe(this,obse!!)
 
 
         /*DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)*/
 
         //myViewModel.postListener = this
+
 
 
         binding.executePendingBindings()
@@ -124,6 +130,30 @@ class HomeFragment : Fragment(), PostListener {
         return view
 
     }
+    fun Obse()
+    {
+        obse = Observer<MutableList<Post>> { value ->
+            Log.d("swap", "Swap")
+            swap()
+
+
+        }
+
+
+    }
+    fun swap()
+    {
+        ada = PostAdapter(context!!, myViewModel)
+        /*if(myViewModel.posts.hasObservers() && myViewModel.posts.value!!.size == 4)
+        {
+            myViewModel.posts.removeObserver(obse!!)
+
+        }*/
+        view!!.post_recyclerView.swapAdapter(ada, true)
+
+    }
+
+
 
 
     private fun LoginVerification(){

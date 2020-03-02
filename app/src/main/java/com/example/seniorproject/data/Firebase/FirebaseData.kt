@@ -49,26 +49,24 @@ class FirebaseData @Inject constructor() {
 
 
     //var savedPosts: MutableLiveData<List<Post>> = MutableLiveData()
-    var savedPosts : PostLiveData = PostLiveData()
-    var userPosts : PostLiveData = PostLiveData()
-    var Comments : CommentLive = CommentLive()
-    var profilePosts : PostLiveData = PostLiveData()
+    var savedPosts: PostLiveData = PostLiveData()
+    var userPosts: PostLiveData = PostLiveData()
+    var Comments: CommentLive = CommentLive()
+    var postref: DatabaseReference? = null
+    private lateinit var postlistener: ValueEventListener
+    private lateinit var userprofile: User
+    var newComments: Comment? = null
 
 
-    private lateinit var postlistener : ValueEventListener
-    private lateinit var userprofile : User
-    var newComments : Comment? = null
+    var newProfilePosts: Post? = null
+    var profilePosts: PostLiveData = PostLiveData()
 
-
-    var newProfilePosts : Post? = null
-
-
-    var classList : MutableList<CRN> = mutableListOf()
-    var classPostList : PostLiveData = PostLiveData()
-    var MainPosts : MutableList<Post> = mutableListOf()
-    var UserSUB : MutableList<String>? = null
+    var classList: MutableList<CRN> = mutableListOf()
+    var classPostList: PostLiveData = PostLiveData()
+    var MainPosts: MutableList<Post> = mutableListOf()
+    var UserSUB: MutableList<String>? = null
     fun CurrentUser() = FirebaseAuth.getInstance().currentUser
-
+    var MainforumListener: ChildEventListener? = null
 
 
     fun CurrentUserL() {
@@ -287,7 +285,7 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    fun listenForUserProfilePosts (): PostLiveData{
+    fun listenForUserProfilePosts(): PostLiveData {
         Log.d(TAG, "getUserProfilePosts listener called")
         val uid = FirebaseAuth.getInstance().uid
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Posts")
@@ -346,24 +344,20 @@ class FirebaseData @Inject constructor() {
             }
 
 
-
-
         })
         Log.d("Post function return", "Post function return")
 
         return profilePosts
     }
 
-    fun getUserProfilePosts() : PostLiveData{
+    fun getUserProfilePosts(): PostLiveData {
         Log.d(TAG, "getUserProfilePosts called")
         listenForUserProfilePosts()
         return profilePosts
     }
 
 
-
-
-    fun getCommentsCO(Key : String) : CommentLive {
+    fun getCommentsCO(Key: String): CommentLive {
 
         val uid = FirebaseAuth.getInstance().uid
         val reference =
@@ -404,8 +398,6 @@ class FirebaseData @Inject constructor() {
             }
 
 
-
-
         })
         Log.d("Comment return", "comment return")
         return Comments
@@ -435,10 +427,11 @@ class FirebaseData @Inject constructor() {
 
                 if (newComment != null) {
                     Log.d("ACCESSING", newComment?.text)
-                    if(savedCommentList.isNullOrEmpty()) {
+                    if (savedCommentList.isNullOrEmpty()) {
                         savedCommentList.add(newComment)
                     }
                     savedCommentList.add(newComment)
+
                     //repository.saveNewPost(newPost)
                     //adapter.add(PostFrag(newPost.title, newPost.text))
                 }
@@ -456,7 +449,8 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    fun saveNewCommentC(text: String, postID: String, ClassKey: String, UserID: String, crn: String
+    fun saveNewCommentC(
+        text: String, postID: String, ClassKey: String, UserID: String, crn: String
     ) {
 
 
@@ -489,22 +483,26 @@ class FirebaseData @Inject constructor() {
         //}
     }
 
-    fun saveNewComment(text: String, postID: String, ClassKey: String, UserID: String, crn: String
+    fun saveNewComment(
+        text: String, postID: String, ClassKey: String, UserID: String, crn: String
     ) {
 
 
         //val subject = Subject
         //val ClassID = Classkey
         val userID = firebaseAuth.uid
-        val author= firebaseAuth.currentUser?.displayName
+        val author = firebaseAuth.currentUser?.displayName
         val comment = Comment(text, 0, userID, crn, postID)
-        comment.author= author
+        comment.author = author
         Log.d("BigMoods", crn)
         //FIX userprofile not init post.author = userprofile.username!!
         //val Class_key = FirebaseDatabase.getInstance().getReference(CRN).child("Posts").push().key
         //FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID")
-        val Class_key = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey").child("Comments").push().key
-        val User_key = FirebaseDatabase.getInstance().getReference("/users/$UserID/Posts/$postID").child("Comments").push().key
+        val Class_key =
+            FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey")
+                .child("Comments").push().key
+        val User_key = FirebaseDatabase.getInstance().getReference("/users/$UserID/Posts/$postID")
+            .child("Comments").push().key
         // implement in viewmodel
         //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
         comment.ClassComkey = Class_key
@@ -530,14 +528,16 @@ class FirebaseData @Inject constructor() {
         val subject = Subject
         // val ClassID = Classkey
         val userID = firebaseAuth.uid
-        val author= firebaseAuth.currentUser?.displayName
+        val author = firebaseAuth.currentUser?.displayName
         post.UserID = userID
-        post.author=author
+        post.author = author
         //FIX userprofile not init post.author = userprofile.username!!
         //val Class_key = FirebaseDatabase.getInstance().getReference(CRN).child("Posts").push().key
         //FirebaseDatabase.getInstance().getReference("/users/$userID")
-        val User_key = FirebaseDatabase.getInstance().getReference("/users/$userID").child("Posts").push().key
-        val Class_key = FirebaseDatabase.getInstance().getReference("/Subjects/$CRN").child("Posts").push().key
+        val User_key =
+            FirebaseDatabase.getInstance().getReference("/users/$userID").child("Posts").push().key
+        val Class_key =
+            FirebaseDatabase.getInstance().getReference("/Subjects/$CRN").child("Posts").push().key
         post.key = User_key
         post.Classkey = Class_key
         //post.author= auth_key
@@ -549,7 +549,7 @@ class FirebaseData @Inject constructor() {
         //dataupdates["/Subjects/$CRN/Posts/$postID/$author"] = postvalues
         dataupdates["/users/$userID/Posts/$User_key"] = postvalues
 
-       // FirebaseDatabase.getInstance().getReference("users/$userID").child("Post/$User_key").setValue(postvalues)
+        // FirebaseDatabase.getInstance().getReference("users/$userID").child("Post/$User_key").setValue(postvalues)
         FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
         /*Class_reference.setValue(post).addOnSuccessListener {
                 Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
@@ -835,10 +835,9 @@ class FirebaseData @Inject constructor() {
                     it.key = p0.child("key").getValue(String::class.java)
                     it.Classkey = p0.child("Classkey").getValue(String::class.java)
                     it.UserID = p0.child("UserID").getValue(String::class.java)
-                        it.author= p0.child("author").getValue(String::class.java)
+                    it.author = p0.child("author").getValue(String::class.java)
 
                     // comments might need to be gotten separatley to properly convert values
-
 
 
                     savedPostsList.add(newPost)
@@ -851,8 +850,6 @@ class FirebaseData @Inject constructor() {
 
                 classPostList.value = savedPostsList
             }
-
-
 
 
             override fun onChildRemoved(p0: DataSnapshot) {
@@ -958,10 +955,11 @@ class FirebaseData @Inject constructor() {
         })
     }*/
 
-    private fun listenForSubscribedPosts2(sub: MutableList<String>?){
+    private fun listenForSubscribedPosts2(sub: MutableList<String>?) {
+        savedPosts = PostLiveData()
         val reference = FirebaseDatabase.getInstance().getReference("Subjects")
         var sub: MutableList<String>? = sendUserSUB()
-        reference.addChildEventListener(object : ChildEventListener {
+        MainforumListener = reference.addChildEventListener(object : ChildEventListener {
             var savedPostsList: MutableList<Post> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -975,10 +973,9 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                if(sub.isNullOrEmpty()){
+                if (sub.isNullOrEmpty()) {
                     savedPosts.value = savedPostsList
-                }
-                else {
+                } else {
                     Log.d("FIRST1-:", p0.key)
                     if (sub!!.contains(p0.key)) {
                         for (p2 in p0.getChildren()) {
@@ -999,6 +996,7 @@ class FirebaseData @Inject constructor() {
                                             it.UserID = p3.child("UserID").value.toString()
                                             // need to change this later subject should be subject crn should be different
                                             it.crn = p3.child("subject").value.toString()
+                                            it.author = p3.child("author").value.toString()
                                         }
                                     } catch (e: Exception) {
                                         Log.d("Data Error", "error converting to post")
@@ -1018,6 +1016,7 @@ class FirebaseData @Inject constructor() {
                     }
                 }
             }
+
             override fun onChildRemoved(p0: DataSnapshot) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -1025,13 +1024,19 @@ class FirebaseData @Inject constructor() {
     }
 
 
-
     fun getSubscribedPosts(): PostLiveData {
         var sub: MutableList<String>? = sendUserSUB()
-        if(sub!=null) {
-            listenForSubscribedPosts2(sub)
+        var ref: DatabaseReference? = null
+        if (sub != null) {
+           listenForSubscribedPosts2(sub)
         }
-        return savedPosts
+
+
+        val saved = savedPosts
+
+        return saved
+
+
     }
 
 
@@ -1082,7 +1087,6 @@ class FirebaseData @Inject constructor() {
 
             override fun onChildRemoved(p0: DataSnapshot) {
             }
-
 
 
         })
@@ -1165,6 +1169,7 @@ class FirebaseData @Inject constructor() {
     }
 
 }
+
 
 
 
