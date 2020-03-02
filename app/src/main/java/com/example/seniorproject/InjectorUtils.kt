@@ -1,6 +1,5 @@
 package com.example.seniorproject
 
-import com.example.seniorproject.Profile.ProfileRepository
 import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.data.repositories.PostRepository
 import com.example.seniorproject.viewModels.CommunityPostViewModelFactory
@@ -29,8 +28,8 @@ object InjectorUtils {
     }
 
     fun provideProfileViewModelFactory() : ProfileViewModelFactory {
-        val profilepostrepo = ProfileRepository.getInstance(FirebaseData())
-        return ProfileViewModelFactory(profilepostrepo)
+        val postrepo = PostRepository.getInstance(FirebaseData())
+        return ProfileViewModelFactory(postrepo)
     }
 
 

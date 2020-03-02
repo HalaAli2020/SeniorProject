@@ -93,6 +93,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     }
 
 
+    fun getUserProfilePosts() = Firebase.getUserProfilePosts()
+
 
 
     companion object {

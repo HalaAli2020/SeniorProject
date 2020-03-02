@@ -8,15 +8,33 @@
         </variable>
     </data>
 
-    <FrameLayout
+    <LinearLayout
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/in_profile_username"
+            android:text="@{ProfileViewModell.user.email}"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/in_profile_email"
+            android:text="@{ProfileViewModell.user.email}"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/in_profile_image"/>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/user_profile_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-    </FrameLayout>
+    </LinearLayout>
 
 </layout>

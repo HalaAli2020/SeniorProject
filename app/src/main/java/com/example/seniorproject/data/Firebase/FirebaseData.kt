@@ -305,26 +305,33 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val newProfilePost :Post?  = p0.getValue(Post::class.java)
-                //val newProfilePost :Post  = Post()
-                /*try {
+                val newProfilePost = Post()
+                try {
                     newProfilePost.let {
-                        it.text = p0.child("text").getValue().toString()
-                        it.title = p0.child("title").getValue().toString()
-                        it.key = p0.child("Key").getValue().toString()
-
-
-                        //need to add the rest of this part isn't needed
-
+                        it.text = p0.child("text").value.toString()
+                        it.title = p0.child("title").value.toString()
+                        it.key = p0.child("Key").value.toString()
+                        // class key is key for this post
+                        it.Classkey = p0.child("Classkey").value.toString()
+                        // user who posted id
+                        it.UserID = p0.child("UserID").value.toString()
+                        // need to change this later subject should be subject crn should be different
+                        it.crn = p0.child("subject").value.toString()
                     }
                 } catch (e: Exception) {
                     Log.d("Data Error", "error converting to post")
-                }*/
+                }
+
 
 
                 if (newProfilePost != null) {
                     Log.d(TAG, newProfilePost.title ?: " Accessing profile post title")
-                    Log.d(TAG, newProfilePost.text ?: " Accessing profile post title")
+                    Log.d(TAG, newProfilePost.text ?: " Accessing profile post text")
+                    Log.d(TAG, newProfilePost.key ?: " Accessing profile post title")
+                    Log.d(TAG, newProfilePost.Classkey ?: " Accessing profile post title")
+                    Log.d(TAG, newProfilePost.UserID ?: " Accessing profile post title")
+                    Log.d(TAG, newProfilePost.crn ?: " Accessing profile post title")
+
                     profilePostsList.add(newProfilePost)
 
                     newProfilePosts = newProfilePost
@@ -1047,9 +1054,11 @@ class FirebaseData @Inject constructor() {
                 val newPost: Post = Post()
                 try {
                     newPost.let {
-                        it.text = p0.child("text").getValue().toString()
-                        it.title = p0.child("title").getValue().toString()
-                        it.key = p0.child("Key").getValue().toString()
+                        it.text = p0.child("text").value.toString()
+                        it.title = p0.child("title").value.toString()
+                        it.key = p0.child("Key").value.toString()
+                        it.key = p0.child("crn").value.toString()
+                        //added crn so it would show up in home frag
                     }
                 } catch (e: Exception) {
                     Log.d("Data Error", "error converting to post")
