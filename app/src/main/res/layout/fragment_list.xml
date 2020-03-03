@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="?attr/actionBarSize"
     android:layout_marginBottom="?attr/actionBarSize"
-    tools:context=".MainForum.ListFragment">
+    tools:context=".MainForum.Fragments.FragmentList">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_recyclerView"

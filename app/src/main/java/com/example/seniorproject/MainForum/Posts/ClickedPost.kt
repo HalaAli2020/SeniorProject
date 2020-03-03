@@ -1,37 +1,20 @@
-package com.example.seniorproject.MainForum
+package com.example.seniorproject.MainForum.Posts
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.widget.LinearLayout
-import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.DaggerAppComponent
+import com.example.seniorproject.MainForum.Adapters.CommentsAdapter
 import com.example.seniorproject.R
-import com.example.seniorproject.Utils.PostListener
-import com.example.seniorproject.data.models.CommentLive
-import com.example.seniorproject.MainForum.CommentsAdapter.CustomViewHoldersHeader
 import com.example.seniorproject.databinding.ActivityClickedPostBinding
-import com.example.seniorproject.databinding.ActivityLoginBinding
-import com.example.seniorproject.databinding.FragmentHomeBinding
-import com.example.seniorproject.viewModels.AuthenticationViewModel
 import com.example.seniorproject.viewModels.ClickedPostViewModel
-import com.example.seniorproject.viewModels.HomeFragmentViewModel
-import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_clicked_post.*
-import kotlinx.android.synthetic.main.activity_clicked_post.view.*
-import kotlinx.android.synthetic.main.fragment_home.view.*
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ClickedPost : AppCompatActivity() {
@@ -68,6 +51,17 @@ class ClickedPost : AppCompatActivity() {
 
         binding.clickedViewModel = myViewModel
         binding.lifecycleOwner = this
+
+
+        refreshView.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(this, R.color.blue_theme))
+        refreshView.setColorSchemeColors(ContextCompat.getColor(this, R.color.white))
+
+        refreshView.setOnRefreshListener {
+            comment_RecyclerView.adapter = adapter
+            refreshView.isRefreshing = false
+        }
+
+
 
         val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT )
         {
