@@ -1,29 +1,16 @@
 package com.example.seniorproject
 
 import android.net.Uri
-import android.util.Log
-import com.example.seniorproject.Authentication.LoginActivity
-import com.example.seniorproject.Dagger.SeniorProjApp
-import com.example.seniorproject.MainForum.HomeFragment
 import com.example.seniorproject.Utils.AuthenticationListener
 import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.data.repositories.UserAuthRepo
 import com.example.seniorproject.viewModels.AuthenticationViewModel
-import com.example.seniorproject.viewModels.DaggerViewModelFactory
-import com.google.firebase.FirebaseApp
-import com.google.firebase.analytics.FirebaseAnalytics
+import com.example.seniorproject.viewModels.Factories.DaggerViewModelFactory
 import org.junit.Test
-import org.junit.Assert.*
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
-import org.junit.After
-import org.junit.Before
-import java.lang.Exception
-import javax.security.auth.Subject
 
 
 class AuthenticationViewModelTest {

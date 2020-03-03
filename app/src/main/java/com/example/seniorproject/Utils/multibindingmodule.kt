@@ -3,6 +3,7 @@ package com.example.seniorproject.Utils
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.seniorproject.viewModels.*
+import com.example.seniorproject.viewModels.Factories.DaggerViewModelFactory
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -10,7 +11,7 @@ import dagger.multibindings.IntoMap
 @Module
 internal abstract class multibindingmodule{
     @Binds
-abstract fun bindviewmodelFactory(factory:DaggerViewModelFactory):ViewModelProvider.Factory
+abstract fun bindviewmodelFactory(factory: DaggerViewModelFactory):ViewModelProvider.Factory
 
     @Binds
     @IntoMap

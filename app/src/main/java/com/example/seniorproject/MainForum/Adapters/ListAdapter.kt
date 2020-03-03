@@ -1,4 +1,4 @@
-package com.example.seniorproject.MainForum
+package com.example.seniorproject.MainForum.Adapters
 
 import android.content.Context
 import android.content.Intent
@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.seniorproject.MainForum.Posts.CommunityPosts
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.CRN
 import com.example.seniorproject.viewModels.ListViewModel
