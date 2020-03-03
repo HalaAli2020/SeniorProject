@@ -470,6 +470,10 @@ class FirebaseData @Inject constructor() {
         //FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID")
         val User_key = FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID")
             .child("Comments").push().key
+
+
+
+
         //val Class_key = FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID").child("Comments").push().key
         // implement in viewmodel
         //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
@@ -479,6 +483,7 @@ class FirebaseData @Inject constructor() {
         //dataupdates["$userID/Posts/$User_key"] = postvalues
         FirebaseDatabase.getInstance().getReference("users/$userID/Post/$postID")
             .child("Comments/$User_key").setValue(comementvalues)
+
 
         /*Class_reference.setValue(post).addOnSuccessListener {
                 Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
@@ -561,16 +566,31 @@ class FirebaseData @Inject constructor() {
         //FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID")
         val Class_key = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey").child("Comments").push().key
         val User_key = FirebaseDatabase.getInstance().getReference("/users/$UserID/Posts/$postID").child("Comments").push().key
+        //for profile
+        val Profile_key = FirebaseDatabase.getInstance().getReference("/users/$UserID").child("Comments").push().key
+
         // implement in viewmodel
         //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
         comment.ClassComkey = Class_key
         comment.UserComkey = User_key
+        comment.ProfileComkey = Profile_key
+
         val dataupdates = HashMap<String, Any>()
         val comementvalues = comment.toMap()
         dataupdates["Subjects/$crn/Posts/$ClassKey/Comments/$Class_key"] = comementvalues
         dataupdates["users/$UserID/Posts/$postID/Comments/$User_key"] = comementvalues
+       //for profile
+        //dataupdates["users/$UserID/Comments/$Profile_key"] = comementvalues
         //FirebaseDatabase.getInstance().getReference("users/$userID/Post/$postID").child("Comments/$User_key").setValue(comementvalues)
         FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
+
+
+        //for profile
+       FirebaseDatabase.getInstance().getReference("/users/$userID")
+         .child("/Comments/$Profile_key").setValue(comementvalues)
+
+
+
         /*Class_reference.setValue(post).addOnSuccessListener {
                 Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
             }.addOnFailureListener {
