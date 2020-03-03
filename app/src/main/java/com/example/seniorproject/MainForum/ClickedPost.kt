@@ -69,11 +69,11 @@ class ClickedPost : AppCompatActivity() {
         binding.clickedViewModel = myViewModel
         binding.lifecycleOwner = this
 
-        /*val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT )
+        val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT )
         {
             override fun onSwiped(viewHolders: RecyclerView.ViewHolder, position: Int) {
                 //val commentkey: String? =adapter.removeItem(viewHolders as CommentsAdapter.CustomViewHoldersHeader, position)
-                //val commentkey: String? =adapter.removeItem(viewHolders as CommentsAdapter.CustomViewHolders, position)
+                val commentkey: String? =adapter.removeItem(viewHolders as CommentsAdapter.CustomViewHolders, position)
               //  val commentkeyheader: String? =adapter.removeItemHead(viewHolders as , position)
 
 
@@ -94,7 +94,7 @@ class ClickedPost : AppCompatActivity() {
         }
 
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
-        itemTouchHelper.attachToRecyclerView(comment_RecyclerView)*/
+        itemTouchHelper.attachToRecyclerView(comment_RecyclerView)
 
 
     }

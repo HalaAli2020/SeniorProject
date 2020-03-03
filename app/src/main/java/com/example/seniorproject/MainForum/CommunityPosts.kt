@@ -58,6 +58,9 @@ class CommunityPosts : AppCompatActivity() {
 
                 //.getStringExtra("Classkey")
                 //val postkey = intent.getStringExtra("author")
+                //adapter.notifyItemRemoved(viewHolders.position)
+                //adapter.notifyDataSetChanged()
+
                 myViewModel.deletePost(postkey!!,className)
                 //myViewModel.deletePost()
 

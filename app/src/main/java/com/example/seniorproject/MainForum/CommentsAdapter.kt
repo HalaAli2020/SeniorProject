@@ -91,14 +91,14 @@ class CommentsAdapter(
 
     }
 
-   /* fun removeItem(customViewHolders: CustomViewHolders, position: Int): String {
+    fun removeItem(customViewHolders: CustomViewHolders, position: Int): String {
         val comment: Comment = Comments?.value!![customViewHolders.adapterPosition]
         val commentkey: String?= comment.UserComkey
 
-       notifyItemRemoved(customViewHolders.adapterPosition)
+       //notifyItemRemoved(customViewHolders.adapterPosition)
 
         return commentkey!!
-    }*/
+    }
 
 
 

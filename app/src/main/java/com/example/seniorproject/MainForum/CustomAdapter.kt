@@ -67,7 +67,8 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
         val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
         val postkey: String?= post.Classkey
 
-        notifyItemRemoved(customViewHolders.adapterPosition)
+        //notifyItemRemoved(customViewHolders.adapterPosition)
+        //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
 
         return postkey!!
     }
