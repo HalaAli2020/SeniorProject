@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
@@ -8,30 +10,48 @@
         </variable>
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-    <RelativeLayout
-        android:orientation="vertical"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/fContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/pro_bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            app:labelVisibilityMode="labeled"
+            app:itemIconTint="@menu/bottom_navigation_selected"
+            app:itemTextColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:menu="@menu/profile_bottom_nav_menu"
+            tools:layout_editor_absoluteX="206dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
+
+    <!-- <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
+        android:orientation="vertical"
         android:background="@color/grey">
 
-        <ImageButton
-            android:padding="5dp"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:id="@+id/in_profile_image"
-            android:background="@color/grey"/>
-
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:padding="5dp"
-    android:layout_toRightOf="@+id/in_profile_image"
-    android:orientation="vertical">
+    <ImageButton
+        android:padding="5dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:id="@+id/in_profile_image"
+        android:background="@color/grey"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -44,16 +64,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/in_profile_username"
             android:text="@{ProfileViewModell.user.email}"/>
-</LinearLayout>
+    </LinearLayout> -->
 
 
-    </RelativeLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/user_profile_recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
 
-    </LinearLayout>
-
-</layout>

@@ -584,7 +584,6 @@ class FirebaseData @Inject constructor() {
         //FirebaseDatabase.getInstance().getReference("users/$userID/Post/$postID").child("Comments/$User_key").setValue(comementvalues)
         FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
 
-
         //for profile
        FirebaseDatabase.getInstance().getReference("/users/$userID")
          .child("/Comments/$Profile_key").setValue(comementvalues)
