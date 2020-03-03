@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
         android:layout_marginBottom="?attr/actionBarSize"
-        tools:context=".MainForum.NewPostFragment">
+        tools:context=".MainForum.Fragments.FragmentNewPost">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl"

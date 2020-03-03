@@ -1,13 +1,9 @@
-package com.example.seniorproject
+package com.example.seniorproject.Dagger
 
 import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.data.repositories.PostRepository
-import com.example.seniorproject.viewModels.CommunityPostViewModelFactory
-import com.example.seniorproject.viewModels.*
+import com.example.seniorproject.viewModels.Factories.*
 //import com.example.seniorproject.viewModels.AuthenticationViewModelFactory
-import com.example.seniorproject.viewModels.HomeFragmentViewModelFactory
-import com.example.seniorproject.viewModels.ListViewModelFactory
-import com.example.seniorproject.viewModels.ProfileViewModelFactory
 
 //import com.example.seniorproject.viewModels.NewPostFragmentViewModelFactory
 
@@ -18,17 +14,17 @@ object InjectorUtils {
         return HomeFragmentViewModelFactory(postrepo)
     }
 
-    fun provideListViewModelFactory(): ListViewModelFactory{
+    fun provideListViewModelFactory(): ListViewModelFactory {
         val postrepo: PostRepository = PostRepository.getInstance(FirebaseData())
         return ListViewModelFactory(postrepo)
     }
 
-    fun provideCommunityPostViewModelFacotry(): CommunityPostViewModelFactory{
+    fun provideCommunityPostViewModelFacotry(): CommunityPostViewModelFactory {
         val postrepo: PostRepository = PostRepository.getInstance(FirebaseData())
         return CommunityPostViewModelFactory(postrepo)
     }
 
-    fun provideSubscriptionsPostViewModelFactory(): SubscriptionsViewModelFactory{
+    fun provideSubscriptionsPostViewModelFactory(): SubscriptionsViewModelFactory {
         val postrepo: PostRepository = PostRepository.getInstance(FirebaseData())
         return SubscriptionsViewModelFactory(postrepo)
     }

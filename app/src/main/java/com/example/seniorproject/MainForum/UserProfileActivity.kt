@@ -5,9 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageButton
-import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
@@ -17,14 +15,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.seniorproject.Dagger.DaggerAppComponent
-import com.example.seniorproject.InjectorUtils
+import com.example.seniorproject.Dagger.InjectorUtils
+import com.example.seniorproject.MainForum.Adapters.CustomAdapter
 import com.example.seniorproject.R
 import com.example.seniorproject.databinding.ActivityUserProfileBinding
-import com.example.seniorproject.databinding.SideNavHeaderBinding
 import com.example.seniorproject.viewModels.ProfileViewModel
-import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import javax.inject.Inject
 
@@ -77,7 +73,12 @@ class UserProfileActivity : AppCompatActivity() {
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true
         user_profile_recyclerView.layoutManager = linearLayoutManager
-        user_profile_recyclerView.adapter = CustomAdapter(this, myViewModel.getUserProfilePosts())
+        user_profile_recyclerView.adapter =
+            CustomAdapter(
+                this,
+                myViewModel.getUserProfilePosts(),
+                1
+            )
 
 
     }

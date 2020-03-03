@@ -1,4 +1,4 @@
-package com.example.seniorproject.MainForum
+package com.example.seniorproject.MainForum.Adapters
 
 import android.content.Context
 import android.content.Intent
@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.seniorproject.MainForum.Posts.CommunityPosts
 import com.example.seniorproject.R
-import kotlinx.android.synthetic.main.rv_list.view.*
 import kotlinx.android.synthetic.main.rv_list.view.communityName_TV
 import kotlinx.android.synthetic.main.rv_subs.view.*
 

@@ -1,8 +1,7 @@
-package com.example.seniorproject.viewModels
+package com.example.seniorproject.viewModels.Factories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.seniorproject.data.repositories.UserAuthRepo
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton

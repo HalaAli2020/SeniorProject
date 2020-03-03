@@ -1,18 +1,11 @@
 package com.example.seniorproject.viewModels
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.CommentLive
 import com.example.seniorproject.data.repositories.PostRepository
-import com.example.seniorproject.data.repositories.UserAuthRepo
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
-import javax.crypto.Cipher
 import javax.inject.Inject
 
 class ClickedPostViewModel @Inject constructor(private val repository : PostRepository) : ViewModel(){

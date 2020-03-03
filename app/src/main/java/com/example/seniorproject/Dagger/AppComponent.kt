@@ -4,6 +4,9 @@ import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Authentication.PasswordResetActivity
 import com.example.seniorproject.Authentication.RegisterActivity
 import com.example.seniorproject.MainForum.*
+import com.example.seniorproject.MainForum.Fragments.FragmentHome
+import com.example.seniorproject.MainForum.Fragments.FragmentNewPost
+import com.example.seniorproject.MainForum.Posts.ClickedPost
 import com.example.seniorproject.Utils.multibindingmodule
 import dagger.Component
 import javax.inject.Singleton
@@ -18,9 +21,9 @@ interface AppComponent {
 
     fun inject(activity: RegisterActivity)
     fun inject(activity: LoginActivity)
-    fun inject(fragment: HomeFragment)
+    fun inject(fragment: FragmentHome)
     fun inject(activity: PasswordResetActivity)
-    fun inject(fragment: NewPostFragment)
+    fun inject(fragment: FragmentNewPost)
     fun inject(fragment: MainForum)
     fun inject(activity: ClickedPost)
     fun inject(fragment: UserProfileActivity)

@@ -315,6 +315,7 @@ class FirebaseData @Inject constructor() {
                         it.UserID = p0.child("UserID").value.toString()
                         // need to change this later subject should be subject crn should be different
                         it.crn = p0.child("subject").value.toString()
+                        it.author = p0.child("Author").value.toString()
                     }
                 } catch (e: Exception) {
                     Log.d("Data Error", "error converting to post")
