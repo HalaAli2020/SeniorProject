@@ -8,7 +8,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -170,7 +169,7 @@ class FirebaseData @Inject constructor() {
                                     username,
                                     email,
                                     it1,
-                                    profileImageUrl
+                                    null
                                 )
                             }
                         } else {
@@ -251,7 +250,7 @@ class FirebaseData @Inject constructor() {
         username: String,
         email: String,
         password: String,
-        profileImageUrl: Uri
+        profileImageUrl: Uri?
     ) {
         Log.d("Debug", "entered firebase database function")
         val uid = FirebaseAuth.getInstance().uid
