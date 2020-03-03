@@ -1,10 +1,8 @@
-package com.example.seniorproject.MainForum
+package com.example.seniorproject.MainForum.Posts
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -15,11 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Adapters.CustomAdapter
-
 import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.Post
-import com.example.seniorproject.data.models.PostLiveData
 import com.example.seniorproject.viewModels.CommunityPostViewModel
 import kotlinx.android.synthetic.main.activity_community_posts.*
 import javax.inject.Inject
@@ -31,7 +27,7 @@ class CommunityPosts : AppCompatActivity() {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: CommunityPostViewModel
-    lateinit var obse : Observer<in MutableList<Post>>
+    lateinit var obse: Observer<in MutableList<Post>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,58 +38,62 @@ class CommunityPosts : AppCompatActivity() {
         post_list_community_name_TV.text = className
 
         val factory = InjectorUtils.provideCommunityPostViewModelFacotry()
-        myViewModel = ViewModelProviders.of(this,factory).get(CommunityPostViewModel::class.java)
+        myViewModel = ViewModelProviders.of(this, factory).get(CommunityPostViewModel::class.java)
+
 
         classes_post_RV.layoutManager = LinearLayoutManager(this)
-        classes_post_RV.adapter = CustomAdapter(this, myViewModel.returnClassPosts(className!!), 1)
+
+        adapter = CustomAdapter(this, myViewModel.returnClassPosts(className!!), 1)
+        classes_post_RV.adapter = adapter
+
 
         refreshView.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(this, R.color.blue_theme))
         refreshView.setColorSchemeColors(ContextCompat.getColor(this, R.color.white))
 
         refreshView.setOnRefreshListener {
-            classes_post_RV.adapter = CustomAdapter(this, myViewModel.returnClassPosts(className!!), 1)
+            classes_post_RV.adapter = adapter
             refreshView.isRefreshing = false
         }
 
-        obse = Observer< MutableList<Post> > {
+
+
+        obse = Observer<MutableList<Post>> {
             Log.d("obser", " blah")
 
         }
 
-        val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT )
-        {
-            override fun onSwiped(viewHolders: RecyclerView.ViewHolder, position: Int) {
-                val postkey: String? =adapter.removeItem(viewHolders as CustomViewHolders, position)
+        val itemTouchHelperCallback =
+            object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+                override fun onSwiped(viewHolders: RecyclerView.ViewHolder, position: Int) {
+                    val postkey: String? =
+                        adapter.removeItem(viewHolders as CustomViewHolders, position)
 
-                //.getStringExtra("Classkey")
-                //val postkey = intent.getStringExtra("author")
-                //adapter.notifyItemRemoved(viewHolders.position)
-                //adapter.notifyDataSetChanged()
+                    //.getStringExtra("Classkey")
+                    //val postkey = intent.getStringExtra("author")
+                    myViewModel.deletePost(postkey!!, className)
+                    //myViewModel.deletePost()
 
-                myViewModel.deletePost(postkey!!,className)
-                //myViewModel.deletePost()
+                    //  obse.onChanged(pos)
+                }
 
-                //  obse.onChanged(pos)
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return false
+                }
+
             }
-
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
-            }
-
-        }
 
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
         itemTouchHelper.attachToRecyclerView(classes_post_RV)
 
     }
-        //myViewModel.listClasses?.observe(this, obse)
+    //myViewModel.listClasses?.observe(this, obse)
 
 
-    }
+}
 
 
 

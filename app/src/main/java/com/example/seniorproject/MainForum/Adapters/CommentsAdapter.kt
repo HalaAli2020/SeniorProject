@@ -1,4 +1,4 @@
-package com.example.seniorproject.MainForum
+package com.example.seniorproject.MainForum.Adapters
 
 import android.content.Context
 import android.util.Log
@@ -45,12 +45,16 @@ class CommentsAdapter(
             val layoutInflater = LayoutInflater.from(parent.context)
             // val binding : ViewDataBinding = DataBindingUtil.inflate(layoutInflater, viewType, parent, false)
             val cellForRow = layoutInflater.inflate(R.layout.rv_post_header, parent, false)
-            return CustomViewHoldersHeader(cellForRow)
+            return CustomViewHoldersHeader(
+                cellForRow
+            )
         }
         val layoutInflater = LayoutInflater.from(parent.context)
         // val binding : ViewDataBinding = DataBindingUtil.inflate(layoutInflater, viewType, parent, false)
         val cellForRow = layoutInflater.inflate(R.layout.rv_post_comment, parent, false)
-        return CustomViewHolders(cellForRow)
+        return CustomViewHolders(
+            cellForRow
+        )
     }
 
     override fun getItemCount(): Int {

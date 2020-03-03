@@ -6,29 +6,28 @@ import android.content.res.ColorStateList
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
-import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
-import com.bumptech.glide.load.resource.bitmap.TransformationUtils.circleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Dagger.DaggerAppComponent
+import com.example.seniorproject.MainForum.Fragments.FragmentHome
+import com.example.seniorproject.MainForum.Fragments.FragmentList
+import com.example.seniorproject.MainForum.Fragments.FragmentNewPost
+import com.example.seniorproject.MainForum.Fragments.FragmentSubscriptions
 import com.example.seniorproject.R
 import com.example.seniorproject.databinding.SideNavHeaderBinding
 import com.example.seniorproject.databinding.ActivityMainForumBinding
@@ -36,11 +35,8 @@ import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_main_forum.*
 import kotlinx.android.synthetic.main.side_nav_header.*
-import java.io.InputStream
-import java.net.URL
 import javax.inject.Inject
 
 private const val TAG = "MyLogTag"
@@ -70,27 +66,27 @@ class MainForum : AppCompatActivity(),
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.home -> {
-                    FAB.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.black)))
+                    FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
-                    replaceFragment(HomeFragment())
+                    replaceFragment(FragmentHome())
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.subscriptions -> {
-                    FAB.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.black)))
+                    FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
-                    replaceFragment(SubscriptionsFragment())
+                    replaceFragment(FragmentSubscriptions())
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.newPost -> {
-                    FAB.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue_theme)))
+                    FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.blue_theme))
                     FAB.setImageResource(R.drawable.ic_create_blue_24dp)
-                    replaceFragment(NewPostFragment())
+                    replaceFragment(FragmentNewPost())
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.list -> {
-                    FAB.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.black)))
+                    FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
-                    replaceFragment(ListFragment())
+                    replaceFragment(FragmentList())
                     return@OnNavigationItemSelectedListener true
                 }
             }
@@ -105,12 +101,12 @@ class MainForum : AppCompatActivity(),
         myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
         val binding: ActivityMainForumBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_main_forum)
-        replaceFragment(HomeFragment())
-        bottom_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        replaceFragment(FragmentHome())
+        bottom_navigation.onNavigationItemSelectedListener = mOnNavigationItemSelectedListener
         loginVerification()
         //here
 
-        FAB.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.black)))
+        FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
         setSupportActionBar(findViewById(R.id.toolbar))
         val actionbar: ActionBar? = supportActionBar
         actionbar?.apply {
@@ -123,7 +119,7 @@ class MainForum : AppCompatActivity(),
         mDrawerLayout = findViewById(R.id.drawer_layout)
         val navigationView: NavigationView = findViewById(R.id.nav_view)
         val sideNavHeaderBinding: SideNavHeaderBinding = DataBindingUtil.inflate(
-            getLayoutInflater(),
+            layoutInflater,
             R.layout.side_nav_header,
             binding.navView,
             false
@@ -186,7 +182,7 @@ class MainForum : AppCompatActivity(),
 
     }
 
-    var selectedPhotoUri: Uri? = null
+    private var selectedPhotoUri: Uri? = null
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -233,7 +229,7 @@ class MainForum : AppCompatActivity(),
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item?.itemId) {
+        when (item.itemId) {
             android.R.id.home -> {
                 mDrawerLayout.openDrawer(GravityCompat.START)
                 true

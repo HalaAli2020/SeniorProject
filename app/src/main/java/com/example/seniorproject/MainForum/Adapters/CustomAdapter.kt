@@ -1,4 +1,4 @@
-package com.example.seniorproject.MainForum
+package com.example.seniorproject.MainForum.Adapters
 
 import android.content.Context
 import android.content.Intent
@@ -7,10 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.seniorproject.MainForum.Posts.ClickedPost
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.PostLiveData
-import kotlinx.android.synthetic.main.activity_community_posts.view.*
 import kotlinx.android.synthetic.main.rv_post.view.*
 
 class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int ) :

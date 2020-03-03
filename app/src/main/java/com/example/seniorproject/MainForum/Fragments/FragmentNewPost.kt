@@ -1,4 +1,4 @@
-package com.example.seniorproject.MainForum
+package com.example.seniorproject.MainForum.Fragments
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-//import com.example.seniorproject.InjectorUtils
+//import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.databinding.FragmentNewPostBinding
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.R
@@ -17,14 +17,14 @@ import com.example.seniorproject.viewModels.NewPostFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_new_post.view.*
 import javax.inject.Inject
 
-class NewPostFragment : Fragment() {
+class FragmentNewPost : Fragment() {
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var viewModel: NewPostFragmentViewModel
 
     companion object {
-        fun newInstance() = NewPostFragment()
+        fun newInstance() = FragmentNewPost()
     }
 
     //private lateinit var viewModel: NewPostFragmentViewModel

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Authentication.PasswordResetActivity
@@ -13,9 +12,7 @@ import com.example.seniorproject.Utils.AuthenticationListener
 import com.example.seniorproject.data.repositories.UserAuthRepo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.lang.Thread.sleep
 import javax.inject.Inject
 
 private const val TAG = "MyLogTag"
