@@ -15,6 +15,11 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme_AlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorPrimary">@color/black</item>
+    </style>
+
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
     </style>
 

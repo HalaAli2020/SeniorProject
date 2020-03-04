@@ -31,8 +31,6 @@ class CommunityPosts : AppCompatActivity() {
     private lateinit var adapter: CustomAdapter
     var swipeBackground: ColorDrawable = ColorDrawable(Color.parseColor("#FF0000"))
     lateinit var deleteIcon: Drawable
-    var builder = AlertDialog.Builder(this)
-
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -61,7 +59,8 @@ class CommunityPosts : AppCompatActivity() {
         refreshView.setColorSchemeColors(ContextCompat.getColor(this, R.color.white))
 
         refreshView.setOnRefreshListener {
-            classes_post_RV.adapter = adapter
+            classes_post_RV.adapter = CustomAdapter(this, myViewModel.returnClassPosts(className!!), 1)
+            //classes_post_RV.adapter!!.notifyDataSetChanged()
             refreshView.isRefreshing = false
         }
 
@@ -81,20 +80,44 @@ class CommunityPosts : AppCompatActivity() {
                     val postkey: String? =
                         adapter.removeItem(viewHolders as CustomViewHolders, position)
 
-                    builder.setTitle("Delete Post")
-                    builder.setMessage("Are you sure you want to delete this post?")
-                    builder. setPositiveButton("YES", {dialogInterface: DialogInterface?, i: Int ->
-                        myViewModel.deletePost(postkey!!, className)
-                    })
-                    builder. setNegativeButton("NO", {dialogInterface: DialogInterface?, i: Int ->
-                        builder.show()
-                    })
+
+                    var builder = AlertDialog.Builder(this@CommunityPosts, R.style.AppTheme_AlertDialog)
+
                     //.getStringExtra("Classkey")
                     //val postkey = intent.getStringExtra("author")
                     //myViewModel.deletePost(postkey!!, className)
                     //myViewModel.deletePost()
+                   builder.setTitle("Are you sure?")
+                    builder.setMessage("You cannot restore posts that have been deleted.")
+                    builder.setPositiveButton("DELETE",
+                        { dialogInterface: DialogInterface?, i: Int ->
+                            myViewModel.deletePost(postkey!!, className)
+                        })
+                    builder.setNegativeButton("CANCEL",
+                        { dialogInterface: DialogInterface?, i: Int ->
+                            builder.setCancelable(true)
+                        })
 
+                    val msgdialog: AlertDialog = builder.create()
+
+                    msgdialog.show()
+
+                    //myViewModel.deletePost(postkey!!, className)
+                    //classes_post_RV.removeViewAt(viewHolders.adapterPosition)
+                    adapter.notifyItemRemoved(viewHolders.adapterPosition)
+                    adapter.notifyItemRangeChanged(viewHolders.adapterPosition, adapter.itemCount)
+                    classes_post_RV.adapter = adapter
+
+                    //adapter.notifyDataSetChanged()
+                    //adapter.notifyItemRangeRemoved(viewHolders.adapterPosition, 1)
+                    /*adapter.notifyItemRangeChanged(viewHolders.adapterPosition, adapter.itemCount - viewHolders.adapterPosition+1)*/
+                    //adapter.notifyDataSetChanged()
+
+                   // adapter.notifyItemRangeRemoved(viewHolders.adapterPosition, 1)
+                   // adapter.notifyItemRemoved(viewHolders.adapterPosition)
+                   // adapter.notifyItemRangeChanged(viewHolders.adapterPosition, )
                     //  obse.onChanged(pos)
+
                 }
 
                 override fun onChildDraw(
@@ -109,11 +132,7 @@ class CommunityPosts : AppCompatActivity() {
                val itemView = viewHolder.itemView
                val iconMargin = (itemView.height - deleteIcon.intrinsicHeight)/2
 
-               if(dX > 0) {
-                  // swipeBackground.setBounds(itemView.left, itemView.top, dX.toInt(), itemView.bottom)
-                  // deleteIcon.setBounds(itemView.left+ iconMargin, itemView.top + iconMargin, itemView.left +
-                  // iconMargin + deleteIcon.intrinsicWidth, itemView.bottom - iconMargin)
-               } else{
+               if(dX < 0) {
                    swipeBackground.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
                    deleteIcon.setBounds(itemView.right - iconMargin - deleteIcon.intrinsicWidth, itemView.top + iconMargin,
                        itemView.right - iconMargin, itemView.bottom - iconMargin)
