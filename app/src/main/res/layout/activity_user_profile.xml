@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
@@ -8,52 +10,90 @@
         </variable>
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-    <RelativeLayout
         android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/grey">
-
-        <ImageButton
-            android:padding="5dp"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:id="@+id/in_profile_image"
-            android:background="@color/grey"/>
-
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:padding="5dp"
-    android:layout_toRightOf="@+id/in_profile_image"
-    android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/in_profile_email"
-            android:text="@{ProfileViewModell.user.displayName}"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/in_profile_username"
-            android:text="@{ProfileViewModell.user.email}"/>
-</LinearLayout>
+        android:layout_marginTop="5dp">
 
 
-    </RelativeLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/user_profile_recyclerView"
+        <LinearLayout
+            android:id="@+id/profheader"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="100dp"
+            android:layout_marginStart="1dp"
+            android:layout_marginEnd="1dp"
+            android:background="@color/grey"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@id/fContainer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/in_profile_image"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:background="@color/grey"
+                    android:paddingTop="20dp" />
+
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:text="EDIT"
+                android:id="@+id/NavToEdit"/>
+
+                    <TextView
+                        android:id="@+id/in_profile_email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{ProfileViewModell.user.displayName}" />
+
+                    <TextView
+                        android:id="@+id/in_profile_username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{ProfileViewModell.user.email}" />
+
+
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/fContainer"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            app:layout_constraintBottom_toTopOf="@+id/pro_bottom_navigation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profheader"
+            app:layout_constraintVertical_bias="1.0">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/pro_bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            app:labelVisibilityMode="labeled"
+            app:itemIconTint="@menu/bottom_navigation_selected"
+            app:itemTextColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:menu="@menu/profile_bottom_nav_menu"
+            tools:layout_editor_absoluteX="206dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
+
+
+
+
+
+
