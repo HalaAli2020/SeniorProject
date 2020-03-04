@@ -16,7 +16,7 @@
         android:padding="10dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/profile_image"
             android:layout_width="69dp"
             android:layout_height="69dp"
