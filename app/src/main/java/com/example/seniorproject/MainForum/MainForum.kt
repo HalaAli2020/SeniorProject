@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.core.content.ContextCompat
@@ -40,6 +41,7 @@ import kotlinx.android.synthetic.main.side_nav_header.*
 import javax.inject.Inject
 
 private const val TAG = "MyLogTag"
+private const val TAGG = "username"
 
 class MainForum : AppCompatActivity(),
     FirebaseAuth.AuthStateListener {
@@ -114,6 +116,8 @@ class MainForum : AppCompatActivity(),
             setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp)
         }
 
+        Log.d(TAGG, myViewModel.user?.displayName ?: "the displayname in main activity")
+        Log.d(TAG, myViewModel.user?.displayName ?: "the displayname in main activity")
 
 
         mDrawerLayout = findViewById(R.id.drawer_layout)
@@ -129,7 +133,6 @@ class MainForum : AppCompatActivity(),
         //Log.d(TAG,myViewModel.rsomthing())
 
 
-        Log.d(TAG, myViewModel.user?.displayName ?: "the displayname in main activity")
 
 
         navigationView.setNavigationItemSelectedListener { menuItem ->
@@ -158,52 +161,21 @@ class MainForum : AppCompatActivity(),
         }
 
         val headerview = navigationView.getHeaderView(0)
-        val imageView = headerview.findViewById<ImageButton>(R.id.profile_image)
+        val imageView : ImageView = headerview.findViewById(R.id.profile_image)
 
 
 
         Glide.with(this) //1
             .load(FirebaseAuth.getInstance().currentUser?.photoUrl)
-            .placeholder(R.drawable.ic_account_circle_black_24dp)
-            .error(R.drawable.ic_log_out)
+            .placeholder(R.mipmap.ic_holder_round)
+            .error(R.mipmap.ic_holder_round)
             .skipMemoryCache(true) //2
             .diskCacheStrategy(DiskCacheStrategy.NONE) //3
             .apply(RequestOptions().circleCrop())//4
             .into(imageView)
 
-
-        headerview.findViewById<ImageButton>(R.id.profile_image).setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/*"
-            startActivityForResult(intent, 0)
-
-
-        }
-
     }
 
-    private var selectedPhotoUri: Uri? = null
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
-
-            selectedPhotoUri = data.data
-
-            Glide.with(this) //1
-                .load(selectedPhotoUri)
-                .placeholder(R.drawable.ic_account_circle_black_24dp)
-                .error(R.drawable.ic_log_out)
-                .skipMemoryCache(true) //2
-                .diskCacheStrategy(DiskCacheStrategy.NONE) //3
-                .apply(RequestOptions().circleCrop())//4
-                .into(profile_image)
-
-            myViewModel.uploadUserProfileImage(selectedPhotoUri ?: Uri.EMPTY)
-
-
-        }
-    }
 
 
     private fun replaceFragment(fragment: Fragment) {

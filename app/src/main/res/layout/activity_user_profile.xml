@@ -14,15 +14,67 @@
         android:id="@+id/pContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="5dp">
+
+
+        <LinearLayout
+            android:id="@+id/profheader"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginStart="1dp"
+            android:layout_marginEnd="1dp"
+            android:background="@color/grey"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@id/fContainer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+                <ImageView
+                    android:id="@+id/in_profile_image"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:background="@color/grey"
+                    android:paddingTop="20dp" />
+
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:text="EDIT"
+                android:id="@+id/NavToEdit"/>
+
+                    <TextView
+                        android:id="@+id/in_profile_email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{ProfileViewModell.user.displayName}" />
+
+                    <TextView
+                        android:id="@+id/in_profile_username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{ProfileViewModell.user.email}" />
+
+
+
+        </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/fContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="400dp"
+            app:layout_constraintBottom_toTopOf="@+id/pro_bottom_navigation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profheader"
+            app:layout_constraintVertical_bias="1.0">
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/pro_bottom_navigation"
@@ -40,31 +92,7 @@
 
 </layout>
 
-    <!-- <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:orientation="vertical"
-        android:background="@color/grey">
 
-    <ImageButton
-        android:padding="5dp"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:id="@+id/in_profile_image"
-        android:background="@color/grey"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/in_profile_email"
-            android:text="@{ProfileViewModell.user.displayName}"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/in_profile_username"
-            android:text="@{ProfileViewModell.user.email}"/>
-    </LinearLayout> -->
 
 
 

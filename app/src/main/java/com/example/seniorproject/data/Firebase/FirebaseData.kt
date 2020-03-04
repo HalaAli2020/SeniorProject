@@ -60,6 +60,7 @@ class FirebaseData @Inject constructor() {
 
 
     var newProfilePosts : Post? = null
+    var newProfileComments : Comment? = null
 
 
     var classList : MutableList<CRN> = mutableListOf()
@@ -115,6 +116,37 @@ class FirebaseData @Inject constructor() {
         firebaseAuth.signOut()
 
     }
+
+    //saves new username to database and auth profile
+   /* fun saveNewUsername(username: String){
+        val userID = firebaseAuth.uid
+        FirebaseDatabase.getInstance().getReference("/users/$userID")
+            .child("/Username").setValue(username)
+
+
+        //need postkey
+        FirebaseDatabase.getInstance().getReference("/users/$userID/Posts")
+            .child("/author").setValue(username)
+
+
+        val user = CurrentUser()
+        val profileUpdates =
+            UserProfileChangeRequest.Builder().setDisplayName(username).build()
+        user?.updateProfile(profileUpdates)
+            ?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d(
+                        TAG,
+                        "profile updated, emitter complete?:  ${CurrentUser()?.displayName} ."
+                    )
+                } else {
+                    Log.d(TAG, "in else in fetch current user")
+                }
+            }
+    }*/
+
+
+
 
 
     fun fetchCurrentUserName() {
@@ -215,6 +247,8 @@ class FirebaseData @Inject constructor() {
             .addOnCompleteListener {
                 if (!emitter.isDisposed) {
                     if (it.isSuccessful) {
+                        //was this crashing it before?
+                        fetchCurrentUserName()
                         Log.d(TAG, CurrentUser()!!.displayName ?: "the displayname login1")
                         GlobalScope.launch(Dispatchers.Main) {
                             delay(500)
@@ -286,7 +320,7 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    fun listenForUserProfilePosts (): PostLiveData{
+    fun listenForUserProfilePosts (): PostLiveData {
         Log.d(TAG, "getUserProfilePosts listener called")
         val uid = FirebaseAuth.getInstance().uid
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Posts")
@@ -346,13 +380,76 @@ class FirebaseData @Inject constructor() {
             }
 
 
-
-
         })
         Log.d("Post function return", "Post function return")
 
         return profilePosts
     }
+
+
+
+
+
+
+
+    fun listenForUserProfileComments (): CommentLive{
+        Log.d(TAG, "getUserProfile comments listener called")
+        val uid = FirebaseAuth.getInstance().uid
+        val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Comments")
+
+        val profilePostListen = reference.addChildEventListener(object : ChildEventListener {
+            var profileCommentList: MutableList<Comment> = mutableListOf()
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                val newComment = p0.getValue(Comment::class.java)
+
+
+                if (newComment != null) {
+                    Log.d(TAG, newComment.text ?: " Accessing profile comment author")
+
+
+                    profileCommentList.add(newComment)
+
+                    //newProfilePosts = newProfilePost
+                    newProfileComments = newComment
+
+                }
+                Comments.value = profileCommentList
+                //Log.d("TAG", "Comments loaded")
+
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+            }
+
+
+
+
+        })
+        Log.d("Post function return", "Post function return")
+
+        return Comments
+
+    }
+
+
+
+
+
+
+
+
+
+
 
     fun getUserProfilePosts() : PostLiveData{
         Log.d(TAG, "getUserProfilePosts called")
@@ -360,6 +457,11 @@ class FirebaseData @Inject constructor() {
         return profilePosts
     }
 
+    fun getUserProfileComments(): CommentLive{
+        Log.d(TAG, "getUserProfile comments called")
+        listenForUserProfileComments()
+        return Comments
+    }
 
 
 
@@ -547,6 +649,7 @@ class FirebaseData @Inject constructor() {
         })
 
     }
+
 
 
     fun saveNewComment(text: String, postID: String, ClassKey: String, UserID: String, crn: String
