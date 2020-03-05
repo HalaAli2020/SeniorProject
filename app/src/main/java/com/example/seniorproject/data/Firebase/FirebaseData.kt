@@ -351,6 +351,7 @@ class FirebaseData @Inject constructor() {
                         // need to change this later subject should be subject crn should be different
                         it.crn = p0.child("subject").value.toString()
                         it.author = p0.child("Author").value.toString()
+                        // not setting author
                     }
                 } catch (e: Exception) {
                     Log.d("Data Error", "error converting to post")
@@ -741,6 +742,8 @@ class FirebaseData @Inject constructor() {
                 //shows 1 comment in UI and 1 in firebase
 
         //for profile
+        //dataupdates["users/$UserID/Posts/$postID/Comments/$User_key"] = comementvalues
+       //for profile
         //dataupdates["users/$UserID/Comments/$Profile_key"] = comementvalues
         //FirebaseDatabase.getInstance().getReference("users/$userID/Post/$postID").child("Comments/$User_key").setValue(comementvalues)
         FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
@@ -797,52 +800,11 @@ class FirebaseData @Inject constructor() {
         //}
     }
 
-    fun getSavedPost(): PostLiveData {
-        listenforPosts()
-        return savedPosts
-    }
-
-    private fun listenforPosts() {
-        val reference = FirebaseDatabase.getInstance().getReference("/posts")
-
-
-        reference.addChildEventListener(object : ChildEventListener {
-            var savedPostsList: MutableList<Post> = mutableListOf()
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val newPost: Post? = p0.getValue(Post::class.java)
-
-                if (newPost != null) {
-                    //Log.d("ACCESSING", newPost?.text)
-                    savedPostsList.add(newPost)
-
-                    //repository.saveNewPost(newPost)
-                    //adapter.add(PostFrag(newPost.title, newPost.text))
-                }
-                savedPosts.value = savedPostsList
-
-            }
-
-            override fun onChildRemoved(p0: DataSnapshot) {
-            }
-        })
-
-    }
-
     fun getUserSub() {
 
         val uid = FirebaseAuth.getInstance().uid
-        Log.d("uid", uid!!)
-        val reference = FirebaseDatabase.getInstance().getReference("users/$uid/Subscriptions")
+//        Log.d("uid", uid!!)
+        val reference = FirebaseDatabase.getInstance().getReference("users/$uid/Subscriptions").orderByValue()
         reference.addValueEventListener(object : ValueEventListener {
             val SubList: MutableList<String> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
@@ -1128,9 +1090,6 @@ class FirebaseData @Inject constructor() {
 
     }
 
-    fun getSavedUserPost(): PostLiveData {
-        return savedPosts
-    }
 
     fun SeparateList(p0: DataSnapshot): List<String>? {
         var SubList: MutableList<String> = mutableListOf()

@@ -31,8 +31,6 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     fun uploadUserProfileImage(selectedPhotoUri: Uri) =
         Firebase.uploadImageToFirebaseStorage(selectedPhotoUri)
 
-    fun getSavedPosts() = Firebase.getSavedPost()
-    fun getSavedUserPosts() = Firebase.getSavedUserPost()
     fun getSubscribedPosts() = Firebase.getSubscribedPosts()
 
 

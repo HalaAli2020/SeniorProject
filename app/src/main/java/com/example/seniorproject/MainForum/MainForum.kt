@@ -141,15 +141,15 @@ class MainForum : AppCompatActivity(),
             when (menuItem.itemId) {
 
                 R.id.nav_profile -> {
-                    Toast.makeText(this, "redirecting to profile", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Redirecting to Profile", Toast.LENGTH_LONG).show()
                     val intent = Intent(this, UserProfileActivity::class.java)
                     startActivity(intent)
                 }
                 R.id.nav_allClasses -> {
-                    Toast.makeText(this, "show all classes", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Settings", Toast.LENGTH_LONG).show()
                 }
                 R.id.nav_logout -> {
-                    Toast.makeText(this, "User Logged out", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "User is Logged out.", Toast.LENGTH_LONG).show()
                     FirebaseAuth.getInstance().signOut()
                     val intent = Intent(this, LoginActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -167,8 +167,8 @@ class MainForum : AppCompatActivity(),
 
         Glide.with(this) //1
             .load(FirebaseAuth.getInstance().currentUser?.photoUrl)
-            .placeholder(R.mipmap.ic_holder_round)
-            .error(R.mipmap.ic_holder_round)
+            .placeholder(R.drawable.ic_account_circle_blue_24dp)
+            .error(R.drawable.ic_account_circle_blue_24dp)
             .skipMemoryCache(true) //2
             .diskCacheStrategy(DiskCacheStrategy.NONE) //3
             .apply(RequestOptions().circleCrop())//4
