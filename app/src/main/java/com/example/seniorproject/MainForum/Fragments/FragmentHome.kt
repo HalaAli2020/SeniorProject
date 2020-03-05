@@ -2,63 +2,37 @@ package com.example.seniorproject.MainForum.Fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-//import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.seniorproject.Authentication.LoginActivity
-import com.example.seniorproject.Utils.PostListener
+import com.example.seniorproject.Dagger.InjectorUtils
+import com.example.seniorproject.MainForum.Adapters.CustomAdapter
 import com.example.seniorproject.R
-import com.google.firebase.auth.FirebaseAuth
 import com.example.seniorproject.data.models.User
 import com.example.seniorproject.databinding.FragmentHomeBinding
 import com.example.seniorproject.viewModels.HomeFragmentViewModel
-import com.google.firebase.database.*
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_home.view.*
-//import javax.inject.Inject
 import javax.inject.Inject
-import com.example.seniorproject.Dagger.InjectorUtils
-import com.example.seniorproject.MainForum.Adapters.CustomAdapter
 
 
-/**
- * A simple [Fragment] subclass.
- */
-class FragmentHome : Fragment(), PostListener {
+class FragmentHome : Fragment() {
 
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: HomeFragmentViewModel
 
-    override fun onStarted() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
-    override fun onSuccess() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onFailure(message: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onCancelled(p0: DatabaseError) {
-
-    }
-
-    override fun onDataChange(p0: DataSnapshot) {
-
-    }
-
-    // test comment
     companion object {
         var currentUser: User? = null
-
     }
 
 
@@ -73,6 +47,7 @@ class FragmentHome : Fragment(), PostListener {
         val binding: FragmentHomeBinding = inflate(inflater, R.layout.fragment_home, container, false)
         val view = inflater.inflate(R.layout.fragment_home, container, false)*/
 
+        activity?.title = "Home"
         LoginVerification()
 
         val factory = InjectorUtils.providePostViewModelFactory()
@@ -88,22 +63,17 @@ class FragmentHome : Fragment(), PostListener {
         linearLayoutManager.stackFromEnd = true
         view.post_recyclerView.layoutManager = linearLayoutManager
 
-        if (FirebaseAuth.getInstance().uid != null) {
-            view.post_recyclerView.adapter =
-                CustomAdapter(
-                    view.context,
-                    myViewModel.getSubscribedPosts(),
-                    0
-                )
-        }
+        if (FirebaseAuth.getInstance().uid != null)
+            view.post_recyclerView.adapter = CustomAdapter(view.context, myViewModel.getSubscribedPosts(), 0)
+
 
         view.refreshView.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.blue_theme))
         view.refreshView.setColorSchemeColors(ContextCompat.getColor(view.context, R.color.white))
 
+
         view.refreshView.setOnRefreshListener {
-            view.post_recyclerView.adapter =
-                CustomAdapter(view.context, myViewModel.getSubscribedPosts(), 0)
             view.refreshView.isRefreshing = false
+            view.post_recyclerView.adapter = CustomAdapter(view.context, myViewModel.getSubscribedPosts(), 0)
         }
 
         binding.homeFragmentViewModel = myViewModel

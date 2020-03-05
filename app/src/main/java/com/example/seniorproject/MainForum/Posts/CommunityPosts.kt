@@ -51,8 +51,8 @@ class CommunityPosts : AppCompatActivity() {
         refreshView.setColorSchemeColors(ContextCompat.getColor(this, R.color.white))
 
         refreshView.setOnRefreshListener {
-            classes_post_RV.adapter = adapter
             refreshView.isRefreshing = false
+            classes_post_RV.adapter = CustomAdapter(this, myViewModel.returnClassPosts(className!!), 1)
         }
 
 

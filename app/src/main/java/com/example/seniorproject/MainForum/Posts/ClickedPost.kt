@@ -57,7 +57,7 @@ class ClickedPost : AppCompatActivity() {
         refreshView.setColorSchemeColors(ContextCompat.getColor(this, R.color.white))
 
         refreshView.setOnRefreshListener {
-            comment_RecyclerView.adapter = adapter
+            comment_RecyclerView.adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn)
             refreshView.isRefreshing = false
         }
 

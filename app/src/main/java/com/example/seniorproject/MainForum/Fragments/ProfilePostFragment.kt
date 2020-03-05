@@ -55,7 +55,7 @@ class ProfilePostFragment : Fragment() {
             view.profile_post_recyclerView.adapter =
                 CustomAdapter(
                     view.context,
-                    myViewModel.getUserProfilePosts(),1
+                    myViewModel.getUserProfilePosts(),0
                 )
         }
 
@@ -65,7 +65,7 @@ class ProfilePostFragment : Fragment() {
 
         view.refreshView.setOnRefreshListener {
             view.profile_post_recyclerView.adapter =
-                CustomAdapter(view.context, myViewModel.getUserProfilePosts(),1)
+                CustomAdapter(view.context, myViewModel.getUserProfilePosts(),0)
             view.refreshView.isRefreshing = false
         }
 
@@ -82,7 +82,7 @@ class ProfilePostFragment : Fragment() {
             CustomAdapter(
                 view.context,
                 myViewModel.getUserProfilePosts(),
-                1
+                0
             )
 
         binding.executePendingBindings()
