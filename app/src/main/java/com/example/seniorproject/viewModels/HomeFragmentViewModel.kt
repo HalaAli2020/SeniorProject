@@ -19,34 +19,14 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
 
     init {
 
-        posts = repository.getSavedPosts()
+        posts = repository.getSubscribedPosts()
     }
 
-
-    fun getSavedPosts(): PostLiveData {
-
-        posts = repository.getSavedPosts()
-        return posts
-    }
-
-    fun getSavedUserPosts(): PostLiveData {
-
-        posts = repository.getSavedUserPosts()
-        return posts
-    }
-
-    fun editPost(): PostLiveData {
-        postdata = getSavedPosts()
-        return postdata
-    }
 
     fun getSubscribedPosts(): PostLiveData {
         posts = repository.getSubscribedPosts()
         return posts
     }
-
-    fun uploadUserProfileImage(selectedPhotoUri: Uri) =
-        repository.uploadUserProfileImage(selectedPhotoUri)
 
 
     fun fetchCurrentUserName() = repository.fetchCurrentUserName()
