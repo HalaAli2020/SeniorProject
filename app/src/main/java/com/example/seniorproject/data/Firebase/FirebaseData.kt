@@ -743,7 +743,7 @@ class FirebaseData @Inject constructor() {
     fun getUserSub() {
 
         val uid = FirebaseAuth.getInstance().uid
-        Log.d("uid", uid!!)
+//        Log.d("uid", uid!!)
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid/Subscriptions")
         reference.addValueEventListener(object : ValueEventListener {
             val SubList: MutableList<String> = mutableListOf()

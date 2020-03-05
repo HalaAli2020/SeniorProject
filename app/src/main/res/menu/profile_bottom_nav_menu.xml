@@ -3,12 +3,10 @@
 
     <item
         android:id="@+id/select_posts"
-        android:title="Posts"
-        android:enabled="true"/>
+        android:title="Posts" />
 
     <item
         android:id="@+id/select_comments"
-        android:title="Comments"
-        android:enabled="true"/>
+        android:title="Comments" />
 
 </menu>

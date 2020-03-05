@@ -27,15 +27,18 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
     }
 
     override fun getItemCount(): Int {
-        if (savedPosts.value != null)
+        if (!savedPosts.value.isNullOrEmpty()){
             return savedPosts.value!!.size
+        }
         else
             return 0
     }
 
     override fun onBindViewHolder(holder: CustomViewHolders, position: Int) {
-        if (savedPosts.value == null) {
-            holder.itemView.post_title.text="LOADING"
+        if (savedPosts.value.isNullOrEmpty()) {
+            Log.d("CustomAdapter", "EMPTY")
+            holder.itemView.imageView4.visibility = View.INVISIBLE
+            holder.itemView.post_title.text = "Subscribe to a community to see posts on this screen!"
         } else {
             val post: Post = savedPosts.value!![position]
             holder.itemView.post_title.text = post.title
