@@ -1,11 +1,13 @@
 package com.example.seniorproject.MainForum.Adapters
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.MainForum.Posts.ClickedPost
 import com.example.seniorproject.R
@@ -60,20 +62,52 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
     }
 
     fun removeItem(customViewHolders: CustomViewHolders, position: Int): String {
-
         //position=customViewHolders.adapterPosition
 
        // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
         val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
         val postkey: String?= post.Classkey
-
         //notifyItemRemoved(customViewHolders.adapterPosition)
         //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
 
         return postkey!!
     }
 
-}
+    fun getNewCount() : Int{
+        if (savedPosts.value != null)
+            return savedPosts.value!!.size-1
+        else
+            return 0
+    }
+
+
+        //notifyD
+        //notifyItemRemoved(customViewHolders.adapterPosition)
+
+        //adapter.notifyItemRangeRemoved(customViewHolders.adapterPosition, 1)
+        //adapter.notifyItemRangeChanged(viewHolders.adapterPosition, adapter.itemCount - viewHolders.adapterPosition+1)
+    }
+
+    /*fun alertItem(customViewHolders: CustomViewHolders, position: Int): AlertDialog.Builder {
+
+        var builder = AlertDialog.Builder(customViewHolders.itemView.context)
+
+        builder.setTitle("Are you sure?")
+        builder.setMessage("You cannot restore posts that have been deleted")
+        builder.setPositiveButton("DELETE",
+            { dialogInterface: DialogInterface?, i: Int ->
+                builder.show()
+            })
+        builder.setNegativeButton("CANCEL",
+            { dialogInterface: DialogInterface?, i: Int ->
+                builder.show()
+            })
+
+        return builder
+
+    }*/
+
+
 
 class CustomViewHolders(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener {
 

@@ -1,13 +1,12 @@
 package com.example.seniorproject.MainForum
 
-import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +16,9 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Adapters.CustomAdapter
+import com.example.seniorproject.MainForum.Fragments.ProfileCommentFragment
+import com.example.seniorproject.MainForum.Fragments.ProfilePostFragment
+import com.example.seniorproject.MainForum.Posts.EditProfileActivity
 import com.example.seniorproject.R
 import com.example.seniorproject.databinding.ActivityUserProfileBinding
 import com.example.seniorproject.viewModels.ProfileViewModel
@@ -38,10 +40,10 @@ class UserProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
 
+
         val actionbar = supportActionBar
         actionbar!!.title = "Profile"
-
-        actionbar.setDisplayHomeAsUpEnabled(true)
+        replaceFragment(ProfilePostFragment())
 
         DaggerAppComponent.create().inject(this)
         val factory = InjectorUtils.provideProfileViewModelFactory()
@@ -50,60 +52,57 @@ class UserProfileActivity : AppCompatActivity() {
         val binding: ActivityUserProfileBinding = DataBindingUtil.setContentView(this,R.layout.activity_user_profile)
         binding.profileViewModell = myViewModel
         binding.lifecycleOwner = this
+        actionbar.setDisplayHomeAsUpEnabled(true)
 
 
-        val image : ImageButton = findViewById(R.id.in_profile_image)
+        pro_bottom_navigation.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.select_posts -> {
+                    replaceFragment(ProfilePostFragment())
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.select_comments -> {
+                    replaceFragment(ProfileCommentFragment())
+                    return@setOnNavigationItemSelectedListener true
+                }
+
+            }
+            true
+        }
+
+
+        NavToEdit.setOnClickListener {
+               navToEdit()
+            }
+
+
+        val image : ImageView = findViewById(R.id.in_profile_image)
 
         Glide.with(this) //1
             .load(FirebaseAuth.getInstance().currentUser?.photoUrl)
-            .placeholder(R.drawable.ic_account_circle_black_24dp)
-            .error(R.drawable.ic_log_out)
+            .placeholder(R.mipmap.ic_holder_round)
+            .error(R.mipmap.ic_holder_round)
             .skipMemoryCache(true) //2
             .diskCacheStrategy(DiskCacheStrategy.NONE) //3
             .apply(RequestOptions().circleCrop())//4
             .into(image)
 
-        image.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/*"
-            startActivityForResult(intent, 0)}
-
-        myViewModel.getUserProfilePosts()
-        val linearLayoutManager = LinearLayoutManager(this)
-        linearLayoutManager.reverseLayout = true
-        linearLayoutManager.stackFromEnd = true
-        user_profile_recyclerView.layoutManager = linearLayoutManager
-        user_profile_recyclerView.adapter =
-            CustomAdapter(
-                this,
-                myViewModel.getUserProfilePosts(),
-                1
-            )
-
 
     }
 
-    var selectedPhotoUri: Uri? = null
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 0 && resultCode == Activity.RESULT_OK && data !=null)
-        {
+    private fun replaceFragment(fragment: Fragment) {
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.fContainer, fragment)
+        fragmentTransaction.commit()
+    }
 
-            selectedPhotoUri= data.data
-
-            Glide.with(this) //1
-                .load(selectedPhotoUri)
-                .placeholder(R.drawable.ic_launcher_background)
-                .error(R.drawable.ic_log_out)
-                .skipMemoryCache(true) //2
-                .diskCacheStrategy(DiskCacheStrategy.NONE) //3
-                .apply(RequestOptions().circleCrop())//4
-                .into(in_profile_image)
-
-            myViewModel.uploadUserProfileImage(selectedPhotoUri ?: Uri.EMPTY)
-
+    private fun navToEdit() {
+        Intent(this, EditProfileActivity::class.java).also {
+            it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or (Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(it)
         }
     }
+
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()

@@ -37,7 +37,7 @@ class NewPostFragment : Fragment() {
     //private lateinit var viewModel: NewPostFragmentViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
+        activity?.title = "New Post"
         DaggerAppComponent.create().inject(this)
         val binding: FragmentNewPostBinding = DataBindingUtil.inflate(inflater,com.example.seniorproject.R.layout.fragment_new_post , container, false)
         viewModel = ViewModelProviders.of(this, factory).get(NewPostFragmentViewModel::class.java)

@@ -1,8 +1,12 @@
-package com.example.seniorproject.MainForum
+package com.example.seniorproject.MainForum.Fragments
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import android.util.AttributeSet
 import android.util.Log
 import android.view.*
@@ -15,10 +19,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-//import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Authentication.LoginActivity
+import com.example.seniorproject.Dagger.InjectorUtils
+import com.example.seniorproject.MainForum.Adapters.CustomAdapter
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.Post
@@ -34,6 +39,7 @@ import com.google.firebase.database.*
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.rv_post.view.*
 import kotlinx.coroutines.awaitAll
@@ -44,10 +50,7 @@ import com.example.seniorproject.InjectorUtils
 
 
 
-/**
- * A simple [Fragment] subclass.
- */
-class HomeFragment : Fragment(), PostListener {
+class FragmentHome : Fragment() {
 
 
     @Inject
@@ -71,14 +74,8 @@ class HomeFragment : Fragment(), PostListener {
 
     }
 
-    override fun onDataChange(p0: DataSnapshot) {
-
-    }
-
-    // test comment
     companion object {
         var currentUser: User? = null
-
     }
 
 
@@ -93,6 +90,7 @@ class HomeFragment : Fragment(), PostListener {
         val binding: FragmentHomeBinding = inflate(inflater, R.layout.fragment_home, container, false)
         val view = inflater.inflate(R.layout.fragment_home, container, false)*/
 
+        activity?.title = "Home"
         LoginVerification()
 
         val factory = InjectorUtils.providePostViewModelFactory()
@@ -110,6 +108,19 @@ class HomeFragment : Fragment(), PostListener {
         view.post_recyclerView.layoutManager = linearLayoutManager
 
         view.post_recyclerView.adapter = ada
+        if (FirebaseAuth.getInstance().uid != null)
+            view.post_recyclerView.adapter = CustomAdapter(view.context, myViewModel.getSubscribedPosts(), 0)
+
+
+        view.refreshView.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.blue_theme))
+        view.refreshView.setColorSchemeColors(ContextCompat.getColor(view.context, R.color.white))
+
+
+        view.refreshView.setOnRefreshListener {
+            view.refreshView.isRefreshing = false
+            view.post_recyclerView.adapter = CustomAdapter(view.context, myViewModel.getSubscribedPosts(), 0)
+        }
+
         binding.homeFragmentViewModel = myViewModel
         binding.lifecycleOwner = this
         Obse()

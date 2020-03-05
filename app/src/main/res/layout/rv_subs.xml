@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
     <data>
 
     </data>
@@ -10,14 +11,17 @@
         android:id="@+id/subsListCV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="horizontal"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp">
 
         <ImageView
             android:id="@+id/subImage"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="12dp"
-            android:layout_marginBottom="8dp"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -34,7 +38,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/subImage"
             app:layout_constraintTop_toTopOf="@+id/subImage" />
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
