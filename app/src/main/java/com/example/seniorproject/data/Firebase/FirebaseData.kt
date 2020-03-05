@@ -305,7 +305,7 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    fun saveNewPost(postTitle: String, postText: String, postSubject: String) {
+    /*fun saveNewPost(postTitle: String, postText: String, postSubject: String) {
         val reference = FirebaseDatabase.getInstance().getReference("/posts").push()
 
         if (postTitle.isNotEmpty() && postText.isNotEmpty()) {
@@ -317,7 +317,7 @@ class FirebaseData @Inject constructor() {
                 Log.d(TAG, "Error ${it.message}")
             }
         }
-    }
+    }*/
 
 
     fun listenForUserProfilePosts (): PostLiveData {

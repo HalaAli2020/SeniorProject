@@ -29,6 +29,7 @@ import javax.inject.Inject
 class CommunityPosts : AppCompatActivity() {
 
     private lateinit var adapter: CustomAdapter
+
     var swipeBackground: ColorDrawable = ColorDrawable(Color.parseColor("#FF0000"))
     lateinit var deleteIcon: Drawable
 
@@ -59,9 +60,8 @@ class CommunityPosts : AppCompatActivity() {
         refreshView.setColorSchemeColors(ContextCompat.getColor(this, R.color.white))
 
         refreshView.setOnRefreshListener {
-            classes_post_RV.adapter = CustomAdapter(this, myViewModel.returnClassPosts(className!!), 1)
-            //classes_post_RV.adapter!!.notifyDataSetChanged()
             refreshView.isRefreshing = false
+            classes_post_RV.adapter = CustomAdapter(this, myViewModel.returnClassPosts(className!!), 1)
         }
 
 
@@ -87,7 +87,7 @@ class CommunityPosts : AppCompatActivity() {
                     //val postkey = intent.getStringExtra("author")
                     //myViewModel.deletePost(postkey!!, className)
                     //myViewModel.deletePost()
-                   builder.setTitle("Are you sure?")
+                    builder.setTitle("Are you sure?")
                     builder.setMessage("You cannot restore posts that have been deleted.")
                     builder.setPositiveButton("DELETE",
                         { dialogInterface: DialogInterface?, i: Int ->
@@ -113,44 +113,44 @@ class CommunityPosts : AppCompatActivity() {
                     /*adapter.notifyItemRangeChanged(viewHolders.adapterPosition, adapter.itemCount - viewHolders.adapterPosition+1)*/
                     //adapter.notifyDataSetChanged()
 
-                   // adapter.notifyItemRangeRemoved(viewHolders.adapterPosition, 1)
-                   // adapter.notifyItemRemoved(viewHolders.adapterPosition)
-                   // adapter.notifyItemRangeChanged(viewHolders.adapterPosition, )
+                    // adapter.notifyItemRangeRemoved(viewHolders.adapterPosition, 1)
+                    // adapter.notifyItemRemoved(viewHolders.adapterPosition)
+                    // adapter.notifyItemRangeChanged(viewHolders.adapterPosition, )
                     //  obse.onChanged(pos)
 
                 }
 
                 override fun onChildDraw(
-               c: Canvas,
-               recyclerView: RecyclerView,
-               viewHolder: RecyclerView.ViewHolder,
-               dX: Float,
-               dY: Float,
-               actionState: Int,
-               isCurrentlyActive: Boolean
-           ) {
-               val itemView = viewHolder.itemView
-               val iconMargin = (itemView.height - deleteIcon.intrinsicHeight)/2
+                    c: Canvas,
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    dX: Float,
+                    dY: Float,
+                    actionState: Int,
+                    isCurrentlyActive: Boolean
+                ) {
+                    val itemView = viewHolder.itemView
+                    val iconMargin = (itemView.height - deleteIcon.intrinsicHeight)/2
 
-               if(dX < 0) {
-                   swipeBackground.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
-                   deleteIcon.setBounds(itemView.right - iconMargin - deleteIcon.intrinsicWidth, itemView.top + iconMargin,
-                       itemView.right - iconMargin, itemView.bottom - iconMargin)
-               }
+                    if(dX < 0) {
+                        swipeBackground.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                        deleteIcon.setBounds(itemView.right - iconMargin - deleteIcon.intrinsicWidth, itemView.top + iconMargin,
+                            itemView.right - iconMargin, itemView.bottom - iconMargin)
+                    }
 
-               swipeBackground.draw(c)
-               deleteIcon.draw(c)
+                    swipeBackground.draw(c)
+                    deleteIcon.draw(c)
 
-               super.onChildDraw(
-                   c,
-                   recyclerView,
-                   viewHolder,
-                   dX,
-                   dY,
-                   actionState,
-                   isCurrentlyActive
-               )
-           }
+                    super.onChildDraw(
+                        c,
+                        recyclerView,
+                        viewHolder,
+                        dX,
+                        dY,
+                        actionState,
+                        isCurrentlyActive
+                    )
+                }
 
                 override fun onMove(
                     recyclerView: RecyclerView,
@@ -163,8 +163,6 @@ class CommunityPosts : AppCompatActivity() {
             }
 
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
-
-
         itemTouchHelper.attachToRecyclerView(classes_post_RV)
 
     }

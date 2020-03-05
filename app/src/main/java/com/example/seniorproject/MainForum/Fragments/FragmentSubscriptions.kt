@@ -23,7 +23,7 @@ class FragmentSubscriptions : Fragment() {
     lateinit var myViewModel: SubscriptionsViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
+        activity?.title = "Subscriptions"
         val view = inflater.inflate(R.layout.fragment_subscriptions, container, false)
         val factory = InjectorUtils.provideSubscriptionsPostViewModelFactory()
         myViewModel = ViewModelProviders.of(this, factory).get(SubscriptionsViewModel::class.java)
