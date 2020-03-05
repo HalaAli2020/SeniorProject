@@ -1,5 +1,6 @@
 package com.example.seniorproject.MainForum.Fragments
 
+import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Canvas
 import android.graphics.Color
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -22,6 +24,7 @@ import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Adapters.CustomAdapter
 import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
+import com.example.seniorproject.MainForum.UserProfileActivity
 
 import com.example.seniorproject.R
 import com.example.seniorproject.databinding.FragmentProfilePostBinding
@@ -73,6 +76,9 @@ class ProfilePostFragment : Fragment() {
         }
 
 
+        adapter = CustomAdapter(view.context, myViewModel.getUserProfilePosts(),0)
+        view.profile_post_recyclerView.adapter= adapter
+
         view.refreshView.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.blue_theme))
         view.refreshView.setColorSchemeColors(ContextCompat.getColor(view.context, R.color.white))
 
@@ -110,7 +116,11 @@ class ProfilePostFragment : Fragment() {
                     val userkey: String? =
                         adapter.getUserKey(viewHolders as CustomViewHolders, position)
 
-                    var builder = AlertDialog.Builder(activity!!.applicationContext, R.style.AppTheme_AlertDialog)
+                    val crnkey: String? =
+                        adapter.getCrn(viewHolders as CustomViewHolders, position)
+
+                    //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
+                    var builder = AlertDialog.Builder(view.context, R.style.AppTheme_AlertDialog)
 
                     //.getStringExtra("Classkey")
                     //val postkey = intent.getStringExtra("author")
@@ -120,7 +130,7 @@ class ProfilePostFragment : Fragment() {
                     builder.setMessage("You cannot restore posts that have been deleted.")
                     builder.setPositiveButton("DELETE",
                         { dialogInterface: DialogInterface?, i: Int ->
-                            myViewModel.deletePost(postkey!!, userkey!!)
+                            myViewModel.deletePost(postkey!!, crnkey!!, userkey!!)
                         })
                     builder.setNegativeButton("CANCEL",
                         { dialogInterface: DialogInterface?, i: Int ->
@@ -128,6 +138,8 @@ class ProfilePostFragment : Fragment() {
                         })
 
                     val msgdialog: AlertDialog = builder.create()
+
+                    msgdialog.getWindow()!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
 
                     msgdialog.show()
 
@@ -200,7 +212,7 @@ class ProfilePostFragment : Fragment() {
 
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
 
-        itemTouchHelper.attachToRecyclerView(classes_post_RV)
+        itemTouchHelper.attachToRecyclerView(view.profile_post_recyclerView)
 
         binding.executePendingBindings()
         return view

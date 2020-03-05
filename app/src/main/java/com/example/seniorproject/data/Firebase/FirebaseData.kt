@@ -596,16 +596,16 @@ class FirebaseData @Inject constructor() {
         //}
     }
 
-    fun deleteNewPost(postKey: String, userID: String)
+    fun deleteNewPost(postKey: String, crn: String, userID: String)
     {
-      // val refkey2 = FirebaseDatabase.getInstance().getReference("/Subjects/$crn")
+      val refkey2 = FirebaseDatabase.getInstance().getReference("/Subjects/$crn")
 
         val refkeyuser = FirebaseDatabase.getInstance().getReference("/users/$userID")
 
         val queryuserref: Query = refkeyuser.child("Posts").orderByChild("Classkey").equalTo(postKey)
 
 
-        //val query: Query = refkey2.child("Posts").orderByChild("Classkey").equalTo(postKey)
+        val query: Query = refkey2.child("Posts").orderByChild("Classkey").equalTo(postKey)
 
         //  val refkey = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey")
         queryuserref.addListenerForSingleValueEvent( object : ValueEventListener {
@@ -625,18 +625,58 @@ class FirebaseData @Inject constructor() {
             }
         })
 
+        query.addListenerForSingleValueEvent( object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                if(p0.exists()){
+                    for(post in p0.children){
+                        // val refc= comment.getValue(Comment::class.java)
+                        post.ref.removeValue()
+                        //refkey.child("/Subjects/$crn/Posts/$ClassKey/Comments/-M1MwaJ6UaXu2fdByTCU").removeValue()
+                    }
+                }
+
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
+
+
     }
 
 
 
-    fun deleteNewComment(postKey: String, crn: String, comKey: String)
+    fun deleteNewComment(postKey: String, crn: String, comKey: String, userID: String)
     {
         val refkey2 = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$postKey")
 
-        val query: Query = refkey2.child("Comments").orderByChild("UserComkey").equalTo(comKey)
+        val refkeyuser = FirebaseDatabase.getInstance().getReference("/users/$userID")
+
+        val queryuser: Query = refkey2.child("Comments").orderByChild("Classkey").equalTo(comKey)
+
+        val query: Query = refkeyuser.child("Comments").orderByChild("UserComkey").equalTo(comKey)
+
 
         // val refkey = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey/Comments")
         query.addListenerForSingleValueEvent( object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                if(p0.exists()){
+                    for(comment in p0.children){
+                        // val refc= comment.getValue(Comment::class.java)
+                        comment.ref.removeValue()
+                        //refkey.child("/Subjects/$crn/Posts/$ClassKey/Comments/-M1MwaJ6UaXu2fdByTCU").removeValue()
+                    }
+                }
+
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
+
+        queryuser.addListenerForSingleValueEvent( object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     for(comment in p0.children){
