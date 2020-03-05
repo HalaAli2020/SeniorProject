@@ -669,20 +669,20 @@ class FirebaseData @Inject constructor() {
         //val Class_key = FirebaseDatabase.getInstance().getReference(CRN).child("Posts").push().key
         //FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID")
         val Class_key = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey").child("Comments").push().key
-        val User_key = FirebaseDatabase.getInstance().getReference("/users/$UserID/Posts/$postID").child("Comments").push().key
+        //val User_key = FirebaseDatabase.getInstance().getReference("/users/$UserID/Posts/$postID").child("Comments").push().key
         //for profile
         val Profile_key = FirebaseDatabase.getInstance().getReference("/users/$UserID").child("Comments").push().key
 
         // implement in viewmodel
         //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
         comment.ClassComkey = Class_key
-        comment.UserComkey = User_key
+        //comment.UserComkey = User_key
         comment.ProfileComkey = Profile_key
 
         val dataupdates = HashMap<String, Any>()
         val comementvalues = comment.toMap()
         dataupdates["Subjects/$crn/Posts/$ClassKey/Comments/$Class_key"] = comementvalues
-        dataupdates["users/$UserID/Posts/$postID/Comments/$User_key"] = comementvalues
+        //dataupdates["users/$UserID/Posts/$postID/Comments/$User_key"] = comementvalues
        //for profile
         //dataupdates["users/$UserID/Comments/$Profile_key"] = comementvalues
         //FirebaseDatabase.getInstance().getReference("users/$userID/Post/$postID").child("Comments/$User_key").setValue(comementvalues)
@@ -744,7 +744,7 @@ class FirebaseData @Inject constructor() {
 
         val uid = FirebaseAuth.getInstance().uid
 //        Log.d("uid", uid!!)
-        val reference = FirebaseDatabase.getInstance().getReference("users/$uid/Subscriptions")
+        val reference = FirebaseDatabase.getInstance().getReference("users/$uid/Subscriptions").orderByValue()
         reference.addValueEventListener(object : ValueEventListener {
             val SubList: MutableList<String> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
