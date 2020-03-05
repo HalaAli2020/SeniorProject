@@ -351,6 +351,7 @@ class FirebaseData @Inject constructor() {
                         // need to change this later subject should be subject crn should be different
                         it.crn = p0.child("subject").value.toString()
                         it.author = p0.child("Author").value.toString()
+                        // not setting author
                     }
                 } catch (e: Exception) {
                     Log.d("Data Error", "error converting to post")
@@ -359,6 +360,7 @@ class FirebaseData @Inject constructor() {
 
 
                 if (newProfilePost != null) {
+                    newProfilePost.author = CurrentUser()?.displayName
                     Log.d(TAG, newProfilePost.title ?: " Accessing profile post title")
                     Log.d(TAG, newProfilePost.text ?: " Accessing profile post text")
                     Log.d(TAG, newProfilePost.key ?: " Accessing profile post title")
