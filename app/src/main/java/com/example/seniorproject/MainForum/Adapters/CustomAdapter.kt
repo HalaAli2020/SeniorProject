@@ -73,6 +73,18 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
         return postkey!!
     }
 
+    fun getUserKey(customViewHolders: CustomViewHolders, position: Int): String {
+        //position=customViewHolders.adapterPosition
+
+        // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val postkey: String?= post.UserID
+        //notifyItemRemoved(customViewHolders.adapterPosition)
+        //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
+
+        return postkey!!
+    }
+
     fun getNewCount() : Int{
         if (savedPosts.value != null)
             return savedPosts.value!!.size-1

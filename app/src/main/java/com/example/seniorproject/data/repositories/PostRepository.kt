@@ -69,8 +69,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         //Firebase.saveNewCommentClass(Comment ,PKey, Classkey, UserID, crn)
     }
 
-    fun deleteNewPost(postKey: String, crn: String){
-        Firebase.deleteNewPost(postKey, crn)
+    fun deleteNewPost(postKey: String, userID: String){
+        Firebase.deleteNewPost(postKey, userID)
     }
 
     fun deleteNewComment(ClassKey: String, crn: String, comKey: String){

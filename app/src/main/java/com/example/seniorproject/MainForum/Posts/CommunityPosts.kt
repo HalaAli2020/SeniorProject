@@ -152,6 +152,13 @@ class CommunityPosts : AppCompatActivity() {
                     )
                 }
 
+                /*override fun getMovementFlags(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder
+                ): Int {
+                    return super.getMovementFlags(recyclerView, viewHolder)
+                }*/
+
                 override fun onMove(
                     recyclerView: RecyclerView,
                     viewHolder: RecyclerView.ViewHolder,
@@ -163,6 +170,7 @@ class CommunityPosts : AppCompatActivity() {
             }
 
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+
         itemTouchHelper.attachToRecyclerView(classes_post_RV)
 
     }

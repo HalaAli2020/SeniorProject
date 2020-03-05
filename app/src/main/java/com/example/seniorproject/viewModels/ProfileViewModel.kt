@@ -29,6 +29,13 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
         return comments
     }
 
+    fun deletePost(Classkey: String, userID: String)
+    {
+
+        repository.deleteNewPost(Classkey, userID)
+    }
+
+
     fun uploadUserProfileImage(selectedPhotoUri: Uri) = repository.uploadUserProfileImage(selectedPhotoUri)
 
     fun currentUser() = repository.currentUser()

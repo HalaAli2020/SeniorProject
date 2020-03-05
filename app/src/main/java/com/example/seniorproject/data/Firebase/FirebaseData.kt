@@ -596,14 +596,19 @@ class FirebaseData @Inject constructor() {
         //}
     }
 
-    fun deleteNewPost(postKey: String, crn: String)
+    fun deleteNewPost(postKey: String, userID: String)
     {
-        val refkey2 = FirebaseDatabase.getInstance().getReference("/Subjects/$crn")
+      // val refkey2 = FirebaseDatabase.getInstance().getReference("/Subjects/$crn")
 
-        val query: Query = refkey2.child("Posts").orderByChild("Classkey").equalTo(postKey)
+        val refkeyuser = FirebaseDatabase.getInstance().getReference("/users/$userID")
+
+        val queryuserref: Query = refkeyuser.child("Posts").orderByChild("Classkey").equalTo(postKey)
+
+
+        //val query: Query = refkey2.child("Posts").orderByChild("Classkey").equalTo(postKey)
 
         //  val refkey = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey")
-        query.addListenerForSingleValueEvent( object : ValueEventListener {
+        queryuserref.addListenerForSingleValueEvent( object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     for(post in p0.children){
