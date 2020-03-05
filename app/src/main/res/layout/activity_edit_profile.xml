@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
@@ -14,53 +15,71 @@
         android:id="@+id/pContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginTop="5dp">
+        android:orientation="vertical">
 
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/profheader"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:layout_marginStart="1dp"
-            android:layout_marginEnd="1dp"
+            android:layout_height="wrap_content"
             android:background="@color/grey"
-            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
 
             <ImageButton
                 android:id="@+id/img_button"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="16dp"
                 android:background="@color/grey"
-                android:paddingTop="40dp" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
 
             <TextView
                 android:id="@+id/in_profile_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{ProfileEditViewModel.user.displayName}" />
+                android:layout_marginTop="8dp"
+                android:text="@{ProfileEditViewModel.user.displayName}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/img_button" />
 
 
             <TextView
                 android:id="@+id/in_profile_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{ProfileEditViewModel.user.email}" />
-
+                android:layout_marginTop="4dp"
+                android:text="@{ProfileEditViewModel.user.email}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/in_profile_email" />
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="done"
                 android:id="@+id/doneButton"
-                />
+                android:background="@drawable/rounded_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:textColor="@color/white"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:text="done"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/in_profile_username"
+                app:layout_constraintVertical_bias="0.0" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

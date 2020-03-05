@@ -9,15 +9,25 @@
     <string name="title_list">List</string>
     <string name="title_messages">Messages</string>
     <string name="title_notifications">Notifications</string>
-    <string name="title_activity_post_details">Post_details</string>
+    <string name="menu_profile">Profile</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_log_out">Log Out</string>
     <string name="comment">Comment</string>
     <string name="Sub">Subscribed</string>
     <string name="notSub">Subscribe</string>
 
 
     <string-array name="class_list">
+        <item>CSC1000</item>
         <item>CSC1500</item>
-        <item>BIO1500</item>
+        <item>CSC2110</item>
+        <item>CSC3020</item>
+        <item>CSC4996</item>
+        <item>BIO1030</item>
+        <item>BIO1510</item>
+        <item>BIO2200</item>
+        <item>BIO3070</item>
+        <item>BIO5440</item>
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->

@@ -23,6 +23,7 @@ import com.example.seniorproject.R
 import com.example.seniorproject.databinding.ActivityUserProfileBinding
 import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.activity_main_forum.*
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import javax.inject.Inject
 
@@ -54,6 +55,9 @@ class UserProfileActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         actionbar.setDisplayHomeAsUpEnabled(true)
 
+        pro_bottom_navigation.setIconVisibility(false)
+        pro_bottom_navigation.enableAnimation(false)
+        pro_bottom_navigation.setTextSize(20F)
 
         pro_bottom_navigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
@@ -80,8 +84,8 @@ class UserProfileActivity : AppCompatActivity() {
 
         Glide.with(this) //1
             .load(FirebaseAuth.getInstance().currentUser?.photoUrl)
-            .placeholder(R.mipmap.ic_holder_round)
-            .error(R.mipmap.ic_holder_round)
+            .placeholder(R.drawable.ic_account_circle_blue_24dp)
+            .error(R.drawable.ic_account_circle_blue_24dp)
             .skipMemoryCache(true) //2
             .diskCacheStrategy(DiskCacheStrategy.NONE) //3
             .apply(RequestOptions().circleCrop())//4
