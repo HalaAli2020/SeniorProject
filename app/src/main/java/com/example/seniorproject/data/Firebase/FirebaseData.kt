@@ -738,47 +738,6 @@ class FirebaseData @Inject constructor() {
         //}
     }
 
-    fun getSavedPost(): PostLiveData {
-        listenforPosts()
-        return savedPosts
-    }
-
-    private fun listenforPosts() {
-        val reference = FirebaseDatabase.getInstance().getReference("/posts")
-
-
-        reference.addChildEventListener(object : ChildEventListener {
-            var savedPostsList: MutableList<Post> = mutableListOf()
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val newPost: Post? = p0.getValue(Post::class.java)
-
-                if (newPost != null) {
-                    //Log.d("ACCESSING", newPost?.text)
-                    savedPostsList.add(newPost)
-
-                    //repository.saveNewPost(newPost)
-                    //adapter.add(PostFrag(newPost.title, newPost.text))
-                }
-                savedPosts.value = savedPostsList
-
-            }
-
-            override fun onChildRemoved(p0: DataSnapshot) {
-            }
-        })
-
-    }
-
     fun getUserSub() {
 
         val uid = FirebaseAuth.getInstance().uid
@@ -1069,9 +1028,6 @@ class FirebaseData @Inject constructor() {
 
     }
 
-    fun getSavedUserPost(): PostLiveData {
-        return savedPosts
-    }
 
     fun SeparateList(p0: DataSnapshot): List<String>? {
         var SubList: MutableList<String> = mutableListOf()

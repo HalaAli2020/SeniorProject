@@ -1,6 +1,8 @@
 package com.example.seniorproject.MainForum.Adapters
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -90,6 +92,7 @@ class CommentsAdapter(
              }*/
 
             }
+
         }
 
 
@@ -103,7 +106,6 @@ class CommentsAdapter(
 
         return commentkey!!
     }
-
 
 
     class CustomViewHolders(v: View) : RecyclerView.ViewHolder(v) {
