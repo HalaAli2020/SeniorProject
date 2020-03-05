@@ -647,13 +647,9 @@ class FirebaseData @Inject constructor() {
 
 
 
-    fun deleteNewComment(postKey: String, crn: String, comKey: String, userID: String)
+    fun deleteNewCommentFromUserProfile(postKey: String, crn: String, comKey: String, userID: String)
     {
-        val refkey2 = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$postKey")
-
         val refkeyuser = FirebaseDatabase.getInstance().getReference("/users/$userID")
-
-        val queryuser: Query = refkey2.child("Comments").orderByChild("Classkey").equalTo(comKey)
 
         val query: Query = refkeyuser.child("Comments").orderByChild("UserComkey").equalTo(comKey)
 
@@ -676,6 +672,18 @@ class FirebaseData @Inject constructor() {
             }
         })
 
+    }
+
+    fun deleteNewCommentFromCommPosts(postKey: String, crn: String, classkey: String)
+    {
+        val refkey2 = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$postKey")
+
+
+        //classkey for user path is same as true postkey for comment in subject path
+
+        val queryuser: Query = refkey2.child("Comments").orderByChild("Classkey").equalTo(classkey)
+
+        // val refkey = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey/Comments")
         queryuser.addListenerForSingleValueEvent( object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
@@ -694,8 +702,6 @@ class FirebaseData @Inject constructor() {
         })
 
     }
-
-
 
     fun saveNewComment(text: String, postID: String, ClassKey: String, UserID: String, crn: String
     ) {
@@ -716,17 +722,25 @@ class FirebaseData @Inject constructor() {
         //for profile
         val Profile_key = FirebaseDatabase.getInstance().getReference("/users/$UserID").child("Comments").push().key
 
+        val Post_key: String? = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey").key //
+
         // implement in viewmodel
         //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
-        comment.ClassComkey = Class_key
+        comment.Classkey = Class_key
         comment.UserComkey = User_key
         comment.ProfileComkey = Profile_key
+        comment.Postkey = Post_key //
 
         val dataupdates = HashMap<String, Any>()
         val comementvalues = comment.toMap()
         dataupdates["Subjects/$crn/Posts/$ClassKey/Comments/$Class_key"] = comementvalues
         dataupdates["users/$UserID/Posts/$postID/Comments/$User_key"] = comementvalues
-       //for profile
+        //dataupdates["Subjects/$crn/Posts/$ClassKey/Comments/$Post_key"] = comementvalues
+                //shows 2 comments in UI and 2 in firebase
+        //dataupdates["Subjects/$crn/Posts/$ClassKey/$Post_key"] = comementvalues
+                //shows 1 comment in UI and 1 in firebase
+
+        //for profile
         //dataupdates["users/$UserID/Comments/$Profile_key"] = comementvalues
         //FirebaseDatabase.getInstance().getReference("users/$userID/Post/$postID").child("Comments/$User_key").setValue(comementvalues)
         FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)

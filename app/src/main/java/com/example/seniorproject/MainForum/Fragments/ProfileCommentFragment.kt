@@ -1,5 +1,6 @@
 package com.example.seniorproject.MainForum.Fragments
 
+import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Canvas
 import android.graphics.Color
@@ -24,20 +25,24 @@ import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Adapters.CustomAdapter
 import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
 import com.example.seniorproject.MainForum.Adapters.ProfileCommentsAdapter
+import com.example.seniorproject.MainForum.Posts.CommunityPosts
 
 import com.example.seniorproject.R
 import com.example.seniorproject.databinding.FragmentProfileCommentBinding
+import com.example.seniorproject.viewModels.CommunityPostViewModel
 import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_profile__post.view.*
 import kotlinx.android.synthetic.main.fragment_profile_comment.view.*
 import kotlinx.android.synthetic.main.fragment_profile_comment.view.refreshView
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
 class ProfileCommentFragment : Fragment() {
 
     private lateinit var adaptercomments: ProfileCommentsAdapter
+    private lateinit var adapterposts: CustomAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
 
     var swipeBackground: ColorDrawable = ColorDrawable(Color.parseColor("#FF0000"))
@@ -46,6 +51,8 @@ class ProfileCommentFragment : Fragment() {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: ProfileViewModel
+    lateinit var viewModel: ProfileViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +79,7 @@ class ProfileCommentFragment : Fragment() {
                 )
         }
 
-        adaptercomments = ProfileCommentsAdapter(view.context,myViewModel.getUserProfileComments())
+        adaptercomments = ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments())
 
         view.refreshView.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.blue_theme))
         view.refreshView.setColorSchemeColors(ContextCompat.getColor(view.context, R.color.white))
@@ -105,9 +112,10 @@ class ProfileCommentFragment : Fragment() {
         val itemTouchHelperCallback =
             object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
                 override fun onSwiped(viewHolders: RecyclerView.ViewHolder, position: Int) {
-                    val postkey: String? =
-                        adaptercomments.removeItem(viewHolders as CustomViewHolders, position)
+                    val postkeyUP: String? =
+                        adaptercomments.pkeyUserProfile(viewHolders as CustomViewHolders, position)
 
+                    //fails w postkeyCP.
                     val userkey: String? =
                         adaptercomments.getUserKey(viewHolders as CustomViewHolders, position)
 
@@ -117,6 +125,12 @@ class ProfileCommentFragment : Fragment() {
                     val commentkey: String? =
                         adaptercomments.getCommentKey(viewHolders as CustomViewHolders, position)
 
+                    val classkey: String? =
+                        adaptercomments.getClassKey(viewHolders as CustomViewHolders, position)
+
+                    /*val classkey: String? =
+                        adaptercomments.getClassKey(viewHolders as CustomViewHolders, position)*/
+                    //line .getClassKey is null
                     //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
                     var builder = AlertDialog.Builder(view.context, R.style.AppTheme_AlertDialog)
 
@@ -125,10 +139,12 @@ class ProfileCommentFragment : Fragment() {
                     //myViewModel.deletePost(postkey!!, className)
                     //myViewModel.deletePost()
                     builder.setTitle("Are you sure?")
-                    builder.setMessage("You cannot restore posts that have been deleted.")
+                    builder.setMessage("You cannot restore comments that have been deleted.")
                     builder.setPositiveButton("DELETE",
                         { dialogInterface: DialogInterface?, i: Int ->
-                            myViewModel.deleteComment(postkey!!, crnkey!!, commentkey!!, userkey!!)
+                            myViewModel.deleteCommentFromCommPosts(postkeyUP!!, crnkey!!, classkey!!)
+                            myViewModel.deleteCommentFromUserProfile(postkeyUP!!, crnkey!!, commentkey!!, userkey!!)
+                            //myViewModel.deleteCommentFromCommPosts(postkey!!, crnkey!!, commentkey!!, userkey!!)
                         })
                     builder.setNegativeButton("CANCEL",
                         { dialogInterface: DialogInterface?, i: Int ->

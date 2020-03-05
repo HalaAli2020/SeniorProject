@@ -10,7 +10,7 @@ class Comment(val text: String, var Ptime : Long?, var PosterID : String?, var c
 
    // var PosterID : String? = null
     //var Ptime : Long? = null
-    var ClassComkey : String? = null
+    var Classkey : String? = null
     var UserComkey : String? = null
     var author : String? = null
     var ProfileComkey : String? = null
@@ -36,7 +36,7 @@ class Comment(val text: String, var Ptime : Long?, var PosterID : String?, var c
             "Ptime" to Ptime,
             "crn" to crn,
             "Postkey" to Postkey,
-            "Classkey" to ClassComkey,
+            "Classkey" to Classkey,
             "UserComkey" to UserComkey,
             "ProfileComKey" to ProfileComkey
 
