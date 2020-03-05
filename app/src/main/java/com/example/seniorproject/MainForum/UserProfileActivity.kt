@@ -98,7 +98,6 @@ class UserProfileActivity : AppCompatActivity() {
 
     private fun navToEdit() {
         Intent(this, EditProfileActivity::class.java).also {
-            it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or (Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(it)
         }
     }
@@ -107,7 +106,6 @@ class UserProfileActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         val intent = Intent(this, MainForum::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
         return true
     }
