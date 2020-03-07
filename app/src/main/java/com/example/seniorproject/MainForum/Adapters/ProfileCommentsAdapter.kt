@@ -72,6 +72,15 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
         return commentkey!!
     }
 
+    fun getClassProfileKey(customViewHolders: CustomViewHolders, position: Int): String {
+        val comment: Comment = ProfileComments?.value!![customViewHolders.adapterPosition]
+        val commentkey: String?= comment.ProfileComKey
+
+        //notifyItemRemoved(customViewHolders.adapterPosition)
+
+        return commentkey!!
+    }
+
     fun pkeyUserProfile(customViewHolders: CustomViewHolders, position: Int): String {
         val comment: Comment = ProfileComments?.value!![customViewHolders.adapterPosition]
         val commentkey: String?= comment.Postkey

@@ -128,6 +128,9 @@ class ProfileCommentFragment : Fragment() {
                     val classkey: String? =
                         adaptercomments.getClassKey(viewHolders as CustomViewHolders, position)
 
+                    val classprofilekey: String? =
+                        adaptercomments.getClassProfileKey(viewHolders as CustomViewHolders, position)
+
                     /*val classkey: String? =
                         adaptercomments.getClassKey(viewHolders as CustomViewHolders, position)*/
                     //line .getClassKey is null
@@ -143,7 +146,7 @@ class ProfileCommentFragment : Fragment() {
                     builder.setPositiveButton("DELETE",
                         { dialogInterface: DialogInterface?, i: Int ->
                             myViewModel.deleteCommentFromCommPosts(postkeyUP!!, crnkey!!, classkey!!)
-                            myViewModel.deleteCommentFromUserProfile(postkeyUP!!, crnkey!!, commentkey!!, userkey!!)
+                            myViewModel.deleteCommentFromUserProfile(commentkey!!, crnkey!!, classprofilekey!!,userkey!!)
                             //myViewModel.deleteCommentFromCommPosts(postkey!!, crnkey!!, commentkey!!, userkey!!)
                         })
                     builder.setNegativeButton("CANCEL",
