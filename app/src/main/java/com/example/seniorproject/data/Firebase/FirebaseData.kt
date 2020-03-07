@@ -605,11 +605,28 @@ class FirebaseData @Inject constructor() {
 
         val queryuserref: Query = refUserPath.child("Posts").orderByChild("Classkey").equalTo(postKey)
 
-        //val refComment = FirebaseDatabase.getInstance().getReference("/users/$userID")
+        val refComment = FirebaseDatabase.getInstance().getReference("/users/$userID")
 
-        //val queryComment: Query = refComment.child("Comments").orderByChild("ProfileComKey").equalTo(profileComKey)
+        val queryComment: Query = refComment.child("Comments").orderByChild("Postkey").equalTo(postKey)
 
         val query: Query = refSubPath.child("Posts").orderByChild("Classkey").equalTo(postKey)
+
+        queryComment.addListenerForSingleValueEvent( object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                if(p0.exists()){
+                    for(comment in p0.children){
+                        // val refc= comment.getValue(Comment::class.java)
+                        comment.ref.removeValue()
+                        //refkey.child("/Subjects/$crn/Posts/$ClassKey/Comments/-M1MwaJ6UaXu2fdByTCU").removeValue()
+                    }
+                }
+
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
 
         //  val refkey = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey")
         queryuserref.addListenerForSingleValueEvent( object : ValueEventListener {
@@ -651,15 +668,15 @@ class FirebaseData @Inject constructor() {
 
 
 
-    fun deleteNewCommentFromUserProfile(postKey: String, crn: String, comKey: String, userID: String)
+    fun deleteNewCommentFromUserProfile(postKey: String, crn: String, comKey: String, userID: String, userPostKey: String)
     {
         val refkeyuser = FirebaseDatabase.getInstance().getReference("/users/$userID")
 
-        val refkeycominpost = FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$postKey")
+        val refkeycominpost = FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$userPostKey")
 
         val query: Query = refkeyuser.child("Comments").orderByChild("ProfileComKey").equalTo(comKey)
 
-        val querycominpost: Query = refkeyuser.child("Comments").orderByChild("UserComkey").equalTo(comKey)
+        val querycominpost: Query = refkeycominpost.child("Comments").orderByChild("UserPostkey").equalTo(userPostKey)
 
 
         querycominpost.addListenerForSingleValueEvent( object : ValueEventListener {
@@ -667,7 +684,7 @@ class FirebaseData @Inject constructor() {
                 if(p0.exists()){
                     for(comment in p0.children){
                         // val refc= comment.getValue(Comment::class.java)
-                        p0.ref.removeValue()
+                        comment.ref.removeValue()
                         //refkey.child("/Subjects/$crn/Posts/$ClassKey/Comments/-M1MwaJ6UaXu2fdByTCU").removeValue()
                     }
                 }
@@ -749,17 +766,22 @@ class FirebaseData @Inject constructor() {
 
         val Post_key: String? = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey").key //
 
+        val User_Post_key: String? = FirebaseDatabase.getInstance().getReference("/users/$UserID/Posts/$postID").key
+
         // implement in viewmodel
         //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
         comment.Classkey = Class_key
         comment.UserComkey = User_key
         comment.ProfileComKey = Profile_key
         comment.Postkey = Post_key //
+        comment.UserPostkey = User_Post_key
 
         val dataupdates = HashMap<String, Any>()
         val comementvalues = comment.toMap()
         dataupdates["Subjects/$crn/Posts/$ClassKey/Comments/$Class_key"] = comementvalues
         dataupdates["users/$UserID/Posts/$postID/Comments/$User_key"] = comementvalues
+        //dataupdates["users/$UserID/Posts/$postID/Comments/$User_key"] = comementvalues
+
         //dataupdates["Subjects/$crn/Posts/$ClassKey/Comments/$Post_key"] = comementvalues
                 //shows 2 comments in UI and 2 in firebase
         //dataupdates["Subjects/$crn/Posts/$ClassKey/$Post_key"] = comementvalues
