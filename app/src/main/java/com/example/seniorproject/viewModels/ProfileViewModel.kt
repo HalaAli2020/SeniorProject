@@ -40,7 +40,7 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
         repository.deleteNewPost(Classkey, crn, userID)
     }
 
-    fun deleteCommentFromUserProfile(PKey: String, crn: String, Classkey: String, userID: String, userPostkey: String)
+    fun deleteCommentFromUserProfile(PKey: String, crn: String, Classkey: String, userID: String)
     {
         if(PKey.isNullOrEmpty())
         {
@@ -48,7 +48,7 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
             CommentListener?.onFailure("Post key not found")
 
         }
-        repository.deleteNewCommentFromUserProfile(PKey!!, crn!!, Classkey!!, userID!!, userPostkey!!)
+        repository.deleteNewCommentFromUserProfile(PKey!!, crn!!, Classkey!!, userID!!)
     }
 
     fun deleteCommentFromCommPosts(PKey: String, crn: String, Classkey: String)

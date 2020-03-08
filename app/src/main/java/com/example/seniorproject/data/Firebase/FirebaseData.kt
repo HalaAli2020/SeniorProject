@@ -668,18 +668,18 @@ class FirebaseData @Inject constructor() {
 
 
 
-    fun deleteNewCommentFromUserProfile(postKey: String, crn: String, comKey: String, userID: String, userPostKey: String)
+    fun deleteNewCommentFromUserProfile(postKey: String, crn: String, comKey: String, userID: String)
     {
         val refkeyuser = FirebaseDatabase.getInstance().getReference("/users/$userID")
 
-        val refkeycominpost = FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$userPostKey")
+       // val refkeycominpost = FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$userPostKey")
 
         val query: Query = refkeyuser.child("Comments").orderByChild("ProfileComKey").equalTo(comKey)
 
-        val querycominpost: Query = refkeycominpost.child("Comments").orderByChild("UserPostkey").equalTo(userPostKey)
+       // val querycominpost: Query = refkeycominpost.child("Comments").orderByChild("UserPostkey").equalTo(userPostKey)
 
 
-        querycominpost.addListenerForSingleValueEvent( object : ValueEventListener {
+      /*  querycominpost.addListenerForSingleValueEvent( object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     for(comment in p0.children){
@@ -694,7 +694,7 @@ class FirebaseData @Inject constructor() {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
-        })
+        })*/
 
 
         // val refkey = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey/Comments")
@@ -749,6 +749,7 @@ class FirebaseData @Inject constructor() {
     fun saveNewComment(text: String, postID: String, ClassKey: String, UserID: String, crn: String
     ) {
 
+
         //val subject = Subject
         //val ClassID = Classkey
         val userID = firebaseAuth.uid
@@ -764,39 +765,29 @@ class FirebaseData @Inject constructor() {
         //for profile
         val Profile_key = FirebaseDatabase.getInstance().getReference("/users/$UserID").child("Comments").push().key
 
-        val Post_key: String? = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey").key //
+        val Post_key: String? = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey").key
 
-        val User_Post_key: String? = FirebaseDatabase.getInstance().getReference("/users/$UserID/Posts/$postID").key
 
         // implement in viewmodel
         //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
         comment.Classkey = Class_key
         comment.UserComkey = User_key
         comment.ProfileComKey = Profile_key
-        comment.Postkey = Post_key //
-        comment.UserPostkey = User_Post_key
+        comment.Postkey = Post_key
 
         val dataupdates = HashMap<String, Any>()
         val comementvalues = comment.toMap()
         dataupdates["Subjects/$crn/Posts/$ClassKey/Comments/$Class_key"] = comementvalues
-        dataupdates["users/$UserID/Posts/$postID/Comments/$User_key"] = comementvalues
         //dataupdates["users/$UserID/Posts/$postID/Comments/$User_key"] = comementvalues
-
-        //dataupdates["Subjects/$crn/Posts/$ClassKey/Comments/$Post_key"] = comementvalues
-                //shows 2 comments in UI and 2 in firebase
-        //dataupdates["Subjects/$crn/Posts/$ClassKey/$Post_key"] = comementvalues
-                //shows 1 comment in UI and 1 in firebase
-
         //for profile
-        //dataupdates["users/$UserID/Posts/$postID/Comments/$User_key"] = comementvalues
-       //for profile
         //dataupdates["users/$UserID/Comments/$Profile_key"] = comementvalues
         //FirebaseDatabase.getInstance().getReference("users/$userID/Post/$postID").child("Comments/$User_key").setValue(comementvalues)
         FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
 
         //for profile
-       FirebaseDatabase.getInstance().getReference("/users/$userID")
-         .child("/Comments/$Profile_key").setValue(comementvalues)
+        FirebaseDatabase.getInstance().getReference("/users/$userID")
+            .child("/Comments/$Profile_key").setValue(comementvalues)
+
 
 
         /*Class_reference.setValue(post).addOnSuccessListener {
@@ -808,6 +799,7 @@ class FirebaseData @Inject constructor() {
 
         //}
     }
+
 
     // CRN is a placeholder for a class object
     fun saveNewPosttoUser(post: Post, Subject: String, CRN: String) {
