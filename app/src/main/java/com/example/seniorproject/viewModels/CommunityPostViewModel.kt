@@ -19,11 +19,6 @@ class CommunityPostViewModel @Inject constructor(private val repository: PostRep
         return listClasses!!
     }
 
-    fun deletePost(Classkey: String, crn: String)
-    {
-
-        repository.deleteNewPost(Classkey, crn)
-    }
 
    fun checknull() : Boolean
    {

@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.MainForum.Posts.ClickedPost
 import com.example.seniorproject.R
+import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.PostLiveData
 import kotlinx.android.synthetic.main.rv_post.view.*
@@ -74,6 +75,30 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
         //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
 
         return postkey!!
+    }
+
+    fun getUserKey(customViewHolders: CustomViewHolders, position: Int): String {
+        //position=customViewHolders.adapterPosition
+
+        // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val postkey: String?= post.UserID
+        //notifyItemRemoved(customViewHolders.adapterPosition)
+        //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
+
+        return postkey!!
+    }
+
+    fun getCrn(customViewHolders: CustomViewHolders, position: Int): String {
+        //position=customViewHolders.adapterPosition
+
+        // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val postcrn: String?= post.crn
+        //notifyItemRemoved(customViewHolders.adapterPosition)
+        //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
+
+        return postcrn!!
     }
 
     fun getNewCount() : Int{
