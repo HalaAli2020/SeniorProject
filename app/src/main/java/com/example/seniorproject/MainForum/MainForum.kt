@@ -25,10 +25,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Dagger.DaggerAppComponent
-import com.example.seniorproject.MainForum.Fragments.FragmentHome
-import com.example.seniorproject.MainForum.Fragments.FragmentList
-import com.example.seniorproject.MainForum.Fragments.FragmentNewPost
-import com.example.seniorproject.MainForum.Fragments.FragmentSubscriptions
+import com.example.seniorproject.MainForum.Fragments.*
 import com.example.seniorproject.R
 import com.example.seniorproject.databinding.SideNavHeaderBinding
 import com.example.seniorproject.databinding.ActivityMainForumBinding
@@ -89,6 +86,12 @@ class MainForum : AppCompatActivity(),
                     FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
                     replaceFragment(FragmentList())
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.messages -> {
+                    FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
+                    FAB.setImageResource(R.drawable.ic_create_black_24dp)
+                    replaceFragment(FragmentMessages())
                     return@OnNavigationItemSelectedListener true
                 }
             }
