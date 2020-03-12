@@ -106,7 +106,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun getUserProfileComments() = Firebase.getUserProfileComments()
 
-
+    fun saveNewUsername(username: String) = Firebase.saveNewUsername(username)
 
 
     companion object {

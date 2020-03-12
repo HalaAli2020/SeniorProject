@@ -5,6 +5,8 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
@@ -17,6 +19,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Adapters.CustomAdapter
+import com.example.seniorproject.MainForum.Adapters.ProfileCommentsAdapter
 import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
 import com.example.seniorproject.databinding.ActivityEditProfileBinding
@@ -25,9 +28,13 @@ import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_edit_profile.*
 import kotlinx.android.synthetic.main.activity_user_profile.*
+import kotlinx.android.synthetic.main.fragment_profile_comment.view.*
 import javax.inject.Inject
 
 class EditProfileActivity : AppCompatActivity() {
+
+    private lateinit var adaptercomments: ProfileCommentsAdapter
+    private lateinit var adapterposts: CustomAdapter
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -67,6 +74,9 @@ class EditProfileActivity : AppCompatActivity() {
             startActivityForResult(intent, 0)}
 
         doneButton.setOnClickListener {
+
+            val newUsername : EditText = findViewById(R.id.in_profile_username)
+            myViewModel.saveNewUsername(newUsername.text.toString())
             Intent(this, UserProfileActivity::class.java).also {
                 startActivity(it)
             }
