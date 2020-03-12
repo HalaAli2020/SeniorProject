@@ -37,6 +37,7 @@ import com.example.seniorproject.data.models.User
 
 
 private const val TAG = "MyLogTag"
+private const val PTAG = "editproftag"
 
 @Singleton
 @Suppress("unused")
@@ -118,16 +119,29 @@ class FirebaseData @Inject constructor() {
     }
 
     //saves new username to database and auth profile
-   /* fun saveNewUsername(username: String){
-        val userID = firebaseAuth.uid
+    fun saveNewUsername(username: String){
+        val userID = firebaseAuth.uid ?: "null"
+
         FirebaseDatabase.getInstance().getReference("/users/$userID")
             .child("/Username").setValue(username)
 
+        //var to get old username to compare
+        //a nested for loop to check comments in every post
 
-        //need postkey
-        FirebaseDatabase.getInstance().getReference("/users/$userID/Posts")
-            .child("/author").setValue(username)
+        listenForUserProfilePosts (userID)
 
+        var x = 0
+
+        while (x < profilePosts.value!!.size){
+            val post: Post = profilePosts.value!![x]
+            val pkey: String = post.key.toString()
+            Log.d("PTAG", "UNDER HERE")
+            Log.d("PTAG", "the size is :  ${profilePosts.value!!.size}")
+            Log.d("PTAG", "Pkey is:  ${pkey}")
+            FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$pkey")
+                .child("/author").setValue(username)
+            x++
+        }
 
         val user = CurrentUser()
         val profileUpdates =
@@ -135,15 +149,13 @@ class FirebaseData @Inject constructor() {
         user?.updateProfile(profileUpdates)
             ?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.d(
-                        TAG,
-                        "profile updated, emitter complete?:  ${CurrentUser()?.displayName} ."
+                    Log.d(TAG, "profile updated, emitter complete?:  ${CurrentUser()?.displayName} ."
                     )
                 } else {
                     Log.d(TAG, "in else in fetch current user")
                 }
             }
-    }*/
+    }
 
 
 
@@ -320,9 +332,9 @@ class FirebaseData @Inject constructor() {
     }*/
 
 
-    fun listenForUserProfilePosts (): PostLiveData {
+    fun listenForUserProfilePosts (uid : String): PostLiveData {
         Log.d(TAG, "getUserProfilePosts listener called")
-        val uid = FirebaseAuth.getInstance().uid
+
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Posts")
 
         val profilePostListen = reference.addChildEventListener(object : ChildEventListener {
@@ -368,6 +380,7 @@ class FirebaseData @Inject constructor() {
                     Log.d(TAG, newProfilePost.crn ?: " Accessing profile post title")
 
                     profilePostsList.add(newProfilePost)
+                    Log.d(TAG, newProfilePost.key ?: " Accessing profile post title")
 
                     newProfilePosts = newProfilePost
 
@@ -395,7 +408,9 @@ class FirebaseData @Inject constructor() {
 
     fun listenForUserProfileComments (): CommentLive{
         Log.d(TAG, "getUserProfile comments listener called")
-        val uid = FirebaseAuth.getInstance().uid
+
+            val uid = FirebaseAuth.getInstance().uid
+
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Comments")
 
         val profilePostListen = reference.addChildEventListener(object : ChildEventListener {
@@ -443,18 +458,16 @@ class FirebaseData @Inject constructor() {
     }
 
 
-
-
-
-
-
-
-
-
-
-    fun getUserProfilePosts() : PostLiveData{
+    fun getUserProfilePosts(userID: String) : PostLiveData {
         Log.d(TAG, "getUserProfilePosts called")
-        listenForUserProfilePosts()
+        if (userID == "null") {
+            var uid = FirebaseAuth.getInstance().uid ?: "error"
+            listenForUserProfilePosts(uid)
+        } else
+        {
+            var uid = userID
+            listenForUserProfilePosts(uid)
+         }
         return profilePosts
     }
 

@@ -55,9 +55,15 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
                     mContext.startActivity(intent)
                 }
             }
+           else if (type==1){
+                holder.itemView.username.setOnClickListener {
+                    val intent = Intent(mContext, UserProfileActivity::class.java)
+                    intent.putExtra("UserID", post.UserID)
+                    intent.putExtra("Author", post.author)
+                    mContext.startActivity(intent)
+                }
 
-
-
+            }
 
             holder.itemView.setOnClickListener {
                 val intent = Intent(mContext, ClickedPost::class.java)

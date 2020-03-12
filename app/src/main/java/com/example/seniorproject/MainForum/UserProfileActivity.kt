@@ -26,6 +26,12 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main_forum.*
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import javax.inject.Inject
+import androidx.core.app.ComponentActivity
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+
+
 
 private const val TAG = "profileTAG"
 class UserProfileActivity : AppCompatActivity() {
@@ -44,7 +50,12 @@ class UserProfileActivity : AppCompatActivity() {
 
         val actionbar = supportActionBar
         actionbar!!.title = "Profile"
-        replaceFragment(ProfilePostFragment())
+
+        val test : String = intent.getStringExtra("UserID").toString()
+
+        val ID = test
+        val profilepostfrag = ProfilePostFragment.newInstance(ID)
+        replaceFragment(profilepostfrag)
 
         DaggerAppComponent.create().inject(this)
         val factory = InjectorUtils.provideProfileViewModelFactory()
@@ -59,10 +70,12 @@ class UserProfileActivity : AppCompatActivity() {
         pro_bottom_navigation.enableAnimation(false)
         pro_bottom_navigation.setTextSize(20F)
 
+
+
         pro_bottom_navigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.select_posts -> {
-                    replaceFragment(ProfilePostFragment())
+                    replaceFragment(profilepostfrag)
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.select_comments -> {

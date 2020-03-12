@@ -23,9 +23,9 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
 
 
 
-    fun getUserProfilePosts(): PostLiveData {
+    fun getUserProfilePosts(UserID : String): PostLiveData {
 
-        posts = repository.getUserProfilePosts()
+        posts = repository.getUserProfilePosts(UserID)
         return posts
     }
 

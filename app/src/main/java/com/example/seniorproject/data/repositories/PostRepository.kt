@@ -102,7 +102,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     }
 
 
-    fun getUserProfilePosts() = Firebase.getUserProfilePosts()
+    fun getUserProfilePosts(userID: String) = Firebase.getUserProfilePosts(userID)
 
     fun getUserProfileComments() = Firebase.getUserProfileComments()
 
