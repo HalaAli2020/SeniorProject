@@ -51,7 +51,7 @@ class UserProfileActivity : AppCompatActivity() {
         val actionbar = supportActionBar
         actionbar!!.title = "Profile"
 
-        val test : String = intent.getStringExtra("UserID").toString()
+        val test : String = intent.getStringExtra("UserID") ?: "null"
 
         val ID = test
         val profilepostfrag = ProfilePostFragment.newInstance(ID)
