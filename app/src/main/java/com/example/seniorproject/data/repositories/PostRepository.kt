@@ -104,7 +104,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun getUserProfilePosts(userID: String) = Firebase.getUserProfilePosts(userID)
 
-    fun getUserProfileComments() = Firebase.getUserProfileComments()
+    fun getUserProfileComments(userID: String) = Firebase.getUserProfileComments(userID)
 
 
 

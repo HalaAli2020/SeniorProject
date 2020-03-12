@@ -406,10 +406,8 @@ class FirebaseData @Inject constructor() {
 
 
 
-    fun listenForUserProfileComments (): CommentLive{
+    fun listenForUserProfileComments (uid : String): CommentLive{
         Log.d(TAG, "getUserProfile comments listener called")
-
-            val uid = FirebaseAuth.getInstance().uid
 
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Comments")
 
@@ -471,9 +469,16 @@ class FirebaseData @Inject constructor() {
         return profilePosts
     }
 
-    fun getUserProfileComments(): CommentLive{
+    fun getUserProfileComments(userID : String): CommentLive{
         Log.d(TAG, "getUserProfile comments called")
-        listenForUserProfileComments()
+        if (userID == "null") {
+            var uid = FirebaseAuth.getInstance().uid ?: "error"
+            listenForUserProfilePosts(uid)
+        } else
+        {
+            var uid = userID
+            listenForUserProfileComments(uid)
+        }
         return Comments
     }
 

@@ -57,7 +57,7 @@ class ProfilePostFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         //this is only place we dont have the ID
-        val ID = this.getArguments()?.getString("ID").toString()
+        val ID = this.getArguments()?.getString("ID") ?: "null"
 
 
 

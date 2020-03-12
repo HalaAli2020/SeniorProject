@@ -29,8 +29,8 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
         return posts
     }
 
-    fun getUserProfileComments() : CommentLive {
-        comments = repository.getUserProfileComments()
+    fun getUserProfileComments(UserID : String) : CommentLive {
+        comments = repository.getUserProfileComments(UserID)
         return comments
     }
 

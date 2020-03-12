@@ -55,7 +55,10 @@ class UserProfileActivity : AppCompatActivity() {
 
         val ID = test
         val profilepostfrag = ProfilePostFragment.newInstance(ID)
+        val profilecommentfrag = ProfileCommentFragment.newInstance(ID)
         replaceFragment(profilepostfrag)
+
+
 
         DaggerAppComponent.create().inject(this)
         val factory = InjectorUtils.provideProfileViewModelFactory()
@@ -79,7 +82,7 @@ class UserProfileActivity : AppCompatActivity() {
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.select_comments -> {
-                    replaceFragment(ProfileCommentFragment())
+                    replaceFragment(profilecommentfrag)
                     return@setOnNavigationItemSelectedListener true
                 }
 

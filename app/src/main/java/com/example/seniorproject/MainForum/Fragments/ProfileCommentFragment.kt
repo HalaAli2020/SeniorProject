@@ -64,6 +64,8 @@ class ProfileCommentFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        val ID = this.getArguments()?.getString("ID") ?: "null"
+
         DaggerAppComponent.create().inject(this)
         val factory = InjectorUtils.provideProfileViewModelFactory()
         val binding: FragmentProfileCommentBinding =
@@ -71,22 +73,20 @@ class ProfileCommentFragment : Fragment() {
         myViewModel = ViewModelProviders.of(this,factory).get(ProfileViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_profile_comment, container, false)
 
-        if (FirebaseAuth.getInstance().uid != null) {
-            view.profile_comment_recyclerView.adapter =
-                ProfileCommentsAdapter(
-                    view.context,
-                    myViewModel.getUserProfileComments()
-                )
-        }
 
-        adaptercomments = ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments())
+            view.profile_comment_recyclerView.adapter = ProfileCommentsAdapter(view.context,
+                    myViewModel.getUserProfileComments(ID)
+                )
+
+
+        adaptercomments = ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(ID))
 
         view.refreshView.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.blue_theme))
         view.refreshView.setColorSchemeColors(ContextCompat.getColor(view.context, R.color.white))
 
         view.refreshView.setOnRefreshListener {
             view.profile_comment_recyclerView.adapter =
-                ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments())
+                ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(ID))
             view.refreshView.isRefreshing = false
         }
 
@@ -94,7 +94,7 @@ class ProfileCommentFragment : Fragment() {
         binding.profileViewModelCom = myViewModel
         binding.lifecycleOwner = this
 
-        myViewModel.getUserProfileComments()
+        myViewModel.getUserProfileComments(ID)
 
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.reverseLayout = true
@@ -103,7 +103,7 @@ class ProfileCommentFragment : Fragment() {
         view.profile_comment_recyclerView.adapter =
             ProfileCommentsAdapter(
                 view.context,
-                myViewModel.getUserProfileComments())
+                myViewModel.getUserProfileComments(ID))
 
 
         deleteIcon = ContextCompat.getDrawable(activity!!.applicationContext, R.drawable.ic_delete_24px)!!
@@ -234,5 +234,14 @@ class ProfileCommentFragment : Fragment() {
         return view
     }
 
+    companion object {
+        fun newInstance(ID: String): ProfileCommentFragment {
+            val bundle : Bundle = Bundle()
+            bundle.putString("ID",ID)
+            val fragment = ProfileCommentFragment()
+            fragment.setArguments(bundle)
+            return fragment
+        }
+    }
 
 }
