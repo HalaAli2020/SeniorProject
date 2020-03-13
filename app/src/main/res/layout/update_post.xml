@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="NewPostViewModel"
+            name="NewPostModel"
             type="com.example.seniorproject.viewModels.NewPostFragmentViewModel"></variable>
 
     </data>
@@ -38,7 +38,7 @@
                 android:layout_height="0dp"
                 android:layout_marginEnd="12dp"
                 android:background="@drawable/rounded_btn"
-                android:onClick="@{() -> NewPostViewModel.savePostToDatabase()}"
+                android:onClick="@{() -> NewPostModel.editPost()}"
                 android:text="Done"
                 android:textColor="@color/white"
                 android:textSize="12sp"
@@ -73,7 +73,7 @@
             android:paddingEnd="15dp"
             android:paddingBottom="15dp"
             android:singleLine="true"
-            android:text="@={NewPostViewModel.titlePost}"
+            android:text="@={NewPostModel.titlePost}"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -93,7 +93,7 @@
             android:paddingStart="12dp"
             android:paddingTop="10dp"
             android:paddingEnd="12dp"
-            android:text="@={NewPostViewModel.textPost}"
+            android:text="@={NewPostModel.textPost}"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

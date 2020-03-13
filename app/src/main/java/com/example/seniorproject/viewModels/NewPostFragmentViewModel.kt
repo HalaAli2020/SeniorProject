@@ -1,9 +1,12 @@
 package com.example.seniorproject.viewModels
 
+import android.content.Context
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
+import com.example.seniorproject.MainForum.Posts.UpdatePost
 //import com.example.seniorproject.Utils.startMainForum
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.repositories.PostRepository
@@ -14,6 +17,12 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
     var titlePost: String? = null
     var textPost: String? = null
     var classSpinner: String? = null
+    var crn: String? = null
+    var postKey: String? = null
+    var ctext: String? = null
+    var ctitle: String? = null
+    var userID: String? = null
+
     //var author: String? = repository.currentUser()?.displayName
 
 
@@ -31,6 +40,10 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
     var postListener: PostListener? = null
 
 
+    fun editPost(){
+        repository.editPost(crn!!, postKey!!, ctext!!, ctitle!!, textPost!!, titlePost!!, userID!!)
+
+    }
     fun savePostToDatabase() {
 
         if (titlePost.isNullOrEmpty() || textPost.isNullOrEmpty() || classSpinner.isNullOrEmpty()) {

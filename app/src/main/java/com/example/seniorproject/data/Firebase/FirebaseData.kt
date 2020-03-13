@@ -800,7 +800,7 @@ class FirebaseData @Inject constructor() {
         //}
     }
 
-    fun editCommentforUserProfile(userID: String, usercomkey:String, ctext: String, ntext: String, crn: String, postKey: String){
+    fun editComment(userID: String, usercomkey:String, ctext: String, ntext: String, crn: String, postKey: String){
         var comkey = FirebaseDatabase.getInstance().getReference("/users/$userID")
 
         val queryuser =comkey.child("Comments").orderByChild("ProfileComKey").equalTo(usercomkey)
@@ -846,36 +846,23 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    fun editPost(crn: String, postKey: String, pkey: String, ctext: String, ctitle: String, ntext: String, ntitle: String,
+    fun editPost(crn: String, postKey: String, ctext: String, ctitle: String, ntext: String, ntitle: String,
                  userID: String){
-        val refkey2 = FirebaseDatabase.getInstance().getReference("/Subjects/$crn")
+        val refsubpath = FirebaseDatabase.getInstance().getReference("/Subjects/$crn")
 
-        val queryptitle: Query = refkey2.child("/Posts/$postKey").orderByChild("title").equalTo(ctitle)
-        val queryptxt: Query = refkey2.child("/Posts/$postKey").orderByChild("text").equalTo(ctext)
+        var refuserpath = FirebaseDatabase.getInstance().getReference("/users/$userID")
 
-        queryptitle.addListenerForSingleValueEvent( object : ValueEventListener {
-            override fun onDataChange(p0: DataSnapshot) {
-                if(p0.exists()){
-                    for(post in p0.children){
-                        // val refc= comment.getValue(Comment::class.java)
-                        post.ref.child("text").setValue(ntitle)
-                        //refkey.child("/Subjects/$crn/Posts/$ClassKey/Comments/-M1MwaJ6UaXu2fdByTCU").removeValue()
-                    }
-                }
+        val querypost: Query = refsubpath.child("Posts").orderByChild("Classkey").equalTo(postKey)
 
-            }
+        val queryupost: Query = refuserpath.child("Posts").orderByChild("Classkey").equalTo(postKey)
 
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-        })
-
-        queryptxt.addListenerForSingleValueEvent( object : ValueEventListener {
+        querypost.addListenerForSingleValueEvent( object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     for(post in p0.children){
                         // val refc= comment.getValue(Comment::class.java)
                         post.ref.child("text").setValue(ntext)
+                        post.ref.child("title").setValue(ntitle)
                         //refkey.child("/Subjects/$crn/Posts/$ClassKey/Comments/-M1MwaJ6UaXu2fdByTCU").removeValue()
                     }
                 }
@@ -887,38 +874,12 @@ class FirebaseData @Inject constructor() {
             }
         })
 
-
-        var pathkey = FirebaseDatabase.getInstance().getReference("/users/$userID")
-
-        val queryutitle: Query = pathkey.child("/Posts/$pkey").orderByChild("title").equalTo(ctitle)
-
-        val queryutxt: Query = pathkey.child("/Posts/$pkey").orderByChild("text").equalTo(ctext)
-
-
-        queryutitle.addListenerForSingleValueEvent( object : ValueEventListener {
+        queryupost.addListenerForSingleValueEvent( object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     for(post in p0.children){
-                        // val refc= comment.getValue(Comment::class.java)
-                        post.ref.child("text").setValue(ntitle)
-                        //refkey.child("/Subjects/$crn/Posts/$ClassKey/Comments/-M1MwaJ6UaXu2fdByTCU").removeValue()
-                    }
-                }
-
-            }
-
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-        })
-
-        queryutxt.addListenerForSingleValueEvent( object : ValueEventListener {
-            override fun onDataChange(p0: DataSnapshot) {
-                if(p0.exists()){
-                    for(post in p0.children){
-                        // val refc= comment.getValue(Comment::class.java)
                         post.ref.child("text").setValue(ntext)
-                        //refkey.child("/Subjects/$crn/Posts/$ClassKey/Comments/-M1MwaJ6UaXu2fdByTCU").removeValue()
+                        post.ref.child("title").setValue(ntitle)
                     }
                 }
 
@@ -928,8 +889,6 @@ class FirebaseData @Inject constructor() {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
         })
-
-
     }
 
 

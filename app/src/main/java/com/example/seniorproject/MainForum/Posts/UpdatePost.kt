@@ -29,6 +29,20 @@ class UpdatePost : AppCompatActivity() {
         val binding: UpdatePostBinding = DataBindingUtil.setContentView(this,R.layout.update_post)
 
 
+        val text: String = intent.getStringExtra("text")
+        val title: String = intent.getStringExtra("title")
+        val postkey: String = intent.getStringExtra("Classkey")
+        val userid: String = intent.getStringExtra("UserID")
+        val crn: String = intent.getStringExtra("crn")
+
+        myViewModel.ctext = text
+        myViewModel.ctitle=title
+        myViewModel.userID= userid
+        myViewModel.crn = crn
+        myViewModel.postKey = postkey
+
+        binding.newPostModel = myViewModel
+        binding.lifecycleOwner = this
 
     }
 

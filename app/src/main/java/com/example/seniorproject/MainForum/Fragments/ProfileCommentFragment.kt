@@ -111,9 +111,6 @@ class ProfileCommentFragment : Fragment() {
                 myViewModel.getUserProfileComments())
 
 
-        deleteIcon = ContextCompat.getDrawable(activity!!.applicationContext, R.drawable.ic_delete_24px)!!
-
-
 
         val swipe = object : SwipeHelper(context!!, view.profile_comment_recyclerView, 200){
             override fun initButton(
@@ -121,7 +118,7 @@ class ProfileCommentFragment : Fragment() {
                 buffer: MutableList<ProfileButton>
             ) {
 
-                buffer.add(ProfileButton(context!!,"Delete", 30, 0,Color.parseColor
+                buffer.add(ProfileButton(context!!,"Delete", 30,0, Color.parseColor
                     ("#FF0000"), object: ButtonClickListener{
                     override fun onClick(pos: Int) {
                         val postkeyUP: String? =
@@ -150,7 +147,6 @@ class ProfileCommentFragment : Fragment() {
                             { dialogInterface: DialogInterface?, i: Int ->
                                 myViewModel.deleteCommentFromCommPosts(postkeyUP!!, crnkey!!, classkey!!)
                                 myViewModel.deleteCommentFromUserProfile(commentkey!!, crnkey!!, classprofilekey!!,userkey!!)
-                                //myViewModel.deleteCommentFromCommPosts(postkey!!, crnkey!!, commentkey!!, userkey!!)
                             })
                         builder.setNegativeButton("CANCEL",
                             { dialogInterface: DialogInterface?, i: Int ->
@@ -166,7 +162,7 @@ class ProfileCommentFragment : Fragment() {
 
                 }))
 
-                buffer.add(ProfileButton(context!!,"Edit", 30, 0,Color.parseColor
+                buffer.add(ProfileButton(context!!,"Edit", 30,0,Color.parseColor
                     ("#D3D3D3"), object: ButtonClickListener{
                     override fun onClick(pos: Int) {
                         val userkey: String? =
@@ -191,8 +187,6 @@ class ProfileCommentFragment : Fragment() {
                         intent.putExtra("Postkey", postkeyUP)
 
                         context!!.startActivity(intent)
-
-                        Toast.makeText(context, "Update here!"+pos, Toast.LENGTH_SHORT).show()
                     }
 
                 }))

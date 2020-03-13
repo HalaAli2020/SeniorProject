@@ -117,7 +117,7 @@ class ProfilePostFragment : Fragment() {
                 viewHolders: RecyclerView.ViewHolder,
                 buffer: MutableList<ProfileButton>
             ) {
-                buffer.add(ProfileButton(context!!,"Delete", 30, 0,Color.parseColor
+                buffer.add(ProfileButton(context!!,"Delete", 30,0,Color.parseColor
                     ("#FF0000"), object: ButtonClickListener {
                     override fun onClick(pos: Int) {
                         val postkey: String? =
@@ -157,13 +157,33 @@ class ProfilePostFragment : Fragment() {
 
                 }))
 
-                buffer.add(ProfileButton(context!!,"Edit", 30, 0,Color.parseColor
+                buffer.add(ProfileButton(context!!,"Edit", 30,0, Color.parseColor
                     ("#D3D3D3"), object: ButtonClickListener{
                     override fun onClick(pos: Int) {
                         val intent = Intent(context, UpdatePost::class.java)
 
+                        val postkey: String? =
+                            adapter.removeItem(viewHolders as CustomViewHolders, pos)
+
+                        val userkey: String? =
+                            adapter.getUserKey(viewHolders as CustomViewHolders, pos)
+
+                        val crnkey: String? =
+                            adapter.getCrn(viewHolders as CustomViewHolders, pos)
+
+                        val titlekey: String? =
+                            adapter.getTitle(viewHolders as CustomViewHolders, pos)
+
+                        val textkey: String? =
+                            adapter.getText(viewHolders as CustomViewHolders, pos)
+
+                        intent.putExtra("crn", crnkey)
+                        intent.putExtra("Classkey", postkey)
+                        intent.putExtra("UserID", userkey)
+                        intent.putExtra("title", titlekey)
+                        intent.putExtra("text", textkey)
+
                         context!!.startActivity(intent)
-                        Toast.makeText(context, "Update here!"+pos, Toast.LENGTH_SHORT).show()
                     }
 
                 }))

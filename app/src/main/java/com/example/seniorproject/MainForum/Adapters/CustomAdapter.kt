@@ -101,6 +101,30 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
         return postcrn!!
     }
 
+    fun getTitle(customViewHolders: CustomViewHolders, position: Int): String {
+        //position=customViewHolders.adapterPosition
+
+        // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val posttitle: String?= post.title
+        //notifyItemRemoved(customViewHolders.adapterPosition)
+        //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
+
+        return posttitle!!
+    }
+
+    fun getText(customViewHolders: CustomViewHolders, position: Int): String {
+        //position=customViewHolders.adapterPosition
+
+        // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val posttext: String?= post.text
+        //notifyItemRemoved(customViewHolders.adapterPosition)
+        //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
+
+        return posttext!!
+    }
+
     fun getNewCount() : Int{
         if (savedPosts.value != null)
             return savedPosts.value!!.size-1

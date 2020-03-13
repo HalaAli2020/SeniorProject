@@ -46,8 +46,8 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
     }
 
 
-    fun editCommentFromUserProfile(){
-        repository.editNewCommentFromUserProfile(comuserid!!, usercomkey!!, ctext!!, Comment!!, usercrn!!, postukey!!)
+    fun editComment(){
+        repository.editNewComment(comuserid!!, usercomkey!!, ctext!!, Comment!!, usercrn!!, postukey!!)
     }
 
 
