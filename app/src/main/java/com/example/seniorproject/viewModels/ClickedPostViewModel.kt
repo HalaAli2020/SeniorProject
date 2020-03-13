@@ -22,6 +22,13 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
     var text: String? = null
     private var getCommentsJob: Job? = null
     private var PostKey : String? = null
+    var comuserid: String? = null
+    var usercomkey: String?= null
+    var ctext: String? = null
+    var usercrn: String? = null
+    var postukey: String? = null
+
+
     init {
 
     }
@@ -38,6 +45,10 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
         return CommentsLiveList
     }
 
+
+    fun editCommentFromUserProfile(){
+        repository.editNewCommentFromUserProfile(comuserid!!, usercomkey!!, ctext!!, Comment!!, usercrn!!, postukey!!)
+    }
 
 
     fun newComment()
