@@ -837,6 +837,97 @@ class FirebaseData @Inject constructor() {
         //}
     }
 
+    fun editComment(userID: String, usercomkey:String, ctext: String, ntext: String, crn: String, postKey: String){
+        var comkey = FirebaseDatabase.getInstance().getReference("/users/$userID")
+
+        val queryuser =comkey.child("Comments").orderByChild("ProfileComKey").equalTo(usercomkey)
+
+        queryuser.addListenerForSingleValueEvent( object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                if(p0.exists()){
+                    for(comment in p0.children){
+                        // val refc= comment.getValue(Comment::class.java)
+                        comment.ref.child("text").setValue(ntext)
+                        //refkey.child("/Subjects/$crn/Posts/$ClassKey/Comments/-M1MwaJ6UaXu2fdByTCU").removeValue()
+                    }
+                }
+
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
+
+        val refkey2 = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$postKey")
+
+        val queryuser2 =refkey2.child("Comments").orderByChild("ProfileComKey").equalTo(usercomkey)
+
+        queryuser2.addListenerForSingleValueEvent( object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                if(p0.exists()){
+                    for(comment in p0.children){
+                        // val refc= comment.getValue(Comment::class.java)
+                        comment.ref.child("text").setValue(ntext)
+                        //refkey.child("/Subjects/$crn/Posts/$ClassKey/Comments/-M1MwaJ6UaXu2fdByTCU").removeValue()
+                    }
+                }
+
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
+
+    }
+
+
+    fun editPost(crn: String, postKey: String, ctext: String, ctitle: String, ntext: String, ntitle: String,
+                 userID: String){
+        val refsubpath = FirebaseDatabase.getInstance().getReference("/Subjects/$crn")
+
+        var refuserpath = FirebaseDatabase.getInstance().getReference("/users/$userID")
+
+        val querypost: Query = refsubpath.child("Posts").orderByChild("Classkey").equalTo(postKey)
+
+        val queryupost: Query = refuserpath.child("Posts").orderByChild("Classkey").equalTo(postKey)
+
+        querypost.addListenerForSingleValueEvent( object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                if(p0.exists()){
+                    for(post in p0.children){
+                        // val refc= comment.getValue(Comment::class.java)
+                        post.ref.child("text").setValue(ntext)
+                        post.ref.child("title").setValue(ntitle)
+                        //refkey.child("/Subjects/$crn/Posts/$ClassKey/Comments/-M1MwaJ6UaXu2fdByTCU").removeValue()
+                    }
+                }
+
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
+
+        queryupost.addListenerForSingleValueEvent( object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                if(p0.exists()){
+                    for(post in p0.children){
+                        post.ref.child("text").setValue(ntext)
+                        post.ref.child("title").setValue(ntitle)
+                    }
+                }
+
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
+    }
+
 
     // CRN is a placeholder for a class object
     fun saveNewPosttoUser(post: Post, Subject: String, CRN: String) {
@@ -1046,6 +1137,33 @@ class FirebaseData @Inject constructor() {
 
                 }
             }
+
+        val uid = FirebaseAuth.getInstance().uid
+        val reference = FirebaseDatabase.getInstance().getReference("users/$uid")
+        reference.child("/profileImageUrl").setValue(FirebaseAuth.getInstance().currentUser?.photoUrl.toString())
+
+
+        /*reference.addChildEventListener(object : ChildEventListener {
+            override fun onChildRemoved(p0: DataSnapshot) {
+
+            }
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+
+            }
+
+        })*/
+
+
 
     }
 
