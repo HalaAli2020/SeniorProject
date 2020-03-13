@@ -87,6 +87,21 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/in_profile_username" />
 
+                <Button
+                    android:id="@+id/refresh_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:text="refresh"
+                    android:textColor="@color/white"
+                    android:background="@drawable/rounded_btn"
+                    android:textSize="15sp"
+                    app:layout_constraintTop_toBottomOf="@+id/NavToEdit"/>
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>

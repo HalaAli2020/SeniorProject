@@ -30,6 +30,7 @@ import androidx.core.app.ComponentActivity
 import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.os.Handler
 import android.widget.TextView
 
 
@@ -46,7 +47,6 @@ class UserProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
-
 
         val actionbar = supportActionBar
         actionbar!!.title = "Profile"
@@ -75,15 +75,14 @@ class UserProfileActivity : AppCompatActivity() {
             in_profile_email.text = myViewModel.user?.email
         }
 
+        refresh_profile.setOnClickListener {
+            refresh()
+        }
+
        /* val binding: ActivityUserProfileBinding = DataBindingUtil.setContentView(this,R.layout.activity_user_profile)
         binding.profileViewModell = myViewModel
         binding.lifecycleOwner = this */
         actionbar.setDisplayHomeAsUpEnabled(true)
-
-
-
-
-        //on create view?
 
         pro_bottom_navigation.setIconVisibility(false)
         pro_bottom_navigation.enableAnimation(false)
@@ -143,5 +142,9 @@ class UserProfileActivity : AppCompatActivity() {
         val intent = Intent(this, MainForum::class.java)
         startActivity(intent)
         return true
+    }
+
+    fun refresh(){
+        recreate()
     }
 }
