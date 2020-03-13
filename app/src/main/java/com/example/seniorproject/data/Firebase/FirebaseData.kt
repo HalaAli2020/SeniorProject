@@ -57,7 +57,7 @@ class FirebaseData @Inject constructor() {
 
     private lateinit var postlistener : ValueEventListener
     private lateinit var userprofile : User
-    lateinit var otherEmail : String
+    var otherEmail : String? = null
     var newComments : Comment? = null
 
 
@@ -119,7 +119,7 @@ class FirebaseData @Inject constructor() {
 
     }
 
-    fun fetchEmail(UserID: String){
+    fun fetchEmail(UserID: String) : String{
 
         val ref = FirebaseDatabase.getInstance().getReference("/users/$UserID")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -131,15 +131,12 @@ class FirebaseData @Inject constructor() {
                 val email = p0.child("email").getValue(String::class.java)
                 Log.d(TAG, "Current user fetched ${email}")
                 otherEmail = email ?: "null"
-                //getEmail()
             }
         })
+
+        return otherEmail ?: "null"
     }
 
-
-    fun getEmail() : String{
-        return otherEmail
-    }
 
 
 

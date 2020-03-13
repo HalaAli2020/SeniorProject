@@ -58,8 +58,8 @@ class UserProfileActivity : AppCompatActivity() {
         val test : String = intent.getStringExtra("UserID") ?: "null"
         val author : String =  intent.getStringExtra("Author") ?: "null"
         val ID = test
-        myViewModel.fetchEmail(test)
-        val email = myViewModel.getEmail()
+
+        val email = myViewModel.fetchEmail(test)
 
         val profilepostfrag = ProfilePostFragment.newInstance(ID)
         val profilecommentfrag = ProfileCommentFragment.newInstance(ID)

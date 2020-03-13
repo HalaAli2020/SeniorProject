@@ -32,7 +32,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         Firebase.uploadImageToFirebaseStorage(selectedPhotoUri)
 
     fun getSubscribedPosts() = Firebase.getSubscribedPosts()
-    fun getEmail() = Firebase.getEmail()
+    //fun getEmail() = Firebase.getEmail()
 
     fun getpostKey(PKey: String)
     {
