@@ -1101,6 +1101,33 @@ class FirebaseData @Inject constructor() {
                 }
             }
 
+        val uid = FirebaseAuth.getInstance().uid
+        val reference = FirebaseDatabase.getInstance().getReference("users/$uid")
+        reference.child("/profileImageUrl").setValue(FirebaseAuth.getInstance().currentUser?.photoUrl.toString())
+
+
+        /*reference.addChildEventListener(object : ChildEventListener {
+            override fun onChildRemoved(p0: DataSnapshot) {
+
+            }
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+
+            }
+
+        })*/
+
+
+
     }
 
     //this function is commented out because it fails to retrieve image in Firebase Storage and
