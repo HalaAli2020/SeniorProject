@@ -2,6 +2,7 @@ package com.example.seniorproject.MainForum.Fragments
 
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -12,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -24,9 +26,13 @@ import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Adapters.CustomAdapter
 import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
+import com.example.seniorproject.MainForum.Posts.UpdatePost
 import com.example.seniorproject.MainForum.UserProfileActivity
 
 import com.example.seniorproject.R
+import com.example.seniorproject.Utils.ButtonClickListener
+import com.example.seniorproject.Utils.ProfileButton
+import com.example.seniorproject.Utils.SwipeHelper
 import com.example.seniorproject.databinding.FragmentProfilePostBinding
 import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -106,8 +112,86 @@ class ProfilePostFragment : Fragment() {
 
         deleteIcon = ContextCompat.getDrawable(activity!!.applicationContext, R.drawable.ic_delete_24px)!!
 
+        val swipe = object : SwipeHelper(context!!, view.profile_post_recyclerView, 200) {
+            override fun initButton(
+                viewHolders: RecyclerView.ViewHolder,
+                buffer: MutableList<ProfileButton>
+            ) {
+                buffer.add(ProfileButton(context!!,"Delete", 30,0,Color.parseColor
+                    ("#FF0000"), object: ButtonClickListener {
+                    override fun onClick(pos: Int) {
+                        val postkey: String? =
+                            adapter.removeItem(viewHolders as CustomViewHolders, pos)
 
-        val itemTouchHelperCallback =
+                        val userkey: String? =
+                            adapter.getUserKey(viewHolders as CustomViewHolders, pos)
+
+                        val crnkey: String? =
+                            adapter.getCrn(viewHolders as CustomViewHolders, pos)
+
+                        //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
+                        var builder = AlertDialog.Builder(view.context, R.style.AppTheme_AlertDialog)
+
+                        //.getStringExtra("Classkey")
+                        //val postkey = intent.getStringExtra("author")
+                        //myViewModel.deletePost(postkey!!, className)
+                        //myViewModel.deletePost()
+                        builder.setTitle("Are you sure?")
+                        builder.setMessage("You cannot restore posts that have been deleted.")
+                        builder.setPositiveButton("DELETE",
+                            { dialogInterface: DialogInterface?, i: Int ->
+                                myViewModel.deletePost(postkey!!, crnkey!!, userkey!!)
+                            })
+                        builder.setNegativeButton("CANCEL",
+                            { dialogInterface: DialogInterface?, i: Int ->
+                                builder.setCancelable(true)
+                            })
+
+                        val msgdialog: AlertDialog = builder.create()
+
+                        msgdialog.getWindow()!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
+
+                        msgdialog.show()
+
+                    }
+
+                }))
+
+                buffer.add(ProfileButton(context!!,"Edit", 30,0, Color.parseColor
+                    ("#D3D3D3"), object: ButtonClickListener{
+                    override fun onClick(pos: Int) {
+                        val intent = Intent(context, UpdatePost::class.java)
+
+                        val postkey: String? =
+                            adapter.removeItem(viewHolders as CustomViewHolders, pos)
+
+                        val userkey: String? =
+                            adapter.getUserKey(viewHolders as CustomViewHolders, pos)
+
+                        val crnkey: String? =
+                            adapter.getCrn(viewHolders as CustomViewHolders, pos)
+
+                        val titlekey: String? =
+                            adapter.getTitle(viewHolders as CustomViewHolders, pos)
+
+                        val textkey: String? =
+                            adapter.getText(viewHolders as CustomViewHolders, pos)
+
+                        intent.putExtra("crn", crnkey)
+                        intent.putExtra("Classkey", postkey)
+                        intent.putExtra("UserID", userkey)
+                        intent.putExtra("title", titlekey)
+                        intent.putExtra("text", textkey)
+
+                        context!!.startActivity(intent)
+                    }
+
+                }))
+
+            }
+        }
+
+       /* val itemTouchHelperCallback =
             object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
                 override fun onSwiped(viewHolders: RecyclerView.ViewHolder, position: Int) {
                     val postkey: String? =
@@ -212,7 +296,7 @@ class ProfilePostFragment : Fragment() {
 
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
 
-        itemTouchHelper.attachToRecyclerView(view.profile_post_recyclerView)
+        itemTouchHelper.attachToRecyclerView(view.profile_post_recyclerView)*/
 
         binding.executePendingBindings()
         return view
