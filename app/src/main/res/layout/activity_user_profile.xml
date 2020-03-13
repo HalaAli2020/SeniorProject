@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
+  <!--  <data>
 
         <variable
             name="ProfileViewModell"
             type="com.example.seniorproject.viewModels.ProfileViewModel"></variable>
-    </data>
+    </data> -->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/pContainer"
@@ -66,9 +66,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
-                    android:text="@{ProfileViewModell.user.displayName}"
                     android:textColor="@color/TextColor"
                     android:textSize="20sp"
+                    android:text=""
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
@@ -79,7 +79,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
-                    android:text="@{ProfileViewModell.user.email}"
+                    android:text=""
                     android:textColor="@color/TextColor"
                     android:textSize="15sp"
                     app:layout_constraintEnd_toEndOf="parent"

@@ -57,6 +57,7 @@ class FirebaseData @Inject constructor() {
 
     private lateinit var postlistener : ValueEventListener
     private lateinit var userprofile : User
+    lateinit var otherEmail : String
     var newComments : Comment? = null
 
 
@@ -118,6 +119,30 @@ class FirebaseData @Inject constructor() {
 
     }
 
+    fun fetchEmail(UserID: String){
+
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$UserID")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                val email = p0.child("email").getValue(String::class.java)
+                Log.d(TAG, "Current user fetched ${email}")
+                otherEmail = email ?: "null"
+                //getEmail()
+            }
+        })
+    }
+
+
+    fun getEmail() : String{
+        return otherEmail
+    }
+
+
+
     //saves new username to database and auth profile
     fun saveNewUsername(username: String){
         val userID = firebaseAuth.uid ?: "null"
@@ -156,9 +181,6 @@ class FirebaseData @Inject constructor() {
                 }
             }
     }
-
-
-
 
 
     fun fetchCurrentUserName() {
