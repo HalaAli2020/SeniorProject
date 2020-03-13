@@ -67,6 +67,9 @@ class FirebaseData @Inject constructor() {
     var classPostList : PostLiveData = PostLiveData()
     var MainPosts : MutableList<Post> = mutableListOf()
     var UserSUB : MutableList<String>? = null
+
+
+
     fun CurrentUser() = FirebaseAuth.getInstance().currentUser
 
 
@@ -144,9 +147,6 @@ class FirebaseData @Inject constructor() {
                 }
             }
     }*/
-
-
-
 
 
     fun fetchCurrentUserName() {
@@ -388,11 +388,6 @@ class FirebaseData @Inject constructor() {
     }
 
 
-
-
-
-
-
     fun listenForUserProfileComments (): CommentLive{
         Log.d(TAG, "getUserProfile comments listener called")
         val uid = FirebaseAuth.getInstance().uid
@@ -442,16 +437,6 @@ class FirebaseData @Inject constructor() {
 
     }
 
-
-
-
-
-
-
-
-
-
-
     fun getUserProfilePosts() : PostLiveData{
         Log.d(TAG, "getUserProfilePosts called")
         listenForUserProfilePosts()
@@ -463,7 +448,6 @@ class FirebaseData @Inject constructor() {
         listenForUserProfileComments()
         return Comments
     }
-
 
 
     fun getCommentsCO(Key : String) : CommentLive {
@@ -1474,6 +1458,47 @@ class FirebaseData @Inject constructor() {
         })
     }*/
 
+
+    fun readUsers(): MutableLiveData<List<User>>?{
+
+        var UserList2: MutableLiveData<List<User>>? = MutableLiveData()
+        getUsers(object: FirebaseCallback{
+            override fun onCallback(list: MutableList<User>?) {
+                UserList2?.value=list
+            }
+        })
+
+        return UserList2
+    }
+
+    fun getUsers(firebaseCallback: FirebaseCallback) {
+        val ref = FirebaseDatabase.getInstance().getReference("users").limitToFirst(5)
+
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            var UserList: MutableList<User> = mutableListOf()
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                for(p1 in p0.children) {
+                    var user = User()
+                    user.username = p1.child("Username").getValue(String::class.java)
+                    user.uid = p1.child("uid").getValue(String::class.java)
+
+                    if (user != null) {
+                        UserList?.add(user)
+                    }
+                }
+
+                firebaseCallback.onCallback(UserList)
+            }
+
+        })
+    }
+
+    interface FirebaseCallback {
+        fun onCallback(list: MutableList<User>?)
+    }
 
 
     companion object {

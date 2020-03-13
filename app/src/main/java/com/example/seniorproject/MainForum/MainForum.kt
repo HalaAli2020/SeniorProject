@@ -1,15 +1,12 @@
 package com.example.seniorproject.MainForum
 
-import android.app.Activity
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
@@ -26,6 +23,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.Fragments.*
+import com.example.seniorproject.Messages.FragmentLatestMessages
 import com.example.seniorproject.R
 import com.example.seniorproject.databinding.SideNavHeaderBinding
 import com.example.seniorproject.databinding.ActivityMainForumBinding
@@ -34,7 +32,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main_forum.*
-import kotlinx.android.synthetic.main.side_nav_header.*
 import javax.inject.Inject
 
 private const val TAG = "MyLogTag"
@@ -91,7 +88,7 @@ class MainForum : AppCompatActivity(),
                 R.id.messages -> {
                     FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
-                    replaceFragment(FragmentMessages())
+                    replaceFragment(FragmentLatestMessages())
                     return@OnNavigationItemSelectedListener true
                 }
             }

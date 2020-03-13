@@ -3,7 +3,7 @@ package com.example.seniorproject.data.models
 import android.net.Uri
 import androidx.lifecycle.LiveData
 
-data class User(val username: String?, val email: String?, val uid: String?, val profileImageUrl: Uri?
+data class User(var username: String?, val email: String?, var uid: String?, val profileImageUrl: Uri?
 )
 {
     constructor(): this("","","", Uri.EMPTY)
