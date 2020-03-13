@@ -10,6 +10,8 @@ import com.example.seniorproject.MainForum.Fragments.ProfileCommentFragment
 import com.example.seniorproject.MainForum.Fragments.ProfilePostFragment
 import com.example.seniorproject.MainForum.Posts.ClickedPost
 import com.example.seniorproject.MainForum.Posts.EditProfileActivity
+import com.example.seniorproject.MainForum.Posts.UpdateComment
+import com.example.seniorproject.MainForum.Posts.UpdatePost
 import com.example.seniorproject.Utils.multibindingmodule
 import dagger.Component
 import javax.inject.Singleton
@@ -33,5 +35,6 @@ interface AppComponent {
     fun inject(fragment: ProfilePostFragment)
     fun inject(fragment: ProfileCommentFragment)
     fun inject(activity: EditProfileActivity)
-
+    fun inject(activity: UpdateComment)
+    fun inject(activity: UpdatePost)
 }

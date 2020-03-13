@@ -22,6 +22,13 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
     var text: String? = null
     private var getCommentsJob: Job? = null
     private var PostKey : String? = null
+    var comuserid: String? = null
+    var usercomkey: String?= null
+    var ctext: String? = null
+    var usercrn: String? = null
+    var postukey: String? = null
+
+
     init {
 
     }
@@ -44,6 +51,10 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
     }
 
 
+    fun editComment(){
+        repository.editNewComment(comuserid!!, usercomkey!!, ctext!!, Comment!!, usercrn!!, postukey!!)
+    }
+
 
     fun newComment()
     {
@@ -59,16 +70,6 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
         return false
     }
 
-    fun deleteComment(PKey: String, crn: String, Classkey: String)
-    {
-        if(PKey.isNullOrEmpty())
-        {
-            PostKey = PKey
-            CommentListener?.onFailure("Post key not found")
-
-        }
-        repository.deleteNewComment(PKey!!, crn!!, Classkey!!)
-    }
     /*fun getCommentsCO(PKey: String) : CommentLive? {
         getCommentsJob = viewModelScope.launch {
             repository.getCommentsCO(PKey).collect {
