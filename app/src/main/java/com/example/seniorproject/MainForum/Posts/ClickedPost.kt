@@ -60,6 +60,7 @@ class ClickedPost : AppCompatActivity() {
         binding.lifecycleOwner = this
 
 
+
         refreshView.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(this, R.color.blue_theme))
         refreshView.setColorSchemeColors(ContextCompat.getColor(this, R.color.white))
 

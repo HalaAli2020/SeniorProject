@@ -77,6 +77,13 @@ class CommentsAdapter(
             holder.itemView.community_name_TV.text = crn
             holder.itemView.author_name_TV.text = author
 
+            /*holder.itemView.author_name_TV.setOnClickListener {
+                val intent = Intent(mContext, UserProfileActivity::class.java)
+                //intent.putExtra("UserID", UserPostKey)
+                intent.putExtra("Author", author)
+                mContext.startActivity(intent)
+            }*/
+
 
         } else {
             if (Comments?.value == null) {
