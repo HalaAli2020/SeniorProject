@@ -1486,19 +1486,19 @@ class FirebaseData @Inject constructor() {
     }*/
 
 
-    fun readUsers(): MutableLiveData<List<User>>?{
+    fun getUsers(): MutableLiveData<List<User>>?{
 
-        var UserList2: MutableLiveData<List<User>>? = MutableLiveData()
-        getUsers(object: FirebaseCallback{
+        var UserList: MutableLiveData<List<User>>? = MutableLiveData()
+        setUsers(object: FirebaseCallback{
             override fun onCallback(list: MutableList<User>?) {
-                UserList2?.value=list
+                UserList?.value=list
             }
         })
 
-        return UserList2
+        return UserList
     }
 
-    fun getUsers(firebaseCallback: FirebaseCallback) {
+    private fun setUsers(firebaseCallback: FirebaseCallback) {
         val ref = FirebaseDatabase.getInstance().getReference("users").limitToFirst(5)
 
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -1511,6 +1511,10 @@ class FirebaseData @Inject constructor() {
                     var user = User()
                     user.username = p1.child("Username").getValue(String::class.java)
                     user.uid = p1.child("uid").getValue(String::class.java)
+                    val imageProfURL = p1.child("profileImageUrl").getValue(String::class.java)
+                    if(!imageProfURL.isNullOrEmpty()) {
+                        user.profileImageUrl = Uri.parse(imageProfURL)
+                    }
 
                     if (user != null) {
                         UserList?.add(user)
@@ -1522,6 +1526,75 @@ class FirebaseData @Inject constructor() {
 
         })
     }
+
+
+    fun getMessages(){}
+
+    fun listenForMessages(toId: String){
+        val fromId = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId")
+
+        ref.addChildEventListener(object: ChildEventListener{
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                val chatMessage = p0.getValue(ChatMessage::class.java)
+
+
+
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+
+            }
+        })
+    }
+
+
+    fun sendMessage(message: String, toID: String){
+        //val message = editText_chatLog.text.toString()
+
+        val fromID = FirebaseAuth.getInstance().uid
+
+        //if(fromID == null) return
+
+        val reference = FirebaseDatabase.getInstance().getReference("/user-messages/$fromID/$toID").push()
+
+        val toReference = FirebaseDatabase.getInstance().getReference("/user-messages/$toID/$fromID").push()
+
+        val chatMessage = ChatMessage(
+            reference.key!!,
+            message,
+            fromID!!,
+            toID,
+            System.currentTimeMillis() / 1000
+        )
+        reference.setValue(chatMessage).addOnSuccessListener {
+            Log.d("ChatLog", "Saved our chat message")
+            //editText_chatLog.text.clear()
+            //recycler_view_chatLog.scrollToPosition(adapter.itemCount-1)
+        }
+
+        toReference.setValue(chatMessage)
+
+        val latestMessageRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromID/$toID")
+        latestMessageRef.setValue(chatMessage)
+
+        val latestMessageToRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$toID/$fromID")
+        latestMessageToRef.setValue(chatMessage)
+    }
+
 
     interface FirebaseCallback {
         fun onCallback(list: MutableList<User>?)

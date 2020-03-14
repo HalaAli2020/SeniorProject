@@ -14,11 +14,11 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.m_rv_new_message.view.*
 
 
-class NewMessageAdapter(
+class ChatLogAdapter(
     context: Context,
     private val UserList: List<User>
-    ) :
-    RecyclerView.Adapter<UserListHolder>() {
+) :
+    RecyclerView.Adapter<ChatLogHolder>() {
 
     val mContext: Context = context
 
@@ -27,10 +27,10 @@ class NewMessageAdapter(
         val USERNAME = "USERNAME"
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserListHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatLogHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val cellForRow = layoutInflater.inflate(R.layout.m_rv_new_message, parent, false)
-        return UserListHolder(cellForRow)
+        return ChatLogHolder(cellForRow)
     }
 
     override fun getItemCount(): Int {
@@ -42,7 +42,7 @@ class NewMessageAdapter(
         return 0
     }
 
-    override fun onBindViewHolder(holder: UserListHolder, position: Int) {
+    override fun onBindViewHolder(holder: ChatLogHolder, position: Int) {
 
         val user: User = UserList[position]
 
@@ -60,7 +60,7 @@ class NewMessageAdapter(
     }
 }
 
-class UserListHolder(v: View) : RecyclerView.ViewHolder(v)
+class ChatLogHolder(v: View) : RecyclerView.ViewHolder(v)
 
 
 
