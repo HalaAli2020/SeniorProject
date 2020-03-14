@@ -65,6 +65,7 @@ class UserProfileActivity : AppCompatActivity() {
         val profilecommentfrag = ProfileCommentFragment.newInstance(ID)
         replaceFragment(profilepostfrag)
 
+
         if (author != "null")  {
             in_profile_username.text = author
             in_profile_email.text = email
