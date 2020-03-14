@@ -25,6 +25,7 @@ import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Adapters.CustomAdapter
 import com.example.seniorproject.Dagger.DaggerAppComponent
+import com.example.seniorproject.MainForum.PostAdapter
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.R
@@ -39,14 +40,13 @@ import com.google.firebase.database.*
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.rv_post.view.*
 import kotlinx.coroutines.awaitAll
 //import javax.inject.Inject
 import javax.inject.Inject
 import javax.inject.Named
-import com.example.seniorproject.InjectorUtils
+
 
 
 
@@ -58,7 +58,7 @@ class FragmentHome : Fragment() {
     lateinit var myViewModel: HomeFragmentViewModel
      var obse : Observer<in MutableList<Post>>? = null
     lateinit var ada : PostAdapter
-    override fun onStarted() {
+    /*override fun onStarted() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -72,7 +72,7 @@ class FragmentHome : Fragment() {
 
     override fun onCancelled(p0: DatabaseError) {
 
-    }
+    }*/
 
     companion object {
         var currentUser: User? = null
@@ -98,6 +98,7 @@ class FragmentHome : Fragment() {
         myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         //postLiveData = myViewModel.getSavedPosts()
+        myViewModel.getSubscribedPosts()
         ada = PostAdapter(view.context, myViewModel)
 
 
@@ -109,16 +110,16 @@ class FragmentHome : Fragment() {
 
         view.post_recyclerView.adapter = ada
         if (FirebaseAuth.getInstance().uid != null)
-            view.post_recyclerView.adapter = CustomAdapter(view.context, myViewModel.getSubscribedPosts(), 0)
+            view.post_recyclerView.adapter = ada
 
 
-        view.refreshView.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.blue_theme))
-        view.refreshView.setColorSchemeColors(ContextCompat.getColor(view.context, R.color.white))
+        view.refreshView_H.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.blue_theme))
+        view.refreshView_H.setColorSchemeColors(ContextCompat.getColor(view.context, R.color.white))
 
 
-        view.refreshView.setOnRefreshListener {
-            view.refreshView.isRefreshing = false
-            view.post_recyclerView.adapter = CustomAdapter(view.context, myViewModel.getSubscribedPosts(), 0)
+        view.refreshView_H.setOnRefreshListener {
+            view.refreshView_H.isRefreshing = false
+            swap()
         }
 
         binding.homeFragmentViewModel = myViewModel

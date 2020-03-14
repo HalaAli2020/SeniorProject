@@ -2,13 +2,13 @@ package com.example.seniorproject.viewModels
 
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.ViewModel
 import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Authentication.PasswordResetActivity
 import com.example.seniorproject.Authentication.RegisterActivity
 import com.example.seniorproject.Utils.AuthenticationListener
+//import com.example.seniorproject.Utils.AuthenticationListener
 import com.example.seniorproject.data.repositories.UserAuthRepo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -31,9 +31,10 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
     //disposable to dispose the Completable
     private val disposables = CompositeDisposable()
 
-    val user = repository.currentUser()
+    //val user = repository.currentUser()
 
     fun Register(){
+
         if (email.isNullOrEmpty() || password.isNullOrEmpty() || username.isNullOrEmpty()) {
             authListener?.onFailure("Please enter your username, email, or password.")
             return
@@ -65,7 +66,8 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
             //should this really be the main thread?
             .subscribe({
                 authListener?.onSuccess()
-                Log.d(TAG,repository.currentUser()?.displayName ?: "the displayname auth viewmodel2")
+                //Log.d(TAG,repository.currentUser()?.displayName ?: "the displayname auth viewmodel2")
+                repository.currentUser()
             }, {
                 authListener?.onFailure(it.message!!)
             })
@@ -119,5 +121,6 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
         disposables.dispose()
         //now the register function is no longer being observed
     }
+
 
 }

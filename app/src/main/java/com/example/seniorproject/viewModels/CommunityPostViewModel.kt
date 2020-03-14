@@ -7,11 +7,13 @@ import javax.inject.Inject
 
 class CommunityPostViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
 
-    private var listClasses : PostLiveData? = null
+    var listClasses : PostLiveData? = null
     private lateinit var className: String
+    var posts : PostLiveData = PostLiveData()
 
     private fun getClasses(className: String){
         listClasses = repository.getClassPosts(className)
+
     }
 
     fun returnClassPosts(className: String): PostLiveData {

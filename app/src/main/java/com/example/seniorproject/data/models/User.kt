@@ -2,15 +2,17 @@ package com.example.seniorproject.data.models
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
+import java.net.URI
 
-data class User(val username: String?, val email: String?, val uid: String?, val profileImageUrl: Uri?
+data class User(var username: String?, var email: String?, var uid: String?, val profileImageUrl: Uri?
 )
 {
     constructor(): this("","","", Uri.EMPTY)
     var Posts  = mutableListOf<Post>()
     //lateinit var Subscriptions : List<String>
     var Admin : Boolean = true
-    var Subscriptions : HashMap<String,String>? = hashMapOf()
+    var ProfilePic : Uri? = null
+    //var Subscriptions : HashMap<String,String>? = hashMapOf()
     init {
 
 
@@ -23,8 +25,9 @@ data class User(val username: String?, val email: String?, val uid: String?, val
             "uid" to uid,
             "profileImageUrl" to profileImageUrl,
             "Admin" to Admin,
-            "Subscriptions" to Subscriptions,
-            "Posts" to Posts
+            "ProfilePicl" to ProfilePic
+            //"Subscriptions" to Subscriptions,
+            //"Posts" to Posts
 
         )
 

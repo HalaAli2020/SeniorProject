@@ -5,7 +5,6 @@ import com.example.seniorproject.Authentication.PasswordResetActivity
 import com.example.seniorproject.Authentication.RegisterActivity
 import com.example.seniorproject.MainForum.*
 import com.example.seniorproject.MainForum.Fragments.FragmentHome
-import com.example.seniorproject.MainForum.Fragments.FragmentNewPost
 import com.example.seniorproject.MainForum.Fragments.ProfileCommentFragment
 import com.example.seniorproject.MainForum.Fragments.ProfilePostFragment
 import com.example.seniorproject.MainForum.Posts.ClickedPost
@@ -21,7 +20,7 @@ import javax.inject.Singleton
 //usually by use of overriden injection methods
 
 @Singleton
-@Component(modules = [AppModule::class,multibindingmodule::class])
+@Component(modules = [AppModule::class, multibindingmodule::class])
 interface AppComponent {
 
     fun inject(activity: RegisterActivity)

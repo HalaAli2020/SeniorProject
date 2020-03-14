@@ -16,7 +16,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.example.seniorproject.Authentication.RegisterActivity
+import com.example.seniorproject.Dagger.AppComponent
 import com.example.seniorproject.Dagger.DaggerAppComponent
+import com.example.seniorproject.MainForum.Fragments.FragmentHome
+
 import com.example.seniorproject.R
 import com.example.seniorproject.databinding.FragmentNewPostBinding
 import com.example.seniorproject.viewModels.NewPostFragmentViewModel
@@ -24,14 +27,14 @@ import kotlinx.android.synthetic.main.fragment_new_post.view.*
 import javax.inject.Inject
 
 
-class NewPostFragment : Fragment() {
+class FragmentNewPost : Fragment() {
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var viewModel: NewPostFragmentViewModel
 
     companion object {
-        fun newInstance() = NewPostFragment()
+        fun newInstance() = FragmentNewPost()
     }
 
     //private lateinit var viewModel: NewPostFragmentViewModel
@@ -73,7 +76,7 @@ class NewPostFragment : Fragment() {
             {
                 viewModel.savePostToDatabase()
                 fragmentManager!!.beginTransaction()
-                    .replace(R.id.fragmentContainer, HomeFragment())
+                    .replace(R.id.fragmentContainer, FragmentHome())
                     .addToBackStack(null)
                     .commit()
             }
@@ -93,10 +96,10 @@ class NewPostFragment : Fragment() {
         else
         {
             viewModel.savePostToDatabase()
-            /*fragmentManager!!.beginTransaction()
-                .replace((view!!.parent as ViewGroup).id, HomeFragment())
+            fragmentManager!!.beginTransaction()
+                .replace((view!!.parent as ViewGroup).id, FragmentHome())
                 .addToBackStack(null)
-                .commit()*/
+                .commit()
 
         }
         Log.d("SELECTED VALUE:", viewModel.classSpinner.toString())

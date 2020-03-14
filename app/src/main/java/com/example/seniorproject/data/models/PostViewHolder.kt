@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
-import com.example.seniorproject.MainForum.ClickedPost
+import com.example.seniorproject.MainForum.Posts.ClickedPost
 import com.example.seniorproject.R
 
 import kotlinx.android.synthetic.main.rv_post.view.*

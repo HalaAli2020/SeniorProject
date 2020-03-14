@@ -3,12 +3,18 @@ package com.example.seniorproject.viewModels
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.se.omapi.Session
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.CommentLive
 
 import com.example.seniorproject.data.models.PostLiveData
+import com.example.seniorproject.data.models.User
 import com.example.seniorproject.data.repositories.PostRepository
 import javax.inject.Inject
 
@@ -17,12 +23,27 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(private val repository: PostRepository) : ViewModel(){
 
     var posts: PostLiveData = PostLiveData()
-    var comments: CommentLive = CommentLive()
+    var username : LiveData<String>? = null
+    var email : LiveData<String>? = null
+    var comments : CommentLive = CommentLive()
+    var RepoUser : MutableLiveData<User>? = null
+   var CommentListener : PostListener? = null
     private var PostKey : String? = null
-    val CommentListener : PostListener? = null
+    var SessionUser : LiveData<User>? = RepoUser?.let {
+        Transformations.map(it){
+                it
+        }
+    }
 
 
 
+
+
+
+    fun newUser( u : User)
+    {
+
+    }
     fun getUserProfilePosts(): PostLiveData {
 
         posts = repository.getUserProfilePosts()
@@ -64,9 +85,11 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
 
     fun uploadUserProfileImage(selectedPhotoUri: Uri) = repository.uploadUserProfileImage(selectedPhotoUri)
 
-    fun currentUser() = repository.currentUser()
+    fun currentUser()
+    {
+        RepoUser = repository.SessionUser()
+    }
 
-    var user = repository.currentUser()
 
-
+    //var user = repository.SessionUser
 }

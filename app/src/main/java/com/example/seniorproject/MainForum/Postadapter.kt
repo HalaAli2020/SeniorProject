@@ -28,12 +28,11 @@ class PostAdapter(context: Context, ViewModel: HomeFragmentViewModel) :
     RecyclerView.Adapter<PostViewHolder>() {
     val mContext:Context = context
     val mViewModel = ViewModel
-    var savedPosts : PostLiveData = PostLiveData()
+    var savedPosts : LiveData<MutableList<Post>>? = null
     lateinit var looking : Observer<MutableList<Post>>
     lateinit var obse : Observer<in MutableList<Post>>
     init {
-
-        savedPosts = mViewModel.getSubscribedPosts()
+        savedPosts = mViewModel.getPost()
 
 
 
@@ -47,16 +46,19 @@ class PostAdapter(context: Context, ViewModel: HomeFragmentViewModel) :
     }
 
     override fun getItemCount(): Int {
-        if (savedPosts.value != null)
-            return savedPosts.value!!.size
+        if (savedPosts?.value != null)
+            return savedPosts!!.value!!.size
         else
+            Log.d("NULL", "Isa null")
             return 0
     }
 
 
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-       holder.bind(savedPosts.value!![position], mContext)
+       holder.bind(savedPosts!!.value!![position], mContext)
+        Log.d("In list" , savedPosts!!.value!![position].title)
+
     }
 
 

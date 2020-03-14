@@ -3,11 +3,9 @@ package com.example.seniorproject.data.repositories
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.example.seniorproject.data.Firebase.FirebaseData
-import com.example.seniorproject.data.models.Comment
-import com.example.seniorproject.data.models.CommentLive
-import com.example.seniorproject.data.models.Post
-import com.example.seniorproject.data.models.PostLiveData
+import com.example.seniorproject.data.models.*
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.*
@@ -22,6 +20,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     val post: Post? = null
     val CommentList: MutableList<Comment> = mutableListOf()
     val CommentL = CommentLive()
+    var SessionUser : User? = null
+
 
     private var getCommentsJob: Job? = null
 
@@ -33,16 +33,14 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     fun uploadUserProfileImage(selectedPhotoUri: Uri) =
         Firebase.uploadImageToFirebaseStorage(selectedPhotoUri)
 
-    fun getSavedPosts() = Firebase.getSavedPost()
+    //fun getSavedPosts() = Firebase.getSavedPost()
     fun getSavedUserPosts() {
-       val pos = Firebase.getSavedUserPost()
+       //val pos = Firebase.getSavedUserPost()
 
     }
-    fun getSubscribedPosts() : PostLiveData
-    {
-       val po = Firebase.getSubscribedPosts()
-        return po
-    }
+    fun getSubscribedPosts() = Firebase.getSubscribedPosts()
+
+
 
 
     fun getpostKey(PKey: String)
@@ -100,11 +98,11 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         Firebase.editPost(crn, postKey, ctext, ctitle, ntext, ntitle, userID)
     }
 
-    fun currentUser() = Firebase.CurrentUser()
+    fun SessionUser() = Firebase.CurrentUserL()
 
-    fun fetchCurrentUserName() = Firebase.fetchCurrentUserName()
+    fun fetchSessionUserName() = SessionUser!!.username
 
-    fun getClasses() = Firebase.sendClist()
+    fun getClasses() = Firebase.getClasses()
 
     fun getClassPosts(className: String) = Firebase.getClassPosts(className)
 

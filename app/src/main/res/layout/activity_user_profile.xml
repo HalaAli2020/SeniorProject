@@ -36,8 +36,8 @@
                 app:layout_constraintTop_toTopOf="parent">
 
 
-                <ImageView
-                    android:id="@+id/in_profile_image"
+            <ImageView
+                android:id="@+id/in_profile_image"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_marginTop="10dp"
@@ -61,12 +61,12 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/in_profile_email" />
 
-                <TextView
+            <TextView
                     android:id="@+id/in_profile_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
-                    android:text="@{ProfileViewModell.user.displayName}"
+                    android:text="@{ProfileViewModell.SessionUser.username}"
                     android:textColor="@color/TextColor"
                     android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -74,12 +74,12 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/in_profile_image" />
 
-                <TextView
+            <TextView
                     android:id="@+id/in_profile_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
-                    android:text="@{ProfileViewModell.user.email}"
+                    android:text="@{ProfileViewModell.SessionUser.email}"
                     android:textColor="@color/TextColor"
                     android:textSize="15sp"
                     app:layout_constraintEnd_toEndOf="parent"

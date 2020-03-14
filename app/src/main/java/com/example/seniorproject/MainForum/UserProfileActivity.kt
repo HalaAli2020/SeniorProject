@@ -3,10 +3,14 @@ package com.example.seniorproject.MainForum
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +24,8 @@ import com.example.seniorproject.MainForum.Fragments.ProfileCommentFragment
 import com.example.seniorproject.MainForum.Fragments.ProfilePostFragment
 import com.example.seniorproject.MainForum.Posts.EditProfileActivity
 import com.example.seniorproject.R
+import com.example.seniorproject.data.models.Post
+import com.example.seniorproject.data.models.User
 import com.example.seniorproject.databinding.ActivityUserProfileBinding
 import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -32,6 +38,7 @@ class UserProfileActivity : AppCompatActivity() {
     private lateinit var adapter: CustomAdapter
     private lateinit var mDrawerLayout: DrawerLayout
     private lateinit var linearLayoutManager: LinearLayoutManager
+    private var obse : Observer<User>? = null
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -44,7 +51,15 @@ class UserProfileActivity : AppCompatActivity() {
 
         val actionbar = supportActionBar
         actionbar!!.title = "Profile"
-        replaceFragment(ProfilePostFragment())
+
+        actionbar.setDisplayHomeAsUpEnabled(true)
+        obse = Observer<User> { value ->
+            Log.d("swap", "Swap")
+            this.in_profile_username.text = value.username
+            this.in_profile_email.text = value.email
+
+
+        }
 
         DaggerAppComponent.create().inject(this)
         val factory = InjectorUtils.provideProfileViewModelFactory()
@@ -58,6 +73,12 @@ class UserProfileActivity : AppCompatActivity() {
         pro_bottom_navigation.setIconVisibility(false)
         pro_bottom_navigation.enableAnimation(false)
         pro_bottom_navigation.setTextSize(20F)
+        myViewModel.currentUser()
+        myViewModel.SessionUser?.observe(this, obse!!)
+
+
+
+
 
         pro_bottom_navigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
@@ -113,4 +134,5 @@ class UserProfileActivity : AppCompatActivity() {
         startActivity(intent)
         return true
     }
+
 }
