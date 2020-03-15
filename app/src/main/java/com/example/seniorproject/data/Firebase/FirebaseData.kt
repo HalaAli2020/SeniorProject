@@ -171,8 +171,9 @@ class FirebaseData @Inject constructor() {
                     val newref = FirebaseDatabase.getInstance().getReference("/Subjects/${classn}/Posts/${key}").child("/author")
                     if (userID == p0.child("UserID").value.toString()){
                         newref.setValue(username)
+                        changeCommunityCommentUsername(username,classn,key)
                     }
-                    //still need to deal with comments
+
                 }
                 override fun onChildRemoved(p0: DataSnapshot) {
                     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -210,6 +211,45 @@ class FirebaseData @Inject constructor() {
             x++
         }
 
+
+    }
+
+    fun changeCommunityCommentUsername(username: String, classname : String, pkey : String ){
+        // you can get the username, and class via parameter
+        //then you can just fill them in and make the query
+        val userID = firebaseAuth.uid
+        val ref =  FirebaseDatabase.getInstance().getReference("/Subjects/${classname}/Posts/${pkey}/Comments")
+        ref.orderByKey().addChildEventListener(object : ChildEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?){
+                Log.d(PTAG,p0.getKey().toString()) // the comment key
+                var key = p0.getKey().toString()
+                val newref = FirebaseDatabase.getInstance().getReference("/Subjects/${classname}/Posts/${pkey}/Comments/${key}").child("/author")
+                if (userID == p0.child("PosterID").value.toString()){
+                    newref.setValue(username)
+                }
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                Log.d(PTAG,p0.getKey().toString()) // the comment key
+                var key = p0.getKey().toString()
+                val newref = FirebaseDatabase.getInstance().getReference("/Subjects/${classname}/Posts/${pkey}/Comments/${key}").child("/author")
+                if (userID == p0.child("PosterID").value.toString()){
+                    newref.setValue(username)
+                }
+            }
+            override fun onChildRemoved(p0: DataSnapshot) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+        })
 
 
     }
