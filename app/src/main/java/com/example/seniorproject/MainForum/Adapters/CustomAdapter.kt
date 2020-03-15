@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.MainForum.Posts.ClickedPost
+import com.example.seniorproject.MainForum.Posts.CommunityPosts
+import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.Post
@@ -47,7 +49,15 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
 
             if(type==0){
                 holder.itemView.username.text = post.crn
+                holder.itemView.username.setOnClickListener {
+                    val intent = Intent(mContext, CommunityPosts::class.java)
+                    intent.putExtra("ClassName", post.crn)
+                    mContext.startActivity(intent)
+                }
             }
+
+
+
 
             holder.itemView.setOnClickListener {
                 val intent = Intent(mContext, ClickedPost::class.java)
@@ -99,6 +109,30 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
         //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
 
         return postcrn!!
+    }
+
+    fun getTitle(customViewHolders: CustomViewHolders, position: Int): String {
+        //position=customViewHolders.adapterPosition
+
+        // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val posttitle: String?= post.title
+        //notifyItemRemoved(customViewHolders.adapterPosition)
+        //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
+
+        return posttitle!!
+    }
+
+    fun getText(customViewHolders: CustomViewHolders, position: Int): String {
+        //position=customViewHolders.adapterPosition
+
+        // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val posttext: String?= post.text
+        //notifyItemRemoved(customViewHolders.adapterPosition)
+        //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
+
+        return posttext!!
     }
 
     fun getNewCount() : Int{
