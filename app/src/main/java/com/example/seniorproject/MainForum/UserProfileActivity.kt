@@ -44,6 +44,7 @@ class UserProfileActivity : AppCompatActivity() {
 
         val actionbar = supportActionBar
         actionbar!!.title = "Profile"
+        replaceFragment(ProfileCommentFragment())
         replaceFragment(ProfilePostFragment())
 
         DaggerAppComponent.create().inject(this)
