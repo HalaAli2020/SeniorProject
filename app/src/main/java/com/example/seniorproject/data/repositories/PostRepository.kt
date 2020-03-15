@@ -101,6 +101,9 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         Firebase.removeClassSub(crn)
     }
 
+    fun getclassnamesforusername() = Firebase.getclassnamesforusername()
+
+    fun sendClassnameForUsername() = Firebase.sendClassnameForUsername()
 
     fun getUserProfilePosts() = Firebase.getUserProfilePosts()
 

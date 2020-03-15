@@ -70,5 +70,8 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
 
     var user = repository.currentUser()
 
+    fun getclassnamesforusername() = repository.getclassnamesforusername()
+
+    fun sendClassnameForUsername() = repository.sendClassnameForUsername()
 
 }

@@ -56,6 +56,8 @@ class EditProfileActivity : AppCompatActivity() {
         binding.profileEditViewModel = myViewModel
         binding.lifecycleOwner = this
 
+        myViewModel.getclassnamesforusername()
+        myViewModel.sendClassnameForUsername()
 
       val img : ImageButton = findViewById<ImageButton>(R.id.img_button)
 
