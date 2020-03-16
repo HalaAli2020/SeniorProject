@@ -23,14 +23,14 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
 
 
 
-    fun getUserProfilePosts(): PostLiveData {
+    fun getUserProfilePosts(UserID : String): PostLiveData {
 
-        posts = repository.getUserProfilePosts()
+        posts = repository.getUserProfilePosts(UserID)
         return posts
     }
 
-    fun getUserProfileComments() : CommentLive {
-        comments = repository.getUserProfileComments()
+    fun getUserProfileComments(UserID : String) : CommentLive {
+        comments = repository.getUserProfileComments(UserID)
         return comments
     }
 
@@ -69,6 +69,9 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     fun saveNewUsername(username: String) = repository.saveNewUsername(username)
 
     var user = repository.currentUser()
+
+    fun fetchEmail(UserID: String) = repository.fetchEmail(UserID)
+    //fun getEmail() = repository.getEmail()
 
     fun getclassnamesforusername() = repository.getclassnamesforusername()
 

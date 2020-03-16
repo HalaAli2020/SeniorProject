@@ -57,13 +57,18 @@ class ProfilePostFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        //this is only place we dont have the ID
+        var currentuser = FirebaseAuth.getInstance().currentUser?.uid ?: "null"
+        var ID = this.getArguments()?.getString("ID") ?: "null"
+        if (ID == "null"){
+            ID = currentuser
+        }
+
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_profile__post, container, false)
         DaggerAppComponent.create().inject(this)
@@ -73,16 +78,15 @@ class ProfilePostFragment : Fragment() {
         myViewModel = ViewModelProviders.of(this,factory).get(ProfileViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_profile__post, container, false)
 
-        if (FirebaseAuth.getInstance().uid != null) {
-            view.profile_post_recyclerView.adapter =
-                CustomAdapter(
-                    view.context,
-                    myViewModel.getUserProfilePosts(),0
-                )
+        if (myViewModel.getUserProfilePosts(ID).value == null){
+            //need to clear the recyclerview
+            ID = "0"
         }
 
+            view.profile_post_recyclerView.adapter =
+                CustomAdapter(view.context, myViewModel.getUserProfilePosts(ID),0)
 
-        adapter = CustomAdapter(view.context, myViewModel.getUserProfilePosts(),0)
+        adapter = CustomAdapter(view.context, myViewModel.getUserProfilePosts(ID),0)
         view.profile_post_recyclerView.adapter= adapter
 
         view.refreshView.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.blue_theme))
@@ -90,7 +94,7 @@ class ProfilePostFragment : Fragment() {
 
         view.refreshView.setOnRefreshListener {
             view.profile_post_recyclerView.adapter =
-                CustomAdapter(view.context, myViewModel.getUserProfilePosts(),0)
+                CustomAdapter(view.context, myViewModel.getUserProfilePosts(ID),0)
             view.refreshView.isRefreshing = false
         }
 
@@ -98,7 +102,7 @@ class ProfilePostFragment : Fragment() {
         binding.profViewModel = myViewModel
         binding.lifecycleOwner = this
 
-        myViewModel.getUserProfilePosts()
+        myViewModel.getUserProfilePosts(ID)
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true
@@ -106,7 +110,7 @@ class ProfilePostFragment : Fragment() {
         view.profile_post_recyclerView.adapter =
             CustomAdapter(
                 view.context,
-                myViewModel.getUserProfilePosts(),
+                myViewModel.getUserProfilePosts(ID),
                 0
             )
 
@@ -300,6 +304,15 @@ class ProfilePostFragment : Fragment() {
 
         binding.executePendingBindings()
         return view
+    }
+    companion object {
+        fun newInstance(ID: String): ProfilePostFragment {
+            val bundle : Bundle = Bundle()
+            bundle.putString("ID",ID)
+            val fragment = ProfilePostFragment()
+            fragment.setArguments(bundle)
+            return fragment
+        }
     }
 
 
