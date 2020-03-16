@@ -23,7 +23,8 @@ class CommentsAdapter(
     title: String,
     text: String,
     author: String,
-    crn: String
+    crn: String,
+    UserID : String
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -35,6 +36,7 @@ class CommentsAdapter(
     private val text: String = text
     private val author: String = author
     private val crn: String = crn
+    private val UserID: String = UserID
 
 
     override fun getItemViewType(position: Int): Int {
@@ -70,37 +72,38 @@ class CommentsAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        Log.d("CommentsAdapter:", "" + position)
-        if (holder is CustomViewHoldersHeader) {
-            holder.itemView.click_post_title.text = title
-            holder.itemView.click_post_text.text = text
-            holder.itemView.community_name_TV.text = crn
-            holder.itemView.author_name_TV.text = author
 
-            /*holder.itemView.author_name_TV.setOnClickListener {
-                val intent = Intent(mContext, UserProfileActivity::class.java)
-                //intent.putExtra("UserID", UserPostKey)
-                intent.putExtra("Author", author)
-                mContext.startActivity(intent)
-            }*/
+            Log.d("CommentsAdapter:", "" + position)
+            if (holder is CustomViewHoldersHeader) {
+                holder.itemView.click_post_title.text = text
+                holder.itemView.click_post_text.text = text
+                holder.itemView.community_name_TV.text = crn
+                holder.itemView.author_name_TV.text = author
 
-
-        } else {
-            if (Comments?.value == null) {
-                holder.itemView.comment_text.text = "No Comments yet"
-
-            } else {
-                val comment: Comment = Comments?.value!![position]
-                //holder.itemView.post_title.text = .title
-                holder.itemView.comment_text.text = comment.text
-                holder.itemView.authcom.text = comment.author
-
-                holder.itemView.authcom.setOnClickListener {
+                holder.itemView.author_name_TV.setOnClickListener {
                     val intent = Intent(mContext, UserProfileActivity::class.java)
-                    intent.putExtra("UserID", comment.PosterID)
-                    intent.putExtra("Author", comment.author)
+                    intent.putExtra("UserID", UserID)
+                    intent.putExtra("Author", author)
                     mContext.startActivity(intent)
                 }
+
+            } else {
+                if (Comments?.value == null || getItemCount() == 0) {
+                    holder.itemView.comment_text.text = "No Comments yet"
+                    //need to get the No comments yet to show up
+
+                } else {
+                    val comment: Comment = Comments?.value!![position]
+                    //holder.itemView.post_title.text = .title
+                    holder.itemView.comment_text.text = comment.text
+                    holder.itemView.authcom.text = comment.author
+
+                    holder.itemView.authcom.setOnClickListener {
+                        val intent = Intent(mContext, UserProfileActivity::class.java)
+                        intent.putExtra("UserID", comment.PosterID)
+                        intent.putExtra("Author", comment.author)
+                        mContext.startActivity(intent)
+                    }
 
                     /* holder.itemView.setOnClickListener {
                  val intent = Intent(mContext, ClickedPost::class.java)
@@ -112,9 +115,7 @@ class CommentsAdapter(
 
                 }
 
-            }
-
-
+        }
         }
 
         class CustomViewHolders(v: View) : RecyclerView.ViewHolder(v) {

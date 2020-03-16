@@ -63,9 +63,11 @@ class ProfilePostFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         //this is only place we dont have the ID
-        val ID = this.getArguments()?.getString("ID") ?: "null"
-
-
+        var currentuser = FirebaseAuth.getInstance().currentUser?.uid ?: "null"
+        var ID = this.getArguments()?.getString("ID") ?: "null"
+        if (ID == "null"){
+            ID = currentuser
+        }
 
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_profile__post, container, false)
@@ -76,6 +78,10 @@ class ProfilePostFragment : Fragment() {
         myViewModel = ViewModelProviders.of(this,factory).get(ProfileViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_profile__post, container, false)
 
+        if (myViewModel.getUserProfilePosts(ID).value == null){
+            //need to clear the recyclerview
+            ID = "0"
+        }
 
             view.profile_post_recyclerView.adapter =
                 CustomAdapter(view.context, myViewModel.getUserProfilePosts(ID),0)

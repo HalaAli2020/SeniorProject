@@ -17,6 +17,7 @@ import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.PostLiveData
 import kotlinx.android.synthetic.main.rv_post.view.*
+import kotlinx.android.synthetic.main.rv_post_header.view.*
 
 class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int ) :
     RecyclerView.Adapter<CustomViewHolders>() {

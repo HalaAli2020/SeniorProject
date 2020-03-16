@@ -52,9 +52,13 @@ class ClickedPost : AppCompatActivity() {
         myViewModel.text = text
         myViewModel.crn = crn
 
-        adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn)
+        //add userid and send
+
+        adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString())
         comment_RecyclerView.adapter = adapter
         comment_RecyclerView.layoutManager = LinearLayoutManager(this)
+
+
 
         binding.clickedViewModel = myViewModel
         binding.lifecycleOwner = this
@@ -65,7 +69,7 @@ class ClickedPost : AppCompatActivity() {
         refreshView.setColorSchemeColors(ContextCompat.getColor(this, R.color.white))
 
         refreshView.setOnRefreshListener {
-            comment_RecyclerView.adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn)
+            comment_RecyclerView.adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString())
             refreshView.isRefreshing = false
         }
 

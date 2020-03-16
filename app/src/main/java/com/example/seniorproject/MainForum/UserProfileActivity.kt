@@ -31,7 +31,10 @@ import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Handler
+import android.util.Log
+import android.view.View
 import android.widget.TextView
+import androidx.core.view.isInvisible
 
 
 private const val TAG = "profileTAG"
@@ -55,16 +58,24 @@ class UserProfileActivity : AppCompatActivity() {
         val factory = InjectorUtils.provideProfileViewModelFactory()
         myViewModel = ViewModelProviders.of(this,factory).get(ProfileViewModel::class.java)
 
-        val test : String = intent.getStringExtra("UserID") ?: "null"
+        var test : String = intent.getStringExtra("UserID") ?: "null"
         val author : String =  intent.getStringExtra("Author") ?: "null"
-        val ID = test
+        var ID = test
+
+        if (test == "null" || test == FirebaseAuth.getInstance().currentUser?.uid){
+            val nav: TextView = findViewById(R.id.NavToEdit)
+            Log.d(TAG,"user profile opened")
+            nav.visibility = View.VISIBLE
+        }
+        else {
+            val nav: TextView = findViewById(R.id.NavToEdit)
+            nav.visibility = View.INVISIBLE
+        }
 
         val email = myViewModel.fetchEmail(test)
-
         val profilepostfrag = ProfilePostFragment.newInstance(ID)
         val profilecommentfrag = ProfileCommentFragment.newInstance(ID)
         replaceFragment(profilepostfrag)
-
 
         if (author != "null")  {
             in_profile_username.text = author
@@ -106,8 +117,11 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
 
+
+
         NavToEdit.setOnClickListener {
                navToEdit()
+            //set an if statement if the click still works on invisible
             }
 
 
@@ -147,5 +161,9 @@ class UserProfileActivity : AppCompatActivity() {
 
     fun refresh(){
         recreate()
+    }
+
+    fun makeInvisible(view: View){
+
     }
 }

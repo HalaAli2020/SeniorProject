@@ -381,7 +381,7 @@ class FirebaseData @Inject constructor() {
                         it.UserID = p0.child("UserID").value.toString()
                         // need to change this later subject should be subject crn should be different
                         it.crn = p0.child("subject").value.toString()
-                        it.author = p0.child("Author").value.toString()
+                        it.author = p0.child("author").value.toString()
                         // not setting author
                     }
                 } catch (e: Exception) {
@@ -416,6 +416,22 @@ class FirebaseData @Inject constructor() {
         })
         Log.d("Post function return", "Post function return")
 
+        val comref = FirebaseDatabase.getInstance().getReference("users/$uid").child("Posts")
+        val checkforcomments = comref.addListenerForSingleValueEvent( object : ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.getValue() == null) {
+                    Log.d("comment", "doesn't exist")
+                    val emptyPost = Post("no Posts","" ,"")
+                    var profilePostL: MutableList<Post> = mutableListOf()
+                    profilePostL.add(emptyPost)
+                    profilePosts.value = profilePostL
+                }
+            }
+        } )
+
         return profilePosts
     }
 
@@ -428,8 +444,9 @@ class FirebaseData @Inject constructor() {
     fun listenForUserProfileComments (uid : String): CommentLive{
         Log.d(TAG, "getUserProfile comments listener called")
 
-        val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Comments")
 
+
+        val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Comments")
         val profilePostListen = reference.addChildEventListener(object : ChildEventListener {
             var profileCommentList: MutableList<Comment> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
@@ -444,18 +461,14 @@ class FirebaseData @Inject constructor() {
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 val newComment = p0.getValue(Comment::class.java)
-
-
                 if (newComment != null) {
                     Log.d(TAG, newComment.text ?: " Accessing profile comment author")
-
-
                     profileCommentList.add(newComment)
-
                     //newProfilePosts = newProfilePost
                     newProfileComments = newComment
-
                 }
+
+
                 Comments.value = profileCommentList
                 //Log.d("TAG", "Comments loaded")
 
@@ -464,11 +477,30 @@ class FirebaseData @Inject constructor() {
             override fun onChildRemoved(p0: DataSnapshot) {
             }
 
-
-
-
         })
         Log.d("Post function return", "Post function return")
+
+        val comref = FirebaseDatabase.getInstance().getReference("users/$uid").child("Comments")
+        val checkforcomments = comref.addListenerForSingleValueEvent( object : ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.getValue() == null) {
+                    Log.d("comment", "doesn't exist")
+                    val emptycomment = Comment("no Comments" , 0, "", "", "")
+                    var profileCommentL: MutableList<Comment> = mutableListOf()
+                    profileCommentL.add(emptycomment)
+                    Comments.value = profileCommentL
+                }
+            }
+        } )
+
+
+
+
+
 
         return Comments
 
@@ -1379,7 +1411,7 @@ class FirebaseData @Inject constructor() {
                                         newPost.let {
                                             it.text = p3.child("text").value.toString()
                                             it.title = p3.child("title").value.toString()
-                                            it.key = p3.child("Key").value.toString()
+                                            it.key = p3.child("key").value.toString()
                                             // class key is key for this post
                                             it.Classkey = p3.child("Classkey").value.toString()
                                             // user who posted id

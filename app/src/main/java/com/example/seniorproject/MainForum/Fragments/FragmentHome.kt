@@ -63,6 +63,8 @@ class FragmentHome : Fragment() {
         linearLayoutManager.stackFromEnd = true
         view.post_recyclerView.layoutManager = linearLayoutManager
 
+
+
         if (FirebaseAuth.getInstance().uid != null)
             view.post_recyclerView.adapter = CustomAdapter(view.context, myViewModel.getSubscribedPosts(), 0)
 
