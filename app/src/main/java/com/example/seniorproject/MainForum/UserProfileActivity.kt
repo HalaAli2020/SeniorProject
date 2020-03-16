@@ -53,6 +53,8 @@ class UserProfileActivity : AppCompatActivity() {
 
         val actionbar = supportActionBar
         actionbar!!.title = "Profile"
+        replaceFragment(ProfileCommentFragment())
+        replaceFragment(ProfilePostFragment())
 
         DaggerAppComponent.create().inject(this)
         val factory = InjectorUtils.provideProfileViewModelFactory()
@@ -121,7 +123,6 @@ class UserProfileActivity : AppCompatActivity() {
 
         NavToEdit.setOnClickListener {
                navToEdit()
-            //set an if statement if the click still works on invisible
             }
 
 

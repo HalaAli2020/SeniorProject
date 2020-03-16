@@ -66,10 +66,15 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
 
     fun currentUser() = repository.currentUser()
 
+    fun saveNewUsername(username: String) = repository.saveNewUsername(username)
+
     var user = repository.currentUser()
 
     fun fetchEmail(UserID: String) = repository.fetchEmail(UserID)
     //fun getEmail() = repository.getEmail()
 
+    fun getclassnamesforusername() = repository.getclassnamesforusername()
+
+    fun sendClassnameForUsername() = repository.sendClassnameForUsername()
 
 }

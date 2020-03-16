@@ -111,12 +111,17 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         Firebase.removeClassSub(crn)
     }
 
+    fun getclassnamesforusername() = Firebase.getclassnamesforusername()
+
+    fun sendClassnameForUsername() = Firebase.sendClassnameForUsername()
 
     fun getUserProfilePosts(userID: String) = Firebase.getUserProfilePosts(userID)
 
     fun getUserProfileComments(userID: String) = Firebase.getUserProfileComments(userID)
 
     fun fetchEmail(UserID: String) = Firebase.fetchEmail(UserID)
+
+    fun saveNewUsername(username: String) = Firebase.saveNewUsername(username)
 
 
     companion object {
