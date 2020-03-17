@@ -1,66 +1,83 @@
 package com.example.seniorproject.MainForum.Adapters
 
 import android.content.Context
-import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.seniorproject.Messages.ChatLog
 import com.example.seniorproject.R
-import com.example.seniorproject.data.models.User
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.m_rv_new_message.view.*
+import com.example.seniorproject.data.models.ChatMessage
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.m_activity_chat_log.view.*
+import kotlinx.android.synthetic.main.m_rv_chat_from_row.view.*
+import kotlinx.android.synthetic.main.m_rv_chat_to_row.view.*
 
 
 class ChatLogAdapter(
     context: Context,
-    private val UserList: List<User>
+    private val messageList: List<ChatMessage>
 ) :
-    RecyclerView.Adapter<ChatLogHolder>() {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val mContext: Context = context
+    private val TO_CHAT: Int = 0
+    private val FROM_CHAT: Int = 1
+    private val uid = FirebaseAuth.getInstance().uid
 
-    companion object{
+    companion object {
         val USER_KEY = "USER_KEY"
         val USERNAME = "USERNAME"
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatLogHolder {
+    override fun getItemViewType(position: Int): Int {
+        if (messageList[position].fromID == uid) {
+            return TO_CHAT
+        }
+        return FROM_CHAT
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        if (viewType == TO_CHAT) {
+            val layoutInflater = LayoutInflater.from(parent.context)
+            val cellForRow = layoutInflater.inflate(R.layout.m_rv_chat_to_row, parent, false)
+            return ToChatLogHolder(cellForRow)
+        }
+
         val layoutInflater = LayoutInflater.from(parent.context)
-        val cellForRow = layoutInflater.inflate(R.layout.m_rv_new_message, parent, false)
-        return ChatLogHolder(cellForRow)
+        val cellForRow = layoutInflater.inflate(R.layout.m_rv_chat_from_row, parent, false)
+        return FromChatLogHolder(cellForRow)
     }
 
     override fun getItemCount(): Int {
 
-        if (!UserList.isNullOrEmpty()) {
-            return UserList.size
+        if (!messageList.isNullOrEmpty()) {
+            return messageList.size
         }
 
         return 0
     }
 
-    override fun onBindViewHolder(holder: ChatLogHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
-        val user: User = UserList[position]
+        val message: ChatMessage = messageList[position]
 
-        holder.itemView.usernameTextview.text = user.username
-        //Picasso.get().load(user.profileImageURL).into(viewHolder.itemView.image_new_message)
-        Log.d("NewMessageAdapter", user.username)
-        Picasso.get().load(user.profileImageUrl).into(holder.itemView.image_new_message)
-        holder.itemView.newMessageUser.setOnClickListener {
-            val intent = Intent(mContext, ChatLog::class.java)
-            intent.putExtra(USER_KEY, user.uid)
-            intent.putExtra(USERNAME, user.username)
-            mContext.startActivity(intent)
+        if (holder is ToChatLogHolder) {
+            holder.itemView.textview_to_Row.text = message.text
+        } else {
+            holder.itemView.textview_from_Row.text = message.text
         }
+
+        //val message: ChatMessage = messageList[position]
+        //holder.itemView.textview_from_Row.text = message.text
+        //Picasso.get().load(user.profileImageURL).into(viewHolder.itemView.image_new_message)
+        //Log.d("NewMessageAdapter", message.username)
 
     }
 }
 
-class ChatLogHolder(v: View) : RecyclerView.ViewHolder(v)
+class ToChatLogHolder(v: View) : RecyclerView.ViewHolder(v)
+class FromChatLogHolder(v: View) : RecyclerView.ViewHolder(v)
+
 
 
 

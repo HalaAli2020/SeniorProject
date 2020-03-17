@@ -1499,7 +1499,7 @@ class FirebaseData @Inject constructor() {
     }
 
     private fun setUsers(firebaseCallback: FirebaseCallback) {
-        val ref = FirebaseDatabase.getInstance().getReference("users").limitToFirst(5)
+        val ref = FirebaseDatabase.getInstance().getReference("users")
 
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             var UserList: MutableList<User> = mutableListOf()
@@ -1528,19 +1528,35 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    fun getMessages(){}
+    fun getMessages(toId: String?): MutableLiveData<List<ChatMessage>>?{
+        var messages: MutableLiveData<List<ChatMessage>>? = MutableLiveData()
+        listenForMessages(object: FirebaseMessagseCallback{
+            override fun onCallback(list: MutableList<ChatMessage>?) {
+                messages?.value=list
+            }
+        }, toId)
 
-    fun listenForMessages(toId: String){
+        return messages
+    }
+
+    fun listenForMessages(firebaseCallback: FirebaseMessagseCallback, toId: String?){
         val fromId = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId")
 
         ref.addChildEventListener(object: ChildEventListener{
-
+            var chatList: MutableList<ChatMessage> = mutableListOf()
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                //for(p1 in p0.children) {
+
                 val chatMessage = p0.getValue(ChatMessage::class.java)
+                //chatMessage.uid = p1.child("uid").getValue(String::class.java)
 
+                if (chatMessage != null) {
+                    chatList?.add(chatMessage)
+                }
+                //}
 
-
+                firebaseCallback.onCallback(chatList)
             }
 
             override fun onCancelled(p0: DatabaseError) {
@@ -1562,7 +1578,7 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    fun sendMessage(message: String, toID: String){
+    fun sendMessage(message: String, toID: String, username: String){
         //val message = editText_chatLog.text.toString()
 
         val fromID = FirebaseAuth.getInstance().uid
@@ -1580,6 +1596,7 @@ class FirebaseData @Inject constructor() {
             toID,
             System.currentTimeMillis() / 1000
         )
+
         reference.setValue(chatMessage).addOnSuccessListener {
             Log.d("ChatLog", "Saved our chat message")
             //editText_chatLog.text.clear()
@@ -1588,16 +1605,85 @@ class FirebaseData @Inject constructor() {
 
         toReference.setValue(chatMessage)
 
+        val latestChatMessage = LatestMessage(
+            reference.key!!,
+            message,
+            fromID!!,
+            toID,
+            username,
+            System.currentTimeMillis() / 1000
+        )
+
+        val latestChatMessage2 = LatestMessage(
+            reference.key!!,
+            message,
+            fromID!!,
+            toID,
+            FirebaseAuth.getInstance().currentUser?.displayName,
+            System.currentTimeMillis() / 1000
+        )
+
         val latestMessageRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromID/$toID")
-        latestMessageRef.setValue(chatMessage)
+        latestMessageRef.setValue(latestChatMessage)
 
         val latestMessageToRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$toID/$fromID")
-        latestMessageToRef.setValue(chatMessage)
+        latestMessageToRef.setValue(latestChatMessage2)
+    }
+
+
+    fun getRecentMessages(): MutableLiveData<List<LatestMessage>>{
+        val latestMessagesMap = MutableLiveData<List<LatestMessage>>()
+        listenForLatestMessage(object: FirebaseRecentMessagseCallback{
+            override fun onCallback(list: List<LatestMessage>) {
+                latestMessagesMap?.value=list
+            }
+        })
+        return latestMessagesMap
+    }
+
+    private fun listenForLatestMessage(firebaseCallback: FirebaseRecentMessagseCallback){
+        val fromId = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId")
+        ref.addChildEventListener(object: ChildEventListener{
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                var latestMessages: MutableList<LatestMessage> = mutableListOf()
+                val chatMessage = p0.getValue(LatestMessage::class.java) ?: return
+                latestMessages.add(chatMessage)
+
+                firebaseCallback.onCallback(latestMessages)
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+                var latestMessages: MutableList<LatestMessage> = mutableListOf()
+                val chatMessage = p0.getValue(LatestMessage::class.java) ?: return
+                latestMessages.add(chatMessage)
+
+                firebaseCallback.onCallback(latestMessages)
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+            override fun onChildRemoved(p0: DataSnapshot) {
+
+            }
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+
+            }
+        })
     }
 
 
     interface FirebaseCallback {
         fun onCallback(list: MutableList<User>?)
+    }
+
+    interface FirebaseMessagseCallback {
+        fun onCallback(list: MutableList<ChatMessage>?)
+    }
+
+    interface FirebaseRecentMessagseCallback {
+        fun onCallback(list: List<LatestMessage>)
     }
 
 

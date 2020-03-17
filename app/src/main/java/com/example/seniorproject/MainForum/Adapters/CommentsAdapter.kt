@@ -103,7 +103,7 @@ class CommentsAdapter(
     }
 
 
-  class CustomViewHoldersHeader(v: View) : RecyclerView.ViewHolder(v) {
+    class CustomViewHoldersHeader(v: View) : RecyclerView.ViewHolder(v) {
 
     }
 

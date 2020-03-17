@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Messages.ChatLog"></activity>
+        <activity android:name=".Messages.ChatLog"
+            android:windowSoftInputMode="adjustResize|stateVisible"></activity>
         <activity android:name=".Messages.NewMessage" />
         <activity android:name=".MainForum.Posts.EditProfileActivity" />
         <activity android:name=".MainForum.Posts.CommunityPosts" />
