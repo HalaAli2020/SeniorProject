@@ -7,12 +7,15 @@ import java.net.URI
 data class User(var username: String?, var email: String?, var uid: String?, val profileImageUrl: Uri?
 )
 {
-    constructor(): this("","","", Uri.EMPTY)
-    var Posts  = mutableListOf<Post>()
+    constructor() : this("", "", "", Uri.EMPTY)
+
+    var Posts = mutableListOf<Post>()
     //lateinit var Subscriptions : List<String>
-    var Admin : Boolean = true
+    var Admin: Boolean = true
     var ProfilePic : Uri? = null
     //var Subscriptions : HashMap<String,String>? = hashMapOf()
+    var Subscriptions: HashMap<String, String> = hashMapOf()
+
     init {
 
 
