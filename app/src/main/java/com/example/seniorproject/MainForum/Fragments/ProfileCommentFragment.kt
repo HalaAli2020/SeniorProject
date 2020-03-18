@@ -141,7 +141,10 @@ class ProfileCommentFragment : Fragment() {
         binding.executePendingBindings()
         //this?
         //use an if statement to control value of swipe?
-
+        if (ID != FirebaseAuth.getInstance().currentUser?.uid){
+            val swipe = null
+        }
+        else if (ID == FirebaseAuth.getInstance().currentUser?.uid) {
             val swipe = object : SwipeHelper(context!!, view.profile_comment_recyclerView, 200) {
                 override fun initButton(
                     viewHolders: RecyclerView.ViewHolder,
@@ -213,8 +216,8 @@ class ProfileCommentFragment : Fragment() {
                                     })
 
                                 val msgdialog: AlertDialog = builder.create()
-                                    msgdialog.getWindow()!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
-                                    msgdialog.show()
+                                msgdialog.getWindow()!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
+                                msgdialog.show()
 
                             }
 
@@ -271,7 +274,7 @@ class ProfileCommentFragment : Fragment() {
 
             }
 
-
+        }
 
             /*val itemTouchHelperCallback =
             object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
