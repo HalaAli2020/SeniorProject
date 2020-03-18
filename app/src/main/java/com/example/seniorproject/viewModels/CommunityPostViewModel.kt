@@ -19,6 +19,13 @@ class CommunityPostViewModel @Inject constructor(private val repository: PostRep
         return listClasses!!
     }
 
+    fun blockPost(UserID: String, crn: String, classkey: String){
+        repository.blockPost(UserID, crn, classkey)
+    }
+
+    fun reportUserPost(accusedID: String, complaintext: String, crn: String, classkey: String){
+        repository.reportUserPost(accusedID, complaintext, crn, classkey)
+    }
 
    fun checknull() : Boolean
    {

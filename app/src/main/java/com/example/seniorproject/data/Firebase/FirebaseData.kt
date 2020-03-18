@@ -214,7 +214,6 @@ class FirebaseData @Inject constructor() {
 
 
     fun resetPassword(email: String) = Completable.create { emitter ->
-
         FirebaseAuth.getInstance().sendPasswordResetEmail(email)
             .addOnCompleteListener {
                 if (!emitter.isDisposed) {
@@ -891,6 +890,66 @@ class FirebaseData @Inject constructor() {
         })
     }
 
+    fun blockUserComment(UserID: String, text: String, crn: String, postID: String) {
+
+        val userID = firebaseAuth.uid
+        val author= firebaseAuth.currentUser?.displayName
+        val comment = Comment(text, 0, userID, crn, postID)
+        comment.author= author
+        val User_key = FirebaseDatabase.getInstance().getReference("/users/$UserID").child("BlockedUsers").push().key
+
+        comment.PosterID = User_key
+
+        val dataupdates = HashMap<String, Any>()
+        val comementvalues = comment.toMap()
+        //dataupdates["Subjects/$crn/Posts/$ClassKey/Comments/$Class_key"] = comementvalues
+        dataupdates["users/$UserID/BlockedUsers/$User_key"] = comementvalues
+        FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
+
+    }
+
+    fun blockUserPost(UserID: String, crn: String, Classkey: String) {
+
+        val userID = firebaseAuth.uid
+        val author= firebaseAuth.currentUser?.displayName
+
+        val User_key = FirebaseDatabase.getInstance().getReference("/users/$userID").child("BlockedUsers").push().key
+
+        val blockuser = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$UserID").
+            child("BlockedUsers").push().key
+       // post.UserID = User_key
+
+        val dataupdates = HashMap<String, Any>()
+
+        dataupdates["users/$userID/BlockedUsers/$blockuser"]
+        FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
+
+    }
+
+    fun reportUserPost(accusedID: String, complaintext: String, crn: String, classkey: String){
+
+        val accuserID = firebaseAuth.currentUser?.email
+
+        var report = Reports(accuserID!!, accusedID, complaintext, crn, classkey)
+
+        val post = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$classkey").key
+        val user = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$accusedID").key
+        val text = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$complaintext").key
+
+
+        report.classkey= post!!
+        report.complaintext= text!!
+        report.accusedID = user!!
+
+        //val querypost: Query = getreport.child("Posts").orderByChild("Classkey").equalTo(classkey)
+
+
+
+        val dataupdates = HashMap<String, Any>()
+        val reportvalues = report.toMap()
+        dataupdates["Reports/$classkey"] = reportvalues
+        FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
+    }
 
     // CRN is a placeholder for a class object
     fun saveNewPosttoUser(post: Post, Subject: String, CRN: String) {
