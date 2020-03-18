@@ -5,8 +5,7 @@
     android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="4dp"
->
+    android:layout_marginBottom="4dp">
 
     <TextView
         android:id="@+id/textview_to_Row"
@@ -14,11 +13,11 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:background="@drawable/rounded_sent_message"
+        android:background="@drawable/round_send_message"
         android:maxWidth="240dp"
-        android:padding="16dp"
-        android:text="Donald trump is very corrupt and is low energy and low iq despite what people say."
+        android:padding="12dp"
         android:textColor="@android:color/white"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

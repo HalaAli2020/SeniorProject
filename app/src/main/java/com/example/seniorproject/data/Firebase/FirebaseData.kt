@@ -1611,7 +1611,7 @@ class FirebaseData @Inject constructor() {
             fromID!!,
             toID,
             username,
-            System.currentTimeMillis() / 1000
+            1-(System.currentTimeMillis() / 1000)
         )
 
         val latestChatMessage2 = LatestMessage(
@@ -1620,7 +1620,7 @@ class FirebaseData @Inject constructor() {
             fromID!!,
             toID,
             FirebaseAuth.getInstance().currentUser?.displayName,
-            System.currentTimeMillis() / 1000
+            1-(System.currentTimeMillis() / 1000)
         )
 
         val latestMessageRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromID/$toID")
@@ -1636,6 +1636,7 @@ class FirebaseData @Inject constructor() {
         listenForLatestMessage(object: FirebaseRecentMessagseCallback{
             override fun onCallback(list: List<LatestMessage>) {
                 latestMessagesMap?.value=list
+
             }
         })
         return latestMessagesMap
@@ -1643,10 +1644,12 @@ class FirebaseData @Inject constructor() {
 
     private fun listenForLatestMessage(firebaseCallback: FirebaseRecentMessagseCallback){
         val fromId = FirebaseAuth.getInstance().uid
-        val ref = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId")
+
+        val ref = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId").orderByChild("timestamp")
         ref.addChildEventListener(object: ChildEventListener{
+            var latestMessages: MutableList<LatestMessage> = mutableListOf()
+
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                var latestMessages: MutableList<LatestMessage> = mutableListOf()
                 val chatMessage = p0.getValue(LatestMessage::class.java) ?: return
                 latestMessages.add(chatMessage)
 
@@ -1654,9 +1657,13 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-                var latestMessages: MutableList<LatestMessage> = mutableListOf()
                 val chatMessage = p0.getValue(LatestMessage::class.java) ?: return
-                latestMessages.add(chatMessage)
+
+                latestMessages.forEachIndexed{index, element->
+                    if(element.username==chatMessage.username){
+                        latestMessages[index] = chatMessage
+                    }
+                }
 
                 firebaseCallback.onCallback(latestMessages)
             }

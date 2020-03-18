@@ -34,7 +34,7 @@ class ChatLog : AppCompatActivity() {
 
         title = username
 
-        //window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
         val factory = InjectorUtils.provideChatLogViewModelFactory()
         myViewModel = ViewModelProviders.of(this, factory).get(ChatLogViewModel::class.java)

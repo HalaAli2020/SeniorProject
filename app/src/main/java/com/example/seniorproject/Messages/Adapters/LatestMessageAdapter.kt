@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Messages.ChatLog
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.LatestMessage
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.m_rv_latest_message.view.*
 
 
@@ -49,7 +50,13 @@ class LatestMessageAdapter(
 
         holder.itemView.listOfUsers.setOnClickListener{
             val intent = Intent(mContext, ChatLog::class.java)
-            intent.putExtra(USER_KEY, message.fromID)
+
+            if(message.fromID == FirebaseAuth.getInstance().uid){
+                intent.putExtra(USER_KEY, message.toId)
+            }else{
+                intent.putExtra(USER_KEY, message.fromID)
+            }
+
             intent.putExtra(USERNAME, message.username)
             mContext.startActivity(intent)
         }

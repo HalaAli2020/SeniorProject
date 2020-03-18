@@ -11,10 +11,10 @@ import javax.inject.Inject
 class MessagesFragmentViewModel @Inject constructor(private val repository: MessagesRepo) :
     ViewModel() {
 
-
+    var latestMessagesMap = MutableLiveData<List<LatestMessage>>()
 
     fun getRecentMessages(): MutableLiveData<List<LatestMessage>> {
-        var latestMessagesMap = repository.getRecentMessages()
+        latestMessagesMap = repository.getRecentMessages()
         return latestMessagesMap
     }
 
