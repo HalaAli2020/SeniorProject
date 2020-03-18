@@ -85,4 +85,6 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
 
     fun fetchCurrentBio() = repository.fetchCurrentBio()
 
+    fun noPostsChecker(UserID: String) = repository.noPostsChecker(UserID)
+
 }

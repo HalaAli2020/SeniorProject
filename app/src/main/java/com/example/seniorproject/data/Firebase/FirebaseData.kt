@@ -61,6 +61,7 @@ class FirebaseData @Inject constructor() {
     var otherEmail : String? = null
     var otherBio : String? = null
     var newComments : Comment? = null
+    var noPostsCheck: Boolean = false
 
 
     var newProfilePosts : Post? = null
@@ -142,6 +143,8 @@ class FirebaseData @Inject constructor() {
 
     fun fetchBio(UserID: String) : String{
 
+        //if it does no exist then bio = bio
+
         val ref = FirebaseDatabase.getInstance().getReference("/users/$UserID")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -149,9 +152,9 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                val bio = p0.child("UserBio").getValue(String::class.java)
+                val bio = p0.child("UserBio").getValue(String::class.java) ?: "no bio"
                 Log.d(TAG, "Current user fetched ${bio}")
-                otherBio = bio ?: "no bio"
+                otherBio = bio
             }
         })
 
@@ -167,15 +170,14 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                val bio = p0.child("UserBio").getValue(String::class.java)
+                val bio = p0.child("UserBio").getValue(String::class.java) ?: "no bio"
                 Log.d(TAG, "Current user fetched ${bio}")
-                otherBio = bio ?: "null"
+                otherBio = bio
             }
         })
 
-        return otherBio ?: "null"
+        return otherBio ?: "no bio"
     }
-
 
 
 
@@ -574,14 +576,16 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                if (p0.child("text").value.toString() == "null") {
+                if (p0.child("text").exists() == false) {
                     Log.d("post", "doesn't exist")
                     val emptyPost = Post("no Posts","" ,"")
                     var profilePostL: MutableList<Post> = mutableListOf()
                     profilePostL.add(emptyPost)
                     profilePosts.value = profilePostL
+                    noPostsCheck = true
                 }
                 else {
+                    noPostsCheck = false
                     val newProfilePost = Post()
                     try {
                         newProfilePost.let {
@@ -630,18 +634,21 @@ class FirebaseData @Inject constructor() {
         })
         Log.d("Post function return", "Post function return")
 
-        val comref = FirebaseDatabase.getInstance().getReference("users/$uid").child("Posts")
+        //only do this for the current user?
+        // for other users just check the value?
+        val comref = FirebaseDatabase.getInstance().getReference("users/$uid")
         val checkforcomments = comref.addListenerForSingleValueEvent( object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
             override fun onDataChange(p0: DataSnapshot) {
-                if (p0.getValue() == null) {
+                if (p0.child("Posts").exists() == false) {
                     Log.d("comment", "doesn't exist")
                     val emptyPost = Post("no Posts","" ,"")
                     var profilePostL: MutableList<Post> = mutableListOf()
                     profilePostL.add(emptyPost)
                     profilePosts.value = profilePostL
+                    noPostsCheck = true
                 }
             }
         } )
@@ -649,7 +656,10 @@ class FirebaseData @Inject constructor() {
         return profilePosts
     }
 
-
+fun noPostsChecker(userID: String) : Boolean{
+    listenForUserProfilePosts(userID)
+    return noPostsCheck
+}
 
 
 
@@ -674,11 +684,7 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                //val newComment = p0.getValue(Comment::class.java)
-                // need to set up setting
-                //comment is not setting, its the try is not exiting but its null
-                //if the key is null then do not add a comment?
-                if (p0.child("Classkey").value.toString() == "null") {
+                if (p0.child("text").exists() == false) {
                     Log.d("comment", "doesn't exist")
                     val emptycomment = Comment("No Comments", 0, "", "", "")
                     var profileCommentL: MutableList<Comment> = mutableListOf()
@@ -722,14 +728,14 @@ class FirebaseData @Inject constructor() {
         })
         Log.d("Post function return", "Post function return")
 
-        val comref = FirebaseDatabase.getInstance().getReference("users/$uid").child("Comments")
+        val comref = FirebaseDatabase.getInstance().getReference("users/$uid")
         val checkforcomments = comref.addListenerForSingleValueEvent( object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                if (p0.getValue() == null) {
+                if (p0.child("Comments").exists() == false) {
                     Log.d("comment", "doesn't exist")
                     val emptycomment = Comment("no Comments" , 0, "", "", "")
                     var profileCommentL: MutableList<Comment> = mutableListOf()
@@ -756,6 +762,8 @@ class FirebaseData @Inject constructor() {
          }
         return profilePosts
     }
+
+
 
     fun getUserProfileComments(userID : String): CommentLive{
         Log.d(TAG, "getUserProfile comments called")

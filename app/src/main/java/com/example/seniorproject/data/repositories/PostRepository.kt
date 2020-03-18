@@ -142,6 +142,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun fetchCurrentBio() = Firebase.fetchCurrentBio()
 
+    fun noPostsChecker(UserID: String) = Firebase.noPostsChecker(UserID)
+
 
     companion object {
         @Volatile

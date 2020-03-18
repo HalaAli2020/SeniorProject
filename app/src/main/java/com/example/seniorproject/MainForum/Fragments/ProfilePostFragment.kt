@@ -33,6 +33,8 @@ import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
 import com.example.seniorproject.Utils.ProfileButton
 import com.example.seniorproject.Utils.SwipeHelper
+import com.example.seniorproject.data.models.Comment
+import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.databinding.FragmentProfilePostBinding
 import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -115,11 +117,11 @@ class ProfilePostFragment : Fragment() {
 
         deleteIcon = ContextCompat.getDrawable(activity!!.applicationContext, R.drawable.ic_delete_24px)!!
 
-
-        if (ID != FirebaseAuth.getInstance().currentUser?.uid){
+        var check = myViewModel.noPostsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null")
+        if (ID != FirebaseAuth.getInstance().currentUser?.uid || check == true){
             val swipe = null
         }
-        else if (ID == FirebaseAuth.getInstance().currentUser?.uid) {
+        else{
             val swipe = object : SwipeHelper(context!!, view.profile_post_recyclerView, 200) {
                 override fun initButton(
                     viewHolders: RecyclerView.ViewHolder,
