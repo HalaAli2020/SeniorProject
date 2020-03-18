@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
-
     <application
         android:name=".Dagger.SeniorProjApp"
         android:allowBackup="true"
@@ -17,7 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainForum.Posts.EditProfileActivity"></activity>
+        <activity android:name=".Messages.ChatLog"
+            android:windowSoftInputMode="adjustResize|stateVisible"></activity>
+        <activity android:name=".Messages.NewMessage" />
+        <activity android:name=".MainForum.Posts.EditProfileActivity" />
         <activity android:name=".MainForum.Posts.CommunityPosts" />
         <activity android:name=".MainForum.UserProfileActivity" />
         <activity android:name=".MainForum.Posts.ClickedPost" />
