@@ -15,6 +15,7 @@
     <string name="comment">Comment</string>
     <string name="Sub">Subscribed</string>
     <string name="notSub">Subscribe</string>
+    <string name="newMessage">New Message</string>
 
 
     <string-array name="class_list">
@@ -29,9 +30,6 @@
         <item>CSC3020</item>
         <item>CSC4996</item>
     </string-array>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragmentHome</string>
 
 
 </resources>
