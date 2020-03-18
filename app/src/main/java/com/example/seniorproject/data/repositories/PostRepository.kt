@@ -32,7 +32,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         Firebase.uploadImageToFirebaseStorage(selectedPhotoUri)
 
     fun getSubscribedPosts() = Firebase.getSubscribedPosts()
-
+    //fun getEmail() = Firebase.getEmail()
 
     fun getpostKey(PKey: String)
     {
@@ -89,6 +89,19 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         Firebase.editPost(crn, postKey, ctext, ctitle, ntext, ntitle, userID)
     }
 
+    fun blockComment(UserID: String, text: String, crn: String, postID: String){
+        Firebase.blockUserComment(UserID , text , crn , postID)
+    }
+
+    fun blockPost(UserID: String, crn: String, classkey: String){
+        Firebase.blockUserPost(UserID, crn, classkey)
+    }
+
+    fun reportUserPost(accusedID: String, complaintext: String, crn: String, classkey: String){
+        Firebase.reportUserPost(accusedID, complaintext, crn, classkey)
+
+    }
+
     fun currentUser() = Firebase.CurrentUser()
 
     fun fetchCurrentUserName() = Firebase.fetchCurrentUserName()
@@ -111,12 +124,17 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         Firebase.removeClassSub(crn)
     }
 
+    fun getclassnamesforusername() = Firebase.getclassnamesforusername()
 
-    fun getUserProfilePosts() = Firebase.getUserProfilePosts()
+    fun sendClassnameForUsername() = Firebase.sendClassnameForUsername()
 
-    fun getUserProfileComments() = Firebase.getUserProfileComments()
+    fun getUserProfilePosts(userID: String) = Firebase.getUserProfilePosts(userID)
 
+    fun getUserProfileComments(userID: String) = Firebase.getUserProfileComments(userID)
 
+    fun fetchEmail(UserID: String) = Firebase.fetchEmail(UserID)
+
+    fun saveNewUsername(username: String) = Firebase.saveNewUsername(username)
 
 
     companion object {
