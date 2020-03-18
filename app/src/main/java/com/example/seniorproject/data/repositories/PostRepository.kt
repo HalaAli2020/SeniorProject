@@ -102,6 +102,11 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     }
 
+    fun reportUserComment(accusedID: String, complaintext: String, crn: String, classkey: String, comKey: String){
+        Firebase.reportUserComment(accusedID, complaintext, crn, classkey, comKey)
+
+    }
+
     fun currentUser() = Firebase.CurrentUser()
 
     fun fetchCurrentUserName() = Firebase.fetchCurrentUserName()

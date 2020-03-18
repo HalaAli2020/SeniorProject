@@ -135,7 +135,7 @@ class ProfilePostFragment : Fragment() {
                                     adapter.removeItem(viewHolders as CustomViewHolders, pos)
 
                                 val userkey: String? =
-                                    adapter.getUserKey(viewHolders as CustomViewHolders, pos)
+                                    adapter.getUserKey(viewHolders as CustomViewHolders)
 
                                 val crnkey: String? =
                                     adapter.getCrn(viewHolders as CustomViewHolders, pos)
@@ -182,7 +182,7 @@ class ProfilePostFragment : Fragment() {
                                     adapter.removeItem(viewHolders as CustomViewHolders, pos)
 
                                 val userkey: String? =
-                                    adapter.getUserKey(viewHolders as CustomViewHolders, pos)
+                                    adapter.getUserKey(viewHolders as CustomViewHolders)
 
                                 val crnkey: String? =
                                     adapter.getCrn(viewHolders as CustomViewHolders, pos)

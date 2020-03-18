@@ -65,6 +65,11 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
         return false
     }
 
+    fun reportUserComment(accusedID: String, complaintext: String, crn: String, classkey: String, comKey: String){
+        repository.reportUserComment(accusedID, complaintext, crn, classkey, comKey)
+
+    }
+
     /*fun getCommentsCO(PKey: String) : CommentLive? {
         getCommentsJob = viewModelScope.launch {
             repository.getCommentsCO(PKey).collect {
