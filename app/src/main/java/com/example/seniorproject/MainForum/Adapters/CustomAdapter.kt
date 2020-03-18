@@ -98,7 +98,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
         return postkey!!
     }
 
-    fun getUserKey(customViewHolders: CustomViewHolders, position: Int): String {
+    fun getUserKey(customViewHolders: CustomViewHolders): String {
         //position=customViewHolders.adapterPosition
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]

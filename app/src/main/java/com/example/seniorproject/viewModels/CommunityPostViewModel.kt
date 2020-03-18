@@ -27,6 +27,8 @@ class CommunityPostViewModel @Inject constructor(private val repository: PostRep
         repository.reportUserPost(accusedID, complaintext, crn, classkey)
     }
 
+    fun noPostsChecker(UserID: String) = repository.noPostsChecker(UserID)
+
    fun checknull() : Boolean
    {
        if (listClasses == null)

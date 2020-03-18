@@ -118,6 +118,42 @@ class CommentsAdapter(
         }
         }
 
+
+    fun removeItem(holder: RecyclerView.ViewHolder): String {
+        val comment: Comment = Comments?.value!![holder.adapterPosition]
+        val commentkey: String?= comment.Classkey
+
+        return commentkey!!
+    }
+
+    fun getCrn(holder: RecyclerView.ViewHolder, position: Int): String {
+        val comment: Comment = Comments?.value!![holder.adapterPosition]
+        val commentkey: String?= comment.crn
+
+        return commentkey!!
+    }
+
+    fun getUserKey(holder: RecyclerView.ViewHolder): String {
+        val comment: Comment = Comments?.value!![holder.adapterPosition]
+        val commentkey: String?= comment.PosterID
+
+        return commentkey!!
+    }
+
+    fun getText(holder: RecyclerView.ViewHolder): String {
+        val comment: Comment = Comments?.value!![holder.adapterPosition]
+        val commentkey: String?= comment.text
+
+        return commentkey!!
+    }
+
+    fun getPostKey(holder: RecyclerView.ViewHolder): String {
+        val comment: Comment = Comments?.value!![holder.adapterPosition]
+        val commentkey: String?= comment.Postkey
+
+        return commentkey!!
+    }
+
         class CustomViewHolders(v: View) : RecyclerView.ViewHolder(v) {
 
         }

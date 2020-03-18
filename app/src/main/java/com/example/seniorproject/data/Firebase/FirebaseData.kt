@@ -1266,6 +1266,32 @@ fun noPostsChecker(userID: String) : Boolean{
         FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
     }
 
+    fun reportUserComment(accusedID: String, complaintext: String, crn: String, classkey: String, comkey: String){
+
+        val accuserID = firebaseAuth.currentUser?.email
+
+        var report = Reports(accuserID!!, accusedID, complaintext, crn, classkey)
+
+        val post = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$classkey/Comments/$comkey").key
+        val user = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$classkey/Comments/$accusedID").key
+        val text = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$classkey/Comments/$complaintext").key
+
+
+        report.classkey= post!!
+        report.complaintext= text!!
+        report.accusedID = user!!
+
+
+        //val querypost: Query = getreport.child("Posts").orderByChild("Classkey").equalTo(classkey)
+
+
+
+        val dataupdates = HashMap<String, Any>()
+        val reportvalues = report.toMap()
+        dataupdates["Reports/$classkey"] = reportvalues
+        FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
+    }
+
     // CRN is a placeholder for a class object
     fun saveNewPosttoUser(post: Post, Subject: String, CRN: String) {
         val subject = Subject
