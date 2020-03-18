@@ -123,6 +123,12 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun saveNewUsername(username: String) = Firebase.saveNewUsername(username)
 
+    fun saveUserbio(bio : String) = Firebase.saveUserbio(bio)
+
+    fun fetchBio(UserID: String) = Firebase.fetchBio(UserID)
+
+    fun fetchCurrentBio() = Firebase.fetchCurrentBio()
+
 
     companion object {
         @Volatile

@@ -10,6 +10,7 @@ import com.example.seniorproject.data.models.CommentLive
 
 import com.example.seniorproject.data.models.PostLiveData
 import com.example.seniorproject.data.repositories.PostRepository
+import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject
 
 
@@ -20,6 +21,7 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     var comments: CommentLive = CommentLive()
     private var PostKey : String? = null
     val CommentListener : PostListener? = null
+    val userbio : String = fetchBio(FirebaseAuth.getInstance().currentUser?.uid ?: "null")
 
 
 
@@ -76,5 +78,11 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     fun getclassnamesforusername() = repository.getclassnamesforusername()
 
     fun sendClassnameForUsername() = repository.sendClassnameForUsername()
+
+    fun saveUserbio(bio : String) = repository.saveUserbio(bio)
+
+    fun fetchBio(UserID: String) = repository.fetchBio(UserID)
+
+    fun fetchCurrentBio() = repository.fetchCurrentBio()
 
 }

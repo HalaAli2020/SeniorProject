@@ -75,7 +75,7 @@ class CommentsAdapter(
 
             Log.d("CommentsAdapter:", "" + position)
             if (holder is CustomViewHoldersHeader) {
-                holder.itemView.click_post_title.text = text
+                holder.itemView.click_post_title.text = title
                 holder.itemView.click_post_text.text = text
                 holder.itemView.community_name_TV.text = crn
                 holder.itemView.author_name_TV.text = author
@@ -94,7 +94,7 @@ class CommentsAdapter(
 
                 } else {
                     val comment: Comment = Comments?.value!![position]
-                    //holder.itemView.post_title.text = .title
+                    //holder.itemView.post_title.text = comment.title
                     holder.itemView.comment_text.text = comment.text
                     holder.itemView.authcom.text = comment.author
 

@@ -48,6 +48,8 @@ class EditProfileActivity : AppCompatActivity() {
         val actionbar = supportActionBar
         actionbar!!.title = "Edit Profile"
 
+        val viewcheck = findViewById<EditText>(R.id.in_profile_bio)
+
         DaggerAppComponent.create().inject(this)
         val factory = InjectorUtils.provideProfileViewModelFactory()
         myViewModel = ViewModelProviders.of(this,factory).get(ProfileViewModel::class.java)
@@ -78,13 +80,16 @@ class EditProfileActivity : AppCompatActivity() {
         doneButton.setOnClickListener {
 
             val newUsername : EditText = findViewById(R.id.in_profile_username)
+            val newBio : EditText = findViewById(R.id.in_profile_bio)
             myViewModel.saveNewUsername(newUsername.text.toString())
-            Intent(this, UserProfileActivity::class.java).also {
+            myViewModel.saveUserbio(newBio.text.toString())
+
+            val intent = Intent(this, UserProfileActivity::class.java)
+            val ID = FirebaseAuth.getInstance().currentUser?.uid
+            intent.putExtra("UserID",ID).also {
                 startActivity(it)
             }
-
-
-
+            //Intent(this, UserProfileActivity::class.java).also { }
         }
     }
 
