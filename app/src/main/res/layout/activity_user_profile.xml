@@ -87,6 +87,19 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/in_profile_username" />
 
+                <TextView
+                    android:id="@+id/in_profile_bio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dp"
+                    android:text="Bio"
+                    android:textColor="@color/TextColor"
+                    android:textSize="15sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/in_profile_email" />
+
                 <Button
                     android:id="@+id/refresh_profile"
                     android:layout_width="wrap_content"

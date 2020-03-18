@@ -59,7 +59,9 @@ class FirebaseData @Inject constructor() {
     private lateinit var postlistener : ValueEventListener
     private lateinit var userprofile : User
     var otherEmail : String? = null
+    var otherBio : String? = null
     var newComments : Comment? = null
+    var noPostsCheck: Boolean = false
 
 
     var newProfilePosts : Post? = null
@@ -132,14 +134,66 @@ class FirebaseData @Inject constructor() {
             override fun onDataChange(p0: DataSnapshot) {
                 val email = p0.child("email").getValue(String::class.java)
                 Log.d(TAG, "Current user fetched ${email}")
-                otherEmail = email ?: "null"
+                otherEmail = email ?: ""
             }
         })
 
-        return otherEmail ?: "null"
+        return otherEmail ?: ""
+    }
+
+    fun fetchBio(UserID: String) : String{
+
+        //if it does no exist then bio = bio
+
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$UserID")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                val bio = p0.child("UserBio").getValue(String::class.java) ?: "no bio"
+                Log.d(TAG, "Current user fetched ${bio}")
+                otherBio = bio
+            }
+        })
+
+        return otherBio ?: "no bio"
+    }
+
+    fun fetchCurrentBio() : String{
+        val UserID = firebaseAuth.uid ?: "null"
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$UserID")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                val bio = p0.child("UserBio").getValue(String::class.java) ?: "no bio"
+                Log.d(TAG, "Current user fetched ${bio}")
+                otherBio = bio
+            }
+        })
+
+        return otherBio ?: "no bio"
     }
 
 
+
+
+
+
+
+
+
+
+    fun saveUserbio(bio : String){
+
+        val userID = firebaseAuth.uid ?: "null"
+        FirebaseDatabase.getInstance().getReference("/users/$userID")
+            .child("/UserBio").setValue(bio)
+    }
 
 
     //saves new username to database and auth profile
@@ -153,17 +207,21 @@ class FirebaseData @Inject constructor() {
         //a nested for loop to check comments in every post
 
         listenForUserProfilePosts (userID)
+        //do I need this?
 
         var x = 0
 
         while (x < profilePosts.value!!.size){
             val post: Post = profilePosts.value!![x]
             val pkey: String = post.key.toString()
-            Log.d("PTAG", "UNDER HERE")
-            Log.d("PTAG", "the size is :  ${profilePosts.value!!.size}")
-            Log.d("PTAG", "Pkey is:  ${pkey}")
-            FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$pkey")
-                .child("/author").setValue(username)
+            if (pkey != "null"){
+                Log.d("PTAG", "UNDER HERE")
+                Log.d("PTAG", "the size is :  ${profilePosts.value!!.size}")
+                Log.d("PTAG", "Pkey is:  ${pkey}")
+                FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$pkey")
+                    .child("/author").setValue(username)
+            }
+            //this should be the problem
             x++
         }
 
@@ -216,7 +274,7 @@ class FirebaseData @Inject constructor() {
 
                 }
                 override fun onChildRemoved(p0: DataSnapshot) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    Log.d(TAG, "in else in fetch current user")
                 }
 
             })
@@ -227,30 +285,24 @@ class FirebaseData @Inject constructor() {
         while (x < getUserProfilePosts(userID).value!!.size){
             val post: Post = getUserProfilePosts(userID).value!![x]
             val pkey: String = post.key.toString()
-            Log.d("PTAG", "Pkey is:  ${pkey}")
-            FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$pkey")
-                .child("/author").setValue(username)
+            if (pkey != "null"){
+                Log.d("PTAG", "Pkey is:  ${pkey}")
+                FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$pkey")
+                    .child("/author").setValue(username)
+            }
             x++
         }
         x =  0
         while (x < getUserProfileComments(userID).value!!.size){
             val comment = getUserProfileComments(userID).value!![x]
             val ckey: String = comment.ProfileComKey.toString()
-            Log.d("PTAG", "key is:  ${ckey}")
-            FirebaseDatabase.getInstance().getReference("/users/$userID/Comments/$ckey")
-                .child("/author").setValue(username)
+            if (ckey != "null") {
+                Log.d("PTAG", "key is:  ${ckey}")
+                FirebaseDatabase.getInstance().getReference("/users/$userID/Comments/$ckey")
+                    .child("/author").setValue(username)
+            }
             x++
         }
-        x =  0
-        while (x < getUserProfileComments(userID).value!!.size){
-            val comment = getUserProfileComments(userID).value!![x]
-            val ckey: String = comment.ProfileComKey.toString()
-            Log.d("PTAG", "key is:  ${ckey}")
-            FirebaseDatabase.getInstance().getReference("/users/$userID/Comments/$ckey")
-                .child("/author").setValue(username)
-            x++
-        }
-
 
     }
 
@@ -286,7 +338,7 @@ class FirebaseData @Inject constructor() {
                 }
             }
             override fun onChildRemoved(p0: DataSnapshot) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                Log.d(TAG, "in else in fetch current user")
             }
 
         })
@@ -508,8 +560,9 @@ class FirebaseData @Inject constructor() {
     fun listenForUserProfilePosts (uid : String): PostLiveData {
         Log.d(TAG, "getUserProfilePosts listener called")
 
-        val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Posts")
+        //set list to empty here?
 
+        val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Posts")
         val profilePostListen = reference.addChildEventListener(object : ChildEventListener {
             var profilePostsList: MutableList<Post> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
@@ -523,44 +576,55 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val newProfilePost = Post()
-                try {
-                    newProfilePost.let {
-                        it.text = p0.child("text").value.toString()
-                        it.title = p0.child("title").value.toString()
-                        it.key = p0.child("key").value.toString()
-                        // class key is key for this post
-                        it.Classkey = p0.child("Classkey").value.toString()
-                        // user who posted id
-                        it.UserID = p0.child("UserID").value.toString()
-                        // need to change this later subject should be subject crn should be different
-                        it.crn = p0.child("subject").value.toString()
-                        it.author = p0.child("author").value.toString()
-                        // not setting author
+                if (p0.child("text").exists() == false) {
+                    Log.d("post", "doesn't exist")
+                    val emptyPost = Post("no Posts","" ,"")
+                    var profilePostL: MutableList<Post> = mutableListOf()
+                    profilePostL.add(emptyPost)
+                    profilePosts.value = profilePostL
+                    noPostsCheck = true
+                }
+                else {
+                    noPostsCheck = false
+                    val newProfilePost = Post()
+                    try {
+                        newProfilePost.let {
+                            it.text = p0.child("text").value.toString()
+                            it.title = p0.child("title").value.toString()
+                            it.key = p0.child("key").value.toString()
+                            // class key is key for this post
+                            it.Classkey = p0.child("Classkey").value.toString()
+                            // user who posted id
+                            it.UserID = p0.child("UserID").value.toString()
+                            // need to change this later subject should be subject crn should be different
+                            it.crn = p0.child("subject").value.toString()
+                            it.author = p0.child("author").value.toString()
+                            // not setting author
+                        }
+                    } catch (e: Exception) {
+                        Log.d("Data Error", "error converting to post")
                     }
-                } catch (e: Exception) {
-                    Log.d("Data Error", "error converting to post")
+
+
+
+                    if (newProfilePost != null) {
+                        Log.d(TAG, newProfilePost.title ?: " Accessing profile post title")
+                        Log.d(TAG, newProfilePost.text ?: " Accessing profile post text")
+                        Log.d(TAG, newProfilePost.key ?: " Accessing profile post title")
+                        Log.d(TAG, newProfilePost.Classkey ?: " Accessing profile post title")
+                        Log.d(TAG, newProfilePost.UserID ?: " Accessing profile post title")
+                        Log.d(TAG, newProfilePost.crn ?: " Accessing profile post title")
+
+                        profilePostsList.add(newProfilePost)
+                        Log.d(TAG, newProfilePost.key ?: " Accessing profile post title")
+
+                        newProfilePosts = newProfilePost
+
+                    }
+                    profilePosts.value = profilePostsList
+                    //Log.d("TAG", "Comments loaded")
                 }
-
-
-
-                if (newProfilePost != null) {
-                    Log.d(TAG, newProfilePost.title ?: " Accessing profile post title")
-                    Log.d(TAG, newProfilePost.text ?: " Accessing profile post text")
-                    Log.d(TAG, newProfilePost.key ?: " Accessing profile post title")
-                    Log.d(TAG, newProfilePost.Classkey ?: " Accessing profile post title")
-                    Log.d(TAG, newProfilePost.UserID ?: " Accessing profile post title")
-                    Log.d(TAG, newProfilePost.crn ?: " Accessing profile post title")
-
-                    profilePostsList.add(newProfilePost)
-                    Log.d(TAG, newProfilePost.key ?: " Accessing profile post title")
-
-                    newProfilePosts = newProfilePost
-
-                }
-                profilePosts.value = profilePostsList
-                //Log.d("TAG", "Comments loaded")
-
+                //return profile posts?
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {
@@ -570,18 +634,21 @@ class FirebaseData @Inject constructor() {
         })
         Log.d("Post function return", "Post function return")
 
-        val comref = FirebaseDatabase.getInstance().getReference("users/$uid").child("Posts")
+        //only do this for the current user?
+        // for other users just check the value?
+        val comref = FirebaseDatabase.getInstance().getReference("users/$uid")
         val checkforcomments = comref.addListenerForSingleValueEvent( object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
             override fun onDataChange(p0: DataSnapshot) {
-                if (p0.getValue() == null) {
+                if (p0.child("Posts").exists() == false) {
                     Log.d("comment", "doesn't exist")
                     val emptyPost = Post("no Posts","" ,"")
                     var profilePostL: MutableList<Post> = mutableListOf()
                     profilePostL.add(emptyPost)
                     profilePosts.value = profilePostL
+                    noPostsCheck = true
                 }
             }
         } )
@@ -589,7 +656,10 @@ class FirebaseData @Inject constructor() {
         return profilePosts
     }
 
-
+fun noPostsChecker(userID: String) : Boolean{
+    listenForUserProfilePosts(userID)
+    return noPostsCheck
+}
 
 
 
@@ -614,57 +684,58 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                //val newComment = p0.getValue(Comment::class.java)
-                // need to set up setting
-                //comment is not setting, its the try is not exiting but its null
-                var newComment = Comment()
-                try {
-                    newComment.let {
-                        it.text = p0.child("text").value.toString()
-                        it.Classkey = p0.child("Classkey").value.toString()
-                        it.PosterID = p0.child("PosterID").value.toString()
-                        it.Postkey = p0.child("Postkey").value.toString()
-                        it.ProfileComKey = p0.child("ProfileComKey").value.toString()
-                        it.Ptime = p0.child("Ptime").value as Long
-                        it.UserComkey = p0.child("UserComkey").value.toString()
-                        it.author = p0.child("author").value.toString()
-                        it.crn = p0.child("crn").value.toString()
+                if (p0.child("text").exists() == false) {
+                    Log.d("comment", "doesn't exist")
+                    val emptycomment = Comment("No Comments", 0, "", "", "")
+                    var profileCommentL: MutableList<Comment> = mutableListOf()
+                    profileCommentL.add(emptycomment)
+                    Comments.value = profileCommentL
+                } else {
+                    var newComment = Comment()
+                    try {
+                        newComment.let {
+                            it.text = p0.child("text").value.toString()
+                            it.Classkey = p0.child("Classkey").value.toString()
+                            it.PosterID = p0.child("PosterID").value.toString()
+                            it.Postkey = p0.child("Postkey").value.toString()
+                            it.ProfileComKey = p0.child("ProfileComKey").value.toString()
+                            it.Ptime = p0.child("Ptime").value as Long
+                            it.UserComkey = p0.child("UserComkey").value.toString()
+                            it.author = p0.child("author").value.toString()
+                            it.crn = p0.child("crn").value.toString()
+                        }
+                    } catch (e: Exception) {
+                        Log.d("Data Error", "error converting to post")
                     }
-                }catch (e: Exception) {
-                    Log.d("Data Error", "error converting to post")
+
+                    if (newComment != null) {
+                        Log.d(TAG, newComment.text ?: " Accessing profile comment author")
+                        profileCommentList.add(newComment)
+                        //newProfilePosts = newProfilePost
+                        newProfileComments = newComment
+                    }
+
+
+                    Comments.value = profileCommentList
+                    //Log.d("TAG", "Comments loaded")
+
                 }
-
-                if (newComment != null) {
-                    Log.d(TAG, newComment.text ?: " Accessing profile comment author")
-
-                    profileCommentList.add(newComment)
-                    //newProfilePosts = newProfilePost
-                    newProfileComments = newComment
-                }
-
-
-                Comments.value = profileCommentList
-                //Log.d("TAG", "Comments loaded")
-
             }
-
             override fun onChildRemoved(p0: DataSnapshot) {
             }
-
-
 
 
         })
         Log.d("Post function return", "Post function return")
 
-        val comref = FirebaseDatabase.getInstance().getReference("users/$uid").child("Comments")
+        val comref = FirebaseDatabase.getInstance().getReference("users/$uid")
         val checkforcomments = comref.addListenerForSingleValueEvent( object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                if (p0.getValue() == null) {
+                if (p0.child("Comments").exists() == false) {
                     Log.d("comment", "doesn't exist")
                     val emptycomment = Comment("no Comments" , 0, "", "", "")
                     var profileCommentL: MutableList<Comment> = mutableListOf()
@@ -673,11 +744,6 @@ class FirebaseData @Inject constructor() {
                 }
             }
         } )
-
-
-
-
-
 
         return Comments
 
@@ -696,6 +762,8 @@ class FirebaseData @Inject constructor() {
          }
         return profilePosts
     }
+
+
 
     fun getUserProfileComments(userID : String): CommentLive{
         Log.d(TAG, "getUserProfile comments called")

@@ -75,6 +75,7 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
         val email = myViewModel.fetchEmail(test)
+        val bio = myViewModel.fetchBio(test)
         val profilepostfrag = ProfilePostFragment.newInstance(ID)
         val profilecommentfrag = ProfileCommentFragment.newInstance(ID)
         replaceFragment(profilepostfrag)
@@ -82,12 +83,25 @@ class UserProfileActivity : AppCompatActivity() {
         if (author != "null")  {
             in_profile_username.text = author
             in_profile_email.text = email
-            //get email with UID as parameter function.
+            if (bio == "null"){
+                in_profile_bio.text = "no bio"
+            }
+            else{
+                in_profile_bio.text = bio
+            }
         }
         else if (author == "null") {
             in_profile_username.text = myViewModel.user?.displayName
             in_profile_email.text = myViewModel.user?.email
+            if (bio == "null"){
+                in_profile_bio.text = myViewModel.fetchBio(FirebaseAuth.getInstance().currentUser?.uid ?: "no bio")
+            }
+            else{
+                in_profile_bio.text = bio
+            }
+
         }
+
 
         refresh_profile.setOnClickListener {
             refresh()

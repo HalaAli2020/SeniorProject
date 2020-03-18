@@ -65,19 +65,23 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
                 }
 
             }
-
             holder.itemView.setOnClickListener {
-                val intent = Intent(mContext, ClickedPost::class.java)
-
-                intent.putExtra("Title", post.title)
-                intent.putExtra("Text", post.text)
-                intent.putExtra("Pkey", post.key)
-                intent.putExtra("Classkey", post.Classkey)
-                intent.putExtra("UserID", post.UserID)
-                intent.putExtra("Author", post.author)
-                intent.putExtra("crn", post.crn)
-
-                mContext.startActivity(intent)
+                if (post.title == "no Posts" || post.title == "No Posts")
+                {
+                    Log.d("Tag","no post")
+                    //toast needed
+                }
+                else {
+                    val intent = Intent(mContext, ClickedPost::class.java)
+                    intent.putExtra("Title", post.title)
+                    intent.putExtra("Text", post.text)
+                    intent.putExtra("Pkey", post.key)
+                    intent.putExtra("Classkey", post.Classkey)
+                    intent.putExtra("UserID", post.UserID)
+                    intent.putExtra("Author", post.author)
+                    intent.putExtra("crn", post.crn)
+                    mContext.startActivity(intent)
+                }
             }
         }
     }
