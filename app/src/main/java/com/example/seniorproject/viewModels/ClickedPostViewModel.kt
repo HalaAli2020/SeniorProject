@@ -70,9 +70,6 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
 
     }
 
-    fun noPostsChecker(UserID: String) = repository.noPostsChecker(UserID)
-
-
     /*fun getCommentsCO(PKey: String) : CommentLive? {
         getCommentsJob = viewModelScope.launch {
             repository.getCommentsCO(PKey).collect {
