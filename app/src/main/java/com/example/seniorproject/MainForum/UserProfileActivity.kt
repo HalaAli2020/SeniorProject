@@ -26,6 +26,16 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main_forum.*
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import javax.inject.Inject
+import androidx.core.app.ComponentActivity
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.os.Handler
+import android.util.Log
+import android.view.View
+import android.widget.TextView
+import androidx.core.view.isInvisible
+
 
 private const val TAG = "profileTAG"
 class UserProfileActivity : AppCompatActivity() {
@@ -41,38 +51,74 @@ class UserProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
 
-
         val actionbar = supportActionBar
         actionbar!!.title = "Profile"
+        replaceFragment(ProfileCommentFragment())
         replaceFragment(ProfilePostFragment())
 
         DaggerAppComponent.create().inject(this)
         val factory = InjectorUtils.provideProfileViewModelFactory()
         myViewModel = ViewModelProviders.of(this,factory).get(ProfileViewModel::class.java)
 
-        val binding: ActivityUserProfileBinding = DataBindingUtil.setContentView(this,R.layout.activity_user_profile)
+        var test : String = intent.getStringExtra("UserID") ?: "null"
+        val author : String =  intent.getStringExtra("Author") ?: "null"
+        var ID = test
+
+        if (test == "null" || test == FirebaseAuth.getInstance().currentUser?.uid){
+            val nav: TextView = findViewById(R.id.NavToEdit)
+            Log.d(TAG,"user profile opened")
+            nav.visibility = View.VISIBLE
+        }
+        else {
+            val nav: TextView = findViewById(R.id.NavToEdit)
+            nav.visibility = View.INVISIBLE
+        }
+
+        val email = myViewModel.fetchEmail(test)
+        val profilepostfrag = ProfilePostFragment.newInstance(ID)
+        val profilecommentfrag = ProfileCommentFragment.newInstance(ID)
+        replaceFragment(profilepostfrag)
+
+        if (author != "null")  {
+            in_profile_username.text = author
+            in_profile_email.text = email
+            //get email with UID as parameter function.
+        }
+        else if (author == "null") {
+            in_profile_username.text = myViewModel.user?.displayName
+            in_profile_email.text = myViewModel.user?.email
+        }
+
+        refresh_profile.setOnClickListener {
+            refresh()
+        }
+
+       /* val binding: ActivityUserProfileBinding = DataBindingUtil.setContentView(this,R.layout.activity_user_profile)
         binding.profileViewModell = myViewModel
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = this */
         actionbar.setDisplayHomeAsUpEnabled(true)
 
         pro_bottom_navigation.setIconVisibility(false)
         pro_bottom_navigation.enableAnimation(false)
         pro_bottom_navigation.setTextSize(20F)
 
+
         pro_bottom_navigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.select_posts -> {
-                    replaceFragment(ProfilePostFragment())
+                    replaceFragment(profilepostfrag)
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.select_comments -> {
-                    replaceFragment(ProfileCommentFragment())
+                    replaceFragment(profilecommentfrag)
                     return@setOnNavigationItemSelectedListener true
                 }
 
             }
             true
         }
+
+
 
 
         NavToEdit.setOnClickListener {
@@ -112,5 +158,13 @@ class UserProfileActivity : AppCompatActivity() {
         val intent = Intent(this, MainForum::class.java)
         startActivity(intent)
         return true
+    }
+
+    fun refresh(){
+        recreate()
+    }
+
+    fun makeInvisible(view: View){
+
     }
 }

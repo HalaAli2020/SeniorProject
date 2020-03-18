@@ -4,7 +4,7 @@ import com.example.seniorproject.R
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.rv_post_comment.view.*
 
-class Comment(val text: String, var Ptime : Long?, var PosterID : String?, var crn : String?, var Postkey : String?)
+class Comment(var text: String, var Ptime : Long?, var PosterID : String?, var crn : String?, var Postkey : String?)
 {
     constructor() : this("", null,"", "", "")
 
