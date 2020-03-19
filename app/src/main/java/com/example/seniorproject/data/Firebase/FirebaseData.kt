@@ -1,5 +1,6 @@
 package com.example.seniorproject.data.Firebase
 import android.net.Uri
+import android.provider.ContactsContract
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -28,7 +29,7 @@ import java.util.logging.Handler
 import javax.security.auth.Subject
 import kotlin.collections.HashMap
 import com.example.seniorproject.data.models.User
-
+import com.example.seniorproject.viewModels.SearchViewModel
 
 
 //import kotlin.reflect.jvm.internal.impl.load.java.lazy.ContextKt.child
@@ -2115,6 +2116,39 @@ class FirebaseData @Inject constructor() {
             }
         })
     }
+    fun UsersSearch(query: String, result : SearchViewModel.FirebaseResult)
+    {
+        result.onStart()
+        val ref = FirebaseDatabase.getInstance().getReference("Subjects/$query")
+       ref.addListenerForSingleValueEvent(object : ValueEventListener{
+           override fun onCancelled(p0: DatabaseError) {
+               result.onFailure("Query Failed")
+           }
+
+           override fun onDataChange(p0: DataSnapshot) {
+               result.onSuccess(p0)
+           }
+       })
+    }
+    fun getallclasses(listen : SearchViewModel.FirebaseResult)
+    {
+        var listC : MutableList<CRN> = mutableListOf()
+        listen.onStart()
+        val ref = FirebaseDatabase.getInstance().getReference("Subjects")
+        ref.addValueEventListener(object : ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+                listen.onFailure("Error")
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                listen.onSuccess(p0, FirebaseAuth.getInstance().uid.toString())
+            }
+        })
+
+    }
+
+
+
 
 
     interface FirebaseCallback {
