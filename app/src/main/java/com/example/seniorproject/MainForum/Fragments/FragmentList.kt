@@ -30,7 +30,7 @@ class FragmentList : Fragment() {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: ListViewModel
-    var obse : Observer<in MutableList<CRN>>? = null
+    var obse : Observer<in MutableList<String>>? = null
     private var ada : ListAdapter? = null
 
 
@@ -43,14 +43,14 @@ class FragmentList : Fragment() {
         view.list_recyclerView.layoutManager = LinearLayoutManager(context)
         view.list_recyclerView.adapter = ada
         Obse()
-       myViewModel.SubList.observe(this.viewLifecycleOwner,obse!!)
+       myViewModel.UsersSubs?.observe(this ,obse!!)
 
         return view
 
     }
     fun Obse()
     {
-        obse = Observer<MutableList<CRN>> { value ->
+        obse = Observer<MutableList<String>> { value ->
             Log.d("swap", "Swap")
             swap()
 
@@ -61,7 +61,7 @@ class FragmentList : Fragment() {
     }
     fun swap()
     {
-        myViewModel.combineSubs()
+       // myViewModel.combineSubs()
         ada = ListAdapter(context!!,  myViewModel)
         view!!.list_recyclerView.swapAdapter(ada, true)
     }

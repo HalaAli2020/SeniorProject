@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.MainForum.Posts.CommunityPosts
 import com.example.seniorproject.R
@@ -20,14 +21,15 @@ class ListAdapter(
     private val mViewModel: ListViewModel
 ) :
     RecyclerView.Adapter<ListHolder>() {
-    private val classList: MutableList<CRN>?
+    private val classList: MutableLiveData<MutableList<CRN>>?
     val mContext: Context = context
     init {
        //mViewModel.combineSubs()
-        mViewModel.getSubs()
-        classList = mViewModel.returnClasses()
-        mViewModel.combineSubs()
-
+        //mViewModel.getSubs()
+        //classList = mViewModel.returnClasses()
+       // mViewModel.combineSubs()
+        //classList = mViewModel.returnClasses()
+        classList = mViewModel.Getcomnosubs()
 
     }
 
@@ -41,15 +43,15 @@ class ListAdapter(
 
     override fun getItemCount(): Int {
 
-        return if (classList != null)
-            classList.size
+        return if (classList?.value != null)
+            classList.value!!.size
         else
             0
 
     }
 
     override fun onBindViewHolder(holder: ListHolder, position: Int) {
-            holder.bind(classList!![position], mContext, mViewModel)
+            holder.bind(classList?.value!![position], mContext, mViewModel)
 
 
 

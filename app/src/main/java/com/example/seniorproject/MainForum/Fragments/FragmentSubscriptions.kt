@@ -33,7 +33,7 @@ class FragmentSubscriptions : Fragment() {
             myViewModel.getUserSub()?.let {
                 SubsriptionAdapter(
                     view.context,
-                    it
+                    it.value!!
                 )
             }
 
@@ -46,7 +46,7 @@ class FragmentSubscriptions : Fragment() {
                 myViewModel.getUserSub()?.let {
                     SubsriptionAdapter(
                         view.context,
-                        it
+                       it.value!!
                     )
                 }
             view.refreshView.isRefreshing = false

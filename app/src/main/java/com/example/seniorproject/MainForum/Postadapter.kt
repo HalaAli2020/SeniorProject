@@ -32,7 +32,8 @@ class PostAdapter(context: Context, ViewModel: HomeFragmentViewModel) :
     lateinit var looking : Observer<MutableList<Post>>
     lateinit var obse : Observer<in MutableList<Post>>
     init {
-        savedPosts = mViewModel.getPost()
+        savedPosts = mViewModel.getSubscribedPosts()
+        //savedPosts = mViewModel.getPost()
 
 
 

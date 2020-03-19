@@ -54,10 +54,8 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
     }
 
 
-    fun getSubscribedPosts() {
-        posts = repository.getSubscribedPosts()
+    fun getSubscribedPosts()  = repository.getSubscribedPosts()
         //return posts
-    }
     fun getPost() : LiveData<MutableList<Post>>?{
         return postdata
     }

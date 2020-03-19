@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-  <!--  <data>
+  <data>
 
         <variable
             name="ProfileViewModell"
             type="com.example.seniorproject.viewModels.ProfileViewModel"></variable>
-    </data> -->
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/pContainer"
@@ -69,7 +69,6 @@
                     android:text="@{ProfileViewModell.SessionUser.username}"
                     android:textColor="@color/TextColor"
                     android:textSize="20sp"
-                    android:text=""
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"

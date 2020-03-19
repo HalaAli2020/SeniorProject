@@ -56,7 +56,7 @@ class FirebaseData @Inject constructor() {
     var postref: DatabaseReference? = null
     private lateinit var postlistener: ValueEventListener
     private var userprofile: User? = null
-    private lateinit var userprofile : User
+    //private lateinit var userprofile : User
     var otherEmail : String? = null
     var newComments: Comment? = null
 
@@ -67,11 +67,11 @@ class FirebaseData @Inject constructor() {
 
 
     var classList: MutableLiveData<MutableList<CRN>> = MutableLiveData()
-    var classList : MutableList<CRN> = mutableListOf()
+    //var classList : MutableList<CRN> = mutableListOf()
     var cList : MutableList<String> = mutableListOf()
     var classPostList: PostLiveData = PostLiveData()
     var MainPosts: MutableList<Post> = mutableListOf()
-    var UserSUB: MutableList<String>? = null
+    var UserSUB : MutableLiveData<MutableList<String>> = MutableLiveData()
     fun CurrentUser() = FirebaseAuth.getInstance().currentUser
     var MainforumListener: ChildEventListener? = null
     var CurrentUser: MutableLiveData<User>? = null
@@ -156,7 +156,11 @@ class FirebaseData @Inject constructor() {
         //var to get old username to compare
         //a nested for loop to check comments in every post
 
-        listenForUserProfilePosts (userID)
+        listenForUserProfilePosts(userID, object : FirebaseCallbackPost{
+            override fun onCallback(PostL: PostLiveData) {
+                TODO("Not yet implemented")
+            }
+        })
 
         var x = 0
 
@@ -500,7 +504,7 @@ class FirebaseData @Inject constructor() {
     }*/
 
 
-    fun listenForUserProfilePosts (uid : String): PostLiveData {
+    fun listenForUserProfilePosts (uid : String, callbackPost: FirebaseCallbackPost){
         Log.d(TAG, "getUserProfilePosts listener called")
         val uid = CurrentUser?.value!!.uid
         //FirebaseAuth.getInstance().uid
@@ -582,7 +586,7 @@ class FirebaseData @Inject constructor() {
             }
         } )
 
-        return profilePosts
+        callbackPost.onCallback(profilePosts)
     }
 
 
@@ -591,7 +595,7 @@ class FirebaseData @Inject constructor() {
 
 
 
-    fun listenForUserProfileComments (uid : String): CommentLive{
+    fun listenForUserProfileComments (uid : String, callbackComment: FirebaseCallbackComment){
         Log.d(TAG, "getUserProfile comments listener called")
 
 
@@ -673,86 +677,58 @@ class FirebaseData @Inject constructor() {
 
 
 
-        return Comments
+       callbackComment.onCallback(Comments)
 
     }
 
 
     fun getUserProfilePosts(userID: String) : PostLiveData {
         Log.d(TAG, "getUserProfilePosts called")
+        var post = PostLiveData()
         if (userID == "null") {
             var uid = FirebaseAuth.getInstance().uid ?: "error"
-            listenForUserProfilePosts(uid)
+            listenForUserProfilePosts(uid, object : FirebaseCallbackPost{
+                override fun onCallback(PostL: PostLiveData) {
+                    TODO("Not yet implemented")
+                }
+            })
         } else
         {
             var uid = userID
-            listenForUserProfilePosts(uid)
+            listenForUserProfilePosts(uid, object :FirebaseCallbackPost{
+                override fun onCallback(PostL: PostLiveData) {
+                    post.value = PostL.value
+                }
+            })
          }
-        return profilePosts
+        return post
     }
 
     fun getUserProfileComments(userID : String): CommentLive{
         Log.d(TAG, "getUserProfile comments called")
+        var com = CommentLive()
         if (userID == "null") {
             var uid = FirebaseAuth.getInstance().uid ?: "error"
-            listenForUserProfilePosts(uid)
+            listenForUserProfilePosts(uid, object : FirebaseCallbackPost {
+                override fun onCallback(PostL: PostLiveData) {
+                    TODO("Not yet implemented")
+                }
+            })
         } else
         {
             var uid = userID
-            listenForUserProfileComments(uid)
-        }
-        return Comments
-    }
-
-    fun getCommentsCO(Key: String): CommentLive {
-
-        val uid = FirebaseAuth.getInstance().uid
-        val reference =
-            FirebaseDatabase.getInstance().getReference("users/$uid/Post/$Key").child("Comments")
-
-        val commentListen = reference.addChildEventListener(object : ChildEventListener {
-            var savedCommentList: MutableList<Comment> = mutableListOf()
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val newComment = p0.getValue(Comment::class.java)
-
-
-                if (newComment != null) {
-                    Log.d("ACCESSING", newComment?.text)
-                    savedCommentList.add(newComment)
-
-                    newComments = newComment
-                    //repository.saveNewPost(newPost)
-                    //adapter.add(PostFrag(newPost.title, newPost.text))
-
+            listenForUserProfileComments(uid, object : FirebaseCallbackComment {
+                override fun onCallback(CommentL: CommentLive) {
+                    com.value = CommentL.value
                 }
-                Comments.value = savedCommentList
-                //Log.d("TAG", "Comments loaded")
-
-
-            }
-
-            override fun onChildRemoved(p0: DataSnapshot) {
-            }
-
-
-        })
-        Log.d("Comment return", "comment return")
-        return Comments
-
-
+            })
+        }
+        return com
     }
 
-    fun getComments(Key: String, subject: String): CommentLive {
+
+    fun listenComments(Key: String, subject: String, callbackComment: FirebaseCallbackComment)
+    {
         val uid = FirebaseAuth.getInstance().uid
         val reference =
             FirebaseDatabase.getInstance().getReference("Subjects/$subject/Posts/$Key/Comments")
@@ -790,8 +766,18 @@ class FirebaseData @Inject constructor() {
 
 
         })
-        return Comments
+       callbackComment.onCallback(Comments)
 
+    }
+
+    fun getComments(Key: String, subject: String): CommentLive {
+        var com = CommentLive()
+       listenComments(Key, subject, object : FirebaseCallbackComment{
+           override fun onCallback(CommentL: CommentLive) {
+               com.value = CommentL.value
+           }
+       })
+        return com
     }
 
 
@@ -1223,6 +1209,31 @@ class FirebaseData @Inject constructor() {
 
         //}
     }
+    fun listenUserSub(callbackString: FirebaseCallbackString){
+        val uid = FirebaseAuth.getInstance().uid
+//        Log.d("uid", uid!!)
+        val reference = FirebaseDatabase.getInstance().getReference("users/$uid/Subscriptions").orderByValue()
+        reference.addValueEventListener(object : ValueEventListener {
+            val SubList: MutableList<String> = mutableListOf()
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                val size = p0.hasChildren()
+                Log.d("Size", size.toString())
+                //var has :HashMap<String,String>? = hashMapOf()
+                val Sublist = p0.children
+                for (x in Sublist) {
+                    Log.d("usersub", x.getValue(String::class.java)!!)
+                    SubList.add(x.getValue(String::class.java)!!)
+                }
+                //UserSUB = SubList
+                callbackString.onCallback(SubList)
+            }
+        })
+        //callbackString.onCallback(UserSUB)
+    }
 
     fun getUserSub() {
 
@@ -1244,7 +1255,7 @@ class FirebaseData @Inject constructor() {
                     Log.d("usersub", x.getValue(String::class.java)!!)
                     SubList.add(x.getValue(String::class.java)!!)
                 }
-                UserSUB = SubList
+                UserSUB.value = SubList
             }
         })
     }
@@ -1272,10 +1283,15 @@ class FirebaseData @Inject constructor() {
 
 }*/
 
-    fun sendUserSUB(): MutableList<String>? {
-        getUserSub()
-        var sub = UserSUB
-        return sub
+    fun sendUserSUB(): MutableLiveData<MutableList<String>> {
+        //var sub = mutableListOf<String>()
+        listenUserSub(object : FirebaseCallbackString {
+            override fun onCallback(subs: MutableList<String>) {
+                UserSUB.value = subs
+            }
+        })
+
+        return UserSUB
     }
 
     //, Subject: String
@@ -1319,7 +1335,7 @@ class FirebaseData @Inject constructor() {
                     }
                 }
 
-                UserSUB = SubList
+                UserSUB.value = SubList
             }
         })
     }
@@ -1350,7 +1366,7 @@ class FirebaseData @Inject constructor() {
                     }
                 }
 
-                UserSUB = SubList
+                UserSUB.value = SubList
             }
         })
 
@@ -1449,8 +1465,9 @@ class FirebaseData @Inject constructor() {
 
 
  }*/
+    fun listenforClassPosts(className: String, callbackPost: FirebaseCallbackPost)
+    {
 
-    fun getClassPosts(className: String): PostLiveData {
         val reference = FirebaseDatabase.getInstance().getReference("Subjects/$className/Posts")
 
         reference.addChildEventListener(object : ChildEventListener {
@@ -1498,6 +1515,7 @@ class FirebaseData @Inject constructor() {
 
 
                 classPostList.value = savedPostsList
+                callbackPost.onCallback(classPostList)
             }
 
 
@@ -1505,11 +1523,85 @@ class FirebaseData @Inject constructor() {
             }
         })
 
-        return classPostList
+        //callbackPost.onCallback(classPostList)
+
+    }
+
+    fun getClassPosts(className: String) : PostLiveData{
+        var posts = PostLiveData()
+        listenforClassPosts(className, object : FirebaseCallbackPost {
+            override fun onCallback(PostL: PostLiveData) {
+                posts.value = PostL.value
+            }
+        })
+        return posts
     }
 
     fun getClasses() : MutableLiveData<MutableList<CRN>> {
-        val reference = FirebaseDatabase.getInstance().reference.child("/Subjects")
+        var csall : MutableLiveData<MutableList<CRN>> = MutableLiveData()
+        listenClasses(object : FirebaseCallbackCRN{
+            override fun onCallback(CRNL: MutableLiveData<MutableList<CRN>>) {
+                csall = CRNL
+
+            }
+        })
+        return csall
+    }
+    fun getUsersSubsnClass() : MutableLiveData<MutableList<CRN>>
+    {
+        var csall : MutableLiveData<MutableList<CRN>> = MutableLiveData()
+        var SUBS : MutableList<String> = mutableListOf()
+        listenClasses(object : FirebaseCallbackCRN{
+            override fun onCallback(CRNL: MutableLiveData<MutableList<CRN>>) {
+                csall = CRNL
+                listenUserSub(object : FirebaseCallbackString{
+                    override fun onCallback(subs: MutableList<String>) {
+                        SUBS = subs
+                        combineSubs(csall, SUBS)
+
+
+                    }
+
+                })
+            }
+        })
+
+        return csall
+    }
+    fun combineSubs(listClasses : MutableLiveData<MutableList<CRN>>, UsersSubs :MutableList<String>) : Int
+    {
+        /*while(UsersSubs.isNullOrEmpty())
+        {
+
+            Log.d("UserSUBs", "null")
+            //return listClasses
+        }*/
+        if(listClasses.value.isNullOrEmpty() || UsersSubs.isNullOrEmpty())
+        {
+
+            Log.d("Null", "one was null")
+            return 0
+        }
+        else
+        {
+            for(data in listClasses.value!!.iterator())
+            {
+                if(UsersSubs.contains(data.name))
+                {
+                    data.Subscribed = true
+                    Log.d("combine", data.name)
+                }
+
+            }
+            return 1
+
+
+        }
+
+    }
+    fun listenClasses(callbackCRN: FirebaseCallbackCRN)
+    {
+        val reference = FirebaseDatabase.getInstance().getReference("Subjects")
 
         reference.addListenerForSingleValueEvent(object : ValueEventListener {
             var classes: MutableList<String> = mutableListOf()
@@ -1530,18 +1622,18 @@ class FirebaseData @Inject constructor() {
                         //x.SUBLIST = SeparateList(datas.child("SubList"))
                     }*/
 
-
+                    Log.d("getclasses", classnames.name)
                     classList.value?.add(classnames)
 
 
-                }
 
+                }
+                callbackCRN.onCallback(classList)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
             }
         })
-        return classList
 
     }
 
@@ -1610,10 +1702,10 @@ class FirebaseData @Inject constructor() {
     })
 }*/
 
-    private fun listenForSubscribedPosts2(sub: MutableList<String>?) {
+    private fun listenForSubscribedPosts2(sub: MutableList<String>?, callbackPost: FirebaseCallbackPost) {
         savedPosts = PostLiveData()
         val reference = FirebaseDatabase.getInstance().getReference("Subjects")
-        var sub: MutableList<String>? = sendUserSUB()
+        var sub: MutableLiveData<MutableList<String>>? = sendUserSUB()
         MainforumListener = reference.addChildEventListener(object : ChildEventListener {
             var savedPostsList: MutableList<Post> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
@@ -1628,11 +1720,11 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                if (sub.isNullOrEmpty()) {
+                if (sub!!.value.isNullOrEmpty()) {
                     savedPosts.value = savedPostsList
                 } else {
                     Log.d("FIRST1-:", p0.key)
-                    if (sub!!.contains(p0.key)) {
+                    if (sub.value!!.contains(p0.key)) {
                         for (p2 in p0.getChildren()) {
                             Log.d("FIRST2---:", p2.key)
                             if (p2.key == "Posts") {
@@ -1664,7 +1756,11 @@ class FirebaseData @Inject constructor() {
 
                                     savedPosts.value = savedPostsList
                                     counter++
-                                    if (counter == 2) break
+                                    if (counter == 2)
+                                    {
+                                        callbackPost.onCallback(savedPosts)
+                                        break
+                                    }
                                 }
                             }
                         }
@@ -1676,15 +1772,20 @@ class FirebaseData @Inject constructor() {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
         })
+        //callbackPost.onCallback(savedPosts)
     }
 
 
     fun getSubscribedPosts(): PostLiveData {
-        var sub: MutableList<String>? = sendUserSUB()
+        var sub: MutableLiveData<MutableList<String>>? = sendUserSUB()
         var ref: DatabaseReference? = null
-        if (sub != null) {
-            listenForSubscribedPosts2(sub)
-        }
+        var post = PostLiveData()
+            listenForSubscribedPosts2(sub!!.value, object : FirebaseCallbackPost {
+                override fun onCallback(PostL: PostLiveData) {
+                    savedPosts.value = PostL.value
+                }
+            })
+
 
 
         return savedPosts
@@ -1694,8 +1795,19 @@ class FirebaseData @Inject constructor() {
 
     }
 
+    fun getUserPost() : PostLiveData
+    {
+        var post = PostLiveData()
+        listenforUserPosts(object : FirebaseCallbackPost{
+            override fun onCallback(PostL: PostLiveData) {
+                post.value = PostL.value
+            }
+        })
+        return post
+    }
 
-    private fun listenforUserPosts() {
+
+    private fun listenforUserPosts(callbackPost: FirebaseCallbackPost) {
         // val userID = FirebaseAuth.getInstance().currentUser
         val reference =
             FirebaseDatabase.getInstance().getReference("users/1XN3H62rMJhe6CiCbN4os2TNp5H2")
@@ -1737,7 +1849,7 @@ class FirebaseData @Inject constructor() {
                     //adapter.add(PostFrag(newPost.title, newPost.text))
                 }
                 savedPosts.value = savedPostsList
-
+                callbackPost.onCallback(savedPosts)
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {
@@ -1745,7 +1857,7 @@ class FirebaseData @Inject constructor() {
 
 
         })
-
+        
     }
 
 
@@ -1835,9 +1947,9 @@ class FirebaseData @Inject constructor() {
                     var user = User()
                     user.username = p1.child("Username").getValue(String::class.java)
                     user.uid = p1.child("uid").getValue(String::class.java)
-                    val imageProfURL = p1.child("profileImageUrl").getValue(String::class.java)
+                    var imageProfURL = p1.child("profileImageUrl").getValue(String::class.java)
                     if(!imageProfURL.isNullOrEmpty()) {
-                        user.profileImageUrl = Uri.parse(imageProfURL)
+                        user.ProfilePic = Uri.parse(imageProfURL)
                     }
 
                     if (user != null) {
@@ -2015,6 +2127,18 @@ class FirebaseData @Inject constructor() {
 
     interface FirebaseRecentMessagseCallback {
         fun onCallback(list: List<LatestMessage>)
+    }
+    interface FirebaseCallbackPost{
+        fun onCallback(PostL : PostLiveData)
+    }
+    interface  FirebaseCallbackComment{
+        fun onCallback(CommentL : CommentLive)
+    }
+    interface FirebaseCallbackCRN{
+        fun onCallback(CRNL : MutableLiveData<MutableList<CRN>>)
+    }
+    interface FirebaseCallbackString{
+        fun onCallback(subs : MutableList<String>)
     }
 
 

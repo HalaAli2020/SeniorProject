@@ -19,9 +19,10 @@ class ListViewModel @Inject constructor(private val repository: PostRepository) 
         }
     }
     //var obse : Observer<in MutableList<CRN>>? = null
-    private var UsersSubs : MutableList<String>? = mutableListOf()
+     var UsersSubs : MutableLiveData<MutableList<String>>? = MutableLiveData()
 
     init {
+        getClasses()
         getUserSub()
         //getClasses()
 
@@ -35,11 +36,11 @@ class ListViewModel @Inject constructor(private val repository: PostRepository) 
         //combineSubs()
 
     }
-
-    private fun getClasses() : MutableLiveData<MutableList<CRN>> {
+    //: MutableLiveData<MutableList<CRN>>
+    private fun getClasses()  {
         //listClasses.clear()
 
-        return repository.getClasses()
+        listClasses = repository.getClasses()
 
     }
     private fun getUserSub()
@@ -49,8 +50,10 @@ class ListViewModel @Inject constructor(private val repository: PostRepository) 
     }
      fun getSubs()
     {
-        getClasses()
+       getClasses()
         getUserSub()
+        //combineSubs()
+
 
 
 
@@ -58,8 +61,9 @@ class ListViewModel @Inject constructor(private val repository: PostRepository) 
     }
     fun check() : Boolean
     {
-        return (listClasses.value.isNullOrEmpty() && UsersSubs.isNullOrEmpty())
+        return (listClasses.value.isNullOrEmpty() && UsersSubs?.value.isNullOrEmpty())
     }
+    fun Getcomnosubs() = repository.getSubs()
 
 
     fun combineSubs()
@@ -70,15 +74,16 @@ class ListViewModel @Inject constructor(private val repository: PostRepository) 
             Log.d("UserSUBs", "null")
             //return listClasses
         }*/
-        if(listClasses.value.isNullOrEmpty() && UsersSubs.isNullOrEmpty())
+        if(listClasses.value.isNullOrEmpty() && UsersSubs?.value.isNullOrEmpty())
         {
-            Log.d("Combine", "null")
+
+            Log.d("Null", "one was null")
         }
         else
         {
             for(data in listClasses.value!!.iterator())
             {
-                if(UsersSubs!!.contains(data.name))
+                if(UsersSubs!!.value!!.contains(data.name))
                 {
                     data.Subscribed = true
                     Log.d("combine", data.name)
@@ -104,7 +109,7 @@ class ListViewModel @Inject constructor(private val repository: PostRepository) 
     fun removeSub(crn : String)
     {
         repository.remUsersub(crn)
-        UsersSubs = mutableListOf()
+        UsersSubs = MutableLiveData()
         listClasses = MutableLiveData()
         getClasses()
         getUserSub()

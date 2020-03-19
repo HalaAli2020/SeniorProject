@@ -120,7 +120,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun getClassPosts(className: String) = Firebase.getClassPosts(className)
 
-    fun getUserSub(): MutableList<String>? {
+    fun getUserSub() : MutableLiveData<MutableList<String>>? {
         return Firebase.sendUserSUB()
 
     }
@@ -128,7 +128,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     fun addUsersub(crn: String) {
         Firebase.addUserSUB(crn)
     }
-
+    fun getSubs() = Firebase.getUsersSubsnClass()
     fun remUsersub(crn: String) {
         Firebase.removeUserSub(crn)
         Firebase.removeClassSub(crn)

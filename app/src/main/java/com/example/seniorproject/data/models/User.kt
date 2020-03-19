@@ -28,7 +28,7 @@ data class User(var username: String?, var email: String?, var uid: String?, val
             "uid" to uid,
             "profileImageUrl" to profileImageUrl,
             "Admin" to Admin,
-            "ProfilePicl" to ProfilePic
+            "ProfilePic" to ProfilePic
             //"Subscriptions" to Subscriptions,
             //"Posts" to Posts
 

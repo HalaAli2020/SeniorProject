@@ -39,6 +39,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main_forum.*
+import kotlinx.android.synthetic.main.side_nav_header.*
 import javax.inject.Inject
 
 private const val TAG = "MyLogTag"
