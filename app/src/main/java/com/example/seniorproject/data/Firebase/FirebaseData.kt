@@ -1205,39 +1205,16 @@ fun noPostsChecker(userID: String) : Boolean{
         })
     }
 
-    fun blockUserComment(UserID: String, text: String, crn: String, postID: String) {
+    fun blockUser(UserID: String) {
 
         val userID = firebaseAuth.uid
-        val author= firebaseAuth.currentUser?.displayName
-        val comment = Comment(text, 0, userID, crn, postID)
-        comment.author= author
-        val User_key = FirebaseDatabase.getInstance().getReference("/users/$UserID").child("BlockedUsers").push().key
 
-        comment.PosterID = User_key
-
-        val dataupdates = HashMap<String, Any>()
-        val comementvalues = comment.toMap()
-        //dataupdates["Subjects/$crn/Posts/$ClassKey/Comments/$Class_key"] = comementvalues
-        dataupdates["users/$UserID/BlockedUsers/$User_key"] = comementvalues
-        FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
-
-    }
-
-    fun blockUserPost(UserID: String, crn: String, Classkey: String) {
-
-        val userID = firebaseAuth.uid
-        val author= firebaseAuth.currentUser?.displayName
-
-        val User_key = FirebaseDatabase.getInstance().getReference("/users/$userID").child("BlockedUsers").push().key
-
-        val blockuser = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$UserID").
-            child("BlockedUsers").push().key
+       // val userkey = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$UserID").key
+       // val blockuser = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$UserID").
+       //     child("BlockedUsers").push().key
        // post.UserID = User_key
-
-        val dataupdates = HashMap<String, Any>()
-
-        dataupdates["users/$userID/BlockedUsers/$blockuser"]
-        FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
+        val ref = FirebaseDatabase.getInstance().getReference("users/$userID/BlockedUsers")
+        ref.push().setValue(UserID)
 
     }
 
@@ -1570,33 +1547,33 @@ fun noPostsChecker(userID: String) : Boolean{
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val post = p0.getValue()
-                //val newPost = Post()
-                var postdetails: Iterable<DataSnapshot> = p0.children
-                //for (n in postdetails) {
-                var newPost = Post()
-                newPost.let {
+                    val post = p0.getValue()
+                    //val newPost = Post()
+                    var postdetails: Iterable<DataSnapshot> = p0.children
+                    //for (n in postdetails) {
+                    var newPost = Post()
+                    newPost.let {
 
-                    //Log.d("ACCESSING", newPost?.text)
-                    it.title = p0.child("title").getValue(String::class.java)
-                    it.text = p0.child("text").getValue(String::class.java)
-                    //newPost.author = pos.child("author").getValue(String::class.java)
-                    it.crn = className
-                    Log.d("CRN", p0.key!!)
-                    //newPost.subject = post.child("subject").getValue(String ::class.java)
-                    //newPost.ptime = pos.child("Timestamp").getValue(Long::class.java)
-                    it.key = p0.child("key").getValue(String::class.java)
-                    it.Classkey = p0.child("Classkey").getValue(String::class.java)
-                    it.UserID = p0.child("UserID").getValue(String::class.java)
-                        it.author= p0.child("author").getValue(String::class.java)
+                        //Log.d("ACCESSING", newPost?.text)
+                        it.title = p0.child("title").getValue(String::class.java)
+                        it.text = p0.child("text").getValue(String::class.java)
+                        //newPost.author = pos.child("author").getValue(String::class.java)
+                        it.crn = className
+                        Log.d("CRN", p0.key!!)
+                        //newPost.subject = post.child("subject").getValue(String ::class.java)
+                        //newPost.ptime = pos.child("Timestamp").getValue(Long::class.java)
+                        it.key = p0.child("key").getValue(String::class.java)
+                        it.Classkey = p0.child("Classkey").getValue(String::class.java)
+                        it.UserID = p0.child("UserID").getValue(String::class.java)
+                        it.author = p0.child("author").getValue(String::class.java)
 
-                    // comments might need to be gotten separatley to properly convert values
+                        // comments might need to be gotten separatley to properly convert values
 
 
+                        savedPostsList.add(newPost)
 
-                    savedPostsList.add(newPost)
 
-                }
+                    }
 
                 //repository.saveNewPost(newPost)
                 //adapter.add(PostFrag(newPost.title, newPost.text))

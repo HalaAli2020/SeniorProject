@@ -9,10 +9,13 @@ import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.view.isNotEmpty
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -32,6 +35,8 @@ import com.example.seniorproject.viewModels.CommunityPostViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_community_posts.*
 import kotlinx.android.synthetic.main.fragment_profile__post.view.*
+import kotlinx.android.synthetic.main.rv_post.view.*
+import org.w3c.dom.Text
 import javax.inject.Inject
 
 class CommunityPosts : AppCompatActivity() {
@@ -55,9 +60,9 @@ class CommunityPosts : AppCompatActivity() {
         val factory = InjectorUtils.provideCommunityPostViewModelFacotry()
         myViewModel = ViewModelProviders.of(this, factory).get(CommunityPostViewModel::class.java)
 
+        //var firstpos = classes_post_RV.layoutManager.findContainingItemView()
 
         classes_post_RV.layoutManager = LinearLayoutManager(this)
-
         adapter = CustomAdapter(this, myViewModel.returnClassPosts(className!!), 1)
         classes_post_RV.adapter = adapter
 
@@ -169,6 +174,9 @@ class CommunityPosts : AppCompatActivity() {
                                     val crnkey: String? =
                                         adapter.getCrn(viewHolders as CustomViewHolders, pos)
 
+                                    val userkey: String? =
+                                        adapter.getUserKey(viewHolders as CustomViewHolders)
+
                                     //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
                                     var builder = AlertDialog.Builder(
                                         this@CommunityPosts,
@@ -183,7 +191,21 @@ class CommunityPosts : AppCompatActivity() {
                                     builder.setMessage("You won't see posts or comments from this user.")
                                     builder.setPositiveButton("BLOCK",
                                         { dialogInterface: DialogInterface?, i: Int ->
-                                            //myViewModel.blockPost(userkey!!, crnkey!!, postkey!!)
+                                            myViewModel.blockUser(userkey!!)
+                                            classes_post_RV.findViewHolderForAdapterPosition(pos)!!.itemView.post_title.text="[blocked]"
+                                            var count: Int =0
+                                            for( i in 0..classes_post_RV.childCount) {
+                                                if(classes_post_RV.findViewHolderForAdapterPosition(count)!!.itemView.username.text.toString() == "Sally Meyers"){
+                                                    classes_post_RV.findViewHolderForAdapterPosition(count)!!.itemView.post_title.text="[blocked]"
+                                                }
+                                                //classes_post_RV.findViewHolderForAdapterPosition(count)!!.itemView.post_title.text="[blocked]"
+                                                count++
+                                                if(count== classes_post_RV.childCount){
+                                                    break;
+                                                }
+                                                //classes_post_RV.findViewHolderForAdapterPosition(i)!!.itemView.post_title.text="[blocked]"
+                                                //classes_post_RV.getChildViewHolder(classes_post_RV.getChildAt(i)).itemView.post_title.text="[blocked]"
+                                            }
                                             var toast = Toast.makeText(
                                                 this@CommunityPosts,
                                                 "This user has been blocked",

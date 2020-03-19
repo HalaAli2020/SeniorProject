@@ -198,7 +198,7 @@ class ClickedPost : AppCompatActivity() {
                                     builder.setMessage("You won't see posts or comments from this user.")
                                     builder.setPositiveButton("BLOCK",
                                         { dialogInterface: DialogInterface?, i: Int ->
-                                            //myViewModel.blockPost(userkey!!, crnkey!!, postkey!!)
+                                            myViewModel.blockUser(userkey!!)
                                             var toast = Toast.makeText(
                                                 this@ClickedPost,
                                                 "This user has been blocked",
