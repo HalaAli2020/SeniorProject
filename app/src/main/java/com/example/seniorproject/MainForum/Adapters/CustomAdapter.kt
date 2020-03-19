@@ -47,6 +47,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
             val post: Post = savedPosts.value!![position]
             holder.itemView.post_title.text = post.title
             holder.itemView.username.text = post.author
+            holder.itemView.post_timestamp.text=post.Ptime
 
             if(type==0){
                 holder.itemView.username.text = post.crn

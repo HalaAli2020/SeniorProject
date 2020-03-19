@@ -686,7 +686,7 @@ fun noPostsChecker(userID: String) : Boolean{
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 if (p0.child("text").exists() == false) {
                     Log.d("comment", "doesn't exist")
-                    val emptycomment = Comment("No Comments", 0, "", "", "")
+                    val emptycomment = Comment("No Comments", "", "", "", "")
                     var profileCommentL: MutableList<Comment> = mutableListOf()
                     profileCommentL.add(emptycomment)
                     Comments.value = profileCommentL
@@ -699,7 +699,7 @@ fun noPostsChecker(userID: String) : Boolean{
                             it.PosterID = p0.child("PosterID").value.toString()
                             it.Postkey = p0.child("Postkey").value.toString()
                             it.ProfileComKey = p0.child("ProfileComKey").value.toString()
-                            it.Ptime = p0.child("Ptime").value as Long
+                            it.Ptime = p0.child("Ptime").value.toString()
                             it.UserComkey = p0.child("UserComkey").value.toString()
                             it.author = p0.child("author").value.toString()
                             it.crn = p0.child("crn").value.toString()
@@ -737,7 +737,7 @@ fun noPostsChecker(userID: String) : Boolean{
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.child("Comments").exists() == false) {
                     Log.d("comment", "doesn't exist")
-                    val emptycomment = Comment("no Comments" , 0, "", "", "")
+                    val emptycomment = Comment("no Comments" , "", "", "", "")
                     var profileCommentL: MutableList<Comment> = mutableListOf()
                     profileCommentL.add(emptycomment)
                     Comments.value = profileCommentL
@@ -880,7 +880,7 @@ fun noPostsChecker(userID: String) : Boolean{
         //val subject = Subject
         //val ClassID = Classkey
         val userID = firebaseAuth.uid
-        val comment = Comment(text, 0, userID, crn, postID)
+        val comment = Comment(text, "", userID, crn, postID)
         //FIX userprofile not init post.author = userprofile.username!!
         //val Class_key = FirebaseDatabase.getInstance().getReference(CRN).child("Posts").push().key
         //FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID")
@@ -1068,7 +1068,7 @@ fun noPostsChecker(userID: String) : Boolean{
         //val ClassID = Classkey
         val userID = firebaseAuth.uid
         val author= firebaseAuth.currentUser?.displayName
-        val comment = Comment(text, 0, userID, crn, postID)
+        val comment = Comment(text, "", userID, crn, postID)
         comment.author= author
         Log.d("BigMoods", crn)
         //FIX userprofile not init post.author = userprofile.username!!
@@ -1209,7 +1209,7 @@ fun noPostsChecker(userID: String) : Boolean{
 
         val userID = firebaseAuth.uid
         val author= firebaseAuth.currentUser?.displayName
-        val comment = Comment(text, 0, userID, crn, postID)
+        val comment = Comment(text, "", userID, crn, postID)
         comment.author= author
         val User_key = FirebaseDatabase.getInstance().getReference("/users/$UserID").child("BlockedUsers").push().key
 
