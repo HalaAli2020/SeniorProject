@@ -5,7 +5,8 @@
     android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="4dp">
+    android:layout_marginBottom="4dp"
+    android:background="@color/BackgroundColor">
 
     <TextView
         android:id="@+id/textview_from_Row"
@@ -13,11 +14,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:textSize="16sp"
         android:background="@drawable/round_received_message"
         android:maxWidth="240dp"
         android:padding="12dp"
-        android:textColor="@android:color/black"
+        android:textColor="@color/TextColor"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

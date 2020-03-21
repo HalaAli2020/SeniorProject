@@ -13,6 +13,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/LContainer"
+        android:background="@color/BackgroundColor"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -34,7 +35,7 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    android:background="@color/white"
+                    android:background="@color/BackgroundColor"
                     android:theme="@style/ThemeOverlay.AppCompat.Light" />
             </FrameLayout>
 
@@ -50,9 +51,9 @@
             <com.google.android.material.navigation.NavigationView
                 android:id="@+id/nav_view"
                 android:layout_width="wrap_content"
-                android:background="@color/white"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
+                android:background="@color/BackgroundColor"
                 app:menu="@menu/activity_main_drawer" />
 
         </androidx.drawerlayout.widget.DrawerLayout>
@@ -62,7 +63,7 @@
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
+            android:background="@color/BackgroundColor"
             app:itemIconTint="@menu/bottom_navigation_selected"
             app:itemTextColor="@menu/bottom_navigation_selected"
             app:labelVisibilityMode="unlabeled"
@@ -74,9 +75,9 @@
             android:id="@+id/FAB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
-            android:src="@drawable/ic_create_black_24dp"
+            android:backgroundTint="@color/BackgroundColor"
             android:scaleType="centerInside"
+            android:src="@drawable/ic_create_black_24dp"
             app:borderWidth="3dp"
             app:elevation="9dp"
             app:layout_constraintBottom_toBottomOf="parent"

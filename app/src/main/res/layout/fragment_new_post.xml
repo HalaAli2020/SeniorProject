@@ -17,6 +17,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
         android:layout_marginBottom="?attr/actionBarSize"
+        android:background="@color/BackgroundColor"
         tools:context=".MainForum.Fragments.FragmentNewPost">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,6 +48,7 @@
 
             <Button
                 android:id="@+id/new_post_btn"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="88dp"
                 android:layout_height="0dp"
                 android:layout_marginEnd="12dp"
@@ -87,6 +89,7 @@
             android:paddingTop="12dp"
             android:paddingEnd="15dp"
             android:paddingBottom="15dp"
+            android:textColor="@color/TextColor"
             android:singleLine="true"
             android:text="@={NewPostViewModel.titlePost}"
             android:textSize="15sp"
@@ -106,6 +109,7 @@
             android:inputType="textMultiLine|textCapSentences"
             android:maxLength="500"
             android:paddingStart="12dp"
+            android:textColor="@color/TextColor"
             android:paddingTop="10dp"
             android:paddingEnd="12dp"
             android:text="@={NewPostViewModel.textPost}"

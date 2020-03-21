@@ -5,7 +5,8 @@
     android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="4dp">
+    android:layout_marginBottom="4dp"
+    android:background="@color/BackgroundColor">
 
     <TextView
         android:id="@+id/textview_to_Row"

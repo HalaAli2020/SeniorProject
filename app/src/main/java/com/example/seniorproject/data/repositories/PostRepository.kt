@@ -115,10 +115,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun getClassPosts(className: String) = Firebase.getClassPosts(className)
 
-    fun getUserSub(): MutableList<String>? {
-        return Firebase.sendUserSUB()
+    fun getUserSub()= Firebase.sendUserSUB()
 
-    }
 
     fun addUsersub(crn: String) {
         Firebase.addUserSUB(crn)
