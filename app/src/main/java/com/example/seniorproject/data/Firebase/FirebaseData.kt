@@ -28,7 +28,8 @@ import java.util.logging.Handler
 import javax.security.auth.Subject
 import kotlin.collections.HashMap
 import com.example.seniorproject.data.models.User
-
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.storage.UploadTask
 
 
 //import kotlin.reflect.jvm.internal.impl.load.java.lazy.ContextKt.child
@@ -50,31 +51,32 @@ class FirebaseData @Inject constructor() {
 
 
     //var savedPosts: MutableLiveData<List<Post>> = MutableLiveData()
-    var savedPosts : PostLiveData = PostLiveData()
-    var userPosts : PostLiveData = PostLiveData()
-    var Comments : CommentLive = CommentLive()
-    var profilePosts : PostLiveData = PostLiveData()
+    var savedPosts: PostLiveData = PostLiveData()
+    var userPosts: PostLiveData = PostLiveData()
+    var Comments: CommentLive = CommentLive()
+    var profilePosts: PostLiveData = PostLiveData()
 
 
-    private lateinit var postlistener : ValueEventListener
-    private lateinit var userprofile : User
-    var otherEmail : String? = null
-    var otherBio : String? = null
-    var newComments : Comment? = null
+    private lateinit var postlistener: ValueEventListener
+    private lateinit var userprofile: User
+    var otherEmail: String? = null
+    var otherBio: String? = null
+    var newComments: Comment? = null
     var noPostsCheck: Boolean = false
+    var noCommentsCheck: Boolean = false
+    var saveImageurl: String? = null
 
 
-    var newProfilePosts : Post? = null
-    var newProfileComments : Comment? = null
+    var newProfilePosts: Post? = null
+    var newProfileComments: Comment? = null
 
 
-    var classList : MutableList<CRN> = mutableListOf()
-    var cList : MutableList<String> = mutableListOf()
-    var classPostList : PostLiveData = PostLiveData()
-    var MainPosts : MutableList<Post> = mutableListOf()
-    var UserSUB : MutableList<String>? = null
+    var classList: MutableList<CRN> = mutableListOf()
+    var cList: MutableList<String> = mutableListOf()
+    var classPostList: PostLiveData = PostLiveData()
+    var MainPosts: MutableList<Post> = mutableListOf()
+    var UserSUB: MutableList<String>? = null
     fun CurrentUser() = FirebaseAuth.getInstance().currentUser
-
 
 
     fun CurrentUserL() {
@@ -123,7 +125,7 @@ class FirebaseData @Inject constructor() {
 
     }
 
-    fun fetchEmail(UserID: String) : String{
+    fun fetchEmail(UserID: String): String {
 
         val ref = FirebaseDatabase.getInstance().getReference("/users/$UserID")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -141,7 +143,7 @@ class FirebaseData @Inject constructor() {
         return otherEmail ?: ""
     }
 
-    fun fetchBio(UserID: String) : String{
+    fun fetchBio(UserID: String): String {
 
         //if it does no exist then bio = bio
 
@@ -161,7 +163,7 @@ class FirebaseData @Inject constructor() {
         return otherBio ?: "no bio"
     }
 
-    fun fetchCurrentBio() : String{
+    fun fetchCurrentBio(): String {
         val UserID = firebaseAuth.uid ?: "null"
         val ref = FirebaseDatabase.getInstance().getReference("/users/$UserID")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -180,15 +182,7 @@ class FirebaseData @Inject constructor() {
     }
 
 
-
-
-
-
-
-
-
-
-    fun saveUserbio(bio : String){
+    fun saveUserbio(bio: String) {
 
         val userID = firebaseAuth.uid ?: "null"
         FirebaseDatabase.getInstance().getReference("/users/$userID")
@@ -197,7 +191,7 @@ class FirebaseData @Inject constructor() {
 
 
     //saves new username to database and auth profile
-    fun saveNewUsername(username: String){
+    fun saveNewUsername(username: String) {
         val userID = firebaseAuth.uid ?: "null"
 
         FirebaseDatabase.getInstance().getReference("/users/$userID")
@@ -206,15 +200,15 @@ class FirebaseData @Inject constructor() {
         //var to get old username to compare
         //a nested for loop to check comments in every post
 
-        listenForUserProfilePosts (userID)
+        listenForUserProfilePosts(userID)
         //do I need this?
 
         var x = 0
 
-        while (x < profilePosts.value!!.size){
+        while (x < profilePosts.value!!.size) {
             val post: Post = profilePosts.value!![x]
             val pkey: String = post.key.toString()
-            if (pkey != "null"){
+            if (pkey != "null") {
                 Log.d("PTAG", "UNDER HERE")
                 Log.d("PTAG", "the size is :  ${profilePosts.value!!.size}")
                 Log.d("PTAG", "Pkey is:  ${pkey}")
@@ -231,7 +225,8 @@ class FirebaseData @Inject constructor() {
         user?.updateProfile(profileUpdates)
             ?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.d(TAG, "profile updated, emitter complete?:  ${CurrentUser()?.displayName} ."
+                    Log.d(
+                        TAG, "profile updated, emitter complete?:  ${CurrentUser()?.displayName} ."
                     )
                 } else {
                     Log.d(TAG, "in else in fetch current user")
@@ -254,46 +249,49 @@ class FirebaseData @Inject constructor() {
                     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 }
 
-                override fun onChildChanged(p0: DataSnapshot, p1: String?){
-                    Log.d(PTAG,p0.getKey().toString())
+                override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+                    Log.d(PTAG, p0.getKey().toString())
                     var key = p0.getKey().toString()
-                    val newref = FirebaseDatabase.getInstance().getReference("/Subjects/${classn}/Posts/${key}").child("/author")
-                    if (userID == p0.child("UserID").value.toString()){
+                    val newref = FirebaseDatabase.getInstance()
+                        .getReference("/Subjects/${classn}/Posts/${key}").child("/author")
+                    if (userID == p0.child("UserID").value.toString()) {
                         newref.setValue(username)
                     }
                 }
 
                 override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                    Log.d(PTAG,p0.getKey().toString())
+                    Log.d(PTAG, p0.getKey().toString())
                     var key = p0.getKey().toString()
-                    val newref = FirebaseDatabase.getInstance().getReference("/Subjects/${classn}/Posts/${key}").child("/author")
-                    if (userID == p0.child("UserID").value.toString()){
+                    val newref = FirebaseDatabase.getInstance()
+                        .getReference("/Subjects/${classn}/Posts/${key}").child("/author")
+                    if (userID == p0.child("UserID").value.toString()) {
                         newref.setValue(username)
-                        changeCommunityCommentUsername(username,classn,key)
+                        changeCommunityCommentUsername(username, classn, key)
                     }
 
                 }
+
                 override fun onChildRemoved(p0: DataSnapshot) {
                     Log.d(TAG, "in else in fetch current user")
                 }
 
             })
-               x++
+            x++
         }
 
-        x=0
-        while (x < getUserProfilePosts(userID).value!!.size){
+        x = 0
+        while (x < getUserProfilePosts(userID).value!!.size) {
             val post: Post = getUserProfilePosts(userID).value!![x]
             val pkey: String = post.key.toString()
-            if (pkey != "null"){
+            if (pkey != "null") {
                 Log.d("PTAG", "Pkey is:  ${pkey}")
                 FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$pkey")
                     .child("/author").setValue(username)
             }
             x++
         }
-        x =  0
-        while (x < getUserProfileComments(userID).value!!.size){
+        x = 0
+        while (x < getUserProfileComments(userID).value!!.size) {
             val comment = getUserProfileComments(userID).value!![x]
             val ckey: String = comment.ProfileComKey.toString()
             if (ckey != "null") {
@@ -306,11 +304,12 @@ class FirebaseData @Inject constructor() {
 
     }
 
-    fun changeCommunityCommentUsername(username: String, classname : String, pkey : String ){
+    fun changeCommunityCommentUsername(username: String, classname: String, pkey: String) {
         // you can get the username, and class via parameter
         //then you can just fill them in and make the query
         val userID = firebaseAuth.uid
-        val ref =  FirebaseDatabase.getInstance().getReference("/Subjects/${classname}/Posts/${pkey}/Comments")
+        val ref = FirebaseDatabase.getInstance()
+            .getReference("/Subjects/${classname}/Posts/${pkey}/Comments")
         ref.orderByKey().addChildEventListener(object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -320,23 +319,28 @@ class FirebaseData @Inject constructor() {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
-            override fun onChildChanged(p0: DataSnapshot, p1: String?){
-                Log.d(PTAG,p0.getKey().toString()) // the comment key
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+                Log.d(PTAG, p0.getKey().toString()) // the comment key
                 var key = p0.getKey().toString()
-                val newref = FirebaseDatabase.getInstance().getReference("/Subjects/${classname}/Posts/${pkey}/Comments/${key}").child("/author")
-                if (userID == p0.child("PosterID").value.toString()){
+                val newref = FirebaseDatabase.getInstance()
+                    .getReference("/Subjects/${classname}/Posts/${pkey}/Comments/${key}")
+                    .child("/author")
+                if (userID == p0.child("PosterID").value.toString()) {
                     newref.setValue(username)
                 }
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                Log.d(PTAG,p0.getKey().toString()) // the comment key
+                Log.d(PTAG, p0.getKey().toString()) // the comment key
                 var key = p0.getKey().toString()
-                val newref = FirebaseDatabase.getInstance().getReference("/Subjects/${classname}/Posts/${pkey}/Comments/${key}").child("/author")
-                if (userID == p0.child("PosterID").value.toString()){
+                val newref = FirebaseDatabase.getInstance()
+                    .getReference("/Subjects/${classname}/Posts/${pkey}/Comments/${key}")
+                    .child("/author")
+                if (userID == p0.child("PosterID").value.toString()) {
                     newref.setValue(username)
                 }
             }
+
             override fun onChildRemoved(p0: DataSnapshot) {
                 Log.d(TAG, "in else in fetch current user")
             }
@@ -347,7 +351,7 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    fun getclassnamesforusername(){
+    fun getclassnamesforusername() {
 
         val reference = FirebaseDatabase.getInstance().reference.child("/Subjects")
         reference.orderByKey().addChildEventListener(object : ChildEventListener {
@@ -360,18 +364,19 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-                Log.d(PTAG,p0.getKey().toString())
+                Log.d(PTAG, p0.getKey().toString())
                 var classname = p0.getKey().toString()
                 cList.add(classname)
                 val checker = cList.size
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                Log.d(PTAG,p0.getKey().toString())
+                Log.d(PTAG, p0.getKey().toString())
                 var classname = p0.getKey().toString()
                 cList.add(classname)
                 val checker = cList.size
             }
+
             override fun onChildRemoved(p0: DataSnapshot) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -384,7 +389,6 @@ class FirebaseData @Inject constructor() {
         val check = cList.size
         return cList
     }
-
 
 
     fun fetchCurrentUserName() {
@@ -557,7 +561,7 @@ class FirebaseData @Inject constructor() {
     }*/
 
 
-    fun listenForUserProfilePosts (uid : String): PostLiveData {
+    fun listenForUserProfilePosts(uid: String): PostLiveData {
         Log.d(TAG, "getUserProfilePosts listener called")
 
         //set list to empty here?
@@ -578,13 +582,12 @@ class FirebaseData @Inject constructor() {
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 if (p0.child("text").exists() == false) {
                     Log.d("post", "doesn't exist")
-                    val emptyPost = Post("no Posts","" ,"")
+                    val emptyPost = Post("no Posts", "", "")
                     var profilePostL: MutableList<Post> = mutableListOf()
                     profilePostL.add(emptyPost)
                     profilePosts.value = profilePostL
                     noPostsCheck = true
-                }
-                else {
+                } else {
                     noPostsCheck = false
                     val newProfilePost = Post()
                     try {
@@ -599,6 +602,7 @@ class FirebaseData @Inject constructor() {
                             // need to change this later subject should be subject crn should be different
                             it.crn = p0.child("subject").value.toString()
                             it.author = p0.child("author").value.toString()
+                            it.uri = p0.child("uri").value.toString()
                             // not setting author
                         }
                     } catch (e: Exception) {
@@ -637,37 +641,39 @@ class FirebaseData @Inject constructor() {
         //only do this for the current user?
         // for other users just check the value?
         val comref = FirebaseDatabase.getInstance().getReference("users/$uid")
-        val checkforcomments = comref.addListenerForSingleValueEvent( object : ValueEventListener{
+        val checkforcomments = comref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
+
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.child("Posts").exists() == false) {
                     Log.d("comment", "doesn't exist")
-                    val emptyPost = Post("no Posts","" ,"")
+                    val emptyPost = Post("no Posts", "", "")
                     var profilePostL: MutableList<Post> = mutableListOf()
                     profilePostL.add(emptyPost)
                     profilePosts.value = profilePostL
                     noPostsCheck = true
                 }
             }
-        } )
+        })
 
         return profilePosts
     }
 
-fun noPostsChecker(userID: String) : Boolean{
-    listenForUserProfilePosts(userID)
-    return noPostsCheck
-}
+    fun noPostsChecker(userID: String): Boolean {
+        listenForUserProfilePosts(userID)
+        return noPostsCheck
+    }
+
+    fun noCommentsChecker(userID: String): Boolean {
+        listenForUserProfilePosts(userID)
+        return noCommentsCheck
+    }
 
 
-
-
-
-    fun listenForUserProfileComments (uid : String): CommentLive{
+    fun listenForUserProfileComments(uid: String): CommentLive {
         Log.d(TAG, "getUserProfile comments listener called")
-
 
 
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Comments")
@@ -690,7 +696,9 @@ fun noPostsChecker(userID: String) : Boolean{
                     var profileCommentL: MutableList<Comment> = mutableListOf()
                     profileCommentL.add(emptycomment)
                     Comments.value = profileCommentL
+                    noCommentsCheck = true
                 } else {
+                    noCommentsCheck = false
                     var newComment = Comment()
                     try {
                         newComment.let {
@@ -721,6 +729,7 @@ fun noPostsChecker(userID: String) : Boolean{
 
                 }
             }
+
             override fun onChildRemoved(p0: DataSnapshot) {
             }
 
@@ -729,7 +738,7 @@ fun noPostsChecker(userID: String) : Boolean{
         Log.d("Post function return", "Post function return")
 
         val comref = FirebaseDatabase.getInstance().getReference("users/$uid")
-        val checkforcomments = comref.addListenerForSingleValueEvent( object : ValueEventListener{
+        val checkforcomments = comref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -737,41 +746,40 @@ fun noPostsChecker(userID: String) : Boolean{
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.child("Comments").exists() == false) {
                     Log.d("comment", "doesn't exist")
-                    val emptycomment = Comment("no Comments" , 0, "", "", "")
+                    val emptycomment = Comment("no Comments", 0, "", "", "")
                     var profileCommentL: MutableList<Comment> = mutableListOf()
                     profileCommentL.add(emptycomment)
                     Comments.value = profileCommentL
+                    noCommentsCheck = true
+                } else {
+                    noCommentsCheck = false
                 }
             }
-        } )
+        })
 
         return Comments
-
     }
 
 
-    fun getUserProfilePosts(userID: String) : PostLiveData {
+    fun getUserProfilePosts(userID: String): PostLiveData {
         Log.d(TAG, "getUserProfilePosts called")
         if (userID == "null") {
             var uid = FirebaseAuth.getInstance().uid ?: "error"
             listenForUserProfilePosts(uid)
-        } else
-        {
+        } else {
             var uid = userID
             listenForUserProfilePosts(uid)
-         }
+        }
         return profilePosts
     }
 
 
-
-    fun getUserProfileComments(userID : String): CommentLive{
+    fun getUserProfileComments(userID: String): CommentLive {
         Log.d(TAG, "getUserProfile comments called")
         if (userID == "null") {
             var uid = FirebaseAuth.getInstance().uid ?: "error"
             listenForUserProfilePosts(uid)
-        } else
-        {
+        } else {
             var uid = userID
             listenForUserProfileComments(uid)
         }
@@ -779,8 +787,7 @@ fun noPostsChecker(userID: String) : Boolean{
     }
 
 
-
-    fun getCommentsCO(Key : String) : CommentLive {
+    fun getCommentsCO(Key: String): CommentLive {
 
         val uid = FirebaseAuth.getInstance().uid
         val reference =
@@ -821,8 +828,6 @@ fun noPostsChecker(userID: String) : Boolean{
             }
 
 
-
-
         })
         Log.d("Comment return", "comment return")
         return Comments
@@ -852,7 +857,7 @@ fun noPostsChecker(userID: String) : Boolean{
 
                 if (newComment != null) {
                     Log.d("ACCESSING", newComment?.text)
-                    if(savedCommentList.isNullOrEmpty()) {
+                    if (savedCommentList.isNullOrEmpty()) {
                         savedCommentList.add(newComment)
                     }
                     savedCommentList.add(newComment)
@@ -873,7 +878,8 @@ fun noPostsChecker(userID: String) : Boolean{
     }
 
 
-    fun saveNewCommentC(text: String, postID: String, ClassKey: String, UserID: String, crn: String
+    fun saveNewCommentC(
+        text: String, postID: String, ClassKey: String, UserID: String, crn: String
     ) {
 
 
@@ -886,8 +892,6 @@ fun noPostsChecker(userID: String) : Boolean{
         //FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID")
         val User_key = FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID")
             .child("Comments").push().key
-
-
 
 
         //val Class_key = FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID").child("Comments").push().key
@@ -911,24 +915,25 @@ fun noPostsChecker(userID: String) : Boolean{
         //}
     }
 
-    fun deleteNewPost(postKey: String, crn: String, userID: String)
-    {
-      val refSubPath = FirebaseDatabase.getInstance().getReference("/Subjects/$crn")
+    fun deleteNewPost(postKey: String, crn: String, userID: String) {
+        val refSubPath = FirebaseDatabase.getInstance().getReference("/Subjects/$crn")
 
         val refUserPath = FirebaseDatabase.getInstance().getReference("/users/$userID")
 
-        val queryuserref: Query = refUserPath.child("Posts").orderByChild("Classkey").equalTo(postKey)
+        val queryuserref: Query =
+            refUserPath.child("Posts").orderByChild("Classkey").equalTo(postKey)
 
         val refComment = FirebaseDatabase.getInstance().getReference("/users/$userID")
 
-        val queryComment: Query = refComment.child("Comments").orderByChild("Postkey").equalTo(postKey)
+        val queryComment: Query =
+            refComment.child("Comments").orderByChild("Postkey").equalTo(postKey)
 
         val query: Query = refSubPath.child("Posts").orderByChild("Classkey").equalTo(postKey)
 
-        queryComment.addListenerForSingleValueEvent( object : ValueEventListener {
+        queryComment.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
-                if(p0.exists()){
-                    for(comment in p0.children){
+                if (p0.exists()) {
+                    for (comment in p0.children) {
                         // val refc= comment.getValue(Comment::class.java)
                         comment.ref.removeValue()
                         //refkey.child("/Subjects/$crn/Posts/$ClassKey/Comments/-M1MwaJ6UaXu2fdByTCU").removeValue()
@@ -943,10 +948,10 @@ fun noPostsChecker(userID: String) : Boolean{
         })
 
         //  val refkey = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey")
-        queryuserref.addListenerForSingleValueEvent( object : ValueEventListener {
+        queryuserref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
-                if(p0.exists()){
-                    for(post in p0.children){
+                if (p0.exists()) {
+                    for (post in p0.children) {
                         // val refc= comment.getValue(Comment::class.java)
                         post.ref.removeValue()
                         //refkey.child("/Subjects/$crn/Posts/$ClassKey/Comments/-M1MwaJ6UaXu2fdByTCU").removeValue()
@@ -960,10 +965,10 @@ fun noPostsChecker(userID: String) : Boolean{
             }
         })
 
-        query.addListenerForSingleValueEvent( object : ValueEventListener {
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
-                if(p0.exists()){
-                    for(post in p0.children){
+                if (p0.exists()) {
+                    for (post in p0.children) {
                         // val refc= comment.getValue(Comment::class.java)
                         post.ref.removeValue()
                         //refkey.child("/Subjects/$crn/Posts/$ClassKey/Comments/-M1MwaJ6UaXu2fdByTCU").removeValue()
@@ -981,19 +986,23 @@ fun noPostsChecker(userID: String) : Boolean{
     }
 
 
-
-    fun deleteNewCommentFromUserProfile(postKey: String, crn: String, comKey: String, userID: String)
-    {
+    fun deleteNewCommentFromUserProfile(
+        postKey: String,
+        crn: String,
+        comKey: String,
+        userID: String
+    ) {
         val refkeyuser = FirebaseDatabase.getInstance().getReference("/users/$userID")
 
-       // val refkeycominpost = FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$userPostKey")
+        // val refkeycominpost = FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$userPostKey")
 
-        val query: Query = refkeyuser.child("Comments").orderByChild("ProfileComKey").equalTo(comKey)
+        val query: Query =
+            refkeyuser.child("Comments").orderByChild("ProfileComKey").equalTo(comKey)
 
-       // val querycominpost: Query = refkeycominpost.child("Comments").orderByChild("UserPostkey").equalTo(userPostKey)
+        // val querycominpost: Query = refkeycominpost.child("Comments").orderByChild("UserPostkey").equalTo(userPostKey)
 
 
-      /*  querycominpost.addListenerForSingleValueEvent( object : ValueEventListener {
+        /*  querycominpost.addListenerForSingleValueEvent( object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     for(comment in p0.children){
@@ -1012,10 +1021,10 @@ fun noPostsChecker(userID: String) : Boolean{
 
 
         // val refkey = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey/Comments")
-        query.addListenerForSingleValueEvent( object : ValueEventListener {
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
-                if(p0.exists()){
-                    for(comment in p0.children){
+                if (p0.exists()) {
+                    for (comment in p0.children) {
                         // val refc= comment.getValue(Comment::class.java)
                         comment.ref.removeValue()
                         //refkey.child("/Subjects/$crn/Posts/$ClassKey/Comments/-M1MwaJ6UaXu2fdByTCU").removeValue()
@@ -1031,8 +1040,7 @@ fun noPostsChecker(userID: String) : Boolean{
 
     }
 
-    fun deleteNewCommentFromCommPosts(postKey: String, crn: String, classkey: String)
-    {
+    fun deleteNewCommentFromCommPosts(postKey: String, crn: String, classkey: String) {
         val refkey2 = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$postKey")
 
 
@@ -1041,10 +1049,10 @@ fun noPostsChecker(userID: String) : Boolean{
         val queryuser: Query = refkey2.child("Comments").orderByChild("Classkey").equalTo(classkey)
 
         // val refkey = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey/Comments")
-        queryuser.addListenerForSingleValueEvent( object : ValueEventListener {
+        queryuser.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
-                if(p0.exists()){
-                    for(comment in p0.children){
+                if (p0.exists()) {
+                    for (comment in p0.children) {
                         // val refc= comment.getValue(Comment::class.java)
                         comment.ref.removeValue()
                         //refkey.child("/Subjects/$crn/Posts/$ClassKey/Comments/-M1MwaJ6UaXu2fdByTCU").removeValue()
@@ -1060,26 +1068,33 @@ fun noPostsChecker(userID: String) : Boolean{
 
     }
 
-    fun saveNewComment(text: String, postID: String, ClassKey: String, UserID: String, crn: String
+    fun saveNewComment(
+        text: String, postID: String, ClassKey: String, UserID: String, crn: String
     ) {
 
 
         //val subject = Subject
         //val ClassID = Classkey
         val userID = firebaseAuth.uid
-        val author= firebaseAuth.currentUser?.displayName
+        val author = firebaseAuth.currentUser?.displayName
         val comment = Comment(text, 0, userID, crn, postID)
-        comment.author= author
+        comment.author = author
         Log.d("BigMoods", crn)
         //FIX userprofile not init post.author = userprofile.username!!
         //val Class_key = FirebaseDatabase.getInstance().getReference(CRN).child("Posts").push().key
         //FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID")
-        val Class_key = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey").child("Comments").push().key
-        val User_key = FirebaseDatabase.getInstance().getReference("/users/$UserID/Posts/$postID").child("Comments").push().key
+        val Class_key =
+            FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey")
+                .child("Comments").push().key
+        val User_key = FirebaseDatabase.getInstance().getReference("/users/$UserID/Posts/$postID")
+            .child("Comments").push().key
         //for profile
-        val Profile_key = FirebaseDatabase.getInstance().getReference("/users/$UserID").child("Comments").push().key
+        val Profile_key =
+            FirebaseDatabase.getInstance().getReference("/users/$UserID").child("Comments").push()
+                .key
 
-        val Post_key: String? = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey").key
+        val Post_key: String? =
+            FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey").key
 
 
         // implement in viewmodel
@@ -1103,7 +1118,6 @@ fun noPostsChecker(userID: String) : Boolean{
             .child("/Comments/$Profile_key").setValue(comementvalues)
 
 
-
         /*Class_reference.setValue(post).addOnSuccessListener {
                 Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
             }.addOnFailureListener {
@@ -1114,15 +1128,22 @@ fun noPostsChecker(userID: String) : Boolean{
         //}
     }
 
-    fun editComment(userID: String, usercomkey:String, ctext: String, ntext: String, crn: String, postKey: String){
+    fun editComment(
+        userID: String,
+        usercomkey: String,
+        ctext: String,
+        ntext: String,
+        crn: String,
+        postKey: String
+    ) {
         var comkey = FirebaseDatabase.getInstance().getReference("/users/$userID")
 
-        val queryuser =comkey.child("Comments").orderByChild("ProfileComKey").equalTo(usercomkey)
+        val queryuser = comkey.child("Comments").orderByChild("ProfileComKey").equalTo(usercomkey)
 
-        queryuser.addListenerForSingleValueEvent( object : ValueEventListener {
+        queryuser.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
-                if(p0.exists()){
-                    for(comment in p0.children){
+                if (p0.exists()) {
+                    for (comment in p0.children) {
                         // val refc= comment.getValue(Comment::class.java)
                         comment.ref.child("text").setValue(ntext)
                         //refkey.child("/Subjects/$crn/Posts/$ClassKey/Comments/-M1MwaJ6UaXu2fdByTCU").removeValue()
@@ -1138,12 +1159,12 @@ fun noPostsChecker(userID: String) : Boolean{
 
         val refkey2 = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$postKey")
 
-        val queryuser2 =refkey2.child("Comments").orderByChild("ProfileComKey").equalTo(usercomkey)
+        val queryuser2 = refkey2.child("Comments").orderByChild("ProfileComKey").equalTo(usercomkey)
 
-        queryuser2.addListenerForSingleValueEvent( object : ValueEventListener {
+        queryuser2.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
-                if(p0.exists()){
-                    for(comment in p0.children){
+                if (p0.exists()) {
+                    for (comment in p0.children) {
                         // val refc= comment.getValue(Comment::class.java)
                         comment.ref.child("text").setValue(ntext)
                         //refkey.child("/Subjects/$crn/Posts/$ClassKey/Comments/-M1MwaJ6UaXu2fdByTCU").removeValue()
@@ -1160,8 +1181,10 @@ fun noPostsChecker(userID: String) : Boolean{
     }
 
 
-    fun editPost(crn: String, postKey: String, ctext: String, ctitle: String, ntext: String, ntitle: String,
-                 userID: String){
+    fun editPost(
+        crn: String, postKey: String, ctext: String, ctitle: String, ntext: String, ntitle: String,
+        userID: String
+    ) {
         val refsubpath = FirebaseDatabase.getInstance().getReference("/Subjects/$crn")
 
         var refuserpath = FirebaseDatabase.getInstance().getReference("/users/$userID")
@@ -1170,10 +1193,10 @@ fun noPostsChecker(userID: String) : Boolean{
 
         val queryupost: Query = refuserpath.child("Posts").orderByChild("Classkey").equalTo(postKey)
 
-        querypost.addListenerForSingleValueEvent( object : ValueEventListener {
+        querypost.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
-                if(p0.exists()){
-                    for(post in p0.children){
+                if (p0.exists()) {
+                    for (post in p0.children) {
                         // val refc= comment.getValue(Comment::class.java)
                         post.ref.child("text").setValue(ntext)
                         post.ref.child("title").setValue(ntitle)
@@ -1188,10 +1211,10 @@ fun noPostsChecker(userID: String) : Boolean{
             }
         })
 
-        queryupost.addListenerForSingleValueEvent( object : ValueEventListener {
+        queryupost.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
-                if(p0.exists()){
-                    for(post in p0.children){
+                if (p0.exists()) {
+                    for (post in p0.children) {
                         post.ref.child("text").setValue(ntext)
                         post.ref.child("title").setValue(ntitle)
                     }
@@ -1208,10 +1231,12 @@ fun noPostsChecker(userID: String) : Boolean{
     fun blockUserComment(UserID: String, text: String, crn: String, postID: String) {
 
         val userID = firebaseAuth.uid
-        val author= firebaseAuth.currentUser?.displayName
+        val author = firebaseAuth.currentUser?.displayName
         val comment = Comment(text, 0, userID, crn, postID)
-        comment.author= author
-        val User_key = FirebaseDatabase.getInstance().getReference("/users/$UserID").child("BlockedUsers").push().key
+        comment.author = author
+        val User_key =
+            FirebaseDatabase.getInstance().getReference("/users/$UserID").child("BlockedUsers")
+                .push().key
 
         comment.PosterID = User_key
 
@@ -1226,13 +1251,15 @@ fun noPostsChecker(userID: String) : Boolean{
     fun blockUserPost(UserID: String, crn: String, Classkey: String) {
 
         val userID = firebaseAuth.uid
-        val author= firebaseAuth.currentUser?.displayName
+        val author = firebaseAuth.currentUser?.displayName
 
-        val User_key = FirebaseDatabase.getInstance().getReference("/users/$userID").child("BlockedUsers").push().key
+        val User_key =
+            FirebaseDatabase.getInstance().getReference("/users/$userID").child("BlockedUsers")
+                .push().key
 
-        val blockuser = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$UserID").
-            child("BlockedUsers").push().key
-       // post.UserID = User_key
+        val blockuser = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$UserID")
+            .child("BlockedUsers").push().key
+        // post.UserID = User_key
 
         val dataupdates = HashMap<String, Any>()
 
@@ -1241,7 +1268,7 @@ fun noPostsChecker(userID: String) : Boolean{
 
     }
 
-    fun reportUserPost(accusedID: String, complaintext: String, crn: String, classkey: String){
+    fun reportUserPost(accusedID: String, complaintext: String, crn: String, classkey: String) {
 
         val accuserID = firebaseAuth.currentUser?.email
 
@@ -1249,15 +1276,15 @@ fun noPostsChecker(userID: String) : Boolean{
 
         val post = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$classkey").key
         val user = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$accusedID").key
-        val text = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$complaintext").key
+        val text =
+            FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$complaintext").key
 
 
-        report.classkey= post!!
-        report.complaintext= text!!
+        report.classkey = post!!
+        report.complaintext = text!!
         report.accusedID = user!!
 
         //val querypost: Query = getreport.child("Posts").orderByChild("Classkey").equalTo(classkey)
-
 
 
         val dataupdates = HashMap<String, Any>()
@@ -1266,24 +1293,32 @@ fun noPostsChecker(userID: String) : Boolean{
         FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
     }
 
-    fun reportUserComment(accusedID: String, complaintext: String, crn: String, classkey: String, comkey: String){
+    fun reportUserComment(
+        accusedID: String,
+        complaintext: String,
+        crn: String,
+        classkey: String,
+        comkey: String
+    ) {
 
         val accuserID = firebaseAuth.currentUser?.email
 
         var report = Reports(accuserID!!, accusedID, complaintext, crn, classkey)
 
-        val post = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$classkey/Comments/$comkey").key
-        val user = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$classkey/Comments/$accusedID").key
-        val text = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$classkey/Comments/$complaintext").key
+        val post = FirebaseDatabase.getInstance()
+            .getReference("Subjects/$crn/Posts/$classkey/Comments/$comkey").key
+        val user = FirebaseDatabase.getInstance()
+            .getReference("Subjects/$crn/Posts/$classkey/Comments/$accusedID").key
+        val text = FirebaseDatabase.getInstance()
+            .getReference("Subjects/$crn/Posts/$classkey/Comments/$complaintext").key
 
 
-        report.classkey= post!!
-        report.complaintext= text!!
+        report.classkey = post!!
+        report.complaintext = text!!
         report.accusedID = user!!
 
 
         //val querypost: Query = getreport.child("Posts").orderByChild("Classkey").equalTo(classkey)
-
 
 
         val dataupdates = HashMap<String, Any>()
@@ -1292,7 +1327,68 @@ fun noPostsChecker(userID: String) : Boolean{
         FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
     }
 
+
     // CRN is a placeholder for a class object
+    fun saveNewImgPosttoUser(title: String, text: String, Subject: String, CRN: String, uri: Uri, imagePost: Boolean) {
+
+        if (uri == null) {
+            return
+        }
+        val filename = UUID.randomUUID().toString()
+        val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
+        ref.putFile(uri)
+            .addOnSuccessListener {
+                Log.d("FirebaseManager", "Upload Successful")
+                //Uri downloadUrl = taskSnapshot.getDownloadUrl()
+                //it.metadata.path
+                ref.downloadUrl.addOnSuccessListener {
+                    val urii = it
+                    Log.d("Pic", "File location: $it")
+                    saveImageurl = urii.toString()
+                    //got it here, no error yet
+                }.addOnFailureListener {
+                    Log.d("Pic", "File location: $it")
+                }.addOnFailureListener {
+                    Log.d("FirebaseManager", "Upload Successful ${it}")
+                }
+
+                var post = Post(title, text, CRN)
+                val subject = Subject
+                val userID = firebaseAuth.uid
+                val author = firebaseAuth.currentUser?.displayName
+                post.UserID = userID
+                post.author = author
+                post.imagePost = imagePost
+
+                GlobalScope.launch(Dispatchers.Main) {
+                    delay(10000)
+                    post.uri = saveImageurl
+                    Log.d(TAG, "im delayed")
+                    val User_key =
+                        FirebaseDatabase.getInstance().getReference("/users/$userID").child("Posts")
+                            .push().key
+                    val Class_key =
+                        FirebaseDatabase.getInstance().getReference("/Subjects/$CRN").child("Posts")
+                            .push().key
+                    post.key = User_key
+                    post.Classkey = Class_key
+                    //post.author= auth_key
+                    // implement in viewmodel
+                    //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
+                    val dataupdates = HashMap<String, Any>()
+                    val postvalues = post.toMap()
+                    dataupdates["/Subjects/$CRN/Posts/$Class_key"] = postvalues
+                    //dataupdates["/Subjects/$CRN/Posts/$postID/$author"] = postvalues
+                    dataupdates["/users/$userID/Posts/$User_key"] = postvalues
+
+                    FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
+                }
+
+            }
+    }
+
+
+
     fun saveNewPosttoUser(post: Post, Subject: String, CRN: String) {
         val subject = Subject
         // val ClassID = Classkey
@@ -1307,6 +1403,7 @@ fun noPostsChecker(userID: String) : Boolean{
         val Class_key = FirebaseDatabase.getInstance().getReference("/Subjects/$CRN").child("Posts").push().key
         post.key = User_key
         post.Classkey = Class_key
+        post.imagePost = false
         //post.author= auth_key
         // implement in viewmodel
         //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
@@ -1316,7 +1413,7 @@ fun noPostsChecker(userID: String) : Boolean{
         //dataupdates["/Subjects/$CRN/Posts/$postID/$author"] = postvalues
         dataupdates["/users/$userID/Posts/$User_key"] = postvalues
 
-       // FirebaseDatabase.getInstance().getReference("users/$userID").child("Post/$User_key").setValue(postvalues)
+        // FirebaseDatabase.getInstance().getReference("users/$userID").child("Post/$User_key").setValue(postvalues)
         FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
         /*Class_reference.setValue(post).addOnSuccessListener {
                 Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
@@ -1324,7 +1421,6 @@ fun noPostsChecker(userID: String) : Boolean{
                 Log.d(TAG, "Error ${it.message}")
             }
          */
-
         //}
     }
 
@@ -1461,6 +1557,7 @@ fun noPostsChecker(userID: String) : Boolean{
     }
 
 
+
     fun uploadImageToFirebaseStorage(selectedPhotoUri: Uri) {
         if (selectedPhotoUri == null) {
             return
@@ -1494,12 +1591,10 @@ fun noPostsChecker(userID: String) : Boolean{
                                 Log.d(TAG, "profile image failed to update")
                             }
                         }
-
                     //uploadImageToFirebaseDatabase(it)
-
-
                 }
             }
+
 
         val uid = FirebaseAuth.getInstance().uid
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid")
@@ -1588,7 +1683,8 @@ fun noPostsChecker(userID: String) : Boolean{
                     it.key = p0.child("key").getValue(String::class.java)
                     it.Classkey = p0.child("Classkey").getValue(String::class.java)
                     it.UserID = p0.child("UserID").getValue(String::class.java)
-                        it.author= p0.child("author").getValue(String::class.java)
+                    it.author= p0.child("author").getValue(String::class.java)
+                    it.uri = p0.child("uri").value.toString()
 
                     // comments might need to be gotten separatley to properly convert values
 
@@ -1750,6 +1846,7 @@ fun noPostsChecker(userID: String) : Boolean{
                                             // need to change this later subject should be subject crn should be different
                                             it.crn = p3.child("subject").value.toString()
                                             it.author = p3.child("author").value.toString()
+                                            it.uri = p0.child("uri").value.toString()
                                         }
                                     } catch (e: Exception) {
                                         Log.d("Data Error", "error converting to post")
@@ -1813,6 +1910,7 @@ fun noPostsChecker(userID: String) : Boolean{
                         it.title = p0.child("title").value.toString()
                         it.key = p0.child("Key").value.toString()
                         it.key = p0.child("crn").value.toString()
+                        it.uri = p0.child("uri").value.toString()
                         //added crn so it would show up in home frag
                     }
                 } catch (e: Exception) {

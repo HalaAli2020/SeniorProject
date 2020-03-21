@@ -1,5 +1,6 @@
 package com.example.seniorproject.data.models
 
+import android.net.Uri
 import com.example.seniorproject.R
 
 data class Post(var title: String?, var text: String?, val subject: String?)
@@ -15,6 +16,9 @@ data class Post(var title: String?, var text: String?, val subject: String?)
     var Classkey : String? = null
     var UserID : String? = null
     var key : String? = null
+    var uri : String? = null
+    var imagePost : Boolean? = null
+
     init {
         // backend will initalize values here or set to null if
         // ptime = System.currentTimeMillis()
@@ -41,7 +45,9 @@ data class Post(var title: String?, var text: String?, val subject: String?)
             "comments" to comments,
             "UserID" to UserID,
             "Classkey" to Classkey,
-            "key" to key
+            "key" to key,
+            "uri" to uri,
+            "imagePost" to imagePost
 
         )
 

@@ -46,7 +46,18 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
 
         //val mContext: Context = context
     }
+    
 
+
+
+    //crn same
+    /*intent.putExtra("Title", post.title) //NEED
+    intent.putExtra("Text", post.text) //NEED
+    intent.putExtra("Pkey", post.key) //postkey, post key
+    intent.putExtra("Classkey", post.Classkey) //class key, same
+    intent.putExtra("UserID", post.UserID)  //posterID = post author's uid
+    intent.putExtra("Author", post.author) //posterID = post author's uid
+    intent.putExtra("crn", post.crn)*/ //same
 
     fun getCommentKey(customViewHolders: CustomViewHolders, position: Int): String {
         val comment: Comment = ProfileComments?.value!![customViewHolders.adapterPosition]

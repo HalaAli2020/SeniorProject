@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.seniorproject.MainForum.Posts.ClickedPost
 import com.example.seniorproject.MainForum.Posts.CommunityPosts
 import com.example.seniorproject.MainForum.UserProfileActivity
@@ -48,6 +49,18 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
             holder.itemView.post_title.text = post.title
             holder.itemView.username.text = post.author
 
+            if (post.uri != null){
+                Glide.with(mContext)
+                    .load(post.uri)
+                    .placeholder(R.color.white)
+                    .into(holder.itemView.post_image)
+            }
+            else
+            {
+                Glide.with(mContext).clear(holder.itemView.post_image)
+                holder.itemView.post_image.setImageDrawable(null)
+            }
+
             if(type==0){
                 holder.itemView.username.text = post.crn
                 holder.itemView.username.setOnClickListener {
@@ -80,6 +93,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
                     intent.putExtra("UserID", post.UserID)
                     intent.putExtra("Author", post.author)
                     intent.putExtra("crn", post.crn)
+                    intent.putExtra("uri",post.uri)
                     mContext.startActivity(intent)
                 }
             }
