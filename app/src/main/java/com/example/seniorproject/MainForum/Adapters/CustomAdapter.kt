@@ -81,6 +81,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
                     intent.putExtra("UserID", post.UserID)
                     intent.putExtra("Author", post.author)
                     intent.putExtra("crn", post.crn)
+                    intent.putExtra("Time", post.Ptime)
                     mContext.startActivity(intent)
                 }
             }
