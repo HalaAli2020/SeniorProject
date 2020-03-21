@@ -8,6 +8,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -1303,29 +1304,41 @@ fun noPostsChecker(userID: String) : Boolean{
         //FIX userprofile not init post.author = userprofile.username!!
         //val Class_key = FirebaseDatabase.getInstance().getReference(CRN).child("Posts").push().key
         //FirebaseDatabase.getInstance().getReference("/users/$userID")
-        val User_key = FirebaseDatabase.getInstance().getReference("/users/$userID").child("Posts").push().key
-        val Class_key = FirebaseDatabase.getInstance().getReference("/Subjects/$CRN").child("Posts").push().key
-        post.key = User_key
-        post.Classkey = Class_key
-        //post.author= auth_key
-        // implement in viewmodel
-        //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
-        val dataupdates = HashMap<String, Any>()
-        val postvalues = post.toMap()
-        dataupdates["/Subjects/$CRN/Posts/$Class_key"] = postvalues
-        //dataupdates["/Subjects/$CRN/Posts/$postID/$author"] = postvalues
-        dataupdates["/users/$userID/Posts/$User_key"] = postvalues
+        val subpath = FirebaseDatabase.getInstance().getReference("/users/$userID")
+        val querysub = subpath.child("Subscriptions").orderByValue().addListenerForSingleValueEvent( object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                if(p0.exists()){
+                    for(sub in p0.children){
+                        // val refc= comment.getValue(Comment::class.java)
+                        if(sub.getValue() == CRN){
+                            val User_key = FirebaseDatabase.getInstance().getReference("/users/$userID").child("Posts").push().key
+                            val Class_key = FirebaseDatabase.getInstance().getReference("/Subjects/$CRN").child("Posts").push().key
+                            post.key = User_key
+                            post.Classkey = Class_key
+                            //post.author= auth_key
+                            // implement in viewmodel
+                            //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
+                            val dataupdates = HashMap<String, Any>()
+                            val postvalues = post.toMap()
+                            dataupdates["/Subjects/$CRN/Posts/$Class_key"] = postvalues
+                            //dataupdates["/Subjects/$CRN/Posts/$postID/$author"] = postvalues
+                            dataupdates["/users/$userID/Posts/$User_key"] = postvalues
 
-       // FirebaseDatabase.getInstance().getReference("users/$userID").child("Post/$User_key").setValue(postvalues)
-        FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
-        /*Class_reference.setValue(post).addOnSuccessListener {
-                Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
-            }.addOnFailureListener {
-                Log.d(TAG, "Error ${it.message}")
+                            // FirebaseDatabase.getInstance().getReference("users/$userID").child("Post/$User_key").setValue(postvalues)
+                            FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
+                        }
+                        else{
+                            Log.d("Not subscribed","you cannot post to a forum you are not subscribed in.")
+                        }
+                    }
+                }
+
             }
-         */
 
-        //}
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
     }
 
     fun getUserSub() {
