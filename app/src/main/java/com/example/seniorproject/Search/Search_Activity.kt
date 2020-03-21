@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.R
 import com.example.seniorproject.viewModels.ChatLogViewModel
@@ -20,7 +21,7 @@ class Search_Activity: AppCompatActivity()
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: SearchViewModel
      lateinit var searchview : SearchView
-    lateinit var lit : ListView
+    lateinit var lit : RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +29,7 @@ class Search_Activity: AppCompatActivity()
         myViewModel = ViewModelProviders.of(this, factory).get(SearchViewModel::class.java)
         val binding: MActivitysearch = DataBindingUtil.setContentView(this, R.layout.activity_search)
         lit.adapter = SearchAdapter(this.applicationContext, myViewModel)
-        searchview.
+
 
     }
 }
