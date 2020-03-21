@@ -70,7 +70,18 @@
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView3"
         app:layout_constraintStart_toEndOf="@+id/imageView3"
-        app:layout_constraintTop_toBottomOf="@+id/communityName_TV"
+        app:layout_constraintTop_toBottomOf="@+id/community_name_TV"
         app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/posts_timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="290dp"
+        android:layout_marginBottom="20dp"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+        app:layout_constraintStart_toEndOf="@+id/imageView3" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

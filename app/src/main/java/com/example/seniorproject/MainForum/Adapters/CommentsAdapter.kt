@@ -24,7 +24,7 @@ class CommentsAdapter(
     text: String,
     author: String,
     crn: String,
-    UserID : String
+    UserID : String, ptime: String
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -37,6 +37,7 @@ class CommentsAdapter(
     private val author: String = author
     private val crn: String = crn
     private val UserID: String = UserID
+    private val ptime: String = ptime
 
 
     override fun getItemViewType(position: Int): Int {
@@ -79,6 +80,7 @@ class CommentsAdapter(
                 holder.itemView.click_post_text.text = text
                 holder.itemView.community_name_TV.text = crn
                 holder.itemView.author_name_TV.text = author
+                holder.itemView.posts_timestamp.text=ptime
                 holder.itemView.author_name_TV.setOnClickListener {
                     val intent = Intent(mContext, UserProfileActivity::class.java)
                     intent.putExtra("UserID", UserID)
