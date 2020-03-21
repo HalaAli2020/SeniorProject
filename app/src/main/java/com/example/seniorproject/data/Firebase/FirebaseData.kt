@@ -1072,39 +1072,53 @@ fun noPostsChecker(userID: String) : Boolean{
         val comment = Comment(text, "", userID, crn, postID)
         comment.author= author
         Log.d("BigMoods", crn)
-        //FIX userprofile not init post.author = userprofile.username!!
-        //val Class_key = FirebaseDatabase.getInstance().getReference(CRN).child("Posts").push().key
-        //FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID")
-        val Class_key = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey").child("Comments").push().key
-        val User_key = FirebaseDatabase.getInstance().getReference("/users/$UserID/Posts/$postID").child("Comments").push().key
-        //for profile
-        val Profile_key = FirebaseDatabase.getInstance().getReference("/users/$UserID").child("Comments").push().key
+        val subpath = FirebaseDatabase.getInstance().getReference("/users/$userID")
+        val querysub = subpath.child("Subscriptions").orderByValue().addListenerForSingleValueEvent( object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                if(p0.exists()){
+                    for(sub in p0.children){
+                        // val refc= comment.getValue(Comment::class.java)
+                        if(sub.getValue() == crn){
+                            val Class_key = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey").child("Comments").push().key
+                            val User_key = FirebaseDatabase.getInstance().getReference("/users/$UserID/Posts/$postID").child("Comments").push().key
+                            //for profile
+                            val Profile_key = FirebaseDatabase.getInstance().getReference("/users/$UserID").child("Comments").push().key
 
-        val Post_key: String? = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey").key
-
-
-        // implement in viewmodel
-        //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
-        comment.Classkey = Class_key
-        comment.UserComkey = User_key
-        comment.ProfileComKey = Profile_key
-        comment.Postkey = Post_key
-
-        val dataupdates = HashMap<String, Any>()
-        val comementvalues = comment.toMap()
-        dataupdates["Subjects/$crn/Posts/$ClassKey/Comments/$Class_key"] = comementvalues
-        //dataupdates["users/$UserID/Posts/$postID/Comments/$User_key"] = comementvalues
-        //for profile
-        //dataupdates["users/$UserID/Comments/$Profile_key"] = comementvalues
-        //FirebaseDatabase.getInstance().getReference("users/$userID/Post/$postID").child("Comments/$User_key").setValue(comementvalues)
-        FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
-
-        //for profile
-        FirebaseDatabase.getInstance().getReference("/users/$userID")
-            .child("/Comments/$Profile_key").setValue(comementvalues)
+                            val Post_key: String? = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey").key
 
 
+                            // implement in viewmodel
+                            //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
+                            comment.Classkey = Class_key
+                            comment.UserComkey = User_key
+                            comment.ProfileComKey = Profile_key
+                            comment.Postkey = Post_key
 
+                            val dataupdates = HashMap<String, Any>()
+                            val comementvalues = comment.toMap()
+                            dataupdates["Subjects/$crn/Posts/$ClassKey/Comments/$Class_key"] = comementvalues
+                            //dataupdates["users/$UserID/Posts/$postID/Comments/$User_key"] = comementvalues
+                            //for profile
+                            //dataupdates["users/$UserID/Comments/$Profile_key"] = comementvalues
+                            //FirebaseDatabase.getInstance().getReference("users/$userID/Post/$postID").child("Comments/$User_key").setValue(comementvalues)
+                            FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
+
+                            //for profile
+                            FirebaseDatabase.getInstance().getReference("/users/$userID")
+                                .child("/Comments/$Profile_key").setValue(comementvalues)
+                        }
+                        else{
+                            Log.d("Not subscribed","you cannot comment on a forum you are not subscribed in.")
+                        }
+                    }
+                }
+
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
         /*Class_reference.setValue(post).addOnSuccessListener {
                 Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
             }.addOnFailureListener {
