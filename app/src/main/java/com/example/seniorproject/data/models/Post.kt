@@ -1,6 +1,8 @@
 package com.example.seniorproject.data.models
 
 import com.example.seniorproject.R
+import java.text.SimpleDateFormat
+import java.util.*
 
 data class Post(var title: String?, var text: String?, val subject: String?)
 {
@@ -11,16 +13,18 @@ data class Post(var title: String?, var text: String?, val subject: String?)
     var author : String? = null
     //var subject : String? = null
     var crn : String? = null
-    var ptime: Long? = null
+    var Ptime: String? = null
     var Classkey : String? = null
     var UserID : String? = null
     var key : String? = null
-    init {
-        // backend will initalize values here or set to null if
-        // ptime = System.currentTimeMillis()
+
+        init {
+            var calendar: Calendar = Calendar.getInstance()
+            var simple: SimpleDateFormat = SimpleDateFormat("EEEE, dd-MMM-yyyy hh:mm:ss a")
+            Ptime = simple.format(calendar.time)
+        }
 
 
-    }
 
     fun getLayout(): Int {
         return R.layout.rv_post
@@ -34,7 +38,7 @@ data class Post(var title: String?, var text: String?, val subject: String?)
         return mapOf(
             "title" to title,
             "text" to text,
-            "Time" to ptime,
+            "Time" to Ptime,
             "author" to author,
             "subject" to subject,
             "crn" to crn,

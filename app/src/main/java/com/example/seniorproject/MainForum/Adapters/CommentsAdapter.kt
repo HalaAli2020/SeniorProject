@@ -79,7 +79,6 @@ class CommentsAdapter(
                 holder.itemView.click_post_text.text = text
                 holder.itemView.community_name_TV.text = crn
                 holder.itemView.author_name_TV.text = author
-
                 holder.itemView.author_name_TV.setOnClickListener {
                     val intent = Intent(mContext, UserProfileActivity::class.java)
                     intent.putExtra("UserID", UserID)
@@ -97,6 +96,7 @@ class CommentsAdapter(
                     //holder.itemView.post_title.text = comment.title
                     holder.itemView.comment_text.text = comment.text
                     holder.itemView.authcom.text = comment.author
+                    holder.itemView.comment_timestamp.text=comment.Ptime
 
                     holder.itemView.authcom.setOnClickListener {
                         val intent = Intent(mContext, UserProfileActivity::class.java)
