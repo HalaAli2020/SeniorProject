@@ -40,6 +40,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
         } else {
             val comment: Comment = ProfileComments.value!![position]
             holder.itemView.comment_text.text = comment.text
+            holder.itemView.comment_timestamp.text=comment.Ptime
             //holder.itemView.username.text = post.author
 
         }

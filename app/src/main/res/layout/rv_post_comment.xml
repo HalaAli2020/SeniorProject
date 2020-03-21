@@ -26,6 +26,14 @@
             android:textSize="13sp" />
 
         <TextView
+            android:id="@+id/comment_timestamp"
+            android:layout_width="wrap_content"
+            android:layout_gravity="right"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="13sp" />
+
+        <TextView
             android:id="@+id/comment_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,6 +41,7 @@
             android:paddingTop="2dp"
             android:textColor="@color/TextColor"
             android:textSize="15sp" />
+
 
     </LinearLayout>
 
