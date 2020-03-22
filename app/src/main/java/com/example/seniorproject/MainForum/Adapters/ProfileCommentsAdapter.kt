@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.MainForum.Posts.ClickedPost
+import com.example.seniorproject.MainForum.Posts.CommunityPosts
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.CommentLive
@@ -40,8 +41,17 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
         } else {
             val comment: Comment = ProfileComments.value!![position]
             holder.itemView.comment_text.text = comment.text
+            holder.itemView.authcom.text=comment.crn
+            var size: Float= 12F
+            holder.itemView.authcom.textSize=size
             holder.itemView.comment_timestamp.text=comment.Ptime
             //holder.itemView.username.text = post.author
+
+            holder.itemView.authcom.setOnClickListener{
+                val intent = Intent(mContext, CommunityPosts::class.java)
+                intent.putExtra("ClassName", comment.crn)
+                mContext.startActivity(intent)
+            }
 
         }
 
