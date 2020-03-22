@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
-import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -20,21 +19,13 @@ import com.example.seniorproject.MainForum.Fragments.ProfileCommentFragment
 import com.example.seniorproject.MainForum.Fragments.ProfilePostFragment
 import com.example.seniorproject.MainForum.Posts.EditProfileActivity
 import com.example.seniorproject.R
-import com.example.seniorproject.databinding.ActivityUserProfileBinding
 import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_main_forum.*
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import javax.inject.Inject
-import androidx.core.app.ComponentActivity
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.TextView
-import androidx.core.view.isInvisible
 
 
 private const val TAG = "profileTAG"

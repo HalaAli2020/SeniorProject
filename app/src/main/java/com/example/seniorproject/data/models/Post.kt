@@ -20,7 +20,7 @@ data class Post(var title: String?, var text: String?, val subject: String?)
 
         init {
             var calendar: Calendar = Calendar.getInstance()
-            var simple: SimpleDateFormat = SimpleDateFormat("MM-dd-yyyy hh:mm:ss a")
+            var simple: SimpleDateFormat = SimpleDateFormat("M-d-yy h:mm a")
             Ptime = simple.format(calendar.time)
         }
 
