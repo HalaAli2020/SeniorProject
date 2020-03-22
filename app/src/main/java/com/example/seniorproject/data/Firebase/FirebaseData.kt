@@ -8,6 +8,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.seniorproject.Utils.Callback
 import com.example.seniorproject.data.models.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -28,7 +29,7 @@ import java.util.logging.Handler
 import javax.security.auth.Subject
 import kotlin.collections.HashMap
 import com.example.seniorproject.data.models.User
-
+import kotlin.collections.ArrayList
 
 
 //import kotlin.reflect.jvm.internal.impl.load.java.lazy.ContextKt.child
@@ -1305,6 +1306,47 @@ fun noPostsChecker(userID: String) : Boolean{
         val reportvalues = report.toMap()
         dataupdates["Reports/$classkey"] = reportvalues
         FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
+    }
+
+
+    fun readPostValues(crn: String, postkey: String, callBack : Callback){
+        FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$postkey").addValueEventListener(object :
+            ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+
+            override fun onDataChange(p0: DataSnapshot) {
+                var title= p0.child("title").getValue(String::class.java)
+                var text= p0.child("text").getValue(String::class.java)
+                var key = p0.child("key").getValue(String::class.java)
+                var ptime= p0.child("Ptime").getValue(String::class.java)
+                var classkey= p0.child("Classkey").getValue(String::class.java)
+                var user= p0.child("UserID").getValue(String::class.java)
+                var author = p0.child("author").getValue(String::class.java)
+                var list: ArrayList<String> = arrayListOf()
+                list.add(0, title!!)
+                list.add(1, text!!)
+                list.add(2, key!!)
+                list.add(3, ptime!!)
+                list.add(4, classkey!!)
+                list.add(5, user!!)
+                list.add(6, author!!)
+                callBack.onCallback(list)
+            }
+            /*override fun onDataChange(p0: DataSnapshot){
+                if(p0.exists()){
+                    var ptext = p0.getValue().toString()
+                    callBack.onCallback(ptext)
+                }
+
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }*/
+        })
     }
 
     // CRN is a placeholder for a class object
