@@ -4,35 +4,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-<data>
-    <variable
-        name="ProfViewModel"
-        type="com.example.seniorproject.viewModels.ProfileViewModel">
-    </variable>
-</data>
+    <data>
+
+        <variable
+            name="ProfViewModel"
+            type="com.example.seniorproject.viewModels.ProfileViewModel"></variable>
+    </data>
 
 
-<FrameLayout
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainForum.Fragments.ProfilePostFragment"
-    android:id="@+id/ppf">
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/refreshView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/profile_post_recyclerView"
+    <FrameLayout xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/ppf"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        android:background="@color/BackgroundColor"
+        tools:context=".MainForum.Fragments.ProfilePostFragment">
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/refreshView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/profile_post_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
-</FrameLayout>
+    </FrameLayout>
 
 </layout>

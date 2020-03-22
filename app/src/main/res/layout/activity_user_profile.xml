@@ -3,23 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-  <!--  <data>
+    <!--  <data>
 
-        <variable
-            name="ProfileViewModell"
-            type="com.example.seniorproject.viewModels.ProfileViewModel"></variable>
-    </data> -->
+          <variable
+              name="ProfileViewModell"
+              type="com.example.seniorproject.viewModels.ProfileViewModel"></variable>
+      </data> -->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/pContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/BackgroundColor">
 
         <LinearLayout
             android:id="@+id/profheader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -48,18 +49,17 @@
 
                 <Button
                     android:id="@+id/NavToEdit"
+                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/rounded_btn"
-                    android:text="EDIT"
+                    android:text="@string/edit"
                     android:textColor="@color/white"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/in_profile_email" />
+                    app:layout_constraintTop_toBottomOf="@+id/in_profile_bio" />
 
                 <TextView
                     android:id="@+id/in_profile_username"
@@ -68,7 +68,6 @@
                     android:layout_marginTop="0dp"
                     android:textColor="@color/TextColor"
                     android:textSize="20sp"
-                    android:text=""
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
@@ -79,7 +78,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
-                    android:text=""
                     android:textColor="@color/TextColor"
                     android:textSize="15sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -91,8 +89,6 @@
                     android:id="@+id/in_profile_bio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="0dp"
-                    android:text="Bio"
                     android:textColor="@color/TextColor"
                     android:textSize="15sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -102,18 +98,20 @@
 
                 <Button
                     android:id="@+id/refresh_profile"
+                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
                     android:layout_marginTop="6dp"
                     android:layout_marginBottom="8dp"
+                    android:background="@drawable/rounded_btn"
+                    android:text="@string/refresh"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:text="refresh"
-                    android:textColor="@color/white"
-                    android:background="@drawable/rounded_btn"
-                    android:textSize="15sp"
-                    app:layout_constraintTop_toBottomOf="@+id/NavToEdit"/>
+                    app:layout_constraintTop_toBottomOf="@+id/NavToEdit" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

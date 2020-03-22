@@ -16,6 +16,8 @@
     <string name="Sub">Subscribed</string>
     <string name="notSub">Subscribe</string>
     <string name="newMessage">New Message</string>
+    <string name="edit">Edit</string>
+    <string name="refresh">Refresh</string>
 
 
     <string-array name="class_list">
