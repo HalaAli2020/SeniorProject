@@ -50,10 +50,10 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
             holder.itemView.post_timestamp.text=post.Ptime
 
             if(type==0){
-                holder.itemView.username.text = post.crn
+                holder.itemView.username.text = post.subject
                 holder.itemView.username.setOnClickListener {
                     val intent = Intent(mContext, CommunityPosts::class.java)
-                    intent.putExtra("ClassName", post.crn)
+                    intent.putExtra("ClassName", post.subject)
                     mContext.startActivity(intent)
                 }
             }
@@ -80,8 +80,8 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
                     intent.putExtra("Classkey", post.Classkey)
                     intent.putExtra("UserID", post.UserID)
                     intent.putExtra("Author", post.author)
-                    intent.putExtra("crn", post.crn)
-                    intent.putExtra("Time", post.Ptime)
+                    intent.putExtra("subject", post.subject)
+                    intent.putExtra("Ptime", post.Ptime)
                     mContext.startActivity(intent)
                 }
             }
@@ -117,7 +117,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
         val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
-        val postcrn: String?= post.crn
+        val postcrn: String?= post.subject
         //notifyItemRemoved(customViewHolders.adapterPosition)
         //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
 
