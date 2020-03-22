@@ -52,9 +52,9 @@ class ClickedPost : AppCompatActivity() {
 
         val title: String = intent.getStringExtra("Title")
         val text: String = intent.getStringExtra("Text")
-        val crn: String = intent.getStringExtra("crn")
+        val crn: String = intent.getStringExtra("subject")
         val author: String = intent.getStringExtra("Author")
-        val time: String = intent.getStringExtra("Time")
+        val time: String = intent.getStringExtra("Ptime")
 
         myViewModel.PKey = intent.getStringExtra("Pkey")
         myViewModel.Classkey = intent.getStringExtra("Classkey")

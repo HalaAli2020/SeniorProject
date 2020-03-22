@@ -8,7 +8,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -579,7 +578,7 @@ class FirebaseData @Inject constructor() {
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 if (p0.child("text").exists() == false) {
                     Log.d("post", "doesn't exist")
-                    val emptyPost = Post("no Posts","" ,"")
+                    val emptyPost = Post("no Posts","" ,"","")
                     var profilePostL: MutableList<Post> = mutableListOf()
                     profilePostL.add(emptyPost)
                     profilePosts.value = profilePostL
@@ -598,7 +597,8 @@ class FirebaseData @Inject constructor() {
                             // user who posted id
                             it.UserID = p0.child("UserID").value.toString()
                             // need to change this later subject should be subject crn should be different
-                            it.crn = p0.child("subject").value.toString()
+                            it.subject = p0.child("subject").value.toString()
+                            it.Ptime=p0.child("Ptime").value.toString()
                             it.author = p0.child("author").value.toString()
                             // not setting author
                         }
@@ -645,7 +645,7 @@ class FirebaseData @Inject constructor() {
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.child("Posts").exists() == false) {
                     Log.d("comment", "doesn't exist")
-                    val emptyPost = Post("no Posts","" ,"")
+                    val emptyPost = Post("no Posts","" ,"","")
                     var profilePostL: MutableList<Post> = mutableListOf()
                     profilePostL.add(emptyPost)
                     profilePosts.value = profilePostL
@@ -943,8 +943,7 @@ fun noPostsChecker(userID: String) : Boolean{
             }
         })
 
-        //  val refkey = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey")
-        queryuserref.addListenerForSingleValueEvent( object : ValueEventListener {
+        query.addListenerForSingleValueEvent( object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     for(post in p0.children){
@@ -961,7 +960,8 @@ fun noPostsChecker(userID: String) : Boolean{
             }
         })
 
-        query.addListenerForSingleValueEvent( object : ValueEventListener {
+        //  val refkey = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey")
+        queryuserref.addListenerForSingleValueEvent( object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     for(post in p0.children){
@@ -1308,11 +1308,12 @@ fun noPostsChecker(userID: String) : Boolean{
     }
 
     // CRN is a placeholder for a class object
-    fun saveNewPosttoUser(post: Post, Subject: String, CRN: String) {
-        val subject = Subject
+    fun saveNewPosttoUser(text: String, title:String, CRN: String) {
+        //val subject = Subject
         // val ClassID = Classkey
         val userID = firebaseAuth.uid
         val author= firebaseAuth.currentUser?.displayName
+        val post = Post(title, text, CRN,"")
         post.UserID = userID
         post.author=author
         //FIX userprofile not init post.author = userprofile.username!!
@@ -1608,11 +1609,12 @@ fun noPostsChecker(userID: String) : Boolean{
                     it.title = p0.child("title").getValue(String::class.java)
                     it.text = p0.child("text").getValue(String::class.java)
                     //newPost.author = pos.child("author").getValue(String::class.java)
-                    it.crn = className
+                    it.subject = className
                     Log.d("CRN", p0.key!!)
                     //newPost.subject = post.child("subject").getValue(String ::class.java)
                     //newPost.ptime = pos.child("Timestamp").getValue(Long::class.java)
                     it.key = p0.child("key").getValue(String::class.java)
+                    it.Ptime = p0.child("Ptime").getValue(String::class.java)
                     it.Classkey = p0.child("Classkey").getValue(String::class.java)
                     it.UserID = p0.child("UserID").getValue(String::class.java)
                         it.author= p0.child("author").getValue(String::class.java)
@@ -1775,7 +1777,8 @@ fun noPostsChecker(userID: String) : Boolean{
                                             // user who posted id
                                             it.UserID = p3.child("UserID").value.toString()
                                             // need to change this later subject should be subject crn should be different
-                                            it.crn = p3.child("subject").value.toString()
+                                            it.subject = p3.child("subject").value.toString()
+                                            it.Ptime=p3.child("Ptime").value.toString()
                                             it.author = p3.child("author").value.toString()
                                         }
                                     } catch (e: Exception) {
@@ -1839,7 +1842,7 @@ fun noPostsChecker(userID: String) : Boolean{
                         it.text = p0.child("text").value.toString()
                         it.title = p0.child("title").value.toString()
                         it.key = p0.child("Key").value.toString()
-                        it.key = p0.child("crn").value.toString()
+                        it.key = p0.child("subject").value.toString()
                         //added crn so it would show up in home frag
                     }
                 } catch (e: Exception) {
