@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.seniorproject.MainForum.Posts.ClickedPost
 import com.example.seniorproject.MainForum.Posts.CommunityPosts
 import com.example.seniorproject.MainForum.UserProfileActivity
@@ -49,12 +50,25 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
             holder.itemView.username.text = post.author
             holder.itemView.post_timestamp.text=post.Ptime
 
+            if (post.uri != null){
+                Glide.with(mContext)
+                    .load(post.uri)
+                    .placeholder(R.color.white)
+                    .into(holder.itemView.post_image)
+            }
+            else
+            {
+                Glide.with(mContext).clear(holder.itemView.post_image)
+                holder.itemView.post_image.setImageDrawable(null)
+            }
+
             if(type==0){
                 holder.itemView.username.text = post.subject
                 holder.itemView.username.setOnClickListener {
                     val intent = Intent(mContext, CommunityPosts::class.java)
                     intent.putExtra("ClassName", post.subject)
                     mContext.startActivity(intent)
+
                 }
             }
            else if (type==1){
@@ -80,6 +94,8 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
                     intent.putExtra("Classkey", post.Classkey)
                     intent.putExtra("UserID", post.UserID)
                     intent.putExtra("Author", post.author)
+                    intent.putExtra("crn", post.crn)
+                    intent.putExtra("uri",post.uri)
                     intent.putExtra("subject", post.subject)
                     intent.putExtra("Ptime", post.Ptime)
                     mContext.startActivity(intent)

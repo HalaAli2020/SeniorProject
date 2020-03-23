@@ -2,6 +2,7 @@ package com.example.seniorproject.MainForum.Fragments
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import com.example.seniorproject.databinding.FragmentNewPostBinding
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.R
 import com.example.seniorproject.viewModels.NewPostFragmentViewModel
+import kotlinx.android.synthetic.main.fragment_new_post.*
 import kotlinx.android.synthetic.main.fragment_new_post.view.*
 import javax.inject.Inject
 
@@ -36,11 +38,13 @@ class FragmentNewPost : Fragment() {
         viewModel = ViewModelProviders.of(this, factory).get(NewPostFragmentViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_new_post, container, false)
 
+
+        //post: Post, Subject: String, CRN: String, uri: Uri, imagePost : Boolean
+
         /*val factory = InjectorUtils.provideNewPostViewModelFactory()
         val binding: NewPostFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_post, container, false)
         viewModel = ViewModelProviders.of(this, factory).get(NewPostFragmentViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_new_post, container, false)*/
-
 
         val adapter = ArrayAdapter.createFromResource(view.context, R.array.class_list, android.R.layout.simple_spinner_item)
         // Specify the layout to use when the subscriptions of choices appears
