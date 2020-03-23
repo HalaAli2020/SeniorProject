@@ -122,12 +122,7 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
         disposables.dispose()
         //now the register function is no longer being observed
     }
-    interface Authcallback()
-    {
-        fun onStart()
-        fun onSuccess(data: DataSnapshot, uid: String)
-        fun onFailure(message: String)
-}
+
 
 
 }

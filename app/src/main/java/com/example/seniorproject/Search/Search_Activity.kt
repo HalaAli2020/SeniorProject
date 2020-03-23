@@ -25,7 +25,7 @@ class Search_Activity: AppCompatActivity()
      lateinit var searchview : SearchView
    // lateinit var lit : RecyclerView
      lateinit var lt :RecyclerView
-     lateinit var ada : SearchAdapter =findViewById(R.id.Search_L)
+    lateinit var ada : SearchAdapter
            //= findViewById(R.id.Search_L)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,11 +47,16 @@ class Search_Activity: AppCompatActivity()
         searchview.setIconifiedByDefault(false)
         searchview.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextChange(newText: String?): Boolean {
-                ada.filter
+                if(!newText.isNullOrEmpty())
+                {
+                    ada.onfilter(newText)
+                }
+                return true
+
             }
 
             override fun onQueryTextSubmit(query: String?): Boolean {
-
+                return false
             }
         })
         searchview.setSubmitButtonEnabled(true)
@@ -60,10 +65,7 @@ class Search_Activity: AppCompatActivity()
     private fun loadListview(adapter: SearchAdapter)
     {
        var Clist =  myViewModel.getallclasses()
-        for (x in Clist)
-        {
 
-        }
     }
 
 

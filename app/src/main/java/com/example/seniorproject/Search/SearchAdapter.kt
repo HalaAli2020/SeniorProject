@@ -20,7 +20,7 @@ import com.example.seniorproject.viewModels.SearchViewModel
 import kotlinx.android.synthetic.main.row.view.*
 
 class SearchAdapter(context: Context, ViewModel: SearchViewModel) :
-  RecyclerView.Adapter<SearchViewHolder>(), Filterable {
+  RecyclerView.Adapter<SearchViewHolder>(){
    var classlist : MutableLiveData<MutableList<CRN>>? = null
     val mContext = context
     val mViewModel =ViewModel
@@ -49,10 +49,10 @@ class SearchAdapter(context: Context, ViewModel: SearchViewModel) :
          Log.d("In list" , classlist!!.value!![position].name)
     }
 
-    override fun getFilter(): Filter {
+     fun getFilter(){
         fun fitlerResults(query : CharSequence?)
         {
-            var Flist : MutableList<CRN> = mutableListOf()
+            var Flist : MutableLiveData<MutableList<CRN>> = MutableLiveData()
             if (classlist!!.value!!.isNullOrEmpty())
             {
                 classlist = Flist
@@ -65,13 +65,12 @@ class SearchAdapter(context: Context, ViewModel: SearchViewModel) :
                     {
                         if(x.name.contains(query!!))
                         {
-                            Flist.add(x)
+                            Flist.value!!.add(x)
                         }
                     }
                 }
             }
         }
-
 
     }
     fun onfilter(query : String)

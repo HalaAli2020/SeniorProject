@@ -9,6 +9,8 @@ import com.google.firebase.database.DataSnapshot
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(private val repository: SearchRepo) : ViewModel() {
+    var UsersSubs : MutableLiveData<MutableList<CRN>> = MutableLiveData()
+    var Clist : MutableLiveData<MutableList<CRN>> = MutableLiveData()
 
     fun Search(query: String): CRN {
         var Result = CRN()
@@ -29,7 +31,7 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
     }
 
     fun separateResult(data: DataSnapshot, query: String): CRN {
-        var RList: MutableList<CRN>
+        var RList: MutableLiveData<MutableList<CRN>>
         var RE = CRN()
         var classResult = CRN()
         if (data.hasChild(query)) {
@@ -47,7 +49,7 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
     }
 
     fun getallclasses() : MutableLiveData<MutableList<CRN>> {
-        var listC : MututableLiveData<MutableList<CRN>> = MutableLiveData()
+        var listC : MutableLiveData<MutableList<CRN>> = MutableLiveData()
         repository.getallclasses(object : FirebaseResult {
             override fun onFailure(message: String) {
                 Log.d("Failure", "onFailure called")
@@ -72,23 +74,39 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
                         }
 
                     }
-                    listC.add(crn)
+                    listC.value!!.add(crn)
                 }
+
             }
+
         })
+        Clist = listC
         return listC
     }
     fun addSub(crn : String)
     {
         repository.addUsersub(crn)
+        for (x in Clist.value!!.iterator())
+        {
+            if(x.name.contentEquals(crn))
+            {
+                x.Subscribed = true
+            }
+        }
+
     }
     fun removeSub(crn : String)
     {
         repository.remUsersub(crn)
-        UsersSubs = MutableLiveData()
-        listClasses = MutableLiveData()
-        getUserSub()
-        combineSubs()
+        for (x in Clist.value!!.iterator())
+        {
+            if(x.name.contentEquals(crn))
+            {
+                x.Subscribed = false
+            }
+        }
+
+
     }
 
     interface FirebaseResult {
