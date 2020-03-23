@@ -2126,7 +2126,7 @@ class FirebaseData @Inject constructor() {
            }
 
            override fun onDataChange(p0: DataSnapshot) {
-               result.onSuccess(p0)
+               result.onSuccess(p0, FirebaseAuth.getInstance().uid.toString())
            }
        })
     }

@@ -25,6 +25,7 @@
         <activity android:name=".MainForum.Posts.ClickedPost" />
         <activity android:name=".MainForum.Posts.UpdatePost" />
         <activity android:name=".MainForum.Posts.UpdateComment" />
+        <activity android:name=".Search.Search_Activity"/>
         <activity
             android:name=".MainForum.MainForum"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">

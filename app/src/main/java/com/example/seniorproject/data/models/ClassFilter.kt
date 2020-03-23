@@ -32,7 +32,7 @@ class ClassFilter(Clist : List<CRN>) : Filter() {
 
     override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
         var Flist : List<CRN> = results?.values as List<CRN>
-        notifyDataSetChanged()
+        //notifyDataSetChanged()
     }
 
 

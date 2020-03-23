@@ -10,6 +10,7 @@ import com.example.seniorproject.Authentication.RegisterActivity
 import com.example.seniorproject.Utils.AuthenticationListener
 //import com.example.seniorproject.Utils.AuthenticationListener
 import com.example.seniorproject.data.repositories.UserAuthRepo
+import com.google.firebase.database.DataSnapshot
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -121,6 +122,12 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
         disposables.dispose()
         //now the register function is no longer being observed
     }
+    interface Authcallback()
+    {
+        fun onStart()
+        fun onSuccess(data: DataSnapshot, uid: String)
+        fun onFailure(message: String)
+}
 
 
 }

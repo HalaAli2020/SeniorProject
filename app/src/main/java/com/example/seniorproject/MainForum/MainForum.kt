@@ -30,6 +30,7 @@ import com.example.seniorproject.MainForum.Fragments.FragmentSubscriptions
 import com.example.seniorproject.MainForum.Fragments.*
 import com.example.seniorproject.Messages.FragmentLatestMessages
 import com.example.seniorproject.R
+import com.example.seniorproject.Search.Search_Activity
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.User
 import com.example.seniorproject.databinding.SideNavHeaderBinding
@@ -90,7 +91,9 @@ class MainForum : AppCompatActivity(),
                 R.id.list -> {
                     FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
-                    replaceFragment(FragmentList())
+                    //replaceFragment(FragmentList())
+                    var intent = Intent(this, Search_Activity::class.java)
+                    startActivity(intent)
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.messages -> {

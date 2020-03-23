@@ -25,10 +25,12 @@ class LoginActivity : AppCompatActivity(), AuthenticationListener {
     lateinit var myViewModel: AuthenticationViewModel
 
     override fun onStarted() {
+        Toast.makeText(this,"Logging in", Toast.LENGTH_SHORT).show()
         }
 
     override fun onSuccess() {
         val myIntent = Intent(this@LoginActivity, MainForum::class.java)
+        Toast.makeText(this,"Logged In", Toast.LENGTH_LONG).show()
         this@LoginActivity.startActivity(myIntent)
     }
 

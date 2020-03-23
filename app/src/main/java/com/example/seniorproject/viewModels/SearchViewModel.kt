@@ -1,6 +1,7 @@
 package com.example.seniorproject.viewModels
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.seniorproject.data.models.CRN
 import com.example.seniorproject.data.repositories.SearchRepo
@@ -20,7 +21,7 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
                 Log.d("Start", "Started Query")
             }
 
-            override fun onSuccess(data: DataSnapshot) {
+            override fun onSuccess(data: DataSnapshot, uid: String) {
                 Result = separateResult(data, query)
             }
         })
@@ -45,15 +46,15 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
 
     }
 
-    fun getallclasses() : MutableList<CRN> {
-        var listC : MutableList<CRN> = mutableListOf()
+    fun getallclasses() : MutableLiveData<MutableList<CRN>> {
+        var listC : MututableLiveData<MutableList<CRN>> = MutableLiveData()
         repository.getallclasses(object : FirebaseResult {
             override fun onFailure(message: String) {
-                TODO("Not yet implemented")
+                Log.d("Failure", "onFailure called")
             }
 
             override fun onStart() {
-                TODO("Not yet implemented")
+                Log.d("started", "onstarted called")
             }
 
             override fun onSuccess(data: DataSnapshot, uid: String) {
@@ -76,6 +77,18 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
             }
         })
         return listC
+    }
+    fun addSub(crn : String)
+    {
+        repository.addUsersub(crn)
+    }
+    fun removeSub(crn : String)
+    {
+        repository.remUsersub(crn)
+        UsersSubs = MutableLiveData()
+        listClasses = MutableLiveData()
+        getUserSub()
+        combineSubs()
     }
 
     interface FirebaseResult {
