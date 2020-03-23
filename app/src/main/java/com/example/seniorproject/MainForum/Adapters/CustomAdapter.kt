@@ -48,6 +48,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
             val post: Post = savedPosts.value!![position]
             holder.itemView.post_title.text = post.title
             holder.itemView.username.text = post.author
+            holder.itemView.post_timestamp.text=post.Ptime
 
             if (post.uri != null){
                 Glide.with(mContext)
@@ -62,10 +63,10 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
             }
 
             if(type==0){
-                holder.itemView.username.text = post.crn
+                holder.itemView.username.text = post.subject
                 holder.itemView.username.setOnClickListener {
                     val intent = Intent(mContext, CommunityPosts::class.java)
-                    intent.putExtra("ClassName", post.crn)
+                    intent.putExtra("ClassName", post.subject)
                     mContext.startActivity(intent)
                 }
             }
@@ -94,6 +95,8 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
                     intent.putExtra("Author", post.author)
                     intent.putExtra("crn", post.crn)
                     intent.putExtra("uri",post.uri)
+                    intent.putExtra("subject", post.subject)
+                    intent.putExtra("Ptime", post.Ptime)
                     mContext.startActivity(intent)
                 }
             }
@@ -129,7 +132,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
         val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
-        val postcrn: String?= post.crn
+        val postcrn: String?= post.subject
         //notifyItemRemoved(customViewHolders.adapterPosition)
         //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
 

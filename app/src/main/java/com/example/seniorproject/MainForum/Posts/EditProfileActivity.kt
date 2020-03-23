@@ -5,14 +5,11 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.databinding.DataBindingUtil
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
@@ -23,12 +20,9 @@ import com.example.seniorproject.MainForum.Adapters.ProfileCommentsAdapter
 import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
 import com.example.seniorproject.databinding.ActivityEditProfileBinding
-import com.example.seniorproject.databinding.ActivityUserProfileBinding
 import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_edit_profile.*
-import kotlinx.android.synthetic.main.activity_user_profile.*
-import kotlinx.android.synthetic.main.fragment_profile_comment.view.*
 import javax.inject.Inject
 
 class EditProfileActivity : AppCompatActivity() {
@@ -104,8 +98,8 @@ class EditProfileActivity : AppCompatActivity() {
 
             Glide.with(this) //1
                 .load(selectedPhotoUri)
-                .placeholder(R.drawable.ic_account_circle_black_24dp)
-                .error(R.drawable.ic_account_circle_black_24dp)
+                .placeholder(R.drawable.ic_account_circle_blue_24dp)
+                .error(R.drawable.ic_account_circle_blue_24dp)
                 .skipMemoryCache(true) //2
                 .diskCacheStrategy(DiskCacheStrategy.NONE) //3
                 .apply(RequestOptions().circleCrop())//4

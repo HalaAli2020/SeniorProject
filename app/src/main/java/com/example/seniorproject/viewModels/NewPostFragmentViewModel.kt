@@ -61,8 +61,8 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
             return
         }
         Log.d("SELECTED VALUE:", classSpinner)
-        repository.saveNewPost(titlePost!!, textPost!!,"1", classSpinner!!)
-        //hardcodde it here
+        repository.saveNewPost(textPost!!,titlePost!!,classSpinner!!)
+
     }
 
    fun saveNewImgPosttoUser(title : String, text:String, Subject: String, CRN: String, uri: Uri, imagePost : Boolean) = repository.saveNewImgPosttoUser(title,text,Subject,CRN,uri,imagePost)

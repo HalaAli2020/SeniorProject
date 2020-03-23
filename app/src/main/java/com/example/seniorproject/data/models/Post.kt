@@ -2,28 +2,29 @@ package com.example.seniorproject.data.models
 
 import android.net.Uri
 import com.example.seniorproject.R
+import java.text.SimpleDateFormat
+import java.util.*
 
-data class Post(var title: String?, var text: String?, val subject: String?)
+data class Post(var title: String?, var text: String?, var subject: String?, var Ptime : String?)
 {
     //val title: String, val text: String, val courseID: Int, val uid: String
-    constructor(): this("","", "")
+    constructor(): this("","", "", null)
     private  var comments : List<Comment> = emptyList()
     //private val database = FirebaseDatabase.getInstance()
     var author : String? = null
     //var subject : String? = null
     var crn : String? = null
-    var ptime: Long? = null
     var Classkey : String? = null
     var UserID : String? = null
     var key : String? = null
+
     var uri : String? = null
     var imagePost : Boolean? = null
 
     init {
-        // backend will initalize values here or set to null if
-        // ptime = System.currentTimeMillis()
-
-
+        var calendar: Calendar = Calendar.getInstance()
+            var simple: SimpleDateFormat = SimpleDateFormat("M-d-yy h:mm a")
+        Ptime = simple.format(calendar.time)
     }
 
     fun getLayout(): Int {
@@ -38,7 +39,7 @@ data class Post(var title: String?, var text: String?, val subject: String?)
         return mapOf(
             "title" to title,
             "text" to text,
-            "Time" to ptime,
+            "Ptime" to Ptime,
             "author" to author,
             "subject" to subject,
             "crn" to crn,

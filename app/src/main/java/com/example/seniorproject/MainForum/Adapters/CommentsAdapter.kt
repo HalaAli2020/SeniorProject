@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.seniorproject.MainForum.Posts.ClickedPost
 import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.Comment
@@ -27,6 +28,7 @@ class CommentsAdapter(
     crn: String,
     UserID : String,
     uri:String
+    UserID : String, ptime: String
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -40,6 +42,7 @@ class CommentsAdapter(
     private val crn: String = crn
     private val UserID: String = UserID
     private val uri : String = uri
+    private val ptime: String = ptime
 
 
     override fun getItemViewType(position: Int): Int {
@@ -97,6 +100,7 @@ class CommentsAdapter(
 
 
 
+                holder.itemView.posts_timestamp.text=ptime
                 holder.itemView.author_name_TV.setOnClickListener {
                     val intent = Intent(mContext, UserProfileActivity::class.java)
                     intent.putExtra("UserID", UserID)
@@ -114,6 +118,7 @@ class CommentsAdapter(
                     //holder.itemView.post_title.text = comment.title
                     holder.itemView.comment_text.text = comment.text
                     holder.itemView.authcom.text = comment.author
+                    holder.itemView.comment_timestamp.text=comment.Ptime
 
                     holder.itemView.authcom.setOnClickListener {
                         val intent = Intent(mContext, UserProfileActivity::class.java)
