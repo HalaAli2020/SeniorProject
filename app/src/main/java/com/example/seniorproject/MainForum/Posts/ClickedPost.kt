@@ -36,7 +36,7 @@ class ClickedPost : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_clicked_post)
 
-        DaggerAppComponent.create().inject(this)
+       // DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this, factory).get(ClickedPostViewModel::class.java)
         val binding: ActivityClickedPostBinding = DataBindingUtil.setContentView(this, R.layout.activity_clicked_post)
 

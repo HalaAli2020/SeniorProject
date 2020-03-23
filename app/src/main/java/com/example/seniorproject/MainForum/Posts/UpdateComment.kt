@@ -32,7 +32,7 @@ class UpdateComment  : AppCompatActivity() {
         setContentView(R.layout.update_comment)
 
 
-        DaggerAppComponent.create().inject(this)
+       // DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this, factory).get(ClickedPostViewModel::class.java)
         val binding: UpdateCommentBinding = DataBindingUtil.setContentView(this,R.layout.update_comment)
 

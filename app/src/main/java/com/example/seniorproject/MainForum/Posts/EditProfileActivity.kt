@@ -48,7 +48,7 @@ class EditProfileActivity : AppCompatActivity() {
         val actionbar = supportActionBar
         actionbar!!.title = "Edit Profile"
 
-        DaggerAppComponent.create().inject(this)
+        //DaggerAppComponent.create().inject(this)
         val factory = InjectorUtils.provideProfileViewModelFactory()
         myViewModel = ViewModelProviders.of(this,factory).get(ProfileViewModel::class.java)
 

@@ -47,7 +47,7 @@ class LoginActivity : AppCompatActivity(), AuthenticationListener {
         setContentView(R.layout.activity_login)
         Log.d("TAG","test logcat")
 
-        DaggerAppComponent.create().inject(this)
+       DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this,factory).get(AuthenticationViewModel::class.java)
         val binding: ActivityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         binding.authViewModel = myViewModel

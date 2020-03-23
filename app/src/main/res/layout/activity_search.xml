@@ -6,12 +6,12 @@
     <data>
         <variable
             name="activity"
-            type="com.example.seniorproject.Search.Search_Activity" />
+            type="com.example.seniorproject.search.SearchActivity" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Search.Search_Activity">
+    tools:context="com.example.seniorproject.search.SearchActivity">
 
     <SearchView
         android:id="@+id/Search_R"

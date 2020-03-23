@@ -1,23 +1,25 @@
-package com.example.seniorproject.Search
+package com.example.seniorproject.search
 
+import android.content.Context
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.widget.ListView
+import android.widget.LinearLayout
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.R
-import com.example.seniorproject.viewModels.ChatLogViewModel
+import com.example.seniorproject.data.models.CRN
+import com.example.seniorproject.databinding.ActivitySearchBinding
 import com.example.seniorproject.viewModels.SearchViewModel
 import kotlinx.android.synthetic.main.activity_search.*
 import javax.inject.Inject
 
-class Search_Activity: AppCompatActivity()
+class SearchActivity: AppCompatActivity()
 {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -26,20 +28,38 @@ class Search_Activity: AppCompatActivity()
    // lateinit var lit : RecyclerView
      lateinit var lt :RecyclerView
     lateinit var ada : SearchAdapter
+
            //= findViewById(R.id.Search_L)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val factory = InjectorUtils.provideSearchViewModelFactory()
         myViewModel = ViewModelProviders.of(this, factory).get(SearchViewModel::class.java)
-        //val binding = DataBindingUtil.setContentView(this, R.layout.activity_search )
-       ada = SearchAdapter(this.applicationContext, myViewModel)
+        val binding : ActivitySearchBinding = DataBindingUtil.setContentView(this, R.layout.activity_search )
+        myViewModel.getallclasses()
+       ada = SearchAdapter(this.baseContext, myViewModel, myViewModel.sendlist())
+        searchview = binding.SearchR
+        lt = binding.SearchL
+        var obse = Observer<MutableList<CRN>> {
+                swap(lt)
+        }
+
+        var lin : LinearLayoutManager = LinearLayoutManager(this)
+        lt.layoutManager = lin
         lt.adapter = ada
 
+       // lt = findViewById<RecyclerView>(R.id.Search_L)
+        setupsearchview()
+        //searchview = findViewById<SearchView>(R.id.Search_R)
+        myViewModel.Clist.observe(this, obse)
 
 
 
-
+    }
+    private fun swap(lt : RecyclerView)
+    {
+        ada = SearchAdapter(this.baseContext, myViewModel, myViewModel.sendlist())
+         lt.swapAdapter(ada, true)
     }
 
     private fun setupsearchview()
@@ -47,26 +67,18 @@ class Search_Activity: AppCompatActivity()
         searchview.setIconifiedByDefault(false)
         searchview.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextChange(newText: String?): Boolean {
-                if(!newText.isNullOrEmpty())
-                {
-                    ada.onfilter(newText)
-                }
-                return true
+
+                return false
 
             }
 
             override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
+                ada.onfilter(query!!)
+                return true
             }
         })
         searchview.setSubmitButtonEnabled(true)
         searchview.setQueryHint("Search Here")
     }
-    private fun loadListview(adapter: SearchAdapter)
-    {
-       var Clist =  myViewModel.getallclasses()
-
-    }
-
 
 }

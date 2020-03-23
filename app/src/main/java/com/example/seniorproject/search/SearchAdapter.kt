@@ -1,31 +1,22 @@
-package com.example.seniorproject.Search
+package com.example.seniorproject.search
 
 import android.content.Context
-import android.database.DataSetObserver
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.*
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
-import com.example.seniorproject.MainForum.Adapters.ListHolder
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.CRN
-import com.example.seniorproject.data.models.PostViewHolder
-import com.example.seniorproject.databinding.ActivityClickedPostBinding.inflate
-import com.example.seniorproject.generated.callback.OnClickListener
-import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.example.seniorproject.viewModels.SearchViewModel
-import kotlinx.android.synthetic.main.row.view.*
 
-class SearchAdapter(context: Context, ViewModel: SearchViewModel) :
+class SearchAdapter(context: Context, ViewModel: SearchViewModel, Clist : MutableLiveData<MutableList<CRN>>) :
   RecyclerView.Adapter<SearchViewHolder>(){
-   var classlist : MutableLiveData<MutableList<CRN>>? = null
+   var classlist : MutableLiveData<MutableList<CRN>>? = Clist
     val mContext = context
-    val mViewModel =ViewModel
+    val mViewModel = ViewModel
     init {
-       classlist = mViewModel.getallclasses()
+       //mViewModel.getallclasses()
     }
 
 
@@ -38,14 +29,14 @@ class SearchAdapter(context: Context, ViewModel: SearchViewModel) :
         return SearchViewHolder(cellForRow)
     }
     override fun getItemCount(): Int {
-        if (classlist!!.value!!.isNotEmpty())
+        if (!classlist!!.value.isNullOrEmpty())
             return classlist!!.value!!.size
         else
-            Log.d("NULL", "Isa null")
+            Log.d("NULL", "Itsa null")
         return 0
     }
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
-        holder.bind(classlist!!.value!![position], mContext)
+        holder.bind(classlist!!.value!![position], mContext, mViewModel)
          Log.d("In list" , classlist!!.value!![position].name)
     }
 
@@ -75,20 +66,25 @@ class SearchAdapter(context: Context, ViewModel: SearchViewModel) :
     }
     fun onfilter(query : String)
     {
+
         //classlist!!.value!!.removeAt()
-        for ((index, x) in classlist!!.value!!.iterator().withIndex())
+        var Clist: MutableList<CRN> = mutableListOf()
+        for ((index, x) in classlist!!.value!!.withIndex())
         {
             if(x.name.contentEquals(query))
             {
-                removeat(index)
+                Clist.add(x)
             }
         }
+        classlist!!.value = Clist
+        notifyDataSetChanged()
     }
     fun removeat(position: Int)
     {
+        //notifyItemRemoved(position)
+        //notifyItemRangeChanged(position, classlist!!.value!!.size)
         classlist!!.value!!.removeAt(position)
-        notifyItemRemoved(position)
-        notifyItemRangeChanged(position, classlist!!.value!!.size)
+
     }
 }
 

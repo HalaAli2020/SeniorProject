@@ -48,8 +48,8 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
 
     }
 
-    fun getallclasses() : MutableLiveData<MutableList<CRN>> {
-        var listC : MutableLiveData<MutableList<CRN>> = MutableLiveData()
+    fun getallclasses() {
+        var listC : MutableList<CRN> = mutableListOf()
         repository.getallclasses(object : FirebaseResult {
             override fun onFailure(message: String) {
                 Log.d("Failure", "onFailure called")
@@ -60,28 +60,36 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
             }
 
             override fun onSuccess(data: DataSnapshot, uid: String) {
+                Log.d("onSuccess", " called")
+
                 for (x in data.children) {
                     var crn = CRN()
+
+                    Log.d("key", x.key.toString())
                     crn.name = x.key.toString()
+                    Log.d("crn.name", crn.name)
                     if (x.hasChild("SubList")) {
                         if (x.child("SubList").hasChild(uid))
                         {
                             crn.Subscribed = true
-                        }
-                        else
-                        {
-                            continue
+                            //Log.d("all classes", crn.name)
                         }
 
+
                     }
-                    listC.value!!.add(crn)
+                    Log.d("all classes", crn.name)
+                    listC.add(crn)
                 }
 
             }
 
+
         })
-        Clist = listC
-        return listC
+        Clist.value = listC
+    }
+    fun sendlist() : MutableLiveData<MutableList<CRN>>
+    {
+        return Clist
     }
     fun addSub(crn : String)
     {
