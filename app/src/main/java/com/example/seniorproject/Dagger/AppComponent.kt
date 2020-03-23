@@ -34,5 +34,5 @@ interface AppComponent {
     fun inject(activity: EditProfileActivity)
     fun inject(activity: UpdateComment)
     fun inject(activity: UpdatePost)
-    fun inject(fragment: Image_Post)
+    fun inject(fragment: FragmentNewImagePost)
 }

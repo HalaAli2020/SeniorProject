@@ -170,16 +170,6 @@ class ClickedPost : AppCompatActivity() {
 
                             })
                         )
-                        
-                                    val msgdialog: AlertDialog = builder.create()
-
-                                    msgdialog.getWindow()!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
-
-                                    msgdialog.show()
-                                }
-
-                            })
-                        )
 
                     }
 

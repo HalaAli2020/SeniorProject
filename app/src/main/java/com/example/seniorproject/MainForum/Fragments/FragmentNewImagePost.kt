@@ -25,16 +25,22 @@ import com.example.seniorproject.Authentication.RegisterActivity
 import com.example.seniorproject.Dagger.DaggerAppComponent
 
 import com.example.seniorproject.R
+import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.databinding.FragmentNewPostBinding
 import com.example.seniorproject.utils.startRegisterActivity
 import com.example.seniorproject.viewModels.NewPostFragmentViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.fragment_image__post.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-class Image_Post : Fragment() {
+class FragmentNewImagePost : Fragment() {
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -98,19 +104,47 @@ class Image_Post : Fragment() {
                     Toast.makeText(activity?.applicationContext, "please add a title, post text and select a subject", Toast.LENGTH_SHORT).show()
                 }
                 else {
-                    Toast.makeText(activity?.applicationContext, "image post created", Toast.LENGTH_SHORT).show()
-                    viewModel.saveNewImgPosttoUser(
-                        title,
-                        text,
-                        subject,
-                        subject,
-                        selectedPhotoUri!!,
-                        true
-                    )
-                    fragmentManager!!.beginTransaction()
-                        .replace((view!!.parent as ViewGroup).id, FragmentHome())
-                        .addToBackStack(null)
-                        .commit()
+                    val userID= FirebaseAuth.getInstance().uid
+                    val subpath = FirebaseDatabase.getInstance().getReference("/users/$userID")
+                    val querysub = subpath.child("Subscriptions").orderByValue()
+                        .addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(p0: DataSnapshot) {
+                                if (p0.exists()) {
+                                    for (sub in p0.children) {
+                                        // val refc= comment.getValue(Comment::class.java)
+                                        if (sub.getValue() == subject) {
+                                            viewModel.saveNewImgPosttoUser(
+                                                title,
+                                                text,
+                                                subject,
+                                                subject,
+                                                selectedPhotoUri!!,
+                                                true
+                                            )
+                                            Toast.makeText(activity?.applicationContext, "image post created", Toast.LENGTH_SHORT).show()
+                                            fragmentManager!!.beginTransaction()
+                                                .replace((view!!.parent as ViewGroup).id, FragmentHome())
+                                                .addToBackStack(null)
+                                                .commit()
+                                        }
+                                        else{
+                                            Toast.makeText(activity?.applicationContext, "Subscribe to $subject in order to create a post", Toast.LENGTH_SHORT).show()
+                                            fragmentManager!!.beginTransaction()
+                                                .replace((view!!.parent as ViewGroup).id, FragmentList())
+                                                .addToBackStack(null)
+                                                .commit()
+                                        }
+
+                                    }
+                                }
+                            }
+
+                            override fun onCancelled(p0: DatabaseError) {
+                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
+                        })
+
+
                 }
             }
         }
