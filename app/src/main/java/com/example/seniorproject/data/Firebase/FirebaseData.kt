@@ -29,6 +29,8 @@ import java.util.logging.Handler
 import javax.security.auth.Subject
 import kotlin.collections.HashMap
 import com.example.seniorproject.data.models.User
+import com.google.firebase.auth.ActionCodeSettings
+import java.lang.IllegalArgumentException
 import kotlin.collections.ArrayList
 import com.example.seniorproject.viewModels.NewPostFragmentViewModel
 import com.google.android.gms.tasks.OnSuccessListener
@@ -431,7 +433,6 @@ class FirebaseData @Inject constructor() {
         Completable.create { emitter ->
             Log.d(TAG, "Entered register user function!!! Email: " + email)
             Log.d(TAG, "pass: " + password)
-
             //Firebase Authentication is being performed inside the completeable
             //emitter indicated weather the task was completed
             //double check this code
@@ -450,11 +451,20 @@ class FirebaseData @Inject constructor() {
                                     null
                                 )
                             }
+                            val user = FirebaseAuth.getInstance().currentUser
+                            user?.sendEmailVerification()
+                                ?.addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        Log.d(TAG, "Email sent.")
+                                        //add toast message that email was sent
+                                    }
+                                }
                         } else {
                             emitter.onError(it.exception!!)
                             //return@addOnCompleteListener
                         }
                     }
+
                 }
         }
 
@@ -497,8 +507,13 @@ class FirebaseData @Inject constructor() {
                         Log.d(TAG, CurrentUser()!!.displayName ?: "the displayname login1")
                         GlobalScope.launch(Dispatchers.Main) {
                             delay(500)
-                            emitter.onComplete()
-                            Log.d(TAG, "im delayed")
+                            val currentuser = FirebaseAuth.getInstance().currentUser
+                            if (currentuser!!.isEmailVerified) {
+                                emitter.onComplete()
+                            }
+                            else {
+                                emitter.onError(IllegalArgumentException("please verify your email"))
+                            }
                         }
                         //updateUser()
                         val currentuser = FirebaseAuth.getInstance().currentUser

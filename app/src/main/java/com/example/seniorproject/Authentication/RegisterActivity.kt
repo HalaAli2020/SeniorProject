@@ -31,6 +31,7 @@ class RegisterActivity : AppCompatActivity(),
     }
 
     override fun onSuccess() {
+        Toast.makeText(this, "A verification email has been sent, please verify before you log in", Toast.LENGTH_SHORT).show()
         val myIntent = Intent(this@RegisterActivity, LoginActivity::class.java)
         this@RegisterActivity.startActivity(myIntent)
         //this.startMainForum()
