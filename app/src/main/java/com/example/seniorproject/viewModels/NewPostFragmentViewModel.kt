@@ -8,6 +8,7 @@ import android.widget.AdapterView
 import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
+import com.example.seniorproject.MainForum.Fragments.FragmentNewPost
 import com.example.seniorproject.MainForum.Posts.UpdatePost
 //import com.example.seniorproject.Utils.startMainForum
 import com.example.seniorproject.Utils.PostListener
@@ -57,7 +58,6 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
 
         if (titlePost.isNullOrEmpty() || textPost.isNullOrEmpty() || classSpinner.isNullOrEmpty()) {
             postListener?.onFailure("please enter a title and text!")
-            //Toast.makeText((RegisterActivity()), "Please fill in both Email and Password fields", Toast.LENGTH_SHORT).show()
             return
         }
         Log.d("SELECTED VALUE:", classSpinner)
