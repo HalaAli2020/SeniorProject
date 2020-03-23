@@ -1,5 +1,6 @@
 package com.example.seniorproject.data.models
 
+import android.net.Uri
 import com.example.seniorproject.R
 import java.text.SimpleDateFormat
 import java.util.*
@@ -16,6 +17,9 @@ data class Post(var title: String?, var text: String?, var subject: String?, var
     var Classkey : String? = null
     var UserID : String? = null
     var key : String? = null
+
+    var uri : String? = null
+    var imagePost : Boolean? = null
 
     init {
         var calendar: Calendar = Calendar.getInstance()
@@ -42,7 +46,9 @@ data class Post(var title: String?, var text: String?, var subject: String?, var
             "comments" to comments,
             "UserID" to UserID,
             "Classkey" to Classkey,
-            "key" to key
+            "key" to key,
+            "uri" to uri,
+            "imagePost" to imagePost
 
         )
 
