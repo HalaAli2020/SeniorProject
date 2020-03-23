@@ -21,12 +21,16 @@ import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.example.seniorproject.Authentication.RegisterActivity
 import com.example.seniorproject.Dagger.DaggerAppComponent
 
 import com.example.seniorproject.R
 import com.example.seniorproject.databinding.FragmentNewPostBinding
+import com.example.seniorproject.utils.startRegisterActivity
 import com.example.seniorproject.viewModels.NewPostFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_image__post.view.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -83,11 +87,30 @@ class Image_Post : Fragment() {
             val donebutton = view!!.new_image_post.setOnClickListener{
                 val titlebox : EditText = view!!.img_post_title
                 val textbox : EditText = view!!.img_post_text
+
                 val title: String = titlebox.text.toString()
                 val text: String = textbox.text.toString()
                 val spinner: Spinner = view!!.spinner3
                 val subject = spinner.selectedItem.toString()
-                viewModel.saveNewImgPosttoUser(title,text,subject,subject,selectedPhotoUri!!,true)
+
+                if (title.isNullOrEmpty() || text.isNullOrEmpty() || subject.isNullOrEmpty())
+                {
+                    Toast.makeText(activity?.applicationContext, "please add a title, post text and select a subject", Toast.LENGTH_SHORT).show()
+                }
+                else {
+                    viewModel.saveNewImgPosttoUser(
+                        title,
+                        text,
+                        subject,
+                        subject,
+                        selectedPhotoUri!!,
+                        true
+                    )
+                    fragmentManager!!.beginTransaction()
+                        .replace((view!!.parent as ViewGroup).id, FragmentHome())
+                        .addToBackStack(null)
+                        .commit()
+                }
             }
         }
 

@@ -28,7 +28,9 @@ import java.util.logging.Handler
 import javax.security.auth.Subject
 import kotlin.collections.HashMap
 import com.example.seniorproject.data.models.User
+import com.example.seniorproject.viewModels.NewPostFragmentViewModel
 import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 
 
@@ -1336,22 +1338,11 @@ class FirebaseData @Inject constructor() {
         }
         val filename = UUID.randomUUID().toString()
         val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
-        ref.putFile(uri)
-            .addOnSuccessListener {
-                Log.d("FirebaseManager", "Upload Successful")
-                //Uri downloadUrl = taskSnapshot.getDownloadUrl()
-                //it.metadata.path
-                ref.downloadUrl.addOnSuccessListener {
-                    val urii = it
-                    Log.d("Pic", "File location: $it")
-                    saveImageurl = urii.toString()
-                    //got it here, no error yet
-                }.addOnFailureListener {
-                    Log.d("Pic", "File location: $it")
-                }.addOnFailureListener {
-                    Log.d("FirebaseManager", "Upload Successful ${it}")
-                }
-
+        ref.putFile(uri).addOnSuccessListener {
+            saveImageurl = "test to see HELLO"
+            ref.downloadUrl.addOnSuccessListener {
+                val urii = it
+                saveImageurl = urii.toString()
                 var post = Post(title, text, CRN)
                 val subject = Subject
                 val userID = firebaseAuth.uid
@@ -1359,33 +1350,25 @@ class FirebaseData @Inject constructor() {
                 post.UserID = userID
                 post.author = author
                 post.imagePost = imagePost
-
-                GlobalScope.launch(Dispatchers.Main) {
-                    delay(10000)
-                    post.uri = saveImageurl
-                    Log.d(TAG, "im delayed")
-                    val User_key =
-                        FirebaseDatabase.getInstance().getReference("/users/$userID").child("Posts")
-                            .push().key
-                    val Class_key =
-                        FirebaseDatabase.getInstance().getReference("/Subjects/$CRN").child("Posts")
-                            .push().key
-                    post.key = User_key
-                    post.Classkey = Class_key
-                    //post.author= auth_key
-                    // implement in viewmodel
-                    //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
-                    val dataupdates = HashMap<String, Any>()
-                    val postvalues = post.toMap()
-                    dataupdates["/Subjects/$CRN/Posts/$Class_key"] = postvalues
-                    //dataupdates["/Subjects/$CRN/Posts/$postID/$author"] = postvalues
-                    dataupdates["/users/$userID/Posts/$User_key"] = postvalues
-
-                    FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
-                }
-
+                val User_key =
+                    FirebaseDatabase.getInstance().getReference("/users/$userID").child("Posts")
+                        .push().key
+                val Class_key =
+                    FirebaseDatabase.getInstance().getReference("/Subjects/$CRN").child("Posts")
+                        .push().key
+                post.key = User_key
+                post.Classkey = Class_key
+                val dataupdates = HashMap<String, Any>()
+                post.uri = saveImageurl
+                val postvalues = post.toMap()
+                dataupdates["/Subjects/$CRN/Posts/$Class_key"] = postvalues
+                dataupdates["/users/$userID/Posts/$User_key"] = postvalues
+                FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
             }
+        }
+
     }
+
 
 
 
@@ -2206,6 +2189,7 @@ class FirebaseData @Inject constructor() {
     interface FirebaseRecentMessagseCallback {
         fun onCallback(list: List<LatestMessage>)
     }
+
 
 
     companion object {

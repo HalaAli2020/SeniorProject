@@ -13,6 +13,13 @@ import com.example.seniorproject.MainForum.Posts.UpdatePost
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.repositories.PostRepository
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.UploadTask
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class NewPostFragmentViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
@@ -58,8 +65,6 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
         //hardcodde it here
     }
 
-    fun saveNewImgPosttoUser(title : String, text:String, Subject: String, CRN: String, uri: Uri, imagePost : Boolean)
-            = repository.saveNewImgPosttoUser(title,text,Subject,CRN,uri,imagePost)
-
+   fun saveNewImgPosttoUser(title : String, text:String, Subject: String, CRN: String, uri: Uri, imagePost : Boolean) = repository.saveNewImgPosttoUser(title,text,Subject,CRN,uri,imagePost)
 
 }
