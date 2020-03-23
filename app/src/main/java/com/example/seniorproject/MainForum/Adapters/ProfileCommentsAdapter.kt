@@ -95,6 +95,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                         intent.putExtra("Author", value[6])
                         intent.putExtra("subject", crn)
                         intent.putExtra("Ptime", value[3])
+                        intent.putExtra("uri",value[7])
                         mContext.startActivity(intent)
 
                     }

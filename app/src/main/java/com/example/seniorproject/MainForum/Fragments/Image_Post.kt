@@ -78,8 +78,8 @@ class Image_Post : Fragment() {
 
             Glide.with(this) //1
                 .load(selectedPhotoUri)
-                .placeholder(R.drawable.ic_account_circle_black_24dp)
-                .error(R.drawable.ic_account_circle_black_24dp)
+                .placeholder(R.color.white)
+                .error(R.color.black)
                 .skipMemoryCache(true) //2
                 .diskCacheStrategy(DiskCacheStrategy.NONE) //4
                 .into(img)

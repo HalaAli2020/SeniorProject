@@ -27,8 +27,9 @@ class CommentsAdapter(
     author: String,
     crn: String,
     UserID : String,
+    ptime: String,
     uri:String
-    UserID : String, ptime: String
+
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

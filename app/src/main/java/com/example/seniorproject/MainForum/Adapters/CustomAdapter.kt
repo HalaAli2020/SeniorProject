@@ -68,6 +68,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
                     val intent = Intent(mContext, CommunityPosts::class.java)
                     intent.putExtra("ClassName", post.subject)
                     mContext.startActivity(intent)
+
                 }
             }
            else if (type==1){

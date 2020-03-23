@@ -1334,6 +1334,7 @@ class FirebaseData @Inject constructor() {
                 var classkey= p0.child("Classkey").getValue(String::class.java)
                 var user= p0.child("UserID").getValue(String::class.java)
                 var author = p0.child("author").getValue(String::class.java)
+                var uri = p0.child("uri").getValue(String::class.java)
                 var list: ArrayList<String> = arrayListOf()
                 list.add(0, title!!)
                 list.add(1, text!!)
@@ -1342,6 +1343,7 @@ class FirebaseData @Inject constructor() {
                 list.add(4, classkey!!)
                 list.add(5, user!!)
                 list.add(6, author!!)
+                list.add(7,uri!!)
                 callBack.onCallback(list)
             }
             /*override fun onDataChange(p0: DataSnapshot){
@@ -1371,7 +1373,7 @@ class FirebaseData @Inject constructor() {
             ref.downloadUrl.addOnSuccessListener {
                 val urii = it
                 saveImageurl = urii.toString()
-                var post = Post(title, text, CRN)
+                var post = Post(title, text, CRN,"")
                 val subject = Subject
                 val userID = firebaseAuth.uid
                 val author = firebaseAuth.currentUser?.displayName
@@ -1400,8 +1402,8 @@ class FirebaseData @Inject constructor() {
 
 
 
-    fun saveNewPosttoUser(post: Post, Subject: String, CRN: String) {
-        val subject = Subject
+    fun saveNewPosttoUser(text: String, title:String, CRN: String) {
+        //val subject = Subject
         // val ClassID = Classkey
         val userID = firebaseAuth.uid
         val author= firebaseAuth.currentUser?.displayName
