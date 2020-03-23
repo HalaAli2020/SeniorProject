@@ -170,47 +170,7 @@ class ClickedPost : AppCompatActivity() {
 
                             })
                         )
-
-                        buffer.add(
-                            ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
-                                ("#D3D3D3"), object : ButtonClickListener {
-                                override fun onClick(pos: Int) {
-                                    val postkey: String? =
-                                        adapter.removeItem(viewHolders)
-
-                                    val userkey: String? =
-                                        adapter.getUserKey(viewHolders)
-
-                                    val crnkey: String? =
-                                        adapter.getCrn(viewHolders, pos)
-
-                                    //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
-                                    var builder = AlertDialog.Builder(
-                                        this@ClickedPost,
-                                        R.style.AppTheme_AlertDialog
-                                    )
-
-                                    //.getStringExtra("Classkey")
-                                    //val postkey = intent.getStringExtra("author")
-                                    //myViewModel.deletePost(postkey!!, className)
-                                    //myViewModel.deletePost()
-                                    builder.setTitle("Are you sure?")
-                                    builder.setMessage("You won't see posts or comments from this user.")
-                                    builder.setPositiveButton("BLOCK",
-                                        { dialogInterface: DialogInterface?, i: Int ->
-                                            //myViewModel.blockPost(userkey!!, crnkey!!, postkey!!)
-                                            var toast = Toast.makeText(
-                                                this@ClickedPost,
-                                                "This user has been blocked",
-                                                Toast.LENGTH_SHORT
-                                            )
-                                            toast.show()
-                                        })
-                                    builder.setNegativeButton("CANCEL",
-                                        { dialogInterface: DialogInterface?, i: Int ->
-                                            builder.setCancelable(true)
-                                        })
-
+                        
                                     val msgdialog: AlertDialog = builder.create()
 
                                     msgdialog.getWindow()!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
