@@ -98,6 +98,7 @@ class Image_Post : Fragment() {
                     Toast.makeText(activity?.applicationContext, "please add a title, post text and select a subject", Toast.LENGTH_SHORT).show()
                 }
                 else {
+                    Toast.makeText(activity?.applicationContext, "image post created", Toast.LENGTH_SHORT).show()
                     viewModel.saveNewImgPosttoUser(
                         title,
                         text,
