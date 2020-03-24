@@ -54,9 +54,9 @@ class ClickedPost : AppCompatActivity() {
         val text: String = intent.getStringExtra("Text")
         val crn: String = intent.getStringExtra("subject")
         val author: String = intent.getStringExtra("Author")
-        val uri : String = intent.getStringExtra("uri") ?: ""
-        val time: String = intent.getStringExtra("Ptime")
-
+        val uri : String = intent.getStringExtra("uri") ?: "null"
+        val ptime: String = intent.getStringExtra("Ptime")
+        val uid: String = intent.getStringExtra("UserID").toString()
         myViewModel.PKey = intent.getStringExtra("Pkey")
         myViewModel.Classkey = intent.getStringExtra("Classkey")
         myViewModel.UserID = intent.getStringExtra("UserID")
@@ -66,19 +66,17 @@ class ClickedPost : AppCompatActivity() {
 
         //add userid and send
 
-        adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString(), time, uri)
-        comment_RecyclerView.adapter = adapter
+        comment_RecyclerView.adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,uid, ptime, uri)
         comment_RecyclerView.layoutManager = LinearLayoutManager(this)
-
 
         binding.clickedViewModel = myViewModel
         binding.lifecycleOwner = this
 
+
         refreshView.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(this, R.color.blue_theme))
         refreshView.setColorSchemeColors(ContextCompat.getColor(this, R.color.white))
-
         refreshView.setOnRefreshListener {
-            comment_RecyclerView.adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString(), time, uri)
+            comment_RecyclerView.adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,uid, ptime, uri)
             refreshView.isRefreshing = false
         }
 
@@ -87,7 +85,7 @@ class ClickedPost : AppCompatActivity() {
             toast.show()
         }
 
-            val swipe = object : SwipeHelper(applicationContext, comment_RecyclerView, 200) {
+        val swipe = object : SwipeHelper(applicationContext, comment_RecyclerView, 200) {
                 override fun initButton(
                     viewHolders: RecyclerView.ViewHolder,
                     buffer: MutableList<ProfileButton>

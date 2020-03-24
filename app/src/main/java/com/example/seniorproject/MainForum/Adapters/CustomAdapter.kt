@@ -43,26 +43,24 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
         if (savedPosts.value.isNullOrEmpty()) {
             Log.d("CustomAdapter", "EMPTY")
             holder.itemView.imageView4.visibility = View.INVISIBLE
-            holder.itemView.post_title.text = "Subscribe to a community to see posts on this screen!"
-        } else {
+            holder.itemView.post_title.text =
+                "Subscribe to a community to see posts on this screen!"
+        }
+        else {
             val post: Post = savedPosts.value!![position]
             holder.itemView.post_title.text = post.title
             holder.itemView.username.text = post.author
-            holder.itemView.post_timestamp.text=post.Ptime
+            holder.itemView.post_timestamp.text = post.Ptime
 
-            if (post.uri != null){
-                Glide.with(mContext)
-                    .load(post.uri)
-                    .placeholder(R.color.white)
+         /*   if (post.uri != null) {
+                Glide.with(mContext).load(post.uri).placeholder(R.color.white)
                     .into(holder.itemView.post_image)
-            }
-            else
-            {
+            } else {
                 Glide.with(mContext).clear(holder.itemView.post_image)
                 holder.itemView.post_image.setImageDrawable(null)
-            }
+            }*/
 
-            if(type==0){
+            if (type == 0) {
                 holder.itemView.username.text = post.subject
                 holder.itemView.username.setOnClickListener {
                     val intent = Intent(mContext, CommunityPosts::class.java)
@@ -70,8 +68,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
                     mContext.startActivity(intent)
 
                 }
-            }
-           else if (type==1){
+            } else if (type == 1) {
                 holder.itemView.username.setOnClickListener {
                     val intent = Intent(mContext, UserProfileActivity::class.java)
                     intent.putExtra("UserID", post.UserID)
@@ -81,12 +78,10 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
 
             }
             holder.itemView.setOnClickListener {
-                if (post.title == "no Posts" || post.title == "No Posts")
-                {
-                    Log.d("Tag","no post")
+                if (post.title == "no Posts" || post.title == "No Posts") {
+                    Log.d("Tag", "no post")
                     //toast needed
-                }
-                else {
+                } else {
                     val intent = Intent(mContext, ClickedPost::class.java)
                     intent.putExtra("Title", post.title)
                     intent.putExtra("Text", post.text)
@@ -95,7 +90,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
                     intent.putExtra("UserID", post.UserID)
                     intent.putExtra("Author", post.author)
                     intent.putExtra("crn", post.crn)
-                    intent.putExtra("uri",post.uri)
+                    intent.putExtra("uri", post.uri)
                     intent.putExtra("subject", post.subject)
                     intent.putExtra("Ptime", post.Ptime)
                     mContext.startActivity(intent)

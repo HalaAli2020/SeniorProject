@@ -33,9 +33,21 @@
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/post_image"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/username" />
+
+        <ImageView
+            android:id="@+id/post_image"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@color/blue_theme"
+            app:layout_constraintBottom_toBottomOf="@id/post_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@id/post_title"
+            app:layout_constraintTop_toTopOf="@+id/username" />
 
         <TextView
             android:id="@+id/username"
