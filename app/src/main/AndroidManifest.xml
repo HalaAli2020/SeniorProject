@@ -28,6 +28,7 @@
         <activity android:name=".search.SearchActivity"/>
         <activity
             android:name=".MainForum.MainForum"
+            android:windowSoftInputMode="adjustPan"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -25,9 +25,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     private var getCommentsJob: Job? = null
 
-    fun saveNewPost(Title: String, Text: String, Subject: String, CRN: String) {
-        val post = Post(Title, Text, CRN)
-        Firebase.saveNewPosttoUser(post, "1", CRN)
+    fun saveNewPost(text: String, title: String, CRN: String) {
+        Firebase.saveNewPosttoUser(text, title, CRN)
     }
 
     fun uploadUserProfileImage(selectedPhotoUri: Uri) =
@@ -112,6 +111,11 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     }
 
+    fun reportUserComment(accusedID: String, complaintext: String, crn: String, classkey: String, comKey: String){
+        Firebase.reportUserComment(accusedID, complaintext, crn, classkey, comKey)
+
+    }
+
     fun currentUser() = Firebase.CurrentUser()
 
     fun fetchSessionUserName() = SessionUser!!.username
@@ -123,7 +127,6 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     fun getUserSub() : MutableLiveData<MutableList<String>>? {
         return Firebase.sendUserSUB()
 
-    }
 
     fun addUsersub(crn: String) {
         Firebase.addUserSUB(crn)
@@ -145,6 +148,14 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     fun fetchEmail(UserID: String) = Firebase.fetchEmail(UserID)
 
     fun saveNewUsername(username: String) = Firebase.saveNewUsername(username)
+
+    fun saveUserbio(bio : String) = Firebase.saveUserbio(bio)
+
+    fun fetchBio(UserID: String) = Firebase.fetchBio(UserID)
+
+    fun fetchCurrentBio() = Firebase.fetchCurrentBio()
+
+    fun noPostsChecker(UserID: String) = Firebase.noPostsChecker(UserID)
 
 
     companion object {

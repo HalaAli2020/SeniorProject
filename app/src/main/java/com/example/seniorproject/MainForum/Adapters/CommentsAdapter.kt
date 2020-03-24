@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.seniorproject.MainForum.Posts.ClickedPost
 import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.Comment
@@ -24,7 +25,7 @@ class CommentsAdapter(
     text: String,
     author: String,
     crn: String,
-    UserID : String
+    UserID : String, ptime: String
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -37,6 +38,7 @@ class CommentsAdapter(
     private val author: String = author
     private val crn: String = crn
     private val UserID: String = UserID
+    private val ptime: String = ptime
 
 
     override fun getItemViewType(position: Int): Int {
@@ -75,11 +77,11 @@ class CommentsAdapter(
 
             Log.d("CommentsAdapter:", "" + position)
             if (holder is CustomViewHoldersHeader) {
-                holder.itemView.click_post_title.text = text
+                holder.itemView.click_post_title.text = title
                 holder.itemView.click_post_text.text = text
                 holder.itemView.community_name_TV.text = crn
                 holder.itemView.author_name_TV.text = author
-
+                holder.itemView.posts_timestamp.text=ptime
                 holder.itemView.author_name_TV.setOnClickListener {
                     val intent = Intent(mContext, UserProfileActivity::class.java)
                     intent.putExtra("UserID", UserID)
@@ -94,9 +96,10 @@ class CommentsAdapter(
 
                 } else {
                     val comment: Comment = Comments?.value!![position]
-                    //holder.itemView.post_title.text = .title
+                    //holder.itemView.post_title.text = comment.title
                     holder.itemView.comment_text.text = comment.text
                     holder.itemView.authcom.text = comment.author
+                    holder.itemView.comment_timestamp.text=comment.Ptime
 
                     holder.itemView.authcom.setOnClickListener {
                         val intent = Intent(mContext, UserProfileActivity::class.java)
@@ -117,6 +120,42 @@ class CommentsAdapter(
 
         }
         }
+
+
+    fun removeItem(holder: RecyclerView.ViewHolder): String {
+        val comment: Comment = Comments?.value!![holder.adapterPosition]
+        val commentkey: String?= comment.Classkey
+
+        return commentkey!!
+    }
+
+    fun getCrn(holder: RecyclerView.ViewHolder, position: Int): String {
+        val comment: Comment = Comments?.value!![holder.adapterPosition]
+        val commentkey: String?= comment.crn
+
+        return commentkey!!
+    }
+
+    fun getUserKey(holder: RecyclerView.ViewHolder): String {
+        val comment: Comment = Comments?.value!![holder.adapterPosition]
+        val commentkey: String?= comment.PosterID
+
+        return commentkey!!
+    }
+
+    fun getText(holder: RecyclerView.ViewHolder): String {
+        val comment: Comment = Comments?.value!![holder.adapterPosition]
+        val commentkey: String?= comment.text
+
+        return commentkey!!
+    }
+
+    fun getPostKey(holder: RecyclerView.ViewHolder): String {
+        val comment: Comment = Comments?.value!![holder.adapterPosition]
+        val commentkey: String?= comment.Postkey
+
+        return commentkey!!
+    }
 
         class CustomViewHolders(v: View) : RecyclerView.ViewHolder(v) {
 

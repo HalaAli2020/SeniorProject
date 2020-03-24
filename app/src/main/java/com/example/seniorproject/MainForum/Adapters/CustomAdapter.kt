@@ -47,12 +47,13 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
             val post: Post = savedPosts.value!![position]
             holder.itemView.post_title.text = post.title
             holder.itemView.username.text = post.author
+            holder.itemView.post_timestamp.text=post.Ptime
 
             if(type==0){
-                holder.itemView.username.text = post.crn
+                holder.itemView.username.text = post.subject
                 holder.itemView.username.setOnClickListener {
                     val intent = Intent(mContext, CommunityPosts::class.java)
-                    intent.putExtra("ClassName", post.crn)
+                    intent.putExtra("ClassName", post.subject)
                     mContext.startActivity(intent)
                 }
             }
@@ -65,19 +66,24 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
                 }
 
             }
-
             holder.itemView.setOnClickListener {
-                val intent = Intent(mContext, ClickedPost::class.java)
-
-                intent.putExtra("Title", post.title)
-                intent.putExtra("Text", post.text)
-                intent.putExtra("Pkey", post.key)
-                intent.putExtra("Classkey", post.Classkey)
-                intent.putExtra("UserID", post.UserID)
-                intent.putExtra("Author", post.author)
-                intent.putExtra("crn", post.crn)
-
-                mContext.startActivity(intent)
+                if (post.title == "no Posts" || post.title == "No Posts")
+                {
+                    Log.d("Tag","no post")
+                    //toast needed
+                }
+                else {
+                    val intent = Intent(mContext, ClickedPost::class.java)
+                    intent.putExtra("Title", post.title)
+                    intent.putExtra("Text", post.text)
+                    intent.putExtra("Pkey", post.key)
+                    intent.putExtra("Classkey", post.Classkey)
+                    intent.putExtra("UserID", post.UserID)
+                    intent.putExtra("Author", post.author)
+                    intent.putExtra("subject", post.subject)
+                    intent.putExtra("Ptime", post.Ptime)
+                    mContext.startActivity(intent)
+                }
             }
         }
     }
@@ -94,7 +100,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
         return postkey!!
     }
 
-    fun getUserKey(customViewHolders: CustomViewHolders, position: Int): String {
+    fun getUserKey(customViewHolders: CustomViewHolders): String {
         //position=customViewHolders.adapterPosition
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
@@ -111,7 +117,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
         val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
-        val postcrn: String?= post.crn
+        val postcrn: String?= post.subject
         //notifyItemRemoved(customViewHolders.adapterPosition)
         //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
 

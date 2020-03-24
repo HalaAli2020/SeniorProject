@@ -3,14 +3,9 @@ package com.example.seniorproject.MainForum
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.ImageButton
 import android.widget.ImageView
-import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,22 +19,13 @@ import com.example.seniorproject.MainForum.Fragments.ProfileCommentFragment
 import com.example.seniorproject.MainForum.Fragments.ProfilePostFragment
 import com.example.seniorproject.MainForum.Posts.EditProfileActivity
 import com.example.seniorproject.R
-import com.example.seniorproject.data.models.Post
-import com.example.seniorproject.data.models.User
-import com.example.seniorproject.databinding.ActivityUserProfileBinding
 import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_main_forum.*
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import javax.inject.Inject
-import androidx.core.app.ComponentActivity
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import android.os.Handler
+import android.util.Log
 import android.view.View
 import android.widget.TextView
-import androidx.core.view.isInvisible
 
 
 private const val TAG = "profileTAG"
@@ -47,7 +33,6 @@ class UserProfileActivity : AppCompatActivity() {
     private lateinit var adapter: CustomAdapter
     private lateinit var mDrawerLayout: DrawerLayout
     private lateinit var linearLayoutManager: LinearLayoutManager
-    private var obse : Observer<User>? = null
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -59,15 +44,6 @@ class UserProfileActivity : AppCompatActivity() {
 
         val actionbar = supportActionBar
         actionbar!!.title = "Profile"
-
-        actionbar.setDisplayHomeAsUpEnabled(true)
-        obse = Observer<User> { value ->
-            Log.d("swap", "Swap")
-            this.in_profile_username.text = value.username
-            this.in_profile_email.text = value.email
-
-
-        }
         replaceFragment(ProfileCommentFragment())
         replaceFragment(ProfilePostFragment())
 
@@ -90,6 +66,7 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
         val email = myViewModel.fetchEmail(test)
+        val bio = myViewModel.fetchBio(test)
         val profilepostfrag = ProfilePostFragment.newInstance(ID)
         val profilecommentfrag = ProfileCommentFragment.newInstance(ID)
         replaceFragment(profilepostfrag)
@@ -97,12 +74,25 @@ class UserProfileActivity : AppCompatActivity() {
         if (author != "null")  {
             in_profile_username.text = author
             in_profile_email.text = email
-            //get email with UID as parameter function.
+            if (bio == "null"){
+                in_profile_bio.text = "no bio"
+            }
+            else{
+                in_profile_bio.text = bio
+            }
         }
         else if (author == "null") {
             in_profile_username.text = myViewModel.user?.displayName
             in_profile_email.text = myViewModel.user?.email
+            if (bio == "null"){
+                in_profile_bio.text = myViewModel.fetchBio(FirebaseAuth.getInstance().currentUser?.uid ?: "no bio")
+            }
+            else{
+                in_profile_bio.text = bio
+            }
+
         }
+
 
         refresh_profile.setOnClickListener {
             refresh()
@@ -116,12 +106,6 @@ class UserProfileActivity : AppCompatActivity() {
         pro_bottom_navigation.setIconVisibility(false)
         pro_bottom_navigation.enableAnimation(false)
         pro_bottom_navigation.setTextSize(20F)
-        myViewModel.currentUser()
-        myViewModel.SessionUser?.observe(this, obse!!)
-
-
-
-
 
 
         pro_bottom_navigation.setOnNavigationItemSelectedListener {
