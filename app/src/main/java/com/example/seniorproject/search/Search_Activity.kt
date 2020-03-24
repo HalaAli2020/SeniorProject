@@ -58,7 +58,7 @@ class SearchActivity: AppCompatActivity()
         binding  = DataBindingUtil.setContentView(this, R.layout.activity_search )
         myViewModel.getallclasses()
        ada = SearchAdapter(this.baseContext, myViewModel, myViewModel.sendlistf())
-        t
+        this.title = ""
         //searchview = binding.SearchR
         lt = binding.SearchL
         var obse = Observer<MutableList<CRN>> {

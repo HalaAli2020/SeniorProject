@@ -30,6 +30,7 @@ import java.util.logging.Handler
 import javax.security.auth.Subject
 import kotlin.collections.HashMap
 import com.example.seniorproject.data.models.User
+import com.example.seniorproject.viewModels.SearchViewModel
 import kotlin.collections.ArrayList
 
 
@@ -658,7 +659,11 @@ class FirebaseData @Inject constructor() {
     }
 
 fun noPostsChecker(userID: String) : Boolean{
-    listenForUserProfilePosts(userID)
+    listenForUserProfilePosts(userID, object : FirebaseCallbackPost {
+        override fun onCallback(PostL: PostLiveData) {
+            var  la = true
+        }
+    })
     return noPostsCheck
 }
 

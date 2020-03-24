@@ -126,45 +126,49 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun getUserSub() : MutableLiveData<MutableList<String>>? {
         return Firebase.sendUserSUB()
-
-
-    fun addUsersub(crn: String) {
-        Firebase.addUserSUB(crn)
-    }
-    fun getSubs() = Firebase.getUsersSubsnClass()
-    fun remUsersub(crn: String) {
-        Firebase.removeUserSub(crn)
-        Firebase.removeClassSub(crn)
     }
 
-    fun getclassnamesforusername() = Firebase.getclassnamesforusername()
 
-    fun sendClassnameForUsername() = Firebase.sendClassnameForUsername()
+        fun addUsersub(crn: String) {
+            Firebase.addUserSUB(crn)
+        }
 
-    fun getUserProfilePosts(userID: String) = Firebase.getUserProfilePosts(userID)
+        fun getSubs() = Firebase.getUsersSubsnClass()
+        fun remUsersub(crn: String) {
+            Firebase.removeUserSub(crn)
+            Firebase.removeClassSub(crn)
+        }
 
-    fun getUserProfileComments(userID: String) = Firebase.getUserProfileComments(userID)
+        fun getclassnamesforusername() = Firebase.getclassnamesforusername()
 
-    fun fetchEmail(UserID: String) = Firebase.fetchEmail(UserID)
+        fun sendClassnameForUsername() = Firebase.sendClassnameForUsername()
 
-    fun saveNewUsername(username: String) = Firebase.saveNewUsername(username)
+        fun getUserProfilePosts(userID: String) = Firebase.getUserProfilePosts(userID)
 
-    fun saveUserbio(bio : String) = Firebase.saveUserbio(bio)
+        fun getUserProfileComments(userID: String) = Firebase.getUserProfileComments(userID)
 
-    fun fetchBio(UserID: String) = Firebase.fetchBio(UserID)
+        fun fetchEmail(UserID: String) = Firebase.fetchEmail(UserID)
 
-    fun fetchCurrentBio() = Firebase.fetchCurrentBio()
+        fun saveNewUsername(username: String) = Firebase.saveNewUsername(username)
 
-    fun noPostsChecker(UserID: String) = Firebase.noPostsChecker(UserID)
+        fun saveUserbio(bio: String) = Firebase.saveUserbio(bio)
+
+        fun fetchBio(UserID: String) = Firebase.fetchBio(UserID)
+
+        fun fetchCurrentBio() = Firebase.fetchCurrentBio()
+
+        fun noPostsChecker(UserID: String) = Firebase.noPostsChecker(UserID)
 
 
-    companion object {
-        @Volatile
-        private var instance: PostRepository? = null
+        companion object {
+            @Volatile
+            private var instance: PostRepository? = null
 
-        fun getInstance(firebasedata: FirebaseData) =
-            instance ?: synchronized(this) {
-                instance ?: PostRepository(firebasedata).also { instance = it }
-            }
-    }
+            fun getInstance(firebasedata: FirebaseData) =
+                instance ?: synchronized(this) {
+                    instance ?: PostRepository(firebasedata).also { instance = it }
+                }
+        }
+
+
 }

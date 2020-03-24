@@ -28,9 +28,10 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     var email : LiveData<String>? = null
     var comments : CommentLive = CommentLive()
     var RepoUser : MutableLiveData<User>? = null
+    var SessionUser = repository.SessionUser()
    var CommentListener : PostListener? = null
     private var PostKey : String? = null
-    val CommentListener : PostListener? = null
+    val CommentListeners : PostListener? = null
     val userbio : String = fetchBio(FirebaseAuth.getInstance().currentUser?.uid ?: "null")
 
 
