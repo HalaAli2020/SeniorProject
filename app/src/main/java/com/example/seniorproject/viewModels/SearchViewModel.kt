@@ -11,6 +11,7 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(private val repository: SearchRepo) : ViewModel() {
     var UsersSubs : MutableLiveData<MutableList<CRN>> = MutableLiveData()
     var Clist : MutableLiveData<MutableList<CRN>> = MutableLiveData()
+    var Fullist : MutableLiveData<MutableList<CRN>> = MutableLiveData()
 
     fun Search(query: String): CRN {
         var Result = CRN()
@@ -69,11 +70,15 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
                     crn.name = x.key.toString()
                     Log.d("crn.name", crn.name)
                     if (x.hasChild("SubList")) {
-                        if (x.child("SubList").hasChild(uid))
-                        {
-                            crn.Subscribed = true
-                            //Log.d("all classes", crn.name)
-                        }
+                       var sub = x.child("SubList").children
+                           for (s in sub)
+                           {
+                               if(uid == s.value.toString())
+                               {
+                                   crn.Subscribed = true
+                               }
+                           }
+
 
 
                     }
@@ -85,10 +90,17 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
 
 
         })
-        Clist.value = listC
+        Fullist.value = listC
     }
     fun sendlist() : MutableLiveData<MutableList<CRN>>
     {
+
+        return Clist
+    }
+    fun sendlistf() : MutableLiveData<MutableList<CRN>>
+    {
+        Clist.value = Fullist.value
+
         return Clist
     }
     fun addSub(crn : String)

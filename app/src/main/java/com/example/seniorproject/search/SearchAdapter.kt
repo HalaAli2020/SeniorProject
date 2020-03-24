@@ -64,20 +64,30 @@ class SearchAdapter(context: Context, ViewModel: SearchViewModel, Clist : Mutabl
         }
 
     }
-    fun onfilter(query : String)
+    fun onfilter(query : String?)
     {
-
-        //classlist!!.value!!.removeAt()
-        var Clist: MutableList<CRN> = mutableListOf()
-        for ((index, x) in classlist!!.value!!.withIndex())
+        if(query.isNullOrEmpty())
         {
-            if(x.name.contentEquals(query))
-            {
-                Clist.add(x)
-            }
+            classlist = mViewModel.sendlistf()
+            notifyDataSetChanged()
         }
-        classlist!!.value = Clist
-        notifyDataSetChanged()
+        else
+        {
+            //classlist!!.value!!.removeAt()
+            classlist = mViewModel.sendlistf()
+            var Clist: MutableList<CRN> = mutableListOf()
+            for ((index, x) in classlist!!.value!!.withIndex())
+            {
+               // query.contains()
+                if(x.name.contains(query!!, true))
+                {
+                    Clist.add(x)
+                }
+            }
+            classlist!!.value = Clist
+            notifyDataSetChanged()
+        }
+
     }
     fun removeat(position: Int)
     {
