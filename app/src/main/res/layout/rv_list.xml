@@ -11,7 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
+        android:background="@color/BackgroundColor"
         android:clickable="true"
         android:focusable="true"
         android:orientation="horizontal"
@@ -22,12 +22,11 @@
             android:id="@+id/imageView"
             android:layout_width="40dp"
             android:layout_height="40dp"
-
             android:layout_marginStart="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_account_circle_black_24dp" />
+            app:srcCompat="@drawable/ic_account_circle_blue_24dp" />
 
         <TextView
             android:id="@+id/communityName_TV"
@@ -43,6 +42,7 @@
 
         <Button
             android:id="@+id/Subscibe_B"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="80dp"
             android:layout_height="0dp"
             android:layout_marginTop="6dp"

@@ -9,13 +9,10 @@ import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.view.WindowManager
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.core.view.isNotEmpty
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -36,7 +33,6 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_community_posts.*
 import kotlinx.android.synthetic.main.fragment_profile__post.view.*
 import kotlinx.android.synthetic.main.rv_post.view.*
-import org.w3c.dom.Text
 import javax.inject.Inject
 
 class CommunityPosts : AppCompatActivity() {
@@ -60,9 +56,9 @@ class CommunityPosts : AppCompatActivity() {
         val factory = InjectorUtils.provideCommunityPostViewModelFacotry()
         myViewModel = ViewModelProviders.of(this, factory).get(CommunityPostViewModel::class.java)
 
-        //var firstpos = classes_post_RV.layoutManager.findContainingItemView()
 
         classes_post_RV.layoutManager = LinearLayoutManager(this)
+
         adapter = CustomAdapter(this, myViewModel.returnClassPosts(className!!), 1)
         classes_post_RV.adapter = adapter
 
@@ -94,8 +90,77 @@ class CommunityPosts : AppCompatActivity() {
                     }
                     else{
                         buffer.add(
-                            ProfileButton(applicationContext, "Report Post", 30, 0, Color.parseColor
+                            ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
                                 ("#FF0000"), object : ButtonClickListener {
+                                override fun onClick(pos: Int) {
+                                    val crnkey: String? =
+                                        adapter.getCrn(viewHolders as CustomViewHolders, pos)
+
+                                    val userkey: String? =
+                                        adapter.getUserKey(viewHolders as CustomViewHolders)
+
+                                    val authkey: String? =
+                                        adapter.getAuthor(viewHolders as CustomViewHolders)
+
+                                    //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
+                                    var builder = AlertDialog.Builder(
+                                        this@CommunityPosts,
+                                        R.style.AppTheme_AlertDialog
+                                    )
+
+                                    //.getStringExtra("Classkey")
+                                    //val postkey = intent.getStringExtra("author")
+                                    //myViewModel.deletePost(postkey!!, className)
+                                    //myViewModel.deletePost()
+                                    builder.setTitle("Are you sure?")
+                                    builder.setMessage("You won't see posts or comments from this user.")
+                                    builder.setPositiveButton("BLOCK"
+                                    ) { _: DialogInterface?, _: Int ->
+                                        myViewModel.blockUser(userkey!!)
+                                        classes_post_RV.findViewHolderForAdapterPosition(pos)!!.itemView.post_title.text="[blocked]"
+                                        var count: Int =0
+                                        for( i in 0..classes_post_RV.childCount) {
+                                            if(classes_post_RV.findViewHolderForAdapterPosition(count)!!.itemView.post_title.text =="[blocked]"){
+                                                classes_post_RV.findViewHolderForAdapterPosition(count)!!.itemView.setOnClickListener {
+                                                    Toast.makeText(this@CommunityPosts, "You have blocked $authkey and cannot see their posts",
+                                                        Toast.LENGTH_SHORT).show()
+
+                                                }
+                                            }
+                                            //classes_post_RV.findViewHolderForAdapterPosition(count)!!.itemView.post_title.text="[blocked]"
+                                            count++
+                                            if(count== classes_post_RV.childCount){
+                                                break;
+                                            }
+                                            //classes_post_RV.findViewHolderForAdapterPosition(i)!!.itemView.post_title.text="[blocked]"
+                                            //classes_post_RV.getChildViewHolder(classes_post_RV.getChildAt(i)).itemView.post_title.text="[blocked]"
+                                        }
+                                        var toast = Toast.makeText(
+                                            this@CommunityPosts,
+                                            "This user has been blocked",
+                                            Toast.LENGTH_SHORT
+                                        )
+                                        toast.show()
+                                    }
+                                    builder.setNegativeButton("CANCEL"
+                                    ) { _: DialogInterface?, _: Int ->
+                                        builder.setCancelable(true)
+                                    }
+
+                                    val msgdialog: AlertDialog = builder.create()
+
+                                    msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
+
+                                    msgdialog.show()
+                                }
+
+                            })
+                        )
+
+
+                        buffer.add(
+                            ProfileButton(applicationContext, "Report Post", 30, 0, Color.parseColor
+                                ("#D3D3D3"), object : ButtonClickListener {
                                 override fun onClick(pos: Int) {
                                     val postkey: String? =
                                         adapter.removeItem(viewHolders as CustomViewHolders, pos)
@@ -118,109 +183,37 @@ class CommunityPosts : AppCompatActivity() {
                                         "This is abusive or harassing",
                                         "Other issues"
                                     )
-                                    //.getStringExtra("Classkey")
-                                    //val postkey = intent.getStringExtra("author")
-                                    //myViewModel.deletePost(postkey!!, className)
-                                    //myViewModel.deletePost()
                                     builder.setTitle("Report Post")
                                     builder.setSingleChoiceItems(
                                         listreason,
                                         0
-                                    ) { dialogInterface, i ->
+                                    ) { _, i ->
                                         var complaint = listreason[i]
                                     }
-                                    builder.setPositiveButton("SUBMIT",
-                                        { dialogInterface: DialogInterface?, i: Int ->
-                                            /*if(listreason[i] ==null){
-                                            var toast= Toast.makeText(this@CommunityPosts, "Please"+pos,Toast.LENGTH_SHORT)
-                                            toast.show()
-                                        }*/
-                                            var toast = Toast.makeText(
-                                                this@CommunityPosts,
-                                                "We've received your report.",
-                                                Toast.LENGTH_SHORT
-                                            )
-                                            toast.show()
-                                            myViewModel.reportUserPost(
-                                                userkey!!,
-                                                textkey!!,
-                                                crnkey!!,
-                                                postkey!!
-                                            )
+                                    builder.setPositiveButton("SUBMIT"
+                                    ) { _: DialogInterface?, _: Int ->
+                                        var toast = Toast.makeText(
+                                            this@CommunityPosts,
+                                            "We've received your report.",
+                                            Toast.LENGTH_SHORT
+                                        )
+                                        toast.show()
+                                        myViewModel.reportUserPost(
+                                            userkey!!,
+                                            textkey!!,
+                                            crnkey!!,
+                                            postkey!!
+                                        )
 
-                                        })
-                                    builder.setNegativeButton("CANCEL",
-                                        { dialogInterface: DialogInterface?, i: Int ->
-                                            builder.setCancelable(true)
-                                        })
+                                    }
+                                    builder.setNegativeButton("CANCEL"
+                                    ) { _: DialogInterface?, _: Int ->
+                                        builder.setCancelable(true)
+                                    }
 
                                     val msgdialog: AlertDialog = builder.create()
 
-                                    msgdialog.getWindow()!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
-
-                                    msgdialog.show()
-                                }
-
-                            })
-                        )
-
-                        buffer.add(
-                            ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
-                                ("#D3D3D3"), object : ButtonClickListener {
-                                override fun onClick(pos: Int) {
-                                    val postkey: String? =
-                                        adapter.removeItem(viewHolders as CustomViewHolders, pos)
-
-                                    val crnkey: String? =
-                                        adapter.getCrn(viewHolders as CustomViewHolders, pos)
-
-                                    val userkey: String? =
-                                        adapter.getUserKey(viewHolders as CustomViewHolders)
-
-                                    //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
-                                    var builder = AlertDialog.Builder(
-                                        this@CommunityPosts,
-                                        R.style.AppTheme_AlertDialog
-                                    )
-
-                                    //.getStringExtra("Classkey")
-                                    //val postkey = intent.getStringExtra("author")
-                                    //myViewModel.deletePost(postkey!!, className)
-                                    //myViewModel.deletePost()
-                                    builder.setTitle("Are you sure?")
-                                    builder.setMessage("You won't see posts or comments from this user.")
-                                    builder.setPositiveButton("BLOCK",
-                                        { dialogInterface: DialogInterface?, i: Int ->
-                                            myViewModel.blockUser(userkey!!)
-                                            classes_post_RV.findViewHolderForAdapterPosition(pos)!!.itemView.post_title.text="[blocked]"
-                                            var count: Int =0
-                                            for( i in 0..classes_post_RV.childCount) {
-                                                if(classes_post_RV.findViewHolderForAdapterPosition(count)!!.itemView.username.text.toString() == "Sally Meyers"){
-                                                    classes_post_RV.findViewHolderForAdapterPosition(count)!!.itemView.post_title.text="[blocked]"
-                                                }
-                                                //classes_post_RV.findViewHolderForAdapterPosition(count)!!.itemView.post_title.text="[blocked]"
-                                                count++
-                                                if(count== classes_post_RV.childCount){
-                                                    break;
-                                                }
-                                                //classes_post_RV.findViewHolderForAdapterPosition(i)!!.itemView.post_title.text="[blocked]"
-                                                //classes_post_RV.getChildViewHolder(classes_post_RV.getChildAt(i)).itemView.post_title.text="[blocked]"
-                                            }
-                                            var toast = Toast.makeText(
-                                                this@CommunityPosts,
-                                                "This user has been blocked",
-                                                Toast.LENGTH_SHORT
-                                            )
-                                            toast.show()
-                                        })
-                                    builder.setNegativeButton("CANCEL",
-                                        { dialogInterface: DialogInterface?, i: Int ->
-                                            builder.setCancelable(true)
-                                        })
-
-                                    val msgdialog: AlertDialog = builder.create()
-
-                                    msgdialog.getWindow()!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
+                                    msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
 
                                     msgdialog.show()
                                 }

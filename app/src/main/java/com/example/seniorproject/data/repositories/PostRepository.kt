@@ -7,6 +7,7 @@ import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.CommentLive
 import com.example.seniorproject.data.models.Post
+import com.example.seniorproject.viewModels.NewPostFragmentViewModel
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.*
@@ -23,9 +24,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     val CommentL = CommentLive()
     private var getCommentsJob: Job? = null
 
-    fun saveNewPost(Title: String, Text: String, Subject: String, CRN: String) {
-        val post = Post(Title, Text, CRN)
-        Firebase.saveNewPosttoUser(post, "1", CRN)
+    fun saveNewPost(text: String, title: String, CRN: String) {
+        Firebase.saveNewPosttoUser(text, title, CRN)
     }
 
     fun uploadUserProfileImage(selectedPhotoUri: Uri) =
@@ -42,6 +42,10 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     fun getComments(ClassKey: String, subject: String): CommentLive {
         return Firebase.getComments(ClassKey, subject)
     }
+
+    fun saveNewImgPosttoUser(title : String, text:String, Subject: String, CRN: String, uri: Uri, imagePost : Boolean)
+    = Firebase.saveNewImgPosttoUser(title,text,Subject,CRN,uri,imagePost)
+
     /*suspend fun getCommentsCO(PKey: String) : Flow<CommentLive> = flow {
          val flo = Firebase.getCommentsCO(PKey)
         flo.asFlow()
@@ -111,10 +115,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun getClassPosts(className: String) = Firebase.getClassPosts(className)
 
-    fun getUserSub(): MutableList<String>? {
-        return Firebase.sendUserSUB()
+    fun getUserSub()= Firebase.sendUserSUB()
 
-    }
 
     fun addUsersub(crn: String) {
         Firebase.addUserSUB(crn)
@@ -144,6 +146,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     fun fetchCurrentBio() = Firebase.fetchCurrentBio()
 
     fun noPostsChecker(UserID: String) = Firebase.noPostsChecker(UserID)
+
+    fun noCommentsChecker(UserID: String) = Firebase.noCommentsChecker(UserID)
 
 
     companion object {

@@ -3,14 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="NewPostModel"
-            type="com.example.seniorproject.viewModels.NewPostFragmentViewModel"></variable>
-
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ConstraintLayout"
         android:layout_width="match_parent"
@@ -32,19 +24,47 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0">
 
+            <Spinner
+                android:id="@+id/spinner3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:entries="@array/class_list"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/new_post_btn"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintTop_toTopOf="parent" />
+               <!-- tools:setOnItemSelectedListener="@{NewPostViewModel.clicksListener}" /> -->
+
             <Button
-                android:id="@+id/new_post_btn"
-                style="?android:attr/borderlessButtonStyle"
+                android:id="@+id/new_image_post"
+                android:layout_width="88dp"
+                android:layout_height="0dp"
+                android:background="@drawable/rounded_btn"
+                android:text="Post"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/spinner3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/add_image"
+                app:layout_constraintHorizontal_bias="0.9"
+                app:layout_constraintStart_toStartOf="@+id/spinner3"
+                app:layout_constraintTop_toTopOf="@+id/spinner3"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <Button
+                android:id="@+id/add_image"
                 android:layout_width="88dp"
                 android:layout_height="0dp"
                 android:layout_marginEnd="12dp"
                 android:background="@drawable/rounded_btn"
-                android:onClick="@{() -> NewPostModel.editPost()}"
-                android:text="Done"
+                android:text="Add Image"
                 android:textColor="@color/white"
                 android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintBottom_toBottomOf="@+id/spinner3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/spinner3" />
 
             <ImageView
                 android:id="@+id/imageView2"
@@ -53,15 +73,17 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/spinner3"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/ic_account_circle_blue_24dp" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <EditText
-            android:id="@+id/new_post_title"
+            android:id="@+id/img_post_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/comment_bottom_border"
@@ -74,7 +96,6 @@
             android:paddingEnd="15dp"
             android:paddingBottom="15dp"
             android:singleLine="true"
-            android:text="@={NewPostModel.titlePost}"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -83,7 +104,7 @@
             app:layout_constraintTop_toBottomOf="@+id/cl" />
 
         <EditText
-            android:id="@+id/new_post_text"
+            android:id="@+id/img_post_text"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/white"
@@ -94,13 +115,26 @@
             android:paddingStart="12dp"
             android:paddingTop="10dp"
             android:paddingEnd="12dp"
-            android:text="@={NewPostModel.textPost}"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/new_post_title" />
+            app:layout_constraintTop_toBottomOf="@+id/img_post_title" />
+
+        <ImageView
+            android:id="@+id/image_preview"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.478"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_post_text"
+            app:layout_constraintVertical_bias="1.0" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
