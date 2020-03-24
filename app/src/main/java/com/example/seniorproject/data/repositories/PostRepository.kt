@@ -93,12 +93,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         Firebase.editPost(crn, postKey, ctext, ctitle, ntext, ntitle, userID)
     }
 
-    fun blockComment(UserID: String, text: String, crn: String, postID: String){
-        Firebase.blockUserComment(UserID , text , crn , postID)
-    }
-
-    fun blockPost(UserID: String, crn: String, classkey: String){
-        Firebase.blockUserPost(UserID, crn, classkey)
+    fun blockUser(UserID: String){
+        Firebase.blockUser(UserID)
     }
 
     fun reportUserPost(accusedID: String, complaintext: String, crn: String, classkey: String){

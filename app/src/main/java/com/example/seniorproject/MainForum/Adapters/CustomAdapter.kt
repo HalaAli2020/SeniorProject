@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -17,7 +18,14 @@ import com.example.seniorproject.R
 import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.PostLiveData
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.rv_post.view.*
+import kotlinx.android.synthetic.main.rv_post.view.imageView4
+import kotlinx.android.synthetic.main.rv_post_comment.view.*
 import kotlinx.android.synthetic.main.rv_post_header.view.*
 
 class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int ) :
@@ -39,6 +47,18 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
             return 0
     }
 
+    fun getUserKey(customViewHolders: CustomViewHolders): String {
+        //position=customViewHolders.adapterPosition
+
+        // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val postkey: String?= post.UserID
+        //notifyItemRemoved(customViewHolders.adapterPosition)
+        //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
+
+        return postkey!!
+    }
+
     override fun onBindViewHolder(holder: CustomViewHolders, position: Int) {
         if (savedPosts.value.isNullOrEmpty()) {
             Log.d("CustomAdapter", "EMPTY")
@@ -46,6 +66,26 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
             holder.itemView.post_title.text = "Subscribe to a community to see posts on this screen!"
         } else {
             val post: Post = savedPosts.value!![position]
+            val userID = FirebaseAuth.getInstance().uid
+
+            val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
+            val queryref = ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
+                ValueEventListener {
+                override fun onDataChange(p0: DataSnapshot) {
+                    if (p0.exists()) {
+                        for (block in p0.children) {
+                            if (block.getValue() == post.UserID) {
+                                holder.itemView.post_title.text = "[blocked]"
+                            }
+                        }
+                    }
+                }
+
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+            })
+
             holder.itemView.post_title.text = post.title
             holder.itemView.username.text = post.author
             holder.itemView.post_timestamp.text=post.Ptime
@@ -86,7 +126,11 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
                     Log.d("Tag","no post")
                     //toast needed
                 }
-                else {
+                else if(holder.itemView.post_title.text == "[blocked]"){
+                    var pauth = post.author
+                    Log.d("Tag","blocked post will not open to clicked post screen")
+                }
+                else{
                     val intent = Intent(mContext, ClickedPost::class.java)
                     intent.putExtra("Title", post.title)
                     intent.putExtra("Text", post.text)
@@ -104,6 +148,11 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
         }
     }
 
+    fun hideBlockedPosts(holder: CustomViewHolders){
+        val post: Post = savedPosts.value!![holder.adapterPosition]
+        holder.itemView.visibility=View.GONE
+
+    }
     fun removeItem(customViewHolders: CustomViewHolders, position: Int): String {
         //position=customViewHolders.adapterPosition
 
@@ -116,17 +165,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
         return postkey!!
     }
 
-    fun getUserKey(customViewHolders: CustomViewHolders): String {
-        //position=customViewHolders.adapterPosition
 
-        // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
-        val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
-        val postkey: String?= post.UserID
-        //notifyItemRemoved(customViewHolders.adapterPosition)
-        //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
-
-        return postkey!!
-    }
 
     fun getCrn(customViewHolders: CustomViewHolders, position: Int): String {
         //position=customViewHolders.adapterPosition
@@ -150,6 +189,18 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
         //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
 
         return posttitle!!
+    }
+
+    fun getAuthor(customViewHolders: CustomViewHolders): String {
+        //position=customViewHolders.adapterPosition
+
+        // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val postauth: String?= post.author
+        //notifyItemRemoved(customViewHolders.adapterPosition)
+        //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
+
+        return postauth!!
     }
 
     fun getText(customViewHolders: CustomViewHolders, position: Int): String {

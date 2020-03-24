@@ -15,6 +15,11 @@ import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.CommentLive
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.rv_post.view.*
 import kotlinx.android.synthetic.main.rv_post_comment.view.*
 import kotlinx.android.synthetic.main.rv_post_header.view.*
@@ -44,6 +49,7 @@ class CommentsAdapter(
     private val UserID: String = UserID
     private val uri : String = uri
     private val ptime: String = ptime
+    val userID = FirebaseAuth.getInstance().uid
 
 
     override fun getItemViewType(position: Int): Int {
@@ -99,8 +105,6 @@ class CommentsAdapter(
                     holder.itemView.post_image.setImageDrawable(null)
                 }
 
-
-
                 holder.itemView.posts_timestamp.text=ptime
                 holder.itemView.author_name_TV.setOnClickListener {
                     val intent = Intent(mContext, UserProfileActivity::class.java)
@@ -116,6 +120,23 @@ class CommentsAdapter(
 
                 } else {
                     val comment: Comment = Comments?.value!![position]
+                    val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
+                    val queryref = ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
+                        ValueEventListener {
+                        override fun onDataChange(p0: DataSnapshot) {
+                            if (p0.exists()) {
+                                for (block in p0.children) {
+                                    if (block.getValue() == comment.PosterID) {
+                                        holder.itemView.comment_text.text ="[blocked]"
+                                    }
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(p0: DatabaseError) {
+                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        }
+                    })
                     //holder.itemView.post_title.text = comment.title
                     holder.itemView.comment_text.text = comment.text
                     holder.itemView.authcom.text = comment.author
