@@ -23,7 +23,7 @@ class SettingsActivity : AppCompatActivity()
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
 
-        binding  = DataBindingUtil.setContentView(this, R.layout.activity_settings)
+        //binding  = DataBindingUtil.setContentView(this, R.layout.activity_settings)
 
 
     }

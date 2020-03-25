@@ -125,14 +125,14 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     }
 
     fun SessionUser() = Firebase.CurrentUserL()
-    fun blockComment(UserID: String, text: String, crn: String, postID: String) {
+   /* fun blockComment(UserID: String, text: String, crn: String, postID: String) {
         Firebase.blockUserComment(UserID, text, crn, postID)
     }
 
     fun blockPost(UserID: String, crn: String, classkey: String) {
         Firebase.blockUserPost(UserID, crn, classkey)
     }
-
+*/
     fun reportUserPost(accusedID: String, complaintext: String, crn: String, classkey: String) {
         Firebase.reportUserPost(accusedID, complaintext, crn, classkey)
 
@@ -505,6 +505,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     fun noPostsChecker(UserID: String) = Firebase.noPostsChecker(UserID)
 
     fun noCommentsChecker(UserID: String) = Firebase.noCommentsChecker(UserID)
+    fun blockUser(UserID: String) = Firebase.blockUser(UserID)
 
 
     companion object {
