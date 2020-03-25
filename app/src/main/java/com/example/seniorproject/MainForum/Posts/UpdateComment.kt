@@ -36,11 +36,11 @@ class UpdateComment  : AppCompatActivity() {
         myViewModel = ViewModelProviders.of(this, factory).get(ClickedPostViewModel::class.java)
         val binding: UpdateCommentBinding = DataBindingUtil.setContentView(this,R.layout.update_comment)
 
-        val text: String = intent.getStringExtra("text")
-        val usercomkey: String = intent.getStringExtra("ProfileComKey")
-        val userid: String = intent.getStringExtra("PosterID")
-        val crn: String = intent.getStringExtra("crn")
-        val postkey: String= intent.getStringExtra("Postkey")
+        val text: String = intent.getStringExtra("text") ?: "no text"
+        val usercomkey: String = intent.getStringExtra("ProfileComKey") ?: "no comkey"
+        val userid: String = intent.getStringExtra("PosterID") ?: "no id"
+        val crn: String = intent.getStringExtra("crn") ?: "no crn"
+        val postkey: String= intent.getStringExtra("Postkey") ?: "no postkey"
 
         myViewModel.ctext = text
         myViewModel.usercomkey=usercomkey

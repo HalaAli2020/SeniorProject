@@ -68,7 +68,7 @@ class CommunityPosts : AppCompatActivity() {
 
         refreshView.setOnRefreshListener {
             refreshView.isRefreshing = false
-            classes_post_RV.adapter = CustomAdapter(this, myViewModel.returnClassPosts(className!!), 1)
+            classes_post_RV.adapter = CustomAdapter(this, myViewModel.returnClassPosts(className), 1)
         }
 
         fun showToast(){
@@ -77,7 +77,7 @@ class CommunityPosts : AppCompatActivity() {
         }
 
 
-            val swipe = object : SwipeHelper(applicationContext, classes_post_RV, 200) {
+             object : SwipeHelper(applicationContext, classes_post_RV, 200) {
                 override fun initButton(
                     viewHolders: RecyclerView.ViewHolder,
                     buffer: MutableList<ProfileButton>
@@ -86,21 +86,21 @@ class CommunityPosts : AppCompatActivity() {
                         adapter.getUserKey(viewHolders as CustomViewHolders)
 
                     if (FirebaseAuth.getInstance().currentUser?.uid == userk){
-                        val swipe = null
+                        //val swipe = null
                     }
                     else{
                         buffer.add(
                             ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
                                 ("#FF0000"), object : ButtonClickListener {
                                 override fun onClick(pos: Int) {
-                                    val crnkey: String? =
-                                        adapter.getCrn(viewHolders as CustomViewHolders, pos)
+                                    //val crnkey: String? =
+                                     //   adapter.getCrn(viewHolders)
 
                                     val userkey: String? =
-                                        adapter.getUserKey(viewHolders as CustomViewHolders)
+                                        adapter.getUserKey(viewHolders)
 
                                     val authkey: String? =
-                                        adapter.getAuthor(viewHolders as CustomViewHolders)
+                                        adapter.getAuthor(viewHolders)
 
                                     //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
                                     var builder = AlertDialog.Builder(
@@ -163,15 +163,15 @@ class CommunityPosts : AppCompatActivity() {
                                 ("#D3D3D3"), object : ButtonClickListener {
                                 override fun onClick(pos: Int) {
                                     val postkey: String? =
-                                        adapter.removeItem(viewHolders as CustomViewHolders, pos)
+                                        adapter.removeItem(viewHolders)
 
                                     val userkey: String? =
-                                        adapter.getUserKey(viewHolders as CustomViewHolders)
+                                        adapter.getUserKey(viewHolders)
 
                                     val crnkey: String? =
-                                        adapter.getCrn(viewHolders as CustomViewHolders, pos)
+                                        adapter.getCrn(viewHolders)
 
-                                    val textkey: String? = adapter.getText(viewHolders, pos)
+                                    val textkey: String? = adapter.getText(viewHolders)
 
                                     var builder = AlertDialog.Builder(
                                         this@CommunityPosts,
@@ -188,7 +188,7 @@ class CommunityPosts : AppCompatActivity() {
                                         listreason,
                                         0
                                     ) { _, i ->
-                                        var complaint = listreason[i]
+                                        //var complaint = listreason[i]
                                     }
                                     builder.setPositiveButton("SUBMIT"
                                     ) { _: DialogInterface?, _: Int ->
