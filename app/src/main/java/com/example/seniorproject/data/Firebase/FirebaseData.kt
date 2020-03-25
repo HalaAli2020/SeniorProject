@@ -1228,39 +1228,31 @@ class FirebaseData @Inject constructor() {
         })
     }
 
-    fun blockUserComment(UserID: String, text: String, crn: String, postID: String) {
+    fun blockUser(UserID: String) {
 
         val userID = firebaseAuth.uid
-        val author= firebaseAuth.currentUser?.displayName
-        val comment = Comment(text, "", userID, crn, postID)
-        comment.author= author
-        val User_key = FirebaseDatabase.getInstance().getReference("/users/$UserID").child("BlockedUsers").push().key
 
-        comment.PosterID = User_key
+        val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
+        //ref.child("BlockedUsers").push().setValue(UserID)
+        val queryref = ref.child("BlockedUsers").orderByValue().
+            addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(p0: DataSnapshot) {
+                    if(p0.exists() == false){
+                        ref.child("BlockedUsers").push().setValue(UserID)
+                    }
+                    if(p0.exists()){
+                        for(block in p0.children){
+                            if(block.getValue() != UserID){
+                                ref.child("BlockedUsers").push().setValue(UserID)
+                            }
+                        }
+                    }
+                }
 
-        val dataupdates = HashMap<String, Any>()
-        val comementvalues = comment.toMap()
-        //dataupdates["Subjects/$crn/Posts/$ClassKey/Comments/$Class_key"] = comementvalues
-        dataupdates["users/$UserID/BlockedUsers/$User_key"] = comementvalues
-        FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
-
-    }
-
-    fun blockUserPost(UserID: String, crn: String, Classkey: String) {
-
-        val userID = firebaseAuth.uid
-        val author= firebaseAuth.currentUser?.displayName
-
-        val User_key = FirebaseDatabase.getInstance().getReference("/users/$userID").child("BlockedUsers").push().key
-
-        val blockuser = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$UserID").
-            child("BlockedUsers").push().key
-       // post.UserID = User_key
-
-        val dataupdates = HashMap<String, Any>()
-
-        dataupdates["users/$userID/BlockedUsers/$blockuser"]
-        FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+            })
 
     }
 
