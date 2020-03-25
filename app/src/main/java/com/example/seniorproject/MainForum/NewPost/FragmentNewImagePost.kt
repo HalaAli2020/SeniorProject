@@ -58,7 +58,7 @@ class FragmentNewImagePost : Fragment() {
             startActivityForResult(intent, 0)
         }
 
-        val donebutton = view!!.new_image_post.setOnClickListener{
+         view!!.new_image_post.setOnClickListener{
             Toast.makeText(activity?.applicationContext, "please add an image", Toast.LENGTH_SHORT).show()
         }
 
@@ -81,7 +81,7 @@ class FragmentNewImagePost : Fragment() {
                 .diskCacheStrategy(DiskCacheStrategy.NONE) //4
                 .into(img)
 
-            val donebutton = view!!.new_image_post.setOnClickListener{
+           view!!.new_image_post.setOnClickListener{
                 val titlebox : EditText = view!!.img_post_title
                 val textbox : EditText = view!!.img_post_text
 
@@ -97,7 +97,7 @@ class FragmentNewImagePost : Fragment() {
                 else {
                     val userID= FirebaseAuth.getInstance().uid
                     val subpath = FirebaseDatabase.getInstance().getReference("/users/$userID")
-                    val querysub = subpath.child("Subscriptions").orderByValue()
+                    subpath.child("Subscriptions").orderByValue()
                         .addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(p0: DataSnapshot) {
                                 if (p0.exists()) {

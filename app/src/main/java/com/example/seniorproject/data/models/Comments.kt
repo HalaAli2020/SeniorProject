@@ -30,10 +30,10 @@ class Comment(var text: String, var Ptime : String?, var PosterID : String?, var
         return R.layout.rv_post_comment
     }
 
-    fun bind(viewHolder: GroupieViewHolder, position: Int) {
+    fun bind(viewHolder: GroupieViewHolder) {
         viewHolder.itemView.comment_text.text = text
-
     }
+
     fun toMap(): Map<String, Any?> {
         return mapOf(
             "text" to text,
