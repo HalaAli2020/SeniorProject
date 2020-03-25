@@ -16,8 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Messages.ChatLog"
-            android:windowSoftInputMode="adjustResize|stateVisible"></activity>
+        <activity android:name=".MainForum.NewPost.NewPost"></activity>
+        <activity
+            android:name=".Messages.ChatLog"
+            android:windowSoftInputMode="adjustResize|stateVisible" />
         <activity android:name=".Messages.NewMessage" />
         <activity android:name=".MainForum.Posts.EditProfileActivity" />
         <activity android:name=".MainForum.Posts.CommunityPosts" />
@@ -25,11 +27,10 @@
         <activity android:name=".MainForum.Posts.ClickedPost" />
         <activity android:name=".MainForum.Posts.UpdatePost" />
         <activity android:name=".MainForum.Posts.UpdateComment" />
-        <activity android:name=".search.SearchActivity"/>
         <activity
             android:name=".MainForum.MainForum"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

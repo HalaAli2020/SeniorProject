@@ -169,7 +169,5 @@ class UserProfileActivity : AppCompatActivity() {
         recreate()
     }
 
-    fun makeInvisible(view: View){
-
-    }
+   // fun makeInvisible(view: View){}
 }

@@ -32,10 +32,6 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
     init {
 
     }
-    fun transformation()
-    {
-
-    }
 
     fun getComments() : CommentLive
     {
@@ -45,7 +41,6 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
            CommentListener?.onFailure("Post key not found")
        }
         CommentsLiveList = repository.getComments(Classkey!!, crn!!)
-
 
         return CommentsLiveList
     }

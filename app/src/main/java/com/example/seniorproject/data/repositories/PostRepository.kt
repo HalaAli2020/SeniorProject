@@ -3,7 +3,6 @@ package com.example.seniorproject.data.repositories
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.example.seniorproject.data.Firebase.FirebaseData
 
 import com.example.seniorproject.data.models.*
@@ -52,10 +51,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     fun getSubscribedPosts() = Firebase.getSubscribedPosts()
     //fun getEmail() = Firebase.getEmail()
 
-
-    fun getpostKey(PKey: String) {
-
-    }
+    //fun getpostKey(PKey: String) {}
 
     fun getComments(ClassKey: String, subject: String): CommentLive {
         return Firebase.getComments(ClassKey, subject)
@@ -89,20 +85,15 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         //Firebase.saveNewCommentClass(Comment ,PKey, Classkey, UserID, crn)
     }
 
-    fun deleteNewPost(postKey: String, crn: String, userID: String) {
+    fun deleteNewPost(postKey: String, crn: String, userID: String){
         Firebase.deleteNewPost(postKey, crn, userID)
     }
 
-    fun deleteNewCommentFromUserProfile(
-        ClassKey: String,
-        crn: String,
-        comKey: String,
-        userID: String
-    ) {
+    fun deleteNewCommentFromUserProfile(ClassKey: String, crn: String, comKey: String, userID: String){
         Firebase.deleteNewCommentFromUserProfile(ClassKey, crn, comKey, userID)
     }
 
-    fun deleteNewCommentFromCommPosts(postKey: String, crn: String, classkey: String) {
+    fun deleteNewCommentFromCommPosts(postKey: String, crn: String, classkey: String){
         Firebase.deleteNewCommentFromCommPosts(postKey, crn, classkey)
     }
 
@@ -118,34 +109,25 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     }
 
 
-    fun editPost(
-        crn: String, postKey: String, ctext: String, ctitle: String, ntext: String, ntitle: String,
-        userID: String
-    ) {
+    fun editPost(crn: String, postKey: String, ctext: String, ctitle: String, ntext: String, ntitle: String,
+                 userID: String){
         Firebase.editPost(crn, postKey, ctext, ctitle, ntext, ntitle, userID)
     }
 
-    fun SessionUser() = Firebase.CurrentUserL()
-   /* fun blockComment(UserID: String, text: String, crn: String, postID: String) {
-        Firebase.blockUserComment(UserID, text, crn, postID)
+    fun blockUser(UserID: String){
+        Firebase.blockUser(UserID)
     }
 
     fun blockPost(UserID: String, crn: String, classkey: String) {
         Firebase.blockUserPost(UserID, crn, classkey)
     }
 */
-    fun reportUserPost(accusedID: String, complaintext: String, crn: String, classkey: String) {
+    fun reportUserPost(accusedID: String, complaintext: String, crn: String, classkey: String){
         Firebase.reportUserPost(accusedID, complaintext, crn, classkey)
 
     }
 
-    fun reportUserComment(
-        accusedID: String,
-        complaintext: String,
-        crn: String,
-        classkey: String,
-        comKey: String
-    ) {
+    fun reportUserComment(accusedID: String, complaintext: String, crn: String, classkey: String, comKey: String){
         Firebase.reportUserComment(accusedID, complaintext, crn, classkey, comKey)
 
     }
@@ -505,7 +487,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun saveNewUsername(username: String) = Firebase.saveNewUsername(username)
 
-    fun saveUserbio(bio: String) = Firebase.saveUserbio(bio)
+    fun saveUserbio(bio : String) = Firebase.saveUserbio(bio)
 
     fun fetchBio(UserID: String) = Firebase.fetchBio(UserID)
 

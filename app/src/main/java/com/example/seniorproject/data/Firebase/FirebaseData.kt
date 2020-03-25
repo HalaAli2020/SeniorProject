@@ -1,6 +1,5 @@
 package com.example.seniorproject.data.Firebase
 import android.net.Uri
-import android.provider.ContactsContract
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -30,9 +29,6 @@ import java.util.logging.Handler
 import javax.security.auth.Subject
 import kotlin.collections.HashMap
 import com.example.seniorproject.data.models.User
-import com.example.seniorproject.data.repositories.PostRepository
-import com.example.seniorproject.viewModels.CommunityPostViewModel
-import com.example.seniorproject.viewModels.SearchViewModel
 import com.google.firebase.auth.ActionCodeSettings
 import java.lang.IllegalArgumentException
 import kotlin.collections.ArrayList
@@ -64,12 +60,13 @@ class FirebaseData @Inject constructor() {
     var savedPosts: PostLiveData = PostLiveData()
     var userPosts: PostLiveData = PostLiveData()
     var Comments: CommentLive = CommentLive()
-    var postref: DatabaseReference? = null
+    var profilePosts: PostLiveData = PostLiveData()
+
+
     private lateinit var postlistener: ValueEventListener
-    private var userprofile: User? = null
-    //private lateinit var userprofile : User
-    var otherEmail : String? = null
-    var otherBio : String? = null
+    private lateinit var userprofile: User
+    var otherEmail: String? = null
+    var otherBio: String? = null
     var newComments: Comment? = null
     var noPostsCheck: Boolean = false
     var noCommentsCheck: Boolean = false
@@ -77,23 +74,18 @@ class FirebaseData @Inject constructor() {
 
 
     var newProfilePosts: Post? = null
-    var profilePosts: PostLiveData = PostLiveData()
     var newProfileComments: Comment? = null
 
 
-    var classList: MutableLiveData<MutableList<CRN>> = MutableLiveData()
-    //var classList : MutableList<CRN> = mutableListOf()
-    var cList : MutableList<String> = mutableListOf()
+    var classList: MutableList<CRN> = mutableListOf()
+    var cList: MutableList<String> = mutableListOf()
     var classPostList: PostLiveData = PostLiveData()
     var MainPosts: MutableList<Post> = mutableListOf()
-    var UserSUB : MutableLiveData<MutableList<String>> = MutableLiveData()
+    var UserSUB: MutableList<String>? = null
     fun CurrentUser() = FirebaseAuth.getInstance().currentUser
-    var MainforumListener: ChildEventListener? = null
-    var CurrentUser: MutableLiveData<User>? = null
-    var getableUser: Boolean = false
 
 
-    fun CurrentUserL(): MutableLiveData<User>? {
+    fun CurrentUserL() {
         val reference =
             FirebaseDatabase.getInstance().getReference("users").child(firebaseAuth.uid!!)
 
@@ -101,35 +93,34 @@ class FirebaseData @Inject constructor() {
         //var classList: MutableLiveData<List<String>> = MutableLiveData()
         //var classPostList: PostLiveData = PostLiveData()
 
-        reference
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                //var savedPostsList: MutableList<Post> = mutableListOf()
-                override fun onDataChange(p0: DataSnapshot) {
-                    val username = p0.child("Username").getValue(String::class.java)
-                    val email = p0.child("email").getValue(String::class.java)
-                    var profileImageUrl = p0.child("profileImageUrl").getValue(Uri::class.java)
-                    CurrentUser?.value = User(username, email, firebaseAuth.uid, profileImageUrl)
+        postlistener = object : ValueEventListener {
+            //var savedPostsList: MutableList<Post> = mutableListOf()
+            override fun onDataChange(p0: DataSnapshot) {
+                val username = p0.child("Username").getValue(String::class.java)
+                val email = p0.child("email").getValue(String::class.java)
+                var profileImageUrl = p0.child("profileImageUrl").getValue(Uri::class.java)
+                userprofile = User(username, email, firebaseAuth.uid, profileImageUrl)
 
-                    Log.d("USERNAME", username!!)
-                    //Log.d("USER", userprofile.username!!)
-                    //CurrentUser = userprofile
-                    /*if (userprofile != null) {
-                        Log.d("ACCESSING", userprofile.username)
-                        //savedPostsList.add(newPost)
-                        //repository.saveNewPost(newPost)
-                        //adapter.add(PostFrag(newPost.title, newPost.text))
-                    }*/
-                    // getableUser = true
+                Log.d("USERNAME", username!!)
+                Log.d("USER", userprofile.username!!)
 
-                }
-
-                override fun onCancelled(p0: DatabaseError) {
-
-                }
+                /*if (userprofile != null) {
+                    Log.d("ACCESSING", userprofile.username)
+                    //savedPostsList.add(newPost)
+                    //repository.saveNewPost(newPost)
+                    //adapter.add(PostFrag(newPost.title, newPost.text))
+                }*/
 
 
-            })
-        return CurrentUser
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+
+        }
+        reference.addValueEventListener(postlistener)
 
     }
     // = firebaseAuth.currentUser
@@ -459,14 +450,14 @@ class FirebaseData @Inject constructor() {
                 Log.d(PTAG, p0.getKey().toString())
                 var classname = p0.getKey().toString()
                 cList.add(classname)
-                val checker = cList.size
+                //val checker = cList.size
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 Log.d(PTAG, p0.getKey().toString())
                 var classname = p0.getKey().toString()
                 cList.add(classname)
-                val checker = cList.size
+                //val checker = cList.size
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {
@@ -478,7 +469,7 @@ class FirebaseData @Inject constructor() {
 
     fun sendClassnameForUsername(): MutableList<String> {
         getclassnamesforusername()
-        val check = cList.size
+        //val check = cList.size
         return cList
     }
 
@@ -562,17 +553,25 @@ class FirebaseData @Inject constructor() {
                     if (it.isSuccessful) {
                         emitter.onComplete()
                         Log.d(TAG, "Email sent")
+                        //val currentuser = FirebaseAuth.getInstance().currentUser
+                        /*currentuser?.let {
+                            val username = currentuser.displayName
+                            val email = currentuser.email
+                            val uid = currentuser.uid
+                            val profileImageUrl = currentuser.photoUrl
+                            val user = User(username, email, uid, profileImageUrl)
+                        }*/
 
+                    } else {
+                        emitter.onError(it.exception!!)
+                        //should not be using two exclaimation points
                     }
 
-                } else {
-                    emitter.onError(it.exception!!)
-                    //should not be using two exclaimation points
                 }
-
             }
-    }
 
+
+    }
 
     //@Provides
     fun LoginUser(email: String, password: String) = Completable.create { emitter ->
@@ -580,9 +579,10 @@ class FirebaseData @Inject constructor() {
             .addOnCompleteListener {
                 if (!emitter.isDisposed) {
                     if (it.isSuccessful) {
-                        //Log.d(TAG, CurrentUser!!.displayName ?: "the displayname login1")
+                        //was this crashing it before?
+                        fetchCurrentUserName()
+                        Log.d(TAG, CurrentUser()!!.displayName ?: "the displayname login1")
                         GlobalScope.launch(Dispatchers.Main) {
-                            CurrentUserL()
                             delay(500)
                             val currentuser = FirebaseAuth.getInstance().currentUser
                             if (currentuser!!.isEmailVerified) {
@@ -592,26 +592,26 @@ class FirebaseData @Inject constructor() {
                                 emitter.onError(IllegalArgumentException("please verify your email"))
                             }
                         }
-                        //CurrentUserL()
                         //updateUser()
-                        /*CurrentUserL()
-                    currentuser?.let {
-                        val username = currentuser.username
-                        val email = currentuser.email
-                        val uid = currentuser.uid
-                        val profileImageUrl = currentuser.ProfilePic  // not
-                        //Log.d(TAG,currentuser!!.photoUrl.toString() ?: "the displayname login2")
-                       CurrentUser = User(username, email, uid, profileImageUrl)*/
+                       /* val currentuser = FirebaseAuth.getInstance().currentUser
+                        currentuser?.let {
+                            val username = currentuser.displayName
+                            val email = currentuser.email
+                            val uid = currentuser.uid
+                            val profileImageUrl = currentuser.photoUrl  // not
+                            //Log.d(TAG,currentuser!!.photoUrl.toString() ?: "the displayname login2")
+                            val user = User(username, email, uid, profileImageUrl)
+                            //user not being used
+                        }*/
+                        Log.d(
+                            TAG,
+                            FirebaseAuth.getInstance().currentUser?.photoUrl.toString()
 
+                        )
+                    } else {
+                        emitter.onError(it.exception!!)
+                        //should not be using two exclaimation points
                     }
-                    Log.d(
-                        TAG,
-                        FirebaseAuth.getInstance().currentUser?.photoUrl.toString()
-                            ?: "the displayname login2"
-                    )
-                } else {
-                    emitter.onError(it.exception!!)
-                    //should not be using two exclaimation points
                 }
             }
     }
@@ -643,30 +643,30 @@ class FirebaseData @Inject constructor() {
 
 
     /*fun saveNewPost(postTitle: String, postText: String, postSubject: String) {
-    val reference = FirebaseDatabase.getInstance().getReference("/posts").push()
+        val reference = FirebaseDatabase.getInstance().getReference("/posts").push()
 
-    if (postTitle.isNotEmpty() && postText.isNotEmpty()) {
-        val post = Post(postTitle, postText, postSubject)
+        if (postTitle.isNotEmpty() && postText.isNotEmpty()) {
+            val post = Post(postTitle, postText, postSubject)
 
-        reference.setValue(post).addOnSuccessListener {
-            Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
-        }.addOnFailureListener {
-            Log.d(TAG, "Error ${it.message}")
+            reference.setValue(post).addOnSuccessListener {
+                Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
+            }.addOnFailureListener {
+                Log.d(TAG, "Error ${it.message}")
+            }
         }
-    }
     }*/
 
 
-    fun listenForUserProfilePosts (uid : String, callbackPost: PostRepository.FirebaseCallbackPost){
+    fun listenForUserProfilePosts(uid: String): PostLiveData {
         Log.d(TAG, "getUserProfilePosts listener called")
 
         //set list to empty here?
-        callbackPost.onStart()
+
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Posts")
-        val profilePostListen = reference.addChildEventListener(object : ChildEventListener {
+         reference.addChildEventListener(object : ChildEventListener {
             var profilePostsList: MutableList<Post> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
-                callbackPost.onFailure()
+
             }
 
             override fun onChildMoved(p0: DataSnapshot, p1: String?) {
@@ -689,7 +689,7 @@ class FirebaseData @Inject constructor() {
         //only do this for the current user?
         // for other users just check the value?
         val comref = FirebaseDatabase.getInstance().getReference("users/$uid")
-        val checkforcomments = comref.addListenerForSingleValueEvent(object : ValueEventListener {
+         comref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -706,21 +706,21 @@ class FirebaseData @Inject constructor() {
             }
         })
 
-
+        return profilePosts
     }
 
     fun noPostsChecker(userID: String): Boolean {
-
+        listenForUserProfilePosts(userID)
         return noPostsCheck
     }
 
     fun noCommentsChecker(userID: String): Boolean {
-        //listenForUserProfilePosts(userID)
+        listenForUserProfilePosts(userID)
         return noCommentsCheck
     }
 
 
-    fun listenForUserProfileComments (uid : String, callbackComment: PostRepository.FirebaseCallbackComment){
+    fun listenForUserProfileComments(uid: String): CommentLive {
         Log.d(TAG, "getUserProfile comments listener called")
 
         callbackComment.onStart()
@@ -752,7 +752,7 @@ class FirebaseData @Inject constructor() {
         Log.d("Post function return", "Post function return")
 
         val comref = FirebaseDatabase.getInstance().getReference("users/$uid")
-        val checkforcomments = comref.addListenerForSingleValueEvent(object : ValueEventListener {
+        comref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -771,65 +771,38 @@ class FirebaseData @Inject constructor() {
             }
         })
 
-
-
-
-
-
-
-
+        return Comments
     }
 
 
-    /*fun getUserProfilePosts(userID: String) : PostLiveData {
+    fun getUserProfilePosts(userID: String): PostLiveData {
         Log.d(TAG, "getUserProfilePosts called")
-        var post = PostLiveData()
         if (userID == "null") {
             var uid = FirebaseAuth.getInstance().uid ?: "error"
-            listenForUserProfilePosts(uid, object : FirebaseCallbackPost{
-                override fun onCallback(PostL: PostLiveData) {
-                    TODO("Not yet implemented")
-                }
-            })
-        } else
-        {
+            listenForUserProfilePosts(uid)
+        } else {
             var uid = userID
-            listenForUserProfilePosts(uid, object :FirebaseCallbackPost{
-                override fun onCallback(PostL: PostLiveData) {
-                    post.value = PostL.value
+            listenForUserProfilePosts(uid)
         }
-            })
-         }
-        return post
-    }*/
+        return profilePosts
+    }
 
 
-
-   /* fun getUserProfileComments(userID : String): CommentLive{
+    fun getUserProfileComments(userID: String): CommentLive {
         Log.d(TAG, "getUserProfile comments called")
-        var com = CommentLive()
         if (userID == "null") {
             var uid = FirebaseAuth.getInstance().uid ?: "error"
-            listenForUserProfilePosts(uid, object : FirebaseCallbackPost {
-                override fun onCallback(PostL: PostLiveData) {
-
-                }
-            })
-        } else
-        {
+            listenForUserProfilePosts(uid)
+        } else {
             var uid = userID
-            listenForUserProfileComments(uid, object : FirebaseCallbackComment {
-                override fun onCallback(CommentL: CommentLive) {
-                    com.value = CommentL.value
-                }
-            })
+            listenForUserProfileComments(uid)
         }
-        return com
-    }*/
+        return Comments
+    }
 
 
-    fun listenComments(Key: String, subject: String, callbackComment: FirebaseCallbackComment)
-    {
+    fun getCommentsCO(Key: String): CommentLive {
+
         val uid = FirebaseAuth.getInstance().uid
         val reference =
             FirebaseDatabase.getInstance().getReference("Subjects/$subject/Posts/$Key/Comments")
@@ -850,7 +823,7 @@ class FirebaseData @Inject constructor() {
                 val newComment = p0.getValue(Comment::class.java)
 
                 if (newComment != null) {
-                    Log.d("ACCESSING", newComment?.text)
+                    Log.d("ACCESSING", newComment.text)
                     if (savedCommentList.isNullOrEmpty()) {
                         savedCommentList.add(newComment)
                     }
@@ -901,7 +874,7 @@ class FirebaseData @Inject constructor() {
         //val Class_key = FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID").child("Comments").push().key
         // implement in viewmodel
         //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
-        val dataupdates = HashMap<String, Any>()
+        //val dataupdates = HashMap<String, Any>()
         val comementvalues = comment.toMap()
         //dataupdates["$subject/$ClassID/Post/$Class_key"] = postvalues
         //dataupdates["$userID/Posts/$User_key"] = postvalues
@@ -910,11 +883,11 @@ class FirebaseData @Inject constructor() {
 
 
         /*Class_reference.setValue(post).addOnSuccessListener {
-            Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
-        }.addOnFailureListener {
-            Log.d(TAG, "Error ${it.message}")
-        }
-     */
+                Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
+            }.addOnFailureListener {
+                Log.d(TAG, "Error ${it.message}")
+            }
+         */
 
         //}
     }
@@ -1021,10 +994,10 @@ class FirebaseData @Inject constructor() {
 
 
         // val refkey = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey/Comments")
-        query.addListenerForSingleValueEvent(object : ValueEventListener {
+        query.addListenerForSingleValueEvent( object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
-                if (p0.exists()) {
-                    for (comment in p0.children) {
+                if(p0.exists()){
+                    for(comment in p0.children){
                         // val refc= comment.getValue(Comment::class.java)
                         comment.ref.removeValue()
                         //refkey.child("/Subjects/$crn/Posts/$ClassKey/Comments/-M1MwaJ6UaXu2fdByTCU").removeValue()
@@ -1076,12 +1049,12 @@ class FirebaseData @Inject constructor() {
         //val subject = Subject
         //val ClassID = Classkey
         val userID = firebaseAuth.uid
-        val author = firebaseAuth.currentUser?.displayName
+        val author= firebaseAuth.currentUser?.displayName
         val comment = Comment(text, "", userID, crn, postID)
-        comment.author = author
+        comment.author= author
         Log.d("BigMoods", crn)
         val subpath = FirebaseDatabase.getInstance().getReference("/users/$userID")
-        val querysub = subpath.child("Subscriptions").orderByValue().addListenerForSingleValueEvent( object : ValueEventListener {
+        subpath.child("Subscriptions").orderByValue().addListenerForSingleValueEvent( object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     for(sub in p0.children){
@@ -1128,11 +1101,11 @@ class FirebaseData @Inject constructor() {
             }
         })
         /*Class_reference.setValue(post).addOnSuccessListener {
-            Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
-        }.addOnFailureListener {
-            Log.d(TAG, "Error ${it.message}")
-        }
-     */
+                Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
+            }.addOnFailureListener {
+                Log.d(TAG, "Error ${it.message}")
+            }
+         */
 
         //}
     }
@@ -1234,7 +1207,7 @@ class FirebaseData @Inject constructor() {
 
         val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
         //ref.child("BlockedUsers").push().setValue(UserID)
-        val queryref = ref.child("BlockedUsers").orderByValue().
+         ref.child("BlockedUsers").orderByValue().
             addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(p0: DataSnapshot) {
                     if(p0.exists() == false){
@@ -1348,7 +1321,7 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onCancelled(p0: DatabaseError) {
-
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }*/
         })
     }
@@ -1367,7 +1340,7 @@ class FirebaseData @Inject constructor() {
                 val urii = it
                 saveImageurl = urii.toString()
                 var post = Post(title, text, CRN,"")
-                val subject = Subject
+                //val subject = Subject
                 val userID = firebaseAuth.uid
                 val author = firebaseAuth.currentUser?.displayName
                 post.UserID = userID
@@ -1407,7 +1380,7 @@ class FirebaseData @Inject constructor() {
         //val Class_key = FirebaseDatabase.getInstance().getReference(CRN).child("Posts").push().key
         //FirebaseDatabase.getInstance().getReference("/users/$userID")
         val subpath = FirebaseDatabase.getInstance().getReference("/users/$userID")
-        val querysub = subpath.child("Subscriptions").orderByValue().addListenerForSingleValueEvent( object : ValueEventListener {
+         subpath.child("Subscriptions").orderByValue().addListenerForSingleValueEvent( object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     for(sub in p0.children){
@@ -1426,8 +1399,8 @@ class FirebaseData @Inject constructor() {
                             //dataupdates["/Subjects/$CRN/Posts/$postID/$author"] = postvalues
                             dataupdates["/users/$userID/Posts/$User_key"] = postvalues
 
-        // FirebaseDatabase.getInstance().getReference("users/$userID").child("Post/$User_key").setValue(postvalues)
-        FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
+                            // FirebaseDatabase.getInstance().getReference("users/$userID").child("Post/$User_key").setValue(postvalues)
+                            FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
                         }
                         else{
                             Log.d("Not subscribed","you cannot post to a forum you are not subscribed in.")
@@ -1435,7 +1408,7 @@ class FirebaseData @Inject constructor() {
                     }
                 }
 
-        }
+            }
 
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -1661,29 +1634,29 @@ class FirebaseData @Inject constructor() {
 
     }
 
-//this function is commented out because it fails to retrieve image in Firebase Storage and
-//store it under user
+    //this function is commented out because it fails to retrieve image in Firebase Storage and
+    //store it under user
 
-/* fun uploadImageToFirebaseDatabase(profileImageUrl: Uri){
-     val uid = FirebaseAuth.getInstance().uid ?: ""
-     val username = FirebaseAuth.getInstance().currentUser?.displayName ?: ""
-     val email = FirebaseAuth.getInstance().currentUser?.email ?: ""
-     val useref = FirebaseDatabase.getInstance().getReference("/users/$uid")
+    /* fun uploadImageToFirebaseDatabase(profileImageUrl: Uri){
+         val uid = FirebaseAuth.getInstance().uid ?: ""
+         val username = FirebaseAuth.getInstance().currentUser?.displayName ?: ""
+         val email = FirebaseAuth.getInstance().currentUser?.email ?: ""
+         val useref = FirebaseDatabase.getInstance().getReference("/users/$uid")
 
-     //val user = User(username, email, uid, profileImageUrl)
-     //var user = CurrentUser()
-     val user = User(username, email, uid, profileImageUrl)
-     val userin = user.toMap()
+         //val user = User(username, email, uid, profileImageUrl)
+         //var user = CurrentUser()
+         val user = User(username, email, uid, profileImageUrl)
+         val userin = user.toMap()
 
-     useref.setValue(userin).addOnSuccessListener {
-
-
-         Log.d(TAG, "profile image is added to Firebase Database schema")
-
-     }
+         useref.setValue(userin).addOnSuccessListener {
 
 
- }*/
+             Log.d(TAG, "profile image is added to Firebase Database schema")
+
+         }
+
+
+     }*/
     fun listenforClassPosts(className: String, call : PostRepository.FirebaseCallbackPost)
     {
 
@@ -2143,13 +2116,13 @@ class FirebaseData @Inject constructor() {
                     var user = User()
                     user.username = p1.child("Username").getValue(String::class.java)
                     user.uid = p1.child("uid").getValue(String::class.java)
-                    var imageProfURL = p1.child("profileImageUrl").getValue(String::class.java)
+                    val imageProfURL = p1.child("profileImageUrl").getValue(String::class.java)
                     if(!imageProfURL.isNullOrEmpty()) {
-                        user.ProfilePic = Uri.parse(imageProfURL)
+                        user.profileImageUrl = Uri.parse(imageProfURL)
                     }
 
-                    if (user != null) {
-                        UserList?.add(user)
+                    if (user.uid != null) {
+                        UserList.add(user)
                     }
                 }
 
@@ -2184,7 +2157,7 @@ class FirebaseData @Inject constructor() {
                 //chatMessage.uid = p1.child("uid").getValue(String::class.java)
 
                 if (chatMessage != null) {
-                    chatList?.add(chatMessage)
+                    chatList.add(chatMessage)
                 }
                 //}
 
@@ -2240,7 +2213,7 @@ class FirebaseData @Inject constructor() {
         val latestChatMessage = LatestMessage(
             reference.key!!,
             message,
-            fromID!!,
+            fromID,
             toID,
             username,
             1-(System.currentTimeMillis() / 1000)
@@ -2249,7 +2222,7 @@ class FirebaseData @Inject constructor() {
         val latestChatMessage2 = LatestMessage(
             reference.key!!,
             message,
-            fromID!!,
+            fromID,
             toID,
             FirebaseAuth.getInstance().currentUser?.displayName,
             1-(System.currentTimeMillis() / 1000)
@@ -2267,7 +2240,7 @@ class FirebaseData @Inject constructor() {
         val latestMessagesMap = MutableLiveData<List<LatestMessage>>()
         listenForLatestMessage(object: FirebaseRecentMessagseCallback{
             override fun onCallback(list: List<LatestMessage>) {
-                latestMessagesMap?.value=list
+                latestMessagesMap.value=list
 
             }
         })
