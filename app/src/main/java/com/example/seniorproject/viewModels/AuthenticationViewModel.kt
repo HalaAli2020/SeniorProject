@@ -5,14 +5,21 @@ import android.net.Uri
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Authentication.PasswordResetActivity
 import com.example.seniorproject.Authentication.RegisterActivity
 import com.example.seniorproject.Utils.AuthenticationListener
 import com.example.seniorproject.data.repositories.UserAuthRepo
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "MyLogTag"
@@ -23,6 +30,12 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
     var password: String? = null
     var username: String? = null
     var profileImageUrl: Uri? = null
+    var authlisteneruser : FirebaseAuth.AuthStateListener? = null
+    var usercur : FirebaseUser? = null
+
+    private val firebaseAuth: FirebaseAuth by lazy {
+        FirebaseAuth.getInstance()
+    }
 
     //auth listener
     var authListener: AuthenticationListener? = null
@@ -33,43 +46,77 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
 
     val user = repository.currentUser()
 
-    fun Register(){
-        if (email.isNullOrEmpty() || password.isNullOrEmpty() || username.isNullOrEmpty()) {
-            authListener?.onFailure("Please enter your username, email, or password.")
-            return
-        }
-        authListener?.onStarted()
-        val disposable = repository.register(username?:"null",email?:"null",password?:"null", profileImageUrl?: Uri.EMPTY)
-            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-        //should this really be the main thread?
-            .subscribe({
-                //success callback
-                authListener?.onSuccess()
-            }, {
-                authListener?.onFailure(it.message?:"failure")
-            })
-        disposables.add(disposable)
+    fun RegisterUserEmail(){
+        viewModelScope.launch(Dispatchers.Main) {
 
+            if (!email.isNullOrEmpty() && !password.isNullOrEmpty() && !username.isNullOrEmpty()) {
+                val currentuser = FirebaseAuth.getInstance().currentUser
+                    repository.RegisterUserEmail(firebaseAuth, email!!, password!!, username!!)
+                    authListener?.onSuccess()
+
+            }
+            else{
+                authListener?.onFailure("Please enter your username, email, and password.")
+            }
+        }
     }
 
-    fun Login(){
-        if (email.isNullOrEmpty() || password.isNullOrEmpty()) {
-            authListener?.onFailure("Please enter both your email and/or password.")
-            //Toast.makeText((RegisterActivity()), "Please fill in both Email and Password fields", Toast.LENGTH_SHORT).show()
-            return
+     fun LoginUserEmail(){
+            // authListener?.onFailure("Please enter both your email and/or password.")
+           //  viewModelScope.launch(Dispatchers.Main) {
+         viewModelScope.launch(Dispatchers.Main) {
+                 if (email.isNullOrEmpty() || password.isNullOrEmpty()) {
+                     authListener?.onFailure("Please enter both your email and password.")
+                 }
+                 else{
+                     authlisteneruser = FirebaseAuth.AuthStateListener(object : FirebaseAuth.AuthStateListener, (FirebaseAuth) -> Unit {
+                         override fun invoke(p1: FirebaseAuth) {
+                         }
+
+                         override fun onAuthStateChanged(p0: FirebaseAuth) {
+                             var user = p0.currentUser
+                             usercur = user
+                         /*    if (user!!.isEmailVerified) {
+                                 viewModelScope.launch(Dispatchers.Main) {
+                                     repository.LoginUserAccount(firebaseAuth, email!!, password!!)
+                                     //authListener?.onSuccess()
+                                 }
+                             }*/
+                         }
+                     })
+
+                         delay(10000)
+                         if (usercur!!.isEmailVerified) {
+
+
+                             repository.LoginUserAccount(firebaseAuth, email!!, password!!)
+                             authListener?.onSuccess()
+
+                         }
+                     }
+
+
+                         //setPersistence(firebase.auth.Auth.Persistence.SESSION.then(authListener?.onSuccess())
+
+                   /*  }
+                     else{
+                         authListener?.onFailure("Please verify your account.")
+                     }
+                 }*/
+             }
+    }
+
+    fun resetUserPassword(){
+        viewModelScope.launch(Dispatchers.Main) {
+
+            if (!email.isNullOrEmpty()) {
+                    repository.resetUserPassword(firebaseAuth, email!!)
+                    authListener?.onSuccess()
+            }
+            else{
+                authListener?.onFailure("Please enter your email.")
+            }
         }
-        authListener?.onStarted()
-        //calling login from repository
-        val disposable = repository.login(email!!,password!!)
-            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            //should this really be the main thread?
-            .subscribe({
-                authListener?.onSuccess()
-                Log.d(TAG,repository.currentUser()?.displayName ?: "the displayname auth viewmodel2")
-            }, {
-                authListener?.onFailure(it.message!!)
-            })
-        disposables.add(disposable)
     }
 
      fun redirectToLogin(view: View){
@@ -89,29 +136,6 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
             view.context.startActivity(it)
         }
     }
-
-    fun ResetPassword(){
-        if (email.isNullOrEmpty()) {
-            authListener?.onFailure("Please enter your email.")
-            //  Toast.makeText((RegisterActivity()), "Please fill in both Email and Password fields", Toast.LENGTH_SHORT).show()
-            return
-        }
-        authListener?.onStarted()
-        //calling login from repository
-        val disposable = repository.resetUserPassword(email!!)
-            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            //should this really be the main thread?
-            .subscribe({
-                //success callback
-                authListener?.onSuccess()
-            }, {
-                authListener?.onFailure(it.message!!)
-            })
-        disposables.add(disposable)
-
-    }
-
-
 
     //disposing the disposables
     override fun onCleared() {

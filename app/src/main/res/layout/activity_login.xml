@@ -83,7 +83,7 @@
             android:layout_marginRight="24dp"
             android:layout_marginBottom="92dp"
             android:background="@drawable/rounded_btn"
-            android:onClick="@{() -> AuthViewModel.Login()}"
+            android:onClick="@{() -> AuthViewModel.LoginUserEmail()}"
             android:text="Login"
             android:textColor="@android:color/white"
             android:textStyle="bold"
