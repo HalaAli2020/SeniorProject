@@ -8,11 +8,13 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -67,10 +69,15 @@ class ClickedPost : AppCompatActivity() {
         myViewModel.crn = crn
 
         //add userid and send
-
+        myViewModel.CommentsLiveList.observe(this, Observer {
+            Log.d("Swap", "Swapping")
+            swap(binding, title, text, author, crn,intent.getStringExtra("UserID").toString(), time, uri)
+        })
         adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString(), time, uri)
         comment_RecyclerView.adapter = adapter
         comment_RecyclerView.layoutManager = LinearLayoutManager(this)
+
+
 
 
         binding.clickedViewModel = myViewModel
@@ -83,6 +90,7 @@ class ClickedPost : AppCompatActivity() {
             comment_RecyclerView.adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString(), time, uri)
             refreshView.isRefreshing = false
         }
+
 
         fun showToast(){
             var toast= Toast.makeText(this@ClickedPost, "We've received your report.", Toast.LENGTH_SHORT)
@@ -225,7 +233,11 @@ class ClickedPost : AppCompatActivity() {
                 }
             }
         }
-
+    fun swap(binding : ActivityClickedPostBinding, title : String, text : String, author : String, crn: String, userid : String, time: String, uri : String)
+    {
+        var ada =  CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString(), time, uri)
+        binding.commentRecyclerView.swapAdapter(ada, false)
+    }
 
 
     }

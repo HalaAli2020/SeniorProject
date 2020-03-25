@@ -66,7 +66,7 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
 
     fun fetchCurrentUserName() = repository.fetchSessionUserName()
 
-    var user = repository.SessionUser()
+    var user = repository.currentUser()
 
 
 }

@@ -1334,7 +1334,9 @@ class FirebaseData @Inject constructor() {
                 list.add(4, classkey!!)
                 list.add(5, user!!)
                 list.add(6, author!!)
+                if(!uri.isNullOrEmpty())
                 list.add(7,uri!!)
+
                 callBack.onCallback(list)
             }
             /*override fun onDataChange(p0: DataSnapshot){
@@ -1685,28 +1687,21 @@ class FirebaseData @Inject constructor() {
     fun listenforClassPosts(className: String, call : PostRepository.FirebaseCallbackPost)
     {
 
-        val reference = FirebaseDatabase.getInstance().getReference("Subjects/$className/Posts")
+        val reference = FirebaseDatabase.getInstance().getReference("Subjects/$className")
         call.onStart()
-        reference.addChildEventListener(object : ChildEventListener {
+        reference.addValueEventListener(object : ValueEventListener {
             var savedPostsList: MutableList<Post> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
                 call.onFailure()
             }
 
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-            }
 
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-
+            override fun onDataChange(p0: DataSnapshot) {
                 call.onSuccess(p0)
             }
 
 
-            override fun onChildRemoved(p0: DataSnapshot) {
-            }
+
         })
 
         //callbackPost.onCallback(classPostList)
@@ -2345,6 +2340,20 @@ class FirebaseData @Inject constructor() {
             }
         })
 
+    }
+    fun blockedusersPosts(posts : MutableList<Post>)
+    {
+        val uid = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("users/$uid/BlockedUsers")
+       ref.addValueEventListener(object : ValueEventListener{
+           override fun onDataChange(p0: DataSnapshot) {
+
+           }
+
+           override fun onCancelled(p0: DatabaseError) {
+
+           }
+       })
     }
 
 

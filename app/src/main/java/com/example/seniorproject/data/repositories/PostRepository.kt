@@ -31,6 +31,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     var newProfilePosts: Post? = null
     var Comments : CommentLive = CommentLive()
     var newProfileComments: Comment? = null
+    var savedPostsList: MutableList<Post> = mutableListOf()
 
 
     private var getCommentsJob: Job? = null
@@ -189,43 +190,49 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     }
 
     fun getClassPosts(className: String): PostLiveData {
+        var newPost = Post()
         Firebase.getClassPosts(className, object : FirebaseCallbackPost {
             override fun onSuccess(data: DataSnapshot) {
 
-                val post = data.getValue()
+
                 var savedPostsList: MutableList<Post> = mutableListOf()
                 //val newPost = Post()
-                var postdetails: Iterable<DataSnapshot> = data.children
-                //for (n in postdetails) {
-                var newPost = Post()
-                newPost.let {
+                //var postss = data.child("Posts")
+                Log.d("Children", data.child("Posts").childrenCount.toString())
+                var postdetails: Iterable<DataSnapshot> = data.child("Posts").children
+                for (n in postdetails) {
+                     newPost = Post()
+                    newPost.let {
 
-                    //Log.d("ACCESSING", newPost?.text)
-                    it.title = data.child("title").getValue(String::class.java)
-                    it.text = data.child("text").getValue(String::class.java)
-                    //newPost.author = pos.child("author").getValue(String::class.java)
-                    it.subject = className
-                    Log.d("CRN", data.key!!)
-                    it.subject = data.child("subject").getValue(String::class.java)
-                    it.Ptime = data.child("Timestamp").getValue(String::class.java)
-                    it.key = data.child("key").getValue(String::class.java)
-                    it.Ptime = data.child("Ptime").getValue(String::class.java)
-                    it.Classkey = data.child("Classkey").getValue(String::class.java)
-                    it.UserID = data.child("UserID").getValue(String::class.java)
-                    it.author = data.child("author").getValue(String::class.java)
+                        //Log.d("ACCESSING", newPost?.text)
+                        it.title = n.child("title").getValue(String::class.java)
+                        //Log.d("Community post", data.child("title").getValue(String::class.java))
+                        it.text = n.child("text").getValue(String::class.java)
+                        //newPost.author = pos.child("author").getValue(String::class.java)
+                        //it.subject = className
+                        Log.d("CRN", data.key!!)
+                        it.subject = n.child("subject").getValue(String::class.java)
+                        it.Ptime = n.child("Timestamp").getValue(String::class.java)
+                        it.key = n.child("key").getValue(String::class.java)
+                        it.Ptime = n.child("Ptime").getValue(String::class.java)
+                        it.Classkey = n.child("Classkey").getValue(String::class.java)
+                        it.UserID = n.child("UserID").getValue(String::class.java)
+                        it.author = n.child("author").getValue(String::class.java)
 
-                    // comments might need to be gotten separatley to properly convert values
+                        // comments might need to be gotten separatley to properly convert values
+
+
 
 
                     savedPostsList.add(newPost)
-
+                 }
                 }
 
                 //repository.saveNewPost(newPost)
                 //adapter.add(PostFrag(newPost.title, newPost.text))
+                listClasses.value = savedPostsList
 
 
-                listClasses!!.value = savedPostsList
             }
 
             override fun onFailure() {
@@ -238,8 +245,10 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
         })
 
+
         return listClasses
     }
+
 
     fun getUserSub(): MutableLiveData<MutableList<String>>? {
         var SubList: MutableList<String> = mutableListOf()

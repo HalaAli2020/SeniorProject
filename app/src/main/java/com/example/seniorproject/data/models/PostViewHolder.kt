@@ -22,7 +22,8 @@ open class PostViewHolder(parent: View) : RecyclerView.ViewHolder(parent) {
     fun bind(post: Post, mContext : Context) {
 
         itemView.post_title.text = post.title
-        itemView.username.text = post.crn
+        itemView.username.text = post.author
+        itemView.post_timestamp.text = post.Ptime
         itemView.setOnClickListener {
             val intent = Intent(mContext, ClickedPost::class.java)
 

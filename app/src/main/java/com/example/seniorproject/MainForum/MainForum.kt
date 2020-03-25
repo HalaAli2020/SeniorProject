@@ -145,7 +145,7 @@ class MainForum : AppCompatActivity(),
             this.email_display.text = it.email
             this.username_display.text = it.username
         }
-        myViewModel.SessionUser?.observe(this, obse!!)
+        //myViewModel.user.observe(this, obse!!)
 
 
         //Log.d(TAG, myViewModel.SessionUser!!.username ?: "the displayname in main activity")
