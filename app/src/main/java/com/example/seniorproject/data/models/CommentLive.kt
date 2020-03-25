@@ -16,16 +16,6 @@ class CommentLive : MutableLiveData<MutableList<Comment>>()
 
 
 
-    override fun onActive() {
-
-
-
-    }
-
-    override fun onInactive() {
-
-    }
-
 
     companion object {
         private lateinit var sInstance: CommentLive

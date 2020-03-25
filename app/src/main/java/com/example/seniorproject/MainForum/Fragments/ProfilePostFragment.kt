@@ -72,7 +72,7 @@ class ProfilePostFragment : Fragment() {
         }
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_profile__post, container, false)
-        DaggerAppComponent.create().inject(this)
+        //DaggerAppComponent.create().inject(this)
         val factory = InjectorUtils.provideProfileViewModelFactory()
         val binding: FragmentProfilePostBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_profile__post, container, false)

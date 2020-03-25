@@ -8,7 +8,6 @@ import android.widget.AdapterView
 import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
-import com.example.seniorproject.MainForum.Fragments.FragmentNewPost
 import com.example.seniorproject.MainForum.Posts.UpdatePost
 //import com.example.seniorproject.Utils.startMainForum
 import com.example.seniorproject.Utils.PostListener

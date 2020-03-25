@@ -24,7 +24,7 @@ class UpdatePost : AppCompatActivity() {
         setContentView(R.layout.update_post)
 
 
-        DaggerAppComponent.create().inject(this)
+        //DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this, factory).get(NewPostFragmentViewModel::class.java)
         val binding: UpdatePostBinding = DataBindingUtil.setContentView(this,R.layout.update_post)
 
