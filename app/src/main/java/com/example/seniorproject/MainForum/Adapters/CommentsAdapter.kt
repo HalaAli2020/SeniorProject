@@ -93,7 +93,7 @@ class CommentsAdapter(
                 holder.itemView.community_name_TV.text = crn
                 holder.itemView.author_name_TV.text = author
 
-                if (uri != null){
+                if (uri != " "){
                     Glide.with(mContext)
                         .load(uri)
                         .placeholder(R.color.white)
@@ -121,7 +121,7 @@ class CommentsAdapter(
                 } else {
                     val comment: Comment = Comments?.value!![position]
                     val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
-                    val queryref = ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
+                     ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
                         ValueEventListener {
                         override fun onDataChange(p0: DataSnapshot) {
                             if (p0.exists()) {
@@ -170,7 +170,7 @@ class CommentsAdapter(
         return commentkey!!
     }
 
-    fun getCrn(holder: RecyclerView.ViewHolder, position: Int): String {
+    fun getCrn(holder: RecyclerView.ViewHolder): String {
         val comment: Comment = Comments?.value!![holder.adapterPosition]
         val commentkey: String?= comment.crn
 
