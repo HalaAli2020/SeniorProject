@@ -95,7 +95,8 @@ class MainForum : AppCompatActivity(),
                 R.id.messages -> {
                     FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
-                    replaceFragment(FragmentLatestMessages())
+                        //replaceFragment(FragmentLatestMessages())
+                    replaceFragment(FragmentNewImagePost())
                     return@OnNavigationItemSelectedListener true
                 }
             }

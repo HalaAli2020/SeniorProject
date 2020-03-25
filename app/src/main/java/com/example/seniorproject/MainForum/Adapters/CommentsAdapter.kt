@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.seniorproject.MainForum.Posts.ClickedPost
 import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
@@ -25,7 +26,10 @@ class CommentsAdapter(
     text: String,
     author: String,
     crn: String,
-    UserID : String, ptime: String
+    UserID : String,
+    ptime: String,
+    uri:String
+
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -38,6 +42,7 @@ class CommentsAdapter(
     private val author: String = author
     private val crn: String = crn
     private val UserID: String = UserID
+    private val uri : String = uri
     private val ptime: String = ptime
 
 
@@ -81,6 +86,21 @@ class CommentsAdapter(
                 holder.itemView.click_post_text.text = text
                 holder.itemView.community_name_TV.text = crn
                 holder.itemView.author_name_TV.text = author
+
+                if (uri != null){
+                    Glide.with(mContext)
+                        .load(uri)
+                        .placeholder(R.color.white)
+                        .into(holder.itemView.post_image_onclick)
+                }
+                else
+                {
+                    Glide.with(mContext).clear(holder.itemView.post_image)
+                    holder.itemView.post_image.setImageDrawable(null)
+                }
+
+
+
                 holder.itemView.posts_timestamp.text=ptime
                 holder.itemView.author_name_TV.setOnClickListener {
                     val intent = Intent(mContext, UserProfileActivity::class.java)

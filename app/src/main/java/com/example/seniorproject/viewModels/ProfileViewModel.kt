@@ -101,4 +101,6 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
 
     fun noPostsChecker(UserID: String) = repository.noPostsChecker(UserID)
 
+    fun noCommentsChecker(UserID: String) = repository.noCommentsChecker(UserID)
+
 }

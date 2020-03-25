@@ -15,6 +15,7 @@ import com.example.seniorproject.R
 //import com.example.seniorproject.Utils.InjectorUtils
 import com.example.seniorproject.databinding.ActivityLoginBinding
 import com.example.seniorproject.MainForum.MainForum
+import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject
 
 private const val TAG = "MyLogTag"
@@ -32,12 +33,12 @@ class LoginActivity : AppCompatActivity(), AuthenticationListener {
         val myIntent = Intent(this@LoginActivity, MainForum::class.java)
         Toast.makeText(this,"Logged In", Toast.LENGTH_LONG).show()
         this@LoginActivity.startActivity(myIntent)
+        Toast.makeText(this, "successful login", Toast.LENGTH_SHORT).show()
     }
 
     override fun onFailure(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
-
 
     // User field to pass the to next fragment
     private lateinit var user: Any
