@@ -16,7 +16,7 @@ class SubscriptionsViewModel @Inject constructor(private val repository: PostRep
     }
 
     fun getUserSub(): MutableList<String>? {
-        UsersSubs = repository.getsublist()
+        UsersSubs = repository.getUserSub()
 
         return UsersSubs
 

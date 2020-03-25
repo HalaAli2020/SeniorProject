@@ -1,34 +1,19 @@
 package com.example.seniorproject.viewModels
 
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.seniorproject.data.models.CRN
-import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.repositories.PostRepository
-import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 class ListViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
 
-    var listClasses: MutableLiveData<MutableList<CRN>> = repository.getClasses()
-    var SubList : LiveData<MutableList<CRN>> = listClasses?.let {
-        Transformations.map(it){ list ->
-            Log.d("Transform", "Called")
-            list
-
-        }
-    }
-    //var obse : Observer<in MutableList<CRN>>? = null
-     var UsersSubs : MutableLiveData<MutableList<String>>? = MutableLiveData()
-
+    private var listClasses: MutableList<CRN> = mutableListOf()
+    private var UsersSubs : MutableList<String>? = mutableListOf()
     init {
-        getClasses()
         getUserSub()
-        //getClasses()
-
-
-
-
+        getClasses()
         /*while(listClasses.isEmpty() && UsersSubs!!.isEmpty())
         {
             Log.d("Loading data", "Loading data")
@@ -36,71 +21,48 @@ class ListViewModel @Inject constructor(private val repository: PostRepository) 
         //combineSubs()
 
     }
-    //: MutableLiveData<MutableList<CRN>>
-    private fun getClasses()  {
-        //listClasses.clear()
+
+    private fun getClasses(){
+        listClasses.clear()
 
         listClasses = repository.getClasses()
-
     }
     private fun getUserSub()
     {
         UsersSubs = repository.getUserSub()
 
     }
-     fun getSubs()
+    private fun getusersSubs()
     {
-       getClasses()
-        getUserSub()
-        //combineSubs()
-
-
-
-
-
+        UsersSubs = repository.getUserSub()
     }
-    fun check() : Boolean
-    {
-        return (listClasses.value.isNullOrEmpty() && UsersSubs?.value.isNullOrEmpty())
-    }
-    fun Getcomnosubs() = repository.getClasses()
-
-
     fun combineSubs()
     {
-        /*while(UsersSubs.isNullOrEmpty())
+        if(UsersSubs == null)
         {
-
             Log.d("UserSUBs", "null")
-            //return listClasses
-        }*/
-        if(listClasses.value.isNullOrEmpty() && UsersSubs?.value.isNullOrEmpty())
-        {
-
-            Log.d("Null", "one was null")
         }
-        else
+
+
+        for(data in listClasses)
         {
-            for(data in listClasses.value!!.iterator())
-            {
-                if(UsersSubs!!.value!!.contains(data.name))
-                {
-                    data.Subscribed = true
-                    Log.d("combine", data.name)
-                }
-
-            }
-
+           if(UsersSubs!!.contains(data.name))
+           {
+               data.Subscribed = true
+               Log.d("combine", data.name)
+           }
 
         }
+
     }
 
 
-    fun returnClasses(): MutableList<CRN>?{
+    fun returnClasses(): MutableList<CRN>{
 
+        //getClasses()
 
-        return SubList.value
-
+        combineSubs()
+        return listClasses
     }
     fun addSub(crn : String)
     {
@@ -109,8 +71,8 @@ class ListViewModel @Inject constructor(private val repository: PostRepository) 
     fun removeSub(crn : String)
     {
         repository.remUsersub(crn)
-        UsersSubs = MutableLiveData()
-        listClasses = MutableLiveData()
+        UsersSubs = mutableListOf()
+        listClasses = mutableListOf()
         getClasses()
         getUserSub()
         combineSubs()

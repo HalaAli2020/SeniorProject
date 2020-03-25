@@ -1,13 +1,9 @@
 package com.example.seniorproject.viewModels
 
 import android.net.Uri
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.PostLiveData
-import com.example.seniorproject.data.models.User
 import com.example.seniorproject.data.repositories.PostRepository
 import javax.inject.Inject
 
@@ -18,55 +14,24 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
 
 
     var posts: PostLiveData = PostLiveData()
-    var postdata: LiveData<MutableList<Post>>? = null
-    var plist : MutableList<Post>? = null
-
-
-    //var p: MutableList<Post>? = null
-    var RepoUser : MutableLiveData<User>? = null
-    var SessionUser : LiveData<User>? = RepoUser?.let {
-        Transformations.map(it){
-            us -> us
-
-        }
-    }
+    var postdata: PostLiveData = PostLiveData.get()
+    var p: MutableList<Post>? = null
 
     init {
 
-            Transformations.map(posts){
-                    num -> num
-                plist = num
-
-            }
-
-
-        //posts = repository.getSavedPosts()
-        RepoUser = repository.SessionUser()
+        posts = repository.getSubscribedPosts()
     }
 
 
-
-
-    fun getSavedUserPosts(){
-
-        //posts = repository.getSavedUserPosts()
-        //return posts
+    fun getSubscribedPosts(): PostLiveData {
+        posts = repository.getSubscribedPosts()
+        return posts
     }
 
 
-    fun getSubscribedPosts()  = repository.getSubscribedPosts()
-        //return posts
-    fun getPost() : LiveData<MutableList<Post>>?{
-        return postdata
-    }
+    fun fetchCurrentUserName() = repository.fetchCurrentUserName()
 
-    fun uploadUserProfileImage(selectedPhotoUri: Uri) =
-        repository.uploadUserProfileImage(selectedPhotoUri)
-
-
-    fun fetchCurrentUserName() = repository.fetchSessionUserName()
-
-    var user = repository.SessionUser()
+    var user = repository.currentUser()
 
 
 }

@@ -15,7 +15,6 @@ import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
@@ -23,14 +22,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Dagger.DaggerAppComponent
-import com.example.seniorproject.MainForum.Fragments.FragmentHome
-import com.example.seniorproject.MainForum.Fragments.FragmentNewImagePost
-import com.example.seniorproject.MainForum.Fragments.FragmentSubscriptions
-import com.example.seniorproject.Messages.ChatLog
-import com.example.seniorproject.Messages.FragmentLatestMessages
+import com.example.seniorproject.MainForum.Fragments.*
 import com.example.seniorproject.R
-import com.example.seniorproject.search.SearchActivity
-import com.example.seniorproject.data.models.User
 import com.example.seniorproject.databinding.SideNavHeaderBinding
 import com.example.seniorproject.databinding.ActivityMainForumBinding
 import com.example.seniorproject.viewModels.HomeFragmentViewModel
@@ -38,7 +31,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main_forum.*
-import kotlinx.android.synthetic.main.side_nav_header.*
 import javax.inject.Inject
 
 private const val TAG = "MyLogTag"
@@ -50,7 +42,7 @@ class MainForum : AppCompatActivity(),
     private val firebaseAuth: FirebaseAuth by lazy {
         FirebaseAuth.getInstance()
     }
-    var obse : Observer<User>? = null
+
     override fun onAuthStateChanged(p0: FirebaseAuth) {
         val currentUser = myViewModel.user
         if (currentUser != null) {
@@ -89,16 +81,14 @@ class MainForum : AppCompatActivity(),
                 R.id.list -> {
                     FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
-                    //replaceFragment(FragmentList())
-                    var intent = Intent(this, SearchActivity::class.java)
-                    startActivity(intent)
-                   // return@OnNavigationItemSelectedListener true
+                    replaceFragment(FragmentList())
+                    return@OnNavigationItemSelectedListener true
                 }
                 R.id.messages -> {
                     FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
                         //replaceFragment(FragmentLatestMessages())
-                    replaceFragment(FragmentLatestMessages())
+                    replaceFragment(FragmentNewImagePost())
                     return@OnNavigationItemSelectedListener true
                 }
             }
@@ -126,8 +116,8 @@ class MainForum : AppCompatActivity(),
             setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp)
         }
 
-        //Log.d(TAGG, myViewModel.user?.displayName ?: "the displayname in main activity")
-        //Log.d(TAG, myViewModel.user?.displayName ?: "the displayname in main activity")
+        Log.d(TAGG, myViewModel.user?.displayName ?: "the displayname in main activity")
+        Log.d(TAG, myViewModel.user?.displayName ?: "the displayname in main activity")
 
 
         mDrawerLayout = findViewById(R.id.drawer_layout)
@@ -141,14 +131,8 @@ class MainForum : AppCompatActivity(),
         binding.navView.addHeaderView(sideNavHeaderBinding.root)
         sideNavHeaderBinding.viewmodell = myViewModel
         //Log.d(TAG,myViewModel.rsomthing())
-        obse = Observer {
-            this.email_display.text = it.email
-            this.username_display.text = it.username
-        }
-        myViewModel.SessionUser?.observe(this, obse!!)
 
 
-        //Log.d(TAG, myViewModel.SessionUser!!.username ?: "the displayname in main activity")
 
 
         navigationView.setNavigationItemSelectedListener { menuItem ->
@@ -170,7 +154,6 @@ class MainForum : AppCompatActivity(),
                     val intent = Intent(this, LoginActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
-
                 }
 
             }

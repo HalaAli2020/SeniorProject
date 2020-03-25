@@ -1,22 +1,17 @@
 package com.example.seniorproject.viewModels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.PostLiveData
 import com.example.seniorproject.data.repositories.PostRepository
-import com.google.firebase.database.DataSnapshot
 import javax.inject.Inject
 
 class CommunityPostViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
 
-    var listClasses : PostLiveData? = null
+    private var listClasses : PostLiveData? = null
     private lateinit var className: String
-    var posts : PostLiveData = PostLiveData()
 
     private fun getClasses(className: String){
         listClasses = repository.getClassPosts(className)
-
     }
 
     fun returnClassPosts(className: String): PostLiveData {
@@ -43,12 +38,7 @@ class CommunityPostViewModel @Inject constructor(private val repository: PostRep
            return false
        }
    }
-    interface FirebasecallbackCRN
-    {
-        fun onSuccess(data : DataSnapshot)
-        fun onFailure()
-        fun onStart()
-    }
+
 
 
 }

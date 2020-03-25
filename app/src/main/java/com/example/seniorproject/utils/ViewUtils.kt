@@ -1,4 +1,4 @@
-package com.example.seniorproject.Utils
+package com.example.seniorproject.utils
 
 import android.content.Context
 import android.content.Intent

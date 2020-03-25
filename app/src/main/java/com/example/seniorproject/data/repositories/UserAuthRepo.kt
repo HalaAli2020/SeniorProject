@@ -12,16 +12,12 @@ import javax.inject.Singleton
 class UserAuthRepo @Inject constructor(private val Firebase: FirebaseData) {
 
     fun login(email: String, password: String) = Firebase.LoginUser(email,password)
-
-
     //should user and password be a livedata object??????? return
 
     fun register(username: String, email: String, password: String, profileImageUrl: Uri) =
         Firebase.RegisterUser(username, email, password, profileImageUrl)
 
-    fun currentUser(){
-        Firebase.CurrentUserL()
-    }
+    fun currentUser() = Firebase.CurrentUser()
 
     fun resetUserPassword(email: String) = Firebase.resetPassword(email)
 
@@ -31,5 +27,4 @@ class UserAuthRepo @Inject constructor(private val Firebase: FirebaseData) {
     {
         Firebase.logout()
     }
-
 }

@@ -18,7 +18,6 @@
     <string name="newMessage">New Message</string>
     <string name="edit">Edit</string>
     <string name="refresh">Refresh</string>
-    <string name="night">NightMode</string>
 
 
     <string-array name="class_list">

@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.seniorproject.Dagger.InjectorUtils
@@ -18,7 +17,6 @@ import kotlinx.android.synthetic.main.fragment_subscriptions.view.*
 import javax.inject.Inject
 
 class FragmentSubscriptions : Fragment() {
-
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -31,14 +29,14 @@ class FragmentSubscriptions : Fragment() {
         myViewModel = ViewModelProviders.of(this, factory).get(SubscriptionsViewModel::class.java)
 
         view.subs_recyclerView.layoutManager = LinearLayoutManager(context)
-
-            var ada = myViewModel.getUserSub()?.let {
+        view.subs_recyclerView.adapter =
+            myViewModel.getUserSub()?.let {
                 SubsriptionAdapter(
                     view.context,
                     it
                 )
             }
-        view.subs_recyclerView.adapter = ada
+
 
         view.refreshView.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.blue_theme))
         view.refreshView.setColorSchemeColors(ContextCompat.getColor(view.context, R.color.white))
@@ -48,7 +46,7 @@ class FragmentSubscriptions : Fragment() {
                 myViewModel.getUserSub()?.let {
                     SubsriptionAdapter(
                         view.context,
-                       it
+                        it
                     )
                 }
             view.refreshView.isRefreshing = false

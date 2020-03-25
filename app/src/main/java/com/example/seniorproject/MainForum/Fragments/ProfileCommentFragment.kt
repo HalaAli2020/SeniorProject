@@ -81,7 +81,7 @@ class ProfileCommentFragment : Fragment() {
         }
 
         //call the lister up here
-      //  DaggerAppComponent.create().inject(this)
+        DaggerAppComponent.create().inject(this)
         val factory = InjectorUtils.provideProfileViewModelFactory()
         val binding: FragmentProfileCommentBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_profile_comment, container, false)
