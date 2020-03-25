@@ -119,10 +119,10 @@ class ProfilePostFragment : Fragment() {
 
         var check = myViewModel.noPostsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null")
         if (ID != FirebaseAuth.getInstance().currentUser?.uid || check == true){
-            //val swipe = null
+            val swipe = null
         }
         else{
-            object : SwipeHelper(context!!, view.profile_post_recyclerView, 200) {
+            val swipe = object : SwipeHelper(context!!, view.profile_post_recyclerView, 200) {
                 override fun initButton(
                     viewHolders: RecyclerView.ViewHolder,
                     buffer: MutableList<ProfileButton>
@@ -132,13 +132,13 @@ class ProfilePostFragment : Fragment() {
                             ("#FF0000"), object : ButtonClickListener {
                             override fun onClick(pos: Int) {
                                 val postkey: String? =
-                                    adapter.removeItem(viewHolders as CustomViewHolders)
+                                    adapter.removeItem(viewHolders as CustomViewHolders, pos)
 
                                 val userkey: String? =
-                                    adapter.getUserKey(viewHolders)
+                                    adapter.getUserKey(viewHolders as CustomViewHolders)
 
                                 val crnkey: String? =
-                                    adapter.getCrn(viewHolders)
+                                    adapter.getCrn(viewHolders as CustomViewHolders, pos)
 
                                 //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
                                 var builder = AlertDialog.Builder(
@@ -179,19 +179,19 @@ class ProfilePostFragment : Fragment() {
                                 val intent = Intent(context, UpdatePost::class.java)
 
                                 val postkey: String? =
-                                    adapter.removeItem(viewHolders as CustomViewHolders)
+                                    adapter.removeItem(viewHolders as CustomViewHolders, pos)
 
                                 val userkey: String? =
-                                    adapter.getUserKey(viewHolders)
+                                    adapter.getUserKey(viewHolders as CustomViewHolders)
 
                                 val crnkey: String? =
-                                    adapter.getCrn(viewHolders)
+                                    adapter.getCrn(viewHolders as CustomViewHolders, pos)
 
                                 val titlekey: String? =
-                                    adapter.getTitle(viewHolders)
+                                    adapter.getTitle(viewHolders as CustomViewHolders, pos)
 
                                 val textkey: String? =
-                                    adapter.getText(viewHolders)
+                                    adapter.getText(viewHolders as CustomViewHolders, pos)
 
                                 intent.putExtra("crn", crnkey)
                                 intent.putExtra("Classkey", postkey)

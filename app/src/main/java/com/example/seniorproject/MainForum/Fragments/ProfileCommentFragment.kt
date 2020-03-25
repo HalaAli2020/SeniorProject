@@ -140,10 +140,10 @@ class ProfileCommentFragment : Fragment() {
         //use an if statement to control value of swipe?
         var check = myViewModel.noCommentsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null")
         if (ID != FirebaseAuth.getInstance().currentUser?.uid || check == true){
-            //val swipe = null
+            val swipe = null
         }
         else if (ID == FirebaseAuth.getInstance().currentUser?.uid) {
-             object : SwipeHelper(context!!, view.profile_comment_recyclerView, 200) {
+            val swipe = object : SwipeHelper(context!!, view.profile_comment_recyclerView, 200) {
                 override fun initButton(
                     viewHolders: RecyclerView.ViewHolder,
                     buffer: MutableList<ProfileButton>
@@ -154,31 +154,37 @@ class ProfileCommentFragment : Fragment() {
                             override fun onClick(pos: Int) {
                                 val postkeyUP: String? =
                                     adaptercomments.pkeyUserProfile(
-                                        viewHolders as CustomViewHolders
+                                        viewHolders as CustomViewHolders,
+                                        pos
                                     )
                                 val userkey: String? =
                                     adaptercomments.getUserKey(
-                                        viewHolders
+                                        viewHolders as CustomViewHolders,
+                                        pos
                                     )
 
                                 val crnkey: String? =
                                     adaptercomments.getCrn(
-                                        viewHolders
+                                        viewHolders as CustomViewHolders,
+                                        pos
                                     )
 
                                 val commentkey: String? =
                                     adaptercomments.getCommentKey(
-                                        viewHolders
+                                        viewHolders as CustomViewHolders,
+                                        pos
                                     )
 
                                 val classkey: String? =
                                     adaptercomments.getClassKey(
-                                        viewHolders
+                                        viewHolders as CustomViewHolders,
+                                        pos
                                     )
 
                                 val classprofilekey: String? =
                                     adaptercomments.getClassProfileKey(
-                                        viewHolders
+                                        viewHolders as CustomViewHolders,
+                                        pos
                                     )
 
                                 var builder = AlertDialog.Builder(
@@ -197,7 +203,7 @@ class ProfileCommentFragment : Fragment() {
                                         )
                                         myViewModel.deleteCommentFromUserProfile(
                                             commentkey!!,
-                                            crnkey,
+                                            crnkey!!,
                                             classprofilekey!!,
                                             userkey!!
                                         )
@@ -222,26 +228,31 @@ class ProfileCommentFragment : Fragment() {
                             override fun onClick(pos: Int) {
                                 val userkey: String? =
                                     adaptercomments.getUserKey(
-                                        viewHolders as CustomViewHolders
+                                        viewHolders as CustomViewHolders,
+                                        pos
                                     )
 
                                 val classprofilekey: String? =
                                     adaptercomments.getClassProfileKey(
-                                        viewHolders
+                                        viewHolders as CustomViewHolders,
+                                        pos
                                     )
 
                                 val textkey: String? = adaptercomments.getText(
-                                    viewHolders
+                                    viewHolders as CustomViewHolders,
+                                    pos
                                 )
 
                                 val crnkey: String? =
                                     adaptercomments.getCrn(
-                                        viewHolders
+                                        viewHolders as CustomViewHolders,
+                                        pos
                                     )
 
                                 val postkeyUP: String? =
                                     adaptercomments.pkeyUserProfile(
-                                        viewHolders
+                                        viewHolders as CustomViewHolders,
+                                        pos
                                     )
 
                                 val intent = Intent(context, UpdateComment::class.java)
