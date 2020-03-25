@@ -5,7 +5,6 @@ package com.example.seniorproject.MainForum
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,14 +12,12 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.example.seniorproject.Authentication.RegisterActivity
 import com.example.seniorproject.Dagger.AppComponent
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.Fragments.FragmentHome
-
 import com.example.seniorproject.R
 import com.example.seniorproject.databinding.FragmentNewPostBinding
 import com.example.seniorproject.viewModels.NewPostFragmentViewModel
@@ -41,13 +38,22 @@ class FragmentNewPost : Fragment() {
 
     //private lateinit var viewModel: NewPostFragmentViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         activity?.title = "New Post"
         DaggerAppComponent.create().inject(this)
-        val binding: FragmentNewPostBinding = DataBindingUtil.inflate(inflater,com.example.seniorproject.R.layout.fragment_new_post , container, false)
+        val binding: FragmentNewPostBinding = DataBindingUtil.inflate(
+            inflater,
+            com.example.seniorproject.R.layout.fragment_new_post,
+            container,
+            false
+        )
         viewModel = ViewModelProviders.of(this, factory).get(NewPostFragmentViewModel::class.java)
-        val view = inflater.inflate(com.example.seniorproject.R.layout.fragment_new_post, container, false)
-
+        val view =
+            inflater.inflate(com.example.seniorproject.R.layout.fragment_new_post, container, false)
 
 
         //post: Post, Subject: String, CRN: String, uri: Uri, imagePost : Boolean
@@ -58,7 +64,11 @@ class FragmentNewPost : Fragment() {
         val view = inflater.inflate(R.layout.fragment_new_post, container, false)*/
 
 
-        val adapter = ArrayAdapter.createFromResource(view.context, com.example.seniorproject.R.array.class_list, android.R.layout.simple_spinner_item)
+        val adapter = ArrayAdapter.createFromResource(
+            view.context,
+            com.example.seniorproject.R.array.class_list,
+            android.R.layout.simple_spinner_item
+        )
         // Specify the layout to use when the subscriptions of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         // Apply the adapter to the spinner
@@ -76,9 +86,7 @@ class FragmentNewPost : Fragment() {
                     "Please fill in both Email and Password fields",
                     Toast.LENGTH_SHORT
                 ).show()
-            }
-            else
-            {
+            } else {
                 viewModel.savePostToDatabase()
                 fragmentManager!!.beginTransaction()
                     .replace(R.id.fragmentContainer, FragmentHome())
@@ -91,15 +99,13 @@ class FragmentNewPost : Fragment() {
 
         return binding.root
     }
-    fun NewPost()
-    {
+
+    fun NewPost() {
         if (viewModel.titlePost.isNullOrEmpty() || viewModel.textPost.isNullOrEmpty() || viewModel.classSpinner.isNullOrEmpty()) {
             viewModel.postListener?.onFailure("please enter a title and text!")
             //Toast.makeText((RegisterActivity()), "Please fill in both Email and Password fields", Toast.LENGTH_SHORT).show()
             return
-        }
-        else
-        {
+        } else {
             viewModel.savePostToDatabase()
             fragmentManager!!.beginTransaction()
                 .replace((view!!.parent as ViewGroup).id, FragmentHome())
@@ -109,7 +115,6 @@ class FragmentNewPost : Fragment() {
         }
         Log.d("SELECTED VALUE:", viewModel.classSpinner.toString())
     }
-
 
 
 }

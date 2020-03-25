@@ -715,7 +715,7 @@ class FirebaseData @Inject constructor() {
     }
 
     fun noCommentsChecker(userID: String): Boolean {
-        listenForUserProfilePosts(userID)
+        //listenForUserProfilePosts(userID)
         return noCommentsCheck
     }
 

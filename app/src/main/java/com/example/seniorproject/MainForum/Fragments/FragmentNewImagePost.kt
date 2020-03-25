@@ -26,8 +26,6 @@ import com.example.seniorproject.Dagger.DaggerAppComponent
 
 import com.example.seniorproject.R
 import com.example.seniorproject.data.Firebase.FirebaseData
-import com.example.seniorproject.databinding.FragmentNewPostBinding
-import com.example.seniorproject.utils.startRegisterActivity
 import com.example.seniorproject.viewModels.NewPostFragmentViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot

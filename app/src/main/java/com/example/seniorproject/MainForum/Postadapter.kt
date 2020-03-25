@@ -51,7 +51,7 @@ class PostAdapter(context: Context, ViewModel: HomeFragmentViewModel) :
             return savedPosts!!.value!!.size
         else
             Log.d("NULL", "Isa null")
-            return 0
+           return 0
     }
 
 
