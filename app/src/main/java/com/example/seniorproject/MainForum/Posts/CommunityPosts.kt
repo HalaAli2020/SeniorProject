@@ -93,8 +93,8 @@ class CommunityPosts : AppCompatActivity() {
                             ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
                                 ("#FF0000"), object : ButtonClickListener {
                                 override fun onClick(pos: Int) {
-                                    val crnkey: String? =
-                                        adapter.getCrn(viewHolders)
+                                    //val crnkey: String? =
+                                     //   adapter.getCrn(viewHolders)
 
                                     val userkey: String? =
                                         adapter.getUserKey(viewHolders)
@@ -188,7 +188,7 @@ class CommunityPosts : AppCompatActivity() {
                                         listreason,
                                         0
                                     ) { _, i ->
-                                        var complaint = listreason[i]
+                                        //var complaint = listreason[i]
                                     }
                                     builder.setPositiveButton("SUBMIT"
                                     ) { _: DialogInterface?, _: Int ->

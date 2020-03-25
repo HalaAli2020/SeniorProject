@@ -139,7 +139,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
     }
 
     fun getClassKey(customViewHolders: CustomViewHolders): String {
-        val comment: Comment = ProfileComments?.value!![customViewHolders.adapterPosition]
+        val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String?= comment.Classkey
 
         //notifyItemRemoved(customViewHolders.adapterPosition)
@@ -148,7 +148,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
     }
 
     fun getClassProfileKey(customViewHolders: CustomViewHolders): String {
-        val comment: Comment = ProfileComments?.value!![customViewHolders.adapterPosition]
+        val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String?= comment.ProfileComKey
 
         //notifyItemRemoved(customViewHolders.adapterPosition)
@@ -157,7 +157,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
     }
 
     fun pkeyUserProfile(customViewHolders: CustomViewHolders): String {
-        val comment: Comment = ProfileComments?.value!![customViewHolders.adapterPosition]
+        val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String?= comment.Postkey
 
         //notifyItemRemoved(customViewHolders.adapterPosition)
@@ -166,7 +166,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
     }
 
     fun getCrn(customViewHolders: CustomViewHolders): String {
-        val comment: Comment = ProfileComments?.value!![customViewHolders.adapterPosition]
+        val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String?= comment.crn
 
         //notifyItemRemoved(customViewHolders.adapterPosition)
@@ -175,7 +175,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
     }
 
     fun getText(customViewHolders: CustomViewHolders): String {
-        val comment: Comment = ProfileComments?.value!![customViewHolders.adapterPosition]
+        val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String?= comment.text
 
         //notifyItemRemoved(customViewHolders.adapterPosition)

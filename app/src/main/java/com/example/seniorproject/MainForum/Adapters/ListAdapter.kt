@@ -73,7 +73,7 @@ class ListAdapter(
                 Log.d("subB", "ifffffff")
                 mViewModel.addSub(classList[position].name)
                 holder.itemView.Subscibe_B.setBackgroundResource(R.drawable.sub_button)
-                holder.itemView.Subscibe_B.setTextColor(mContext.resources.getColor(R.color.white))
+                holder.itemView.Subscibe_B.setTextColor(ContextCompat.getColor(mContext,R.color.white))
                 holder.itemView.Subscibe_B.text = mContext.resources.getString(R.string.Sub)
                 classList[position].Subscribed = true
             }

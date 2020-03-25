@@ -204,7 +204,6 @@ class MainForum : AppCompatActivity(),
         when (item.itemId) {
             android.R.id.home -> {
                 mDrawerLayout.openDrawer(GravityCompat.START)
-                true
             }
 
         }

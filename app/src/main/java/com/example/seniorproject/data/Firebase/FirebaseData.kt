@@ -476,14 +476,14 @@ class FirebaseData @Inject constructor() {
                     if (it.isSuccessful) {
                         emitter.onComplete()
                         Log.d(TAG, "Email sent")
-                        val currentuser = FirebaseAuth.getInstance().currentUser
-                        currentuser?.let {
+                        //val currentuser = FirebaseAuth.getInstance().currentUser
+                        /*currentuser?.let {
                             val username = currentuser.displayName
                             val email = currentuser.email
                             val uid = currentuser.uid
                             val profileImageUrl = currentuser.photoUrl
                             val user = User(username, email, uid, profileImageUrl)
-                        }
+                        }*/
 
                     } else {
                         emitter.onError(it.exception!!)
@@ -631,7 +631,7 @@ class FirebaseData @Inject constructor() {
 
 
 
-                    if (newProfilePost != null) {
+                    if (newProfilePost.key != null) {
                         Log.d(TAG, newProfilePost.title ?: " Accessing profile post title")
                         Log.d(TAG, newProfilePost.text ?: " Accessing profile post text")
                         Log.d(TAG, newProfilePost.key ?: " Accessing profile post title")
@@ -736,7 +736,7 @@ class FirebaseData @Inject constructor() {
                         Log.d("Data Error", "error converting to post")
                     }
 
-                    if (newComment != null) {
+                    if (newComment.ProfileComKey != null) {
                         Log.d(TAG, newComment.text)
                         profileCommentList.add(newComment)
                         //newProfilePosts = newProfilePost
@@ -1381,7 +1381,7 @@ class FirebaseData @Inject constructor() {
                 val urii = it
                 saveImageurl = urii.toString()
                 var post = Post(title, text, CRN,"")
-                val subject = Subject
+                //val subject = Subject
                 val userID = firebaseAuth.uid
                 val author = firebaseAuth.currentUser?.displayName
                 post.UserID = userID
@@ -1699,7 +1699,7 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val post = p0.getValue()
+                //val post = p0.getValue()
                 //val newPost = Post()
                 var postdetails: Iterable<DataSnapshot> = p0.children
                 //for (n in postdetails) {
@@ -1888,8 +1888,8 @@ class FirebaseData @Inject constructor() {
                                         Log.d("Data Error", "error converting to post")
                                     }
 
-                                    if (newPost != null) {
-                                        Log.d("ACCESSING", newPost?.text)
+                                    if (newPost.title != null) {
+                                        //Log.d("ACCESSING", newPost?.text)
                                         savedPostsList.add(newPost)
                                     }
 
@@ -1955,8 +1955,8 @@ class FirebaseData @Inject constructor() {
                 }
 
 
-                if (newPost != null) {
-                    Log.d("ACCESSING", newPost?.text)
+                if (newPost.title != null) {
+                    //Log.d("ACCESSING", newPost?.text)
                     savedPostsList.add(newPost)
 
                     //repository.saveNewPost(newPost)
@@ -2067,8 +2067,8 @@ class FirebaseData @Inject constructor() {
                         user.profileImageUrl = Uri.parse(imageProfURL)
                     }
 
-                    if (user != null) {
-                        UserList?.add(user)
+                    if (user.uid != null) {
+                        UserList.add(user)
                     }
                 }
 
@@ -2103,7 +2103,7 @@ class FirebaseData @Inject constructor() {
                 //chatMessage.uid = p1.child("uid").getValue(String::class.java)
 
                 if (chatMessage != null) {
-                    chatList?.add(chatMessage)
+                    chatList.add(chatMessage)
                 }
                 //}
 
@@ -2159,7 +2159,7 @@ class FirebaseData @Inject constructor() {
         val latestChatMessage = LatestMessage(
             reference.key!!,
             message,
-            fromID!!,
+            fromID,
             toID,
             username,
             1-(System.currentTimeMillis() / 1000)
@@ -2168,7 +2168,7 @@ class FirebaseData @Inject constructor() {
         val latestChatMessage2 = LatestMessage(
             reference.key!!,
             message,
-            fromID!!,
+            fromID,
             toID,
             FirebaseAuth.getInstance().currentUser?.displayName,
             1-(System.currentTimeMillis() / 1000)
@@ -2186,7 +2186,7 @@ class FirebaseData @Inject constructor() {
         val latestMessagesMap = MutableLiveData<List<LatestMessage>>()
         listenForLatestMessage(object: FirebaseRecentMessagseCallback{
             override fun onCallback(list: List<LatestMessage>) {
-                latestMessagesMap?.value=list
+                latestMessagesMap.value=list
 
             }
         })

@@ -197,7 +197,7 @@ class ProfileCommentFragment : Fragment() {
                                         )
                                         myViewModel.deleteCommentFromUserProfile(
                                             commentkey!!,
-                                            crnkey!!,
+                                            crnkey,
                                             classprofilekey!!,
                                             userkey!!
                                         )
