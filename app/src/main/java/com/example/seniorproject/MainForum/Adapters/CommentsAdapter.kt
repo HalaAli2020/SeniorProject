@@ -36,7 +36,7 @@ class CommentsAdapter(
     var text: String,
     var author: String,
     var crn: String,
-    var UserID: String,
+    var asUserID: String,
     var ptime: String,
     var uri: String
 
@@ -93,7 +93,7 @@ class CommentsAdapter(
             holder.itemView.posts_timestamp.text = ptime
             holder.itemView.author_name_TV.setOnClickListener {
                 val intent = Intent(mContext, UserProfileActivity::class.java)
-                intent.putExtra("UserID", UserID)
+                intent.putExtra("UserID", asUserID)
                 intent.putExtra("Author", author)
                 mContext.startActivity(intent)
             }
