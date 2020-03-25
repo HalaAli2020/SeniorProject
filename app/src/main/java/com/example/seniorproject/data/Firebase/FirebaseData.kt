@@ -529,7 +529,7 @@ class FirebaseData @Inject constructor() {
                         Log.d(
                             TAG,
                             FirebaseAuth.getInstance().currentUser?.photoUrl.toString()
-                                ?: "the displayname login2"
+
                         )
                     } else {
                         emitter.onError(it.exception!!)
@@ -586,7 +586,7 @@ class FirebaseData @Inject constructor() {
         //set list to empty here?
 
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Posts")
-        val profilePostListen = reference.addChildEventListener(object : ChildEventListener {
+         reference.addChildEventListener(object : ChildEventListener {
             var profilePostsList: MutableList<Post> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
 
@@ -661,7 +661,7 @@ class FirebaseData @Inject constructor() {
         //only do this for the current user?
         // for other users just check the value?
         val comref = FirebaseDatabase.getInstance().getReference("users/$uid")
-        val checkforcomments = comref.addListenerForSingleValueEvent(object : ValueEventListener {
+         comref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -697,7 +697,7 @@ class FirebaseData @Inject constructor() {
 
 
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Comments")
-        val profilePostListen = reference.addChildEventListener(object : ChildEventListener {
+         reference.addChildEventListener(object : ChildEventListener {
             var profileCommentList: MutableList<Comment> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
 
@@ -737,7 +737,7 @@ class FirebaseData @Inject constructor() {
                     }
 
                     if (newComment != null) {
-                        Log.d(TAG, newComment.text ?: " Accessing profile comment author")
+                        Log.d(TAG, newComment.text)
                         profileCommentList.add(newComment)
                         //newProfilePosts = newProfilePost
                         newProfileComments = newComment
@@ -758,7 +758,7 @@ class FirebaseData @Inject constructor() {
         Log.d("Post function return", "Post function return")
 
         val comref = FirebaseDatabase.getInstance().getReference("users/$uid")
-        val checkforcomments = comref.addListenerForSingleValueEvent(object : ValueEventListener {
+        comref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -813,7 +813,7 @@ class FirebaseData @Inject constructor() {
         val reference =
             FirebaseDatabase.getInstance().getReference("users/$uid/Post/$Key").child("Comments")
 
-        val commentListen = reference.addChildEventListener(object : ChildEventListener {
+         reference.addChildEventListener(object : ChildEventListener {
             var savedCommentList: MutableList<Comment> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
 
@@ -830,7 +830,7 @@ class FirebaseData @Inject constructor() {
 
 
                 if (newComment != null) {
-                    Log.d("ACCESSING", newComment?.text)
+                    Log.d("ACCESSING", newComment.text)
                     savedCommentList.add(newComment)
 
                     newComments = newComment
@@ -856,7 +856,7 @@ class FirebaseData @Inject constructor() {
     }
 
     fun getComments(Key: String, subject: String): CommentLive {
-        val uid = FirebaseAuth.getInstance().uid
+        //val uid = FirebaseAuth.getInstance().uid
         val reference =
             FirebaseDatabase.getInstance().getReference("Subjects/$subject/Posts/$Key/Comments")
 
@@ -876,7 +876,7 @@ class FirebaseData @Inject constructor() {
                 val newComment = p0.getValue(Comment::class.java)
 
                 if (newComment != null) {
-                    Log.d("ACCESSING", newComment?.text)
+                    Log.d("ACCESSING", newComment.text)
                     if (savedCommentList.isNullOrEmpty()) {
                         savedCommentList.add(newComment)
                     }

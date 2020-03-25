@@ -87,14 +87,14 @@ class ClickedPost : AppCompatActivity() {
             toast.show()
         }
 
-            val swipe = object : SwipeHelper(applicationContext, comment_RecyclerView, 200) {
+           object : SwipeHelper(applicationContext, comment_RecyclerView, 200) {
                 override fun initButton(
                     viewHolders: RecyclerView.ViewHolder,
                     buffer: MutableList<ProfileButton>
                 ) {
                     val userk: String? = adapter.getUserKey(viewHolders)
                     if (FirebaseAuth.getInstance().currentUser?.uid == userk){
-                        val swipe = null
+                        //val swipe = null
                     }
                     else {
                         buffer.add(
@@ -108,7 +108,7 @@ class ClickedPost : AppCompatActivity() {
                                         adapter.getUserKey(viewHolders)
 
                                     val crnkey: String? =
-                                        adapter.getCrn(viewHolders, pos)
+                                        adapter.getCrn(viewHolders)
 
                                     //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
                                     var builder = AlertDialog.Builder(
@@ -161,7 +161,7 @@ class ClickedPost : AppCompatActivity() {
                                         adapter.getUserKey(viewHolders)
 
                                     val crnkey: String? =
-                                        adapter.getCrn(viewHolders, pos)
+                                        adapter.getCrn(viewHolders)
 
                                     val textkey: String? = adapter.getText(viewHolders)
 

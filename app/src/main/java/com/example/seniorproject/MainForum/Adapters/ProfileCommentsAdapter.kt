@@ -80,7 +80,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                 val intent = Intent(mContext, ClickedPost::class.java)
                 var crn= comment.crn
                 var postkey = comment.Postkey
-                var callback: Callback? = null
+                //var callback: Callback? = null
 
                 FirebaseData.getInstance().readPostValues(crn!!, postkey!!, object: Callback{
                     override fun onCallback(value: ArrayList<String>){
@@ -120,8 +120,8 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
     intent.putExtra("Author", post.author) //posterID = post author's uid
     intent.putExtra("crn", post.crn)*/ //same
 
-    fun getCommentKey(customViewHolders: CustomViewHolders, position: Int): String {
-        val comment: Comment = ProfileComments?.value!![customViewHolders.adapterPosition]
+    fun getCommentKey(customViewHolders: CustomViewHolders): String {
+        val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String?= comment.UserComkey
 
         //notifyItemRemoved(customViewHolders.adapterPosition)
@@ -129,8 +129,8 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
         return commentkey!!
     }
 
-    fun getUserKey(customViewHolders: CustomViewHolders, position: Int): String {
-        val comment: Comment = ProfileComments?.value!![customViewHolders.adapterPosition]
+    fun getUserKey(customViewHolders: CustomViewHolders): String {
+        val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String?= comment.PosterID
 
         //notifyItemRemoved(customViewHolders.adapterPosition)
@@ -138,7 +138,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
         return commentkey!!
     }
 
-    fun getClassKey(customViewHolders: CustomViewHolders, position: Int): String {
+    fun getClassKey(customViewHolders: CustomViewHolders): String {
         val comment: Comment = ProfileComments?.value!![customViewHolders.adapterPosition]
         val commentkey: String?= comment.Classkey
 
@@ -147,7 +147,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
         return commentkey!!
     }
 
-    fun getClassProfileKey(customViewHolders: CustomViewHolders, position: Int): String {
+    fun getClassProfileKey(customViewHolders: CustomViewHolders): String {
         val comment: Comment = ProfileComments?.value!![customViewHolders.adapterPosition]
         val commentkey: String?= comment.ProfileComKey
 
@@ -156,7 +156,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
         return commentkey!!
     }
 
-    fun pkeyUserProfile(customViewHolders: CustomViewHolders, position: Int): String {
+    fun pkeyUserProfile(customViewHolders: CustomViewHolders): String {
         val comment: Comment = ProfileComments?.value!![customViewHolders.adapterPosition]
         val commentkey: String?= comment.Postkey
 
@@ -165,7 +165,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
         return commentkey!!
     }
 
-    fun getCrn(customViewHolders: CustomViewHolders, position: Int): String {
+    fun getCrn(customViewHolders: CustomViewHolders): String {
         val comment: Comment = ProfileComments?.value!![customViewHolders.adapterPosition]
         val commentkey: String?= comment.crn
 
@@ -174,7 +174,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
         return commentkey!!
     }
 
-    fun getText(customViewHolders: CustomViewHolders, position: Int): String {
+    fun getText(customViewHolders: CustomViewHolders): String {
         val comment: Comment = ProfileComments?.value!![customViewHolders.adapterPosition]
         val commentkey: String?= comment.text
 

@@ -69,7 +69,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
             val userID = FirebaseAuth.getInstance().uid
 
             val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
-            val queryref = ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
+            ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
                 ValueEventListener {
                 override fun onDataChange(p0: DataSnapshot) {
                     if (p0.exists()) {
@@ -127,7 +127,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
                     //toast needed
                 }
                 else if(holder.itemView.post_title.text == "[blocked]"){
-                    var pauth = post.author
+                    //var pauth = post.author
                     Log.d("Tag","blocked post will not open to clicked post screen")
                 }
                 else{
@@ -149,11 +149,11 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
     }
 
     fun hideBlockedPosts(holder: CustomViewHolders){
-        val post: Post = savedPosts.value!![holder.adapterPosition]
+        //val post: Post = savedPosts.value!![holder.adapterPosition]
         holder.itemView.visibility=View.GONE
 
     }
-    fun removeItem(customViewHolders: CustomViewHolders, position: Int): String {
+    fun removeItem(customViewHolders: CustomViewHolders): String {
         //position=customViewHolders.adapterPosition
 
        // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
@@ -167,7 +167,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
 
 
 
-    fun getCrn(customViewHolders: CustomViewHolders, position: Int): String {
+    fun getCrn(customViewHolders: CustomViewHolders): String {
         //position=customViewHolders.adapterPosition
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
@@ -179,7 +179,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
         return postcrn!!
     }
 
-    fun getTitle(customViewHolders: CustomViewHolders, position: Int): String {
+    fun getTitle(customViewHolders: CustomViewHolders): String {
         //position=customViewHolders.adapterPosition
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
@@ -203,7 +203,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type:Int
         return postauth!!
     }
 
-    fun getText(customViewHolders: CustomViewHolders, position: Int): String {
+    fun getText(customViewHolders: CustomViewHolders): String {
         //position=customViewHolders.adapterPosition
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
