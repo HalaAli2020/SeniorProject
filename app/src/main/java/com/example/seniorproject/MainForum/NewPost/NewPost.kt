@@ -3,8 +3,6 @@ package com.example.seniorproject.MainForum.NewPost
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import com.example.seniorproject.MainForum.Fragments.FragmentNewImagePost
-import com.example.seniorproject.MainForum.Fragments.FragmentNewPost
 import com.example.seniorproject.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 

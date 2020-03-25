@@ -1,8 +1,7 @@
-package com.example.seniorproject.MainForum.Fragments
+package com.example.seniorproject.MainForum.NewPost
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +14,6 @@ import com.example.seniorproject.databinding.FragmentNewPostBinding
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.R
 import com.example.seniorproject.viewModels.NewPostFragmentViewModel
-import kotlinx.android.synthetic.main.fragment_new_post.*
 import kotlinx.android.synthetic.main.fragment_new_post.view.*
 import javax.inject.Inject
 
@@ -32,7 +30,7 @@ class FragmentNewPost : Fragment() {
     //private lateinit var viewModel: NewPostFragmentViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        activity?.title = "New Post"
+        activity?.title = "New Text Post"
         DaggerAppComponent.create().inject(this)
         val binding: FragmentNewPostBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_post, container, false)
         viewModel = ViewModelProviders.of(this, factory).get(NewPostFragmentViewModel::class.java)

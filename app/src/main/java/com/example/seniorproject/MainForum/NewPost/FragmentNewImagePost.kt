@@ -1,33 +1,25 @@
-package com.example.seniorproject.MainForum.Fragments
+package com.example.seniorproject.MainForum.NewPost
 
-import android.Manifest
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.app.ActivityCompat
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
-import com.example.seniorproject.Authentication.RegisterActivity
 import com.example.seniorproject.Dagger.DaggerAppComponent
+import com.example.seniorproject.MainForum.Fragments.FragmentHome
+import com.example.seniorproject.MainForum.Fragments.FragmentList
+import com.example.seniorproject.MainForum.MainForum
 
 import com.example.seniorproject.R
-import com.example.seniorproject.data.Firebase.FirebaseData
-import com.example.seniorproject.databinding.FragmentNewPostBinding
-import com.example.seniorproject.utils.startRegisterActivity
 import com.example.seniorproject.viewModels.NewPostFragmentViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -35,8 +27,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.fragment_image__post.view.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -102,7 +92,7 @@ class FragmentNewImagePost : Fragment() {
 
                 if (title.isNullOrEmpty() || text.isNullOrEmpty() || subject.isNullOrEmpty())
                 {
-                    Toast.makeText(activity?.applicationContext, "please add a title, post text and select a subject", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity?.applicationContext, "Please add a title, post text and select a subject.", Toast.LENGTH_SHORT).show()
                 }
                 else {
                     val userID= FirebaseAuth.getInstance().uid
@@ -122,16 +112,16 @@ class FragmentNewImagePost : Fragment() {
                                                 selectedPhotoUri!!,
                                                 true
                                             )
-                                            Toast.makeText(activity?.applicationContext, "image post created", Toast.LENGTH_SHORT).show()
-                                            fragmentManager!!.beginTransaction()
-                                                .replace((view!!.parent as ViewGroup).id, FragmentHome())
-                                                .addToBackStack(null)
-                                                .commit()
+                                            Toast.makeText(activity?.applicationContext, "Image post created", Toast.LENGTH_SHORT).show()
+                                            val intent = Intent(context, MainForum::class.java)
+                                            startActivity(intent)
                                         }
                                         else{
                                             Toast.makeText(activity?.applicationContext, "Subscribe to $subject in order to create a post", Toast.LENGTH_SHORT).show()
                                             fragmentManager!!.beginTransaction()
-                                                .replace((view!!.parent as ViewGroup).id, FragmentList())
+                                                .replace((view!!.parent as ViewGroup).id,
+                                                    FragmentList()
+                                                )
                                                 .addToBackStack(null)
                                                 .commit()
                                         }
