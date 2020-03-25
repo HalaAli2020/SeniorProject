@@ -76,16 +76,16 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                 mContext.startActivity(intent)
             }
 
+            if (comment.author != null || comment.text != "no Comments") {
             holder.itemView.setOnClickListener {
                 val intent = Intent(mContext, ClickedPost::class.java)
                 var crn= comment.crn
                 var postkey = comment.Postkey
-                var callback: Callback? = null
-
-                FirebaseData.getInstance().readPostValues(crn!!, postkey!!, object: Callback{
-                    override fun onCallback(value: ArrayList<String>){
+                //var callback: Callback? = null
+                FirebaseData.getInstance().readPostValues(crn!!, postkey!!, object : Callback {
+                    override fun onCallback(value: ArrayList<String>) {
                         Log.d("spider", value[0])
-                        intent.putExtra("Text",value[1])
+                        intent.putExtra("Text", value[1])
                         Log.d("spider", "HELLO")
 
                         intent.putExtra("Title", value[0])
@@ -95,12 +95,17 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                         intent.putExtra("Author", value[6])
                         intent.putExtra("subject", crn)
                         intent.putExtra("Ptime", value[3])
-                        intent.putExtra("uri",value[7])
+                        intent.putExtra("uri", value[7])
                         mContext.startActivity(intent)
 
                     }
 
                 })
+
+            }
+            }
+            else {
+                holder.itemView.comment_text.text = "no Comments"
             }
 
         }
@@ -120,8 +125,8 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
     intent.putExtra("Author", post.author) //posterID = post author's uid
     intent.putExtra("crn", post.crn)*/ //same
 
-    fun getCommentKey(customViewHolders: CustomViewHolders, position: Int): String {
-        val comment: Comment = ProfileComments?.value!![customViewHolders.adapterPosition]
+    fun getCommentKey(customViewHolders: CustomViewHolders): String {
+        val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String?= comment.UserComkey
 
         //notifyItemRemoved(customViewHolders.adapterPosition)
@@ -129,8 +134,8 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
         return commentkey!!
     }
 
-    fun getUserKey(customViewHolders: CustomViewHolders, position: Int): String {
-        val comment: Comment = ProfileComments?.value!![customViewHolders.adapterPosition]
+    fun getUserKey(customViewHolders: CustomViewHolders): String {
+        val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String?= comment.PosterID
 
         //notifyItemRemoved(customViewHolders.adapterPosition)
@@ -138,8 +143,8 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
         return commentkey!!
     }
 
-    fun getClassKey(customViewHolders: CustomViewHolders, position: Int): String {
-        val comment: Comment = ProfileComments?.value!![customViewHolders.adapterPosition]
+    fun getClassKey(customViewHolders: CustomViewHolders): String {
+        val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String?= comment.Classkey
 
         //notifyItemRemoved(customViewHolders.adapterPosition)
@@ -147,8 +152,8 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
         return commentkey!!
     }
 
-    fun getClassProfileKey(customViewHolders: CustomViewHolders, position: Int): String {
-        val comment: Comment = ProfileComments?.value!![customViewHolders.adapterPosition]
+    fun getClassProfileKey(customViewHolders: CustomViewHolders): String {
+        val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String?= comment.ProfileComKey
 
         //notifyItemRemoved(customViewHolders.adapterPosition)
@@ -156,8 +161,8 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
         return commentkey!!
     }
 
-    fun pkeyUserProfile(customViewHolders: CustomViewHolders, position: Int): String {
-        val comment: Comment = ProfileComments?.value!![customViewHolders.adapterPosition]
+    fun pkeyUserProfile(customViewHolders: CustomViewHolders): String {
+        val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String?= comment.Postkey
 
         //notifyItemRemoved(customViewHolders.adapterPosition)
@@ -165,8 +170,8 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
         return commentkey!!
     }
 
-    fun getCrn(customViewHolders: CustomViewHolders, position: Int): String {
-        val comment: Comment = ProfileComments?.value!![customViewHolders.adapterPosition]
+    fun getCrn(customViewHolders: CustomViewHolders): String {
+        val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String?= comment.crn
 
         //notifyItemRemoved(customViewHolders.adapterPosition)
@@ -174,8 +179,8 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
         return commentkey!!
     }
 
-    fun getText(customViewHolders: CustomViewHolders, position: Int): String {
-        val comment: Comment = ProfileComments?.value!![customViewHolders.adapterPosition]
+    fun getText(customViewHolders: CustomViewHolders): String {
+        val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String?= comment.text
 
         //notifyItemRemoved(customViewHolders.adapterPosition)

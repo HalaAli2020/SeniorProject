@@ -42,7 +42,7 @@ class EditProfileActivity : AppCompatActivity() {
         val actionbar = supportActionBar
         actionbar!!.title = "Edit Profile"
 
-        val viewcheck = findViewById<EditText>(R.id.in_profile_bio)
+        //val viewcheck = findViewById<EditText>(R.id.in_profile_bio)
 
         DaggerAppComponent.create().inject(this)
         val factory = InjectorUtils.provideProfileViewModelFactory()
