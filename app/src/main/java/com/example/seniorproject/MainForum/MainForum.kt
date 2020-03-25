@@ -23,6 +23,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.Fragments.*
+import com.example.seniorproject.MainForum.NewPost.NewPost
+import com.example.seniorproject.Messages.FragmentLatestMessages
 import com.example.seniorproject.R
 import com.example.seniorproject.databinding.SideNavHeaderBinding
 import com.example.seniorproject.databinding.ActivityMainForumBinding
@@ -61,34 +63,39 @@ class MainForum : AppCompatActivity(),
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.home -> {
-                    FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
+                    FAB.backgroundTintList =
+                        ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
                     replaceFragment(FragmentHome())
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.subscriptions -> {
-                    FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
+                    FAB.backgroundTintList =
+                        ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
                     replaceFragment(FragmentSubscriptions())
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.newPost -> {
-                    FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.blue_theme))
+                    FAB.backgroundTintList =
+                        ColorStateList.valueOf(ContextCompat.getColor(this, R.color.blue_theme))
                     FAB.setImageResource(R.drawable.ic_create_blue_24dp)
-                    replaceFragment(FragmentNewPost())
+                    val intent = Intent(this, NewPost::class.java)
+                    startActivity(intent)
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.list -> {
-                    FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
+                    FAB.backgroundTintList =
+                        ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
                     replaceFragment(FragmentList())
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.messages -> {
-                    FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
+                    FAB.backgroundTintList =
+                        ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
-                        //replaceFragment(FragmentLatestMessages())
-                    replaceFragment(FragmentNewImagePost())
+                    replaceFragment(FragmentLatestMessages())
                     return@OnNavigationItemSelectedListener true
                 }
             }
@@ -105,6 +112,7 @@ class MainForum : AppCompatActivity(),
             DataBindingUtil.setContentView(this, R.layout.activity_main_forum)
         replaceFragment(FragmentHome())
         bottom_navigation.onNavigationItemSelectedListener = mOnNavigationItemSelectedListener
+        replaceFragment(FragmentHome())
         loginVerification()
         //here
 
@@ -133,8 +141,6 @@ class MainForum : AppCompatActivity(),
         //Log.d(TAG,myViewModel.rsomthing())
 
 
-
-
         navigationView.setNavigationItemSelectedListener { menuItem ->
             menuItem.isChecked = true
             mDrawerLayout.closeDrawers()
@@ -161,7 +167,7 @@ class MainForum : AppCompatActivity(),
         }
 
         val headerview = navigationView.getHeaderView(0)
-        val imageView : ImageView = headerview.findViewById(R.id.profile_image)
+        val imageView: ImageView = headerview.findViewById(R.id.profile_image)
 
 
 
@@ -175,7 +181,6 @@ class MainForum : AppCompatActivity(),
             .into(imageView)
 
     }
-
 
 
     private fun replaceFragment(fragment: Fragment) {

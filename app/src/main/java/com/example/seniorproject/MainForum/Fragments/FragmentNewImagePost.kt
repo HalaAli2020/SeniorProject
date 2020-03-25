@@ -56,6 +56,7 @@ class FragmentNewImagePost : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        activity?.title = "New Image Post"
         // Inflate the layout for this fragment
         DaggerAppComponent.create().inject(this)
         //val binding: FragmentNewPostBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_post, container, false)

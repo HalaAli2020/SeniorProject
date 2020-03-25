@@ -23,7 +23,6 @@ import kotlinx.android.synthetic.main.rv_post_header.view.click_post_text
 import kotlinx.android.synthetic.main.rv_post_header.view.click_post_title
 import kotlinx.android.synthetic.main.rv_post_header.view.community_name_TV
 import kotlinx.android.synthetic.main.rv_post_header.view.posts_timestamp
-import kotlinx.android.synthetic.main.rv_post_header_image.view.*
 
 class CommentsAdapter(
     var mContext: Context,
@@ -52,12 +51,9 @@ class CommentsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
 
-        if (viewType == 0 && uri == "null") {
+        if (viewType == 0) {
             val cellForRow = layoutInflater.inflate(R.layout.rv_post_header, parent, false)
             return CustomViewHoldersHeader(cellForRow)
-        } else if (viewType == 0 && uri.isNotEmpty()) {
-            val cellForRow = layoutInflater.inflate(R.layout.rv_post_header_image, parent, false)
-            return CustomViewHoldersHeaderImage(cellForRow)
         }
 
         val cellForRow = layoutInflater.inflate(R.layout.rv_post_comment, parent, false)
@@ -76,19 +72,18 @@ class CommentsAdapter(
 
         Log.d("CommentsAdapter:", "" + position)
 
-        if (holder is CustomViewHoldersHeaderImage) {
+        if (holder is CustomViewHoldersHeader) {
             holder.itemView.click_post_title.text = title
             holder.itemView.click_post_text.text = text
             holder.itemView.community_name_TV.text = crn
             holder.itemView.author_name_TV.text = author
 
-
-            Glide.with(mContext)
-                .load(uri)
-                .placeholder(R.color.white)
-                .into(holder.itemView.post_image_onclick)
-
-
+            if(uri!="null") {
+                Glide.with(mContext)
+                    .load(uri)
+                    .placeholder(R.color.white)
+                    .into(holder.itemView.post_image_onclick)
+            }
 
             holder.itemView.posts_timestamp.text = ptime
             holder.itemView.author_name_TV.setOnClickListener {
@@ -98,20 +93,7 @@ class CommentsAdapter(
                 mContext.startActivity(intent)
             }
 
-        } else if (holder is CustomViewHoldersHeader) {
-            holder.itemView.click_post_title.text = title
-            holder.itemView.click_post_text.text = text
-            holder.itemView.community_name_TV.text = crn
-            holder.itemView.author_name_TV.text = author
-            holder.itemView.posts_timestamp.text = ptime
-            holder.itemView.author_name_TV.setOnClickListener {
-                val intent = Intent(mContext, UserProfileActivity::class.java)
-                intent.putExtra("UserID", UserID)
-                intent.putExtra("Author", author)
-                mContext.startActivity(intent)
-            }
-
-        } else {
+        }else {
             if (Comments?.value == null || getItemCount() == 0) {
                 holder.itemView.comment_text.text = "No Comments yet"
                 //need to get the No comments yet to show up
@@ -181,9 +163,6 @@ class CommentsAdapter(
 
     }
 
-    class CustomViewHoldersHeaderImage(v: View) : RecyclerView.ViewHolder(v) {
-
-    }
 
 }
 

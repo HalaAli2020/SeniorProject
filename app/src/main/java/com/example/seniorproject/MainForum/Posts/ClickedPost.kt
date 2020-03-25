@@ -50,16 +50,16 @@ class ClickedPost : AppCompatActivity() {
         myViewModel = ViewModelProviders.of(this, factory).get(ClickedPostViewModel::class.java)
         val binding: ActivityClickedPostBinding = DataBindingUtil.setContentView(this, R.layout.activity_clicked_post)
 
-        val title: String = intent.getStringExtra("Title")
-        val text: String = intent.getStringExtra("Text")
-        val crn: String = intent.getStringExtra("subject")
-        val author: String = intent.getStringExtra("Author")
+        val title: String = intent.getStringExtra("Title") ?: "null"
+        val text: String = intent.getStringExtra("Text") ?: "null"
+        val crn: String = intent.getStringExtra("subject") ?: "null"
+        val author: String = intent.getStringExtra("Author") ?: "null"
         val uri : String = intent.getStringExtra("uri") ?: "null"
-        val ptime: String = intent.getStringExtra("Ptime")
-        val uid: String = intent.getStringExtra("UserID").toString()
+        val ptime: String = intent.getStringExtra("Ptime") ?: "null"
+        val uid: String = intent.getStringExtra("UserID") ?: "null"
         myViewModel.PKey = intent.getStringExtra("Pkey")
         myViewModel.Classkey = intent.getStringExtra("Classkey")
-        myViewModel.UserID = intent.getStringExtra("UserID")
+        myViewModel.UserID = uid
         myViewModel.title = title
         myViewModel.text = text
         myViewModel.crn = crn
