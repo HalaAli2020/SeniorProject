@@ -89,9 +89,9 @@ class FirebaseData @Inject constructor() {
         val reference =
             FirebaseDatabase.getInstance().getReference("users").child(firebaseAuth.uid!!)
 
-        var changed: Boolean = false
-        var classList: MutableLiveData<List<String>> = MutableLiveData()
-        var classPostList: PostLiveData = PostLiveData()
+        //var changed: Boolean = false
+        //var classList: MutableLiveData<List<String>> = MutableLiveData()
+        //var classPostList: PostLiveData = PostLiveData()
 
         postlistener = object : ValueEventListener {
             //var savedPostsList: MutableList<Post> = mutableListOf()
@@ -373,14 +373,14 @@ class FirebaseData @Inject constructor() {
                 Log.d(PTAG, p0.getKey().toString())
                 var classname = p0.getKey().toString()
                 cList.add(classname)
-                val checker = cList.size
+                //val checker = cList.size
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 Log.d(PTAG, p0.getKey().toString())
                 var classname = p0.getKey().toString()
                 cList.add(classname)
-                val checker = cList.size
+                //val checker = cList.size
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {
@@ -392,7 +392,7 @@ class FirebaseData @Inject constructor() {
 
     fun sendClassnameForUsername(): MutableList<String> {
         getclassnamesforusername()
-        val check = cList.size
+        //val check = cList.size
         return cList
     }
 
@@ -516,7 +516,7 @@ class FirebaseData @Inject constructor() {
                             }
                         }
                         //updateUser()
-                        val currentuser = FirebaseAuth.getInstance().currentUser
+                       /* val currentuser = FirebaseAuth.getInstance().currentUser
                         currentuser?.let {
                             val username = currentuser.displayName
                             val email = currentuser.email
@@ -525,7 +525,7 @@ class FirebaseData @Inject constructor() {
                             //Log.d(TAG,currentuser!!.photoUrl.toString() ?: "the displayname login2")
                             val user = User(username, email, uid, profileImageUrl)
                             //user not being used
-                        }
+                        }*/
                         Log.d(
                             TAG,
                             FirebaseAuth.getInstance().currentUser?.photoUrl.toString()
@@ -917,7 +917,7 @@ class FirebaseData @Inject constructor() {
         //val Class_key = FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID").child("Comments").push().key
         // implement in viewmodel
         //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
-        val dataupdates = HashMap<String, Any>()
+        //val dataupdates = HashMap<String, Any>()
         val comementvalues = comment.toMap()
         //dataupdates["$subject/$ClassID/Post/$Class_key"] = postvalues
         //dataupdates["$userID/Posts/$User_key"] = postvalues
@@ -1097,7 +1097,7 @@ class FirebaseData @Inject constructor() {
         comment.author= author
         Log.d("BigMoods", crn)
         val subpath = FirebaseDatabase.getInstance().getReference("/users/$userID")
-        val querysub = subpath.child("Subscriptions").orderByValue().addListenerForSingleValueEvent( object : ValueEventListener {
+        subpath.child("Subscriptions").orderByValue().addListenerForSingleValueEvent( object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     for(sub in p0.children){
@@ -1250,7 +1250,7 @@ class FirebaseData @Inject constructor() {
 
         val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
         //ref.child("BlockedUsers").push().setValue(UserID)
-        val queryref = ref.child("BlockedUsers").orderByValue().
+         ref.child("BlockedUsers").orderByValue().
             addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(p0: DataSnapshot) {
                     if(p0.exists() == false){
@@ -1421,7 +1421,7 @@ class FirebaseData @Inject constructor() {
         //val Class_key = FirebaseDatabase.getInstance().getReference(CRN).child("Posts").push().key
         //FirebaseDatabase.getInstance().getReference("/users/$userID")
         val subpath = FirebaseDatabase.getInstance().getReference("/users/$userID")
-        val querysub = subpath.child("Subscriptions").orderByValue().addListenerForSingleValueEvent( object : ValueEventListener {
+         subpath.child("Subscriptions").orderByValue().addListenerForSingleValueEvent( object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     for(sub in p0.children){
@@ -1516,7 +1516,7 @@ class FirebaseData @Inject constructor() {
         if (UserSUB == null) {
             getUserSub()
         }
-        var SubAdd = HashMap<String, String>()
+        //var SubAdd = HashMap<String, String>()
         //SubAdd[crn] = Subject
         val uid = FirebaseAuth.getInstance().uid
         var ref = FirebaseDatabase.getInstance().getReference("users/$uid/Subscriptions")
@@ -1591,9 +1591,6 @@ class FirebaseData @Inject constructor() {
 
 
     fun uploadImageToFirebaseStorage(selectedPhotoUri: Uri) {
-        if (selectedPhotoUri == null) {
-            return
-        }
 
         Log.d(TAG, "photo url is null")
 
@@ -1701,7 +1698,7 @@ class FirebaseData @Inject constructor() {
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 //val post = p0.getValue()
                 //val newPost = Post()
-                var postdetails: Iterable<DataSnapshot> = p0.children
+                //var postdetails: Iterable<DataSnapshot> = p0.children
                 //for (n in postdetails) {
                 var newPost = Post()
                 newPost.let {

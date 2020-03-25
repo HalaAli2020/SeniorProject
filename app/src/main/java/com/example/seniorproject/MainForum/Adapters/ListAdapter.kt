@@ -33,10 +33,7 @@ class ListAdapter(
 
     override fun getItemCount(): Int {
 
-        return if (classList != null)
-            classList.size
-        else
-            0
+            return classList.size
 
     }
 

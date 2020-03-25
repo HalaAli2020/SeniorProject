@@ -68,7 +68,7 @@ class CommunityPosts : AppCompatActivity() {
 
         refreshView.setOnRefreshListener {
             refreshView.isRefreshing = false
-            classes_post_RV.adapter = CustomAdapter(this, myViewModel.returnClassPosts(className!!), 1)
+            classes_post_RV.adapter = CustomAdapter(this, myViewModel.returnClassPosts(className), 1)
         }
 
         fun showToast(){

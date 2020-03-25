@@ -76,16 +76,16 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                 mContext.startActivity(intent)
             }
 
+            if (comment.author != null || comment.text != "no Comments") {
             holder.itemView.setOnClickListener {
                 val intent = Intent(mContext, ClickedPost::class.java)
                 var crn= comment.crn
                 var postkey = comment.Postkey
                 //var callback: Callback? = null
-
-                FirebaseData.getInstance().readPostValues(crn!!, postkey!!, object: Callback{
-                    override fun onCallback(value: ArrayList<String>){
+                FirebaseData.getInstance().readPostValues(crn!!, postkey!!, object : Callback {
+                    override fun onCallback(value: ArrayList<String>) {
                         Log.d("spider", value[0])
-                        intent.putExtra("Text",value[1])
+                        intent.putExtra("Text", value[1])
                         Log.d("spider", "HELLO")
 
                         intent.putExtra("Title", value[0])
@@ -95,12 +95,17 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                         intent.putExtra("Author", value[6])
                         intent.putExtra("subject", crn)
                         intent.putExtra("Ptime", value[3])
-                        intent.putExtra("uri",value[7])
+                        intent.putExtra("uri", value[7])
                         mContext.startActivity(intent)
 
                     }
 
                 })
+
+            }
+            }
+            else {
+                holder.itemView.comment_text.text = "no Comments"
             }
 
         }
