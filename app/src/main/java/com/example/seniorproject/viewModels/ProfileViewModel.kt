@@ -3,18 +3,12 @@ package com.example.seniorproject.viewModels
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.se.omapi.Session
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.CommentLive
 
 import com.example.seniorproject.data.models.PostLiveData
-import com.example.seniorproject.data.models.User
 import com.example.seniorproject.data.repositories.PostRepository
 import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject
@@ -24,14 +18,9 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(private val repository: PostRepository) : ViewModel(){
 
     var posts: PostLiveData = PostLiveData()
-    var username : LiveData<String>? = null
-    var email : LiveData<String>? = null
-    var comments : CommentLive = CommentLive()
-    var RepoUser : MutableLiveData<User>? = null
-    var SessionUser = repository.SessionUser()
-   var CommentListener : PostListener? = null
+    var comments: CommentLive = CommentLive()
     private var PostKey : String? = null
-    val CommentListeners : PostListener? = null
+    val CommentListener : PostListener? = null
     val userbio : String = fetchBio(FirebaseAuth.getInstance().currentUser?.uid ?: "null")
 
 
@@ -77,10 +66,7 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
 
     fun uploadUserProfileImage(selectedPhotoUri: Uri) = repository.uploadUserProfileImage(selectedPhotoUri)
 
-    fun currentUser()
-    {
-        RepoUser = repository.SessionUser()
-    }
+    fun currentUser() = repository.currentUser()
 
     fun saveNewUsername(username: String) = repository.saveNewUsername(username)
 

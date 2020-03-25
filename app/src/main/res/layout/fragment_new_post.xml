@@ -7,8 +7,7 @@
 
         <variable
             name="NewPostViewModel"
-            type="com.example.seniorproject.viewModels.NewPostFragmentViewModel"/>
-
+            type="com.example.seniorproject.viewModels.NewPostFragmentViewModel"></variable>
 
     </data>
 

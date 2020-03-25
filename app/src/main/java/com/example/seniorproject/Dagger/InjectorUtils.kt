@@ -3,7 +3,6 @@ package com.example.seniorproject.Dagger
 import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.data.repositories.MessagesRepo
 import com.example.seniorproject.data.repositories.PostRepository
-import com.example.seniorproject.data.repositories.SearchRepo
 import com.example.seniorproject.viewModels.Factories.*
 
 //import com.example.seniorproject.viewModels.AuthenticationViewModelFactory
@@ -50,10 +49,6 @@ object InjectorUtils {
     fun provideChatLogViewModelFactory(): ChatLogViewModelFactory{
         val messagerepo = MessagesRepo.getInstance(FirebaseData())
         return ChatLogViewModelFactory(messagerepo)
-    }
-    fun provideSearchViewModelFactory() : SearchViewModelFactory {
-        val searchrepo = SearchRepo.getInstance(FirebaseData())
-        return SearchViewModelFactory(searchrepo)
     }
 
 

@@ -20,7 +20,7 @@
         tools:context=".MainForum.Fragments.FragmentHome">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/refreshView_H"
+            android:id="@+id/refreshView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"

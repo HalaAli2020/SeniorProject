@@ -26,12 +26,10 @@ class LoginActivity : AppCompatActivity(), AuthenticationListener {
     lateinit var myViewModel: AuthenticationViewModel
 
     override fun onStarted() {
-        Toast.makeText(this,"Logging in", Toast.LENGTH_SHORT).show()
         }
 
     override fun onSuccess() {
         val myIntent = Intent(this@LoginActivity, MainForum::class.java)
-        Toast.makeText(this,"Logged In", Toast.LENGTH_LONG).show()
         this@LoginActivity.startActivity(myIntent)
         Toast.makeText(this, "successful login", Toast.LENGTH_SHORT).show()
     }
@@ -48,7 +46,7 @@ class LoginActivity : AppCompatActivity(), AuthenticationListener {
         setContentView(R.layout.activity_login)
         Log.d("TAG","test logcat")
 
-       DaggerAppComponent.create().inject(this)
+        DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this,factory).get(AuthenticationViewModel::class.java)
         val binding: ActivityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         binding.authViewModel = myViewModel

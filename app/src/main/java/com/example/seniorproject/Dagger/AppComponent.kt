@@ -4,15 +4,11 @@ import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Authentication.PasswordResetActivity
 import com.example.seniorproject.Authentication.RegisterActivity
 import com.example.seniorproject.MainForum.*
-import com.example.seniorproject.MainForum.Fragments.FragmentHome
-import com.example.seniorproject.MainForum.Fragments.ProfileCommentFragment
-import com.example.seniorproject.MainForum.Fragments.ProfilePostFragment
 import com.example.seniorproject.MainForum.Fragments.*
 import com.example.seniorproject.MainForum.Posts.ClickedPost
 import com.example.seniorproject.MainForum.Posts.EditProfileActivity
 import com.example.seniorproject.MainForum.Posts.UpdateComment
 import com.example.seniorproject.MainForum.Posts.UpdatePost
-import com.example.seniorproject.search.SearchActivity
 import com.example.seniorproject.Utils.multibindingmodule
 import dagger.Component
 import javax.inject.Singleton
@@ -22,7 +18,7 @@ import javax.inject.Singleton
 //usually by use of overriden injection methods
 
 @Singleton
-@Component(modules = [AppModule::class, multibindingmodule::class])
+@Component(modules = [AppModule::class,multibindingmodule::class])
 interface AppComponent {
 
     fun inject(activity: RegisterActivity)
@@ -38,6 +34,5 @@ interface AppComponent {
     fun inject(activity: EditProfileActivity)
     fun inject(activity: UpdateComment)
     fun inject(activity: UpdatePost)
-    fun inject(activity: SearchActivity)
     fun inject(fragment: FragmentNewImagePost)
 }

@@ -19,14 +19,11 @@
         android:orientation="vertical"
         tools:context=".MainForum.MainForum">
 
-
         <androidx.drawerlayout.widget.DrawerLayout
             android:id="@+id/drawer_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp">
+            android:fitsSystemWindows="true">
 
 
             <FrameLayout
@@ -60,6 +57,7 @@
                 app:menu="@menu/activity_main_drawer" />
 
         </androidx.drawerlayout.widget.DrawerLayout>
+
 
         <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
             android:id="@+id/bottom_navigation"
