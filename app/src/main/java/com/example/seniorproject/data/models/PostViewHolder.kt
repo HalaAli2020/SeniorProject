@@ -33,6 +33,8 @@ open class PostViewHolder(parent: View) : RecyclerView.ViewHolder(parent) {
             intent.putExtra("UserID", post.UserID)
             intent.putExtra("Author", post.author)
             intent.putExtra("crn", post.crn)
+            intent.putExtra("subject", post.subject)
+            intent.putExtra("Ptime", post.Ptime)
             //val bundle = bundleOf()
             mContext.startActivity(intent)
 

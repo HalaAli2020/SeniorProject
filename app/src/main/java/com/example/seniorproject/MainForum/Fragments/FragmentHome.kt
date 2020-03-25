@@ -125,7 +125,7 @@ class FragmentHome : Fragment() {
         binding.homeFragmentViewModel = myViewModel
         binding.lifecycleOwner = this
         Obse()
-        myViewModel.posts.observe(this,obse!!)
+        myViewModel.posts.observe(this.viewLifecycleOwner,obse!!)
 
 
         /*DaggerAppComponent.create().inject(this)

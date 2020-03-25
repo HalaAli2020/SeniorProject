@@ -63,7 +63,7 @@ class ListViewModel @Inject constructor(private val repository: PostRepository) 
     {
         return (listClasses.value.isNullOrEmpty() && UsersSubs?.value.isNullOrEmpty())
     }
-    fun Getcomnosubs() = repository.getSubs()
+    fun Getcomnosubs() = repository.getClasses()
 
 
     fun combineSubs()
