@@ -34,7 +34,10 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     fun getSubscribedPosts() = Firebase.getSubscribedPosts()
     //fun getEmail() = Firebase.getEmail()
 
-    //fun getpostKey(PKey: String) {}
+    fun getpostKey(PKey: String)
+    {
+
+    }
 
     fun getComments(ClassKey: String, subject: String): CommentLive {
         return Firebase.getComments(ClassKey, subject)

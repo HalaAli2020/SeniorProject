@@ -50,12 +50,12 @@ class ClickedPost : AppCompatActivity() {
         myViewModel = ViewModelProviders.of(this, factory).get(ClickedPostViewModel::class.java)
         val binding: ActivityClickedPostBinding = DataBindingUtil.setContentView(this, R.layout.activity_clicked_post)
 
-        val title: String = intent.getStringExtra("Title") ?: "no title"
-        val text: String = intent.getStringExtra("Text") ?: "no text"
-        val crn: String = intent.getStringExtra("subject") ?: "no subject"
-        val author: String = intent.getStringExtra("Author") ?: "no author"
-        val uri : String = intent.getStringExtra("uri") ?: " "
-        val time: String = intent.getStringExtra("Ptime") ?: "no time"
+        val title: String = intent.getStringExtra("Title")
+        val text: String = intent.getStringExtra("Text")
+        val crn: String = intent.getStringExtra("subject")
+        val author: String = intent.getStringExtra("Author")
+        val uri : String = intent.getStringExtra("uri") ?: ""
+        val time: String = intent.getStringExtra("Ptime")
 
         myViewModel.PKey = intent.getStringExtra("Pkey")
         myViewModel.Classkey = intent.getStringExtra("Classkey")
@@ -87,28 +87,28 @@ class ClickedPost : AppCompatActivity() {
             toast.show()
         }
 
-           object : SwipeHelper(applicationContext, comment_RecyclerView, 200) {
+            val swipe = object : SwipeHelper(applicationContext, comment_RecyclerView, 200) {
                 override fun initButton(
                     viewHolders: RecyclerView.ViewHolder,
                     buffer: MutableList<ProfileButton>
                 ) {
                     val userk: String? = adapter.getUserKey(viewHolders)
                     if (FirebaseAuth.getInstance().currentUser?.uid == userk){
-                        //val swipe = null
+                        val swipe = null
                     }
                     else {
                         buffer.add(
                             ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
                                 ("#FF0000"), object : ButtonClickListener {
                                 override fun onClick(pos: Int) {
-                                    //val postkey: String? =
-                                    //    adapter.removeItem(viewHolders)
+                                    val postkey: String? =
+                                        adapter.removeItem(viewHolders)
 
                                     val userkey: String? =
                                         adapter.getUserKey(viewHolders)
 
-                                    //val crnkey: String? =
-                                     //   adapter.getCrn(viewHolders)
+                                    val crnkey: String? =
+                                        adapter.getCrn(viewHolders, pos)
 
                                     //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
                                     var builder = AlertDialog.Builder(
@@ -161,7 +161,7 @@ class ClickedPost : AppCompatActivity() {
                                         adapter.getUserKey(viewHolders)
 
                                     val crnkey: String? =
-                                        adapter.getCrn(viewHolders)
+                                        adapter.getCrn(viewHolders, pos)
 
                                     val textkey: String? = adapter.getText(viewHolders)
 
@@ -184,7 +184,7 @@ class ClickedPost : AppCompatActivity() {
                                         listreason,
                                         0
                                     ) { dialogInterface, i ->
-                                        //var complaint = listreason[i]
+                                        var complaint = listreason[i]
                                     }
                                     builder.setPositiveButton("SUBMIT"
                                     ) { _: DialogInterface?, _: Int ->

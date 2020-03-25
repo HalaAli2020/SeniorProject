@@ -24,7 +24,12 @@ class SubsriptionAdapter(context: Context, private val classList: MutableList<St
     }
 
     override fun getItemCount(): Int {
-          return classList.size
+
+        return if (classList != null)
+            classList.size
+        else
+            0
+
     }
 
     override fun onBindViewHolder(holder: ListHolder12, position: Int) {
