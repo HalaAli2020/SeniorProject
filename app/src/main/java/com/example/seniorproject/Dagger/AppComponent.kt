@@ -5,6 +5,8 @@ import com.example.seniorproject.Authentication.PasswordResetActivity
 import com.example.seniorproject.Authentication.RegisterActivity
 import com.example.seniorproject.MainForum.*
 import com.example.seniorproject.MainForum.Fragments.*
+import com.example.seniorproject.MainForum.NewPost.FragmentNewImagePost
+import com.example.seniorproject.MainForum.NewPost.FragmentNewPost
 import com.example.seniorproject.MainForum.Posts.ClickedPost
 import com.example.seniorproject.MainForum.Posts.EditProfileActivity
 import com.example.seniorproject.MainForum.Posts.UpdateComment

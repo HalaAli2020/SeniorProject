@@ -55,19 +55,18 @@ class ClickedPost : AppCompatActivity() {
         val crn: String = intent.getStringExtra("subject") ?: "no subject"
         val author: String = intent.getStringExtra("Author") ?: "no author"
         val uri : String = intent.getStringExtra("uri") ?: " "
-        val time: String = intent.getStringExtra("Ptime") ?: "no time"
-
+        val ptime: String = intent.getStringExtra("Ptime") ?: "no time"
+        val uid: String = intent.getStringExtra("UserID") ?: "null"
         myViewModel.PKey = intent.getStringExtra("Pkey")
         myViewModel.Classkey = intent.getStringExtra("Classkey")
-        myViewModel.UserID = intent.getStringExtra("UserID")
+        myViewModel.UserID = uid
         myViewModel.title = title
         myViewModel.text = text
         myViewModel.crn = crn
 
         //add userid and send
 
-        adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString(), time, uri)
-        comment_RecyclerView.adapter = adapter
+        comment_RecyclerView.adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,uid, ptime, uri)
         comment_RecyclerView.layoutManager = LinearLayoutManager(this)
 
 
@@ -78,7 +77,7 @@ class ClickedPost : AppCompatActivity() {
         refreshView.setColorSchemeColors(ContextCompat.getColor(this, R.color.white))
 
         refreshView.setOnRefreshListener {
-            comment_RecyclerView.adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString(), time, uri)
+            comment_RecyclerView.adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,uid, ptime, uri)
             refreshView.isRefreshing = false
         }
 
