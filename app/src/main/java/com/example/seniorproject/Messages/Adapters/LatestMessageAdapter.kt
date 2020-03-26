@@ -5,6 +5,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Messages.ChatLog
 import com.example.seniorproject.R
@@ -47,6 +48,7 @@ class LatestMessageAdapter(
 
         holder.itemView.textView_latest_user.text = message.username
         holder.itemView.textView_latest_message.text = message.text
+        holder.itemView.imageView_incoming_user.setImageDrawable(mContext.resources.getDrawable(R.drawable.ic_account_circle_blue_24dp))
 
         holder.itemView.listOfUsers.setOnClickListener{
             val intent = Intent(mContext, ChatLog::class.java)
