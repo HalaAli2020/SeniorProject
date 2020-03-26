@@ -381,7 +381,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                     var profilePostL: MutableList<Post> = mutableListOf()
                     profilePostL.add(emptyPost)
                     profilePosts.value = profilePostL
-                    //noPostsCheck = true
+                    Firebase.noPostsCheck = true
                 }
                 else {
                     //noPostsCheck = false
@@ -425,6 +425,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                     profilePosts.value = profilePostsList
                     //Log.d("TAG", "Comments loaded")
                 }
+
                 //return profile posts?
             }
         })
