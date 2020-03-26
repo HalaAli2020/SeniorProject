@@ -20,6 +20,7 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
     var ctext: String? = null
     var ctitle: String? = null
     var userID: String? = null
+    var bool: Boolean = false
     //var author: String? = repository.currentUser()?.displayName
 
 
@@ -49,7 +50,7 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
         }
         Log.d("SELECTED VALUE:", classSpinner)
         repository.saveNewPost(textPost!!,titlePost!!,classSpinner!!)
-
+        bool = true
     }
 
    fun saveNewImgPosttoUser(title : String, text:String, Subject: String, CRN: String, uri: Uri, imagePost : Boolean) = repository.saveNewImgPosttoUser(title,text,Subject,CRN,uri,imagePost)

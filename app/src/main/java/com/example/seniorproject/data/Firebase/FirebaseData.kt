@@ -1416,7 +1416,7 @@ class FirebaseData @Inject constructor() {
         val author= firebaseAuth.currentUser?.displayName
         val post = Post(title, text, CRN,"")
         post.UserID = userID
-        post.author=author
+        post.author= author
         //FIX userprofile not init post.author = userprofile.username!!
         //val Class_key = FirebaseDatabase.getInstance().getReference(CRN).child("Posts").push().key
         //FirebaseDatabase.getInstance().getReference("/users/$userID")

@@ -23,12 +23,6 @@ class FragmentNewPost : Fragment() {
     lateinit var factory: ViewModelProvider.Factory
     lateinit var viewModel: NewPostFragmentViewModel
 
-    companion object {
-        fun newInstance() = FragmentNewPost()
-    }
-
-    //private lateinit var viewModel: NewPostFragmentViewModel
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         activity?.title = "New Text Post"
         DaggerAppComponent.create().inject(this)
@@ -37,17 +31,8 @@ class FragmentNewPost : Fragment() {
         val view = inflater.inflate(R.layout.fragment_new_post, container, false)
 
 
-        //post: Post, Subject: String, CRN: String, uri: Uri, imagePost : Boolean
-
-        /*val factory = InjectorUtils.provideNewPostViewModelFactory()
-        val binding: NewPostFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_post, container, false)
-        viewModel = ViewModelProviders.of(this, factory).get(NewPostFragmentViewModel::class.java)
-        val view = inflater.inflate(R.layout.fragment_new_post, container, false)*/
-
         val adapter = ArrayAdapter.createFromResource(view.context, R.array.class_list, android.R.layout.simple_spinner_item)
-        // Specify the layout to use when the subscriptions of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        // Apply the adapter to the spinner
         view.spinner2.adapter = adapter
 
         binding.newPostViewModel = viewModel
