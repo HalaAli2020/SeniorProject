@@ -11,18 +11,15 @@
 
     <FrameLayout
         android:layout_width="match_parent"
+        android:background="@color/BackgroundColor"
         android:layout_height="match_parent"
         tools:context="com.example.seniorproject.search.SearchActivity">
 
 
-
-
-
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/Search_L"
-            android:layout_width="409dp"
-            android:layout_height="551dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginTop="2dp"
             android:windowSoftInputMode="adjustResize"
             app:layout_constraintBottom_toBottomOf="parent"
