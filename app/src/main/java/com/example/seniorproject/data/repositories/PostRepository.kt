@@ -201,6 +201,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                         it.Classkey = n.child("Classkey").getValue(String::class.java)
                         it.UserID = n.child("UserID").getValue(String::class.java)
                         it.author = n.child("author").getValue(String::class.java)
+                        it.uri = n.child("uri").getValue(String::class.java)
 
                         // comments might need to be gotten separatley to properly convert values
 
@@ -400,6 +401,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                             it.subject = p0.child("subject").value.toString()
                             it.Ptime=p0.child("Ptime").value.toString()
                             it.author = p0.child("author").value.toString()
+                            it.uri = p0.child("uri").value.toString()
                             // not setting author
                         }
                     } catch (e: Exception) {

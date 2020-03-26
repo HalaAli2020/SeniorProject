@@ -30,6 +30,10 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
         posts = repository.getUserProfilePosts(UserID)
         return posts
     }
+    fun returnProfilePost() : PostLiveData
+    {
+        return posts
+    }
 
     fun getUserProfileComments(UserID : String) : CommentLive {
         comments = repository.getUserProfileComments(UserID)

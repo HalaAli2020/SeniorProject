@@ -82,9 +82,12 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                     var crn = comment.crn
                     var postkey = comment.Postkey
                     //var callback: Callback? = null
+                    Log.d("Commetn", crn)
+                    Log.d("postkey", postkey)
                     FirebaseData.getInstance().readPostValues(crn!!, postkey!!, object : Callback {
                         override fun onCallback(value: ArrayList<String>) {
-                            if (value.size == 8) {
+
+                            if (value.size <= 8) {
                                 Log.d("spider", value[0])
                                 intent.putExtra("Text", value[1])
                                 Log.d("spider", "HELLO")
@@ -96,7 +99,8 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                                 intent.putExtra("Author", value[6])
                                 intent.putExtra("subject", crn)
                                 intent.putExtra("Ptime", value[3])
-                                intent.putExtra("uri", value[7])
+                                //intent.putExtra("uri", value[7])
+                                mContext.startActivity(intent)
                             } else {
                                 Log.d("spider", value[0])
                                 intent.putExtra("Text", value[1])
@@ -112,10 +116,12 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                                 intent.putExtra("uri", value[7])
                                 mContext.startActivity(intent)
 
+
                             }
                         }
-
                     })
+
+
 
 
                 }
