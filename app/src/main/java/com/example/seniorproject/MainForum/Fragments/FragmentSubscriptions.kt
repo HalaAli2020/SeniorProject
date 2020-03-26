@@ -24,6 +24,10 @@ class FragmentSubscriptions : Fragment() {
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: SubscriptionsViewModel
 
+   var obse = Observer<MutableList<String>>{
+       swap()
+   }
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +42,7 @@ class FragmentSubscriptions : Fragment() {
         activity?.title = "Subscriptions"
         val view = inflater.inflate(R.layout.fragment_subscriptions, container, false)
 
-
+        myViewModel.UsersSubs?.observe(this, obse)
         view.subs_recyclerView.layoutManager = LinearLayoutManager(context)
 
         var ada = myViewModel.getUserSub()?.let {
@@ -65,6 +69,11 @@ class FragmentSubscriptions : Fragment() {
 
         return view
 
+    }
+    fun swap()
+    {
+        var ada = SubsriptionAdapter(view!!.context, myViewModel.retsubs())
+        view!!.subs_recyclerView.swapAdapter(ada, true)
     }
 
     override fun onResume() {

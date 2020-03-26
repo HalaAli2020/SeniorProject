@@ -34,6 +34,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     var otherEmail : String? = null
 
 
+
     private var getCommentsJob: Job? = null
 
     fun saveNewPost(text: String, title: String, CRN: String) = Firebase.saveNewPosttoUser(text, title, CRN)
@@ -353,6 +354,33 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
             }
         })
         return SubList
+    }
+    fun getsublist2() : MutableLiveData<MutableList<String>>
+    {
+        var SubList : MutableList<String> = mutableListOf()
+        Firebase.listenUserSub(object : FirebaseCallbackString {
+            override fun onFailure() {
+
+            }
+
+            override fun onStart() {
+
+            }
+
+            override fun onSuccess(d: DataSnapshot) {
+                val size = d.hasChildren()
+                Log.d("Size", size.toString())
+                //var has :HashMap<String,String>? = hashMapOf()
+                val Sublist = d.children
+                for (x in Sublist) {
+                    Log.d("usersub", x.getValue(String::class.java)!!)
+                    SubList.add(x.getValue(String::class.java)!!)
+                }
+                UserSUB.value = SubList
+            }
+        })
+
+        return UserSUB
     }
 
     fun remUsersub(crn: String) {

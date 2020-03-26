@@ -10,7 +10,8 @@ private const val TAG = "MyLogTag"
 class SubscriptionsViewModel @Inject constructor(private val repository: PostRepository) :
     ViewModel() {
 
-    private var UsersSubs: MutableList<String>? = mutableListOf()
+    var UsersSubs: MutableLiveData<MutableList<String>>? = MutableLiveData()
+
 
 
     init {
@@ -18,14 +19,14 @@ class SubscriptionsViewModel @Inject constructor(private val repository: PostRep
     }
 
     fun getUserSub(): MutableList<String>? {
-        UsersSubs = repository.getsublist()
+        UsersSubs = repository.getsublist2()
 
-        return UsersSubs
+        return UsersSubs!!.value
 
     }
     fun retsubs(): MutableList<String>?
     {
-        return UsersSubs
+        return UsersSubs!!.value
     }
 
 
