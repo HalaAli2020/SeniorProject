@@ -12,6 +12,7 @@ import com.example.seniorproject.MainForum.Posts.EditProfileActivity
 import com.example.seniorproject.MainForum.Posts.UpdateComment
 import com.example.seniorproject.MainForum.Posts.UpdatePost
 import com.example.seniorproject.Utils.multibindingmodule
+import com.example.seniorproject.search.SearchActivity
 import dagger.Component
 import javax.inject.Singleton
 
@@ -37,4 +38,5 @@ interface AppComponent {
     fun inject(activity: UpdateComment)
     fun inject(activity: UpdatePost)
     fun inject(fragment: FragmentNewImagePost)
+    fun inject(activity: SearchActivity)
 }

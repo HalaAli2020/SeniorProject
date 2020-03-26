@@ -1,5 +1,6 @@
 package com.example.seniorproject.viewModels
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.seniorproject.data.repositories.PostRepository
 import javax.inject.Inject
@@ -11,15 +12,20 @@ class SubscriptionsViewModel @Inject constructor(private val repository: PostRep
 
     private var UsersSubs: MutableList<String>? = mutableListOf()
 
+
     init {
         getUserSub()
     }
 
     fun getUserSub(): MutableList<String>? {
-        UsersSubs = repository.getUserSub()
+        UsersSubs = repository.getsublist()
 
         return UsersSubs
 
+    }
+    fun retsubs(): MutableList<String>?
+    {
+        return UsersSubs
     }
 
 
