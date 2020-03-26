@@ -654,6 +654,8 @@ class FirebaseData @Inject constructor() {
         }.addOnFailureListener {
             Log.d(TAG, "Error ${it.message}")
         }
+
+       FirebaseDatabase.getInstance().getReference("users/$uid/bio").setValue("no bio")
     }
 
 
