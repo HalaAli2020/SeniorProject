@@ -196,11 +196,11 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
         holder.itemView.visibility=View.GONE
 
     }
-    fun removeItem(customViewHolders: CustomViewHolders): String {
+    fun removeItem(holder: RecyclerView.ViewHolder): String {
         //position=customViewHolders.adapterPosition
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
-        val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val post: Post = savedPosts.value!![holder.adapterPosition]
         val postkey: String? = post.Classkey
         //notifyItemRemoved(customViewHolders.adapterPosition)
         //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
@@ -210,11 +210,11 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
 
 
 
-    fun getCrn(customViewHolders: CustomViewHolders): String {
+    fun getCrn(holder: RecyclerView.ViewHolder): String {
         //position=customViewHolders.adapterPosition
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
-        val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val post: Post = savedPosts.value!![holder.adapterPosition]
         val postcrn: String?= post.subject
         //notifyItemRemoved(customViewHolders.adapterPosition)
         //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
@@ -222,11 +222,11 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
         return postcrn!!
     }
 
-    fun getTitle(customViewHolders: CustomViewHolders): String {
+    fun getTitle(holder: RecyclerView.ViewHolder): String {
         //position=customViewHolders.adapterPosition
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
-        val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val post: Post = savedPosts.value!![holder.adapterPosition]
         val posttitle: String?= post.title
         //notifyItemRemoved(customViewHolders.adapterPosition)
         //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
@@ -234,11 +234,11 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
         return posttitle!!
     }
 
-    fun getAuthor(customViewHolders: CustomViewHolders): String {
+    fun getAuthor(holder: RecyclerView.ViewHolder): String {
         //position=customViewHolders.adapterPosition
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
-        val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val post: Post = savedPosts.value!![holder.adapterPosition]
         val postauth: String?= post.author
         //notifyItemRemoved(customViewHolders.adapterPosition)
         //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
@@ -246,11 +246,11 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
         return postauth!!
     }
 
-    fun getText(customViewHolders: CustomViewHolders): String {
+    fun getText(holder: RecyclerView.ViewHolder): String {
         //position=customViewHolders.adapterPosition
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
-        val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+        val post: Post = savedPosts.value!![holder.adapterPosition]
         val posttext: String? = post.text
         //notifyItemRemoved(customViewHolders.adapterPosition)
         //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)

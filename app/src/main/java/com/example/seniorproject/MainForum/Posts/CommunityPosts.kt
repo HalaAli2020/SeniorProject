@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Adapters.CustomAdapter
 import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
+import com.example.seniorproject.MainForum.Adapters.PostImageViewHolders
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
 import com.example.seniorproject.Utils.ProfileButton
@@ -83,7 +84,7 @@ class CommunityPosts : AppCompatActivity() {
                     buffer: MutableList<ProfileButton>
                 ) {
                     val userk: String? =
-                        adapter.getUserKey(viewHolders as CustomViewHolders)
+                        adapter.getUserKey(viewHolders)
 
                     if (FirebaseAuth.getInstance().currentUser?.uid == userk){
                         //val swipe = null
