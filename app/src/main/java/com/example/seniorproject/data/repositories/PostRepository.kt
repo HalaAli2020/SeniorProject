@@ -31,6 +31,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     var Comments : CommentLive = CommentLive()
     var newProfileComments: Comment? = null
     var savedPostsList: MutableList<Post> = mutableListOf()
+    var otherEmail : String? = null
 
 
     private var getCommentsJob: Job? = null
@@ -485,13 +486,14 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         return Comments
     }
 
-    fun fetchEmail(UserID: String) = Firebase.fetchEmail(UserID)
+    fun fetchEmail(UserID: String,callbackItem : FirebaseCallbackItem) = Firebase.fetchEmail(UserID,callbackItem)
+
 
     fun saveNewUsername(username: String) = Firebase.saveNewUsername(username)
 
     fun saveUserbio(bio : String) = Firebase.saveUserbio(bio)
 
-    fun fetchBio(UserID: String) = Firebase.fetchBio(UserID)
+    fun fetchBio(UserID: String,callbackItem: FirebaseCallbackItem) = Firebase.fetchBio(UserID,callbackItem)
 
     fun fetchCurrentBio() = Firebase.fetchCurrentBio()
 
@@ -546,6 +548,12 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         fun onStart()
         fun onFailure()
         fun onSuccess(data: DataSnapshot)
+    }
+
+    interface FirebaseCallbackItem {
+        fun onStart()
+        fun onFailure()
+        fun onMessage(data: DataSnapshot) : String
     }
 
 
