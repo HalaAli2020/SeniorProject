@@ -113,54 +113,10 @@ class FragmentHome : Fragment() {
         }
     }
 
-    /* private fun listenForPosts(){
-         val reference = FirebaseDatabase.getInstance().getReference("/posts")
-
-         reference.addChildEventListener(object: ChildEventListener{
-             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                 val newPost = p0.getValue(Post::class.java)
-
-                 if(newPost!=null) {
-                     Log.d("ForumACT", newPost?.text)
-                     //adapter.add(Post(newPost.title, newPost.text, 0, ""))
-                 }
-             }
-
-             override fun onCancelled(p0: DatabaseError) {
-
-            }
-
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-
-            }
-
-            override fun onChildRemoved(p0: DataSnapshot) {
-
-            }
-        })
+    override fun onResume() {
+        super.onResume()
+        swap()
     }
-
-    private fun performNewPost(){
-        val title = new_post_title.text.toString()
-        val text = new_post_text.text.toString()
-        val reference = FirebaseDatabase.getInstance().getReference("/posts").push()
-
-        if(title.isNotEmpty() && text.isNotEmpty()) {
-            val post = Post(title, text, 0, "")
-
-            reference.setValue(post).addOnSuccessListener {
-                Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
-                new_post_text.setText("")
-                new_post_title.setText("")
-            }
-        }
-    }
-
-*/
 
 
 }
