@@ -108,10 +108,6 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
 
-        refresh_profile.setOnClickListener {
-            refresh()
-        }
-
        /* val binding: ActivityUserProfileBinding = DataBindingUtil.setContentView(this,R.layout.activity_user_profile)
         binding.profileViewModell = myViewModel
         binding.lifecycleOwner = this */
