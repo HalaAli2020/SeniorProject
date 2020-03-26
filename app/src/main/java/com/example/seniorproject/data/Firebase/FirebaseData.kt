@@ -1390,12 +1390,9 @@ class FirebaseData @Inject constructor() {
                 list.add(4, classkey!!)
                 list.add(5, user!!)
                 list.add(6, author!!)
-                if (uri != null) {
+                if(!uri.isNullOrEmpty()){
                     list.add(7, uri)
                 }
-                else
-
-
                 callBack.onCallback(list)
             }
             /*override fun onDataChange(p0: DataSnapshot){
