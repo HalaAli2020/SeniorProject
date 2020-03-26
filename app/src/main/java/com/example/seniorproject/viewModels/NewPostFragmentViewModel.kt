@@ -4,6 +4,8 @@ import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
+import androidx.databinding.ObservableField
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 //import com.example.seniorproject.Utils.startMainForum
 import com.example.seniorproject.Utils.PostListener
@@ -20,7 +22,7 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
     var ctext: String? = null
     var ctitle: String? = null
     var userID: String? = null
-    var bool: Boolean = false
+    var bool = MutableLiveData<Boolean>()
     //var author: String? = repository.currentUser()?.displayName
 
 
@@ -50,7 +52,7 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
         }
         Log.d("SELECTED VALUE:", classSpinner)
         repository.saveNewPost(textPost!!,titlePost!!,classSpinner!!)
-        bool = true
+        bool.value = true
     }
 
    fun saveNewImgPosttoUser(title : String, text:String, Subject: String, CRN: String, uri: Uri, imagePost : Boolean) = repository.saveNewImgPosttoUser(title,text,Subject,CRN,uri,imagePost)

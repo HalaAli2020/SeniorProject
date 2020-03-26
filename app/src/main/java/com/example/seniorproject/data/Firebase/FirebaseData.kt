@@ -2126,7 +2126,7 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    fun sendMessage(message: String, toID: String, username: String){
+    fun sendMessage(message: String?, toID: String?, username: String?){
         //val message = editText_chatLog.text.toString()
 
         val fromID = FirebaseAuth.getInstance().uid
@@ -2141,7 +2141,7 @@ class FirebaseData @Inject constructor() {
             reference.key!!,
             message,
             fromID!!,
-            toID,
+            toID!!,
             System.currentTimeMillis() / 1000
         )
 
