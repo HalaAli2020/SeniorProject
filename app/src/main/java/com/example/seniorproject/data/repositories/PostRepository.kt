@@ -487,30 +487,14 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         return Comments
     }
 
-    fun fetchEmail(UserID: String) : String{
-        Firebase.fetchEmail(UserID, object : PostRepository.FirebaseCallbackString{
-            override fun onStart() {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
+    fun fetchEmail(UserID: String,callbackItem : FirebaseCallbackItem) = Firebase.fetchEmail(UserID,callbackItem)
 
-            override fun onFailure() {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onSuccess(p0: DataSnapshot) {
-                val email = p0.child("email").getValue(String::class.java)
-                otherEmail = email ?: "no email in success"
-            }
-
-        })
-        return otherEmail ?: "no email"
-    }
 
     fun saveNewUsername(username: String) = Firebase.saveNewUsername(username)
 
     fun saveUserbio(bio : String) = Firebase.saveUserbio(bio)
 
-    fun fetchBio(UserID: String) = Firebase.fetchBio(UserID)
+    fun fetchBio(UserID: String,callbackItem: FirebaseCallbackItem) = Firebase.fetchBio(UserID,callbackItem)
 
     fun fetchCurrentBio() = Firebase.fetchCurrentBio()
 
@@ -565,6 +549,12 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         fun onStart()
         fun onFailure()
         fun onSuccess(data: DataSnapshot)
+    }
+
+    interface FirebaseCallbackItem {
+        fun onStart()
+        fun onFailure()
+        fun onMessage(data: DataSnapshot) : String
     }
 
 

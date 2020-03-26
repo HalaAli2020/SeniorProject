@@ -5,12 +5,15 @@ import android.content.Intent
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.example.seniorproject.Authentication.LoginActivity
+import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.Utils.PostListener
+import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.data.models.CommentLive
 
 import com.example.seniorproject.data.models.PostLiveData
 import com.example.seniorproject.data.repositories.PostRepository
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
 import javax.inject.Inject
 
 
@@ -21,9 +24,9 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     var comments: CommentLive = CommentLive()
     private var PostKey : String? = null
     val CommentListener : PostListener? = null
-    val userbio : String = fetchBio(FirebaseAuth.getInstance().currentUser?.uid ?: "null")
-    var otherEmail : String? = null
-
+    //val userbio : String = fetchBio(FirebaseAuth.getInstance().currentUser?.uid ?: "null")
+    var otherEmail : String = "no email available"
+    var otherBio : String = "no bio available"
 
 
     fun getUserProfilePosts(UserID : String): PostLiveData {
@@ -77,19 +80,53 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
 
     var user = repository.currentUser()
 
-    fun fetchEmail(UserID: String) : String {
-        otherEmail = repository.fetchEmail(UserID)
-        return otherEmail ?: "no email in viewmodel"
+    fun fetchEmail(UserID: String, callback : EmailCallback) : String {
+        repository.fetchEmail(UserID, object : PostRepository.FirebaseCallbackItem{
+            override fun onStart() {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onFailure() {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onMessage(data: DataSnapshot): String {
+                val email = data.child("email").getValue(String::class.java)
+                otherEmail = email ?: "no email in success"
+                callback.getEmail(otherEmail)
+                return otherEmail
+            }
+        })
+        return otherEmail
     }
-    //fun getEmail() = repository.getEmail()
+
+    fun fetchBio(UserID: String, callback: EmailCallback) : String {
+        repository.fetchBio(UserID, object : PostRepository.FirebaseCallbackItem{
+            override fun onStart() {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onFailure() {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onMessage(data: DataSnapshot): String {
+                val bio = data.child("UserBio").getValue(String::class.java) ?: "no bio"
+                otherBio = bio
+                callback.getEmail(otherBio)
+                return otherBio
+            }
+
+        })
+        return otherBio
+    }
+
 
     fun getclassnamesforusername() = repository.getclassnamesforusername()
 
     fun sendClassnameForUsername() = repository.sendClassnameForUsername()
 
     fun saveUserbio(bio : String) = repository.saveUserbio(bio)
-
-    fun fetchBio(UserID: String) = repository.fetchBio(UserID)
 
     fun fetchCurrentBio() = repository.fetchCurrentBio()
 

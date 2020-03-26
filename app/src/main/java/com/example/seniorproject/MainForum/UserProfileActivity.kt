@@ -18,7 +18,6 @@ import com.example.seniorproject.MainForum.Adapters.CustomAdapter
 import com.example.seniorproject.MainForum.Fragments.ProfileCommentFragment
 import com.example.seniorproject.MainForum.Fragments.ProfilePostFragment
 import com.example.seniorproject.MainForum.Posts.EditProfileActivity
-import com.example.seniorproject.R
 import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_user_profile.*
@@ -26,6 +25,14 @@ import javax.inject.Inject
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.lifecycle.Observer
+import androidx.core.app.ComponentActivity
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.R
+import com.example.seniorproject.Utils.EmailCallback
+import io.reactivex.Observable
 
 
 private const val TAG = "profileTAG"
@@ -40,7 +47,8 @@ class UserProfileActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_user_profile)
+        setContentView(com.example.seniorproject.R.layout.activity_user_profile)
+
 
         val actionbar = supportActionBar
         actionbar!!.title = "Profile"
@@ -51,50 +59,52 @@ class UserProfileActivity : AppCompatActivity() {
         val factory = InjectorUtils.provideProfileViewModelFactory()
         myViewModel = ViewModelProviders.of(this,factory).get(ProfileViewModel::class.java)
 
+
+
         var test : String = intent.getStringExtra("UserID") ?: "null"
         val author : String =  intent.getStringExtra("Author") ?: "null"
         var ID = test
+        //myViewModel.fetchEmail(test)
 
         if (test == "null" || test == FirebaseAuth.getInstance().currentUser?.uid){
-            val nav: TextView = findViewById(R.id.NavToEdit)
+            val nav: TextView = findViewById(com.example.seniorproject.R.id.NavToEdit)
             Log.d(TAG,"user profile opened")
             nav.visibility = View.VISIBLE
         }
         else {
-            val nav: TextView = findViewById(R.id.NavToEdit)
+            val nav: TextView = findViewById(com.example.seniorproject.R.id.NavToEdit)
             nav.visibility = View.INVISIBLE
         }
 
-        val email = myViewModel.fetchEmail(test)
-        val bio = myViewModel.fetchBio(test)
+        val email = myViewModel.otherEmail
+        //val bio = myViewModel.fetchBio(test)
         val profilepostfrag = ProfilePostFragment.newInstance(ID)
         val profilecommentfrag = ProfileCommentFragment.newInstance(ID)
         replaceFragment(profilepostfrag)
 
         if (author != "null")  {
-            in_profile_username.text = author
-            in_profile_email.text = email
-            if (bio == "null"){
-                in_profile_bio.text = myViewModel.fetchBio(test)
-            }
-            else if (bio == "no bio")
-            {
-                in_profile_bio.text = "no bio"
-            }
-            else{
-                in_profile_bio.text = bio
-            }
+            myViewModel.fetchEmail(test,object : EmailCallback{
+                override fun getEmail(string: String) {
+                    in_profile_username.text = author
+                    in_profile_email.text = string
+                }
+            })
+
+            myViewModel.fetchBio(test,object : EmailCallback{
+                override fun getEmail(string: String) {
+                    in_profile_bio.text = string
+                }
+            })
+
         }
-        else if (author == "null") {
+        else {
+            myViewModel.fetchBio(FirebaseAuth.getInstance().currentUser?.uid ?: "no bio",object : EmailCallback{
+                override fun getEmail(string: String) {
+                    in_profile_bio.text = string
+                }
+            })
             in_profile_username.text = myViewModel.user?.displayName
             in_profile_email.text = myViewModel.user?.email
-            if (bio == "null"){
-                in_profile_bio.text = myViewModel.fetchBio(FirebaseAuth.getInstance().currentUser?.uid ?: "no bio")
-            }
-            else{
-                in_profile_bio.text = bio
-            }
-
         }
 
 
@@ -114,11 +124,11 @@ class UserProfileActivity : AppCompatActivity() {
 
         pro_bottom_navigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.select_posts -> {
+                com.example.seniorproject.R.id.select_posts -> {
                     replaceFragment(profilepostfrag)
                     return@setOnNavigationItemSelectedListener true
                 }
-                R.id.select_comments -> {
+                com.example.seniorproject.R.id.select_comments -> {
                     replaceFragment(profilecommentfrag)
                     return@setOnNavigationItemSelectedListener true
                 }
@@ -135,12 +145,12 @@ class UserProfileActivity : AppCompatActivity() {
             }
 
 
-        val image : ImageView = findViewById(R.id.in_profile_image)
+        val image : ImageView = findViewById(com.example.seniorproject.R.id.in_profile_image)
 
         Glide.with(this) //1
             .load(FirebaseAuth.getInstance().currentUser?.photoUrl)
-            .placeholder(R.drawable.ic_account_circle_blue_24dp)
-            .error(R.drawable.ic_account_circle_blue_24dp)
+            .placeholder(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
+            .error(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
             .skipMemoryCache(true) //2
             .diskCacheStrategy(DiskCacheStrategy.NONE) //3
             .apply(RequestOptions().circleCrop())//4
@@ -151,7 +161,7 @@ class UserProfileActivity : AppCompatActivity() {
 
     private fun replaceFragment(fragment: Fragment) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.fContainer, fragment)
+        fragmentTransaction.replace(com.example.seniorproject.R.id.fContainer, fragment)
         fragmentTransaction.commit()
     }
 

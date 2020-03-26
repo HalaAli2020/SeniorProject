@@ -136,25 +136,23 @@ class FirebaseData @Inject constructor() {
 
     }
 
-    fun fetchEmail(UserID: String, callbackString: PostRepository.FirebaseCallbackString ) : String{
+    fun fetchEmail(UserID: String, callbackEmail: PostRepository.FirebaseCallbackItem ) {
         val ref = FirebaseDatabase.getInstance().getReference("/users/$UserID")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
             }
             override fun onDataChange(p0: DataSnapshot) {
-                callbackString.onSuccess(p0)
+                callbackEmail.onMessage(p0)
                 //val email = p0.child("email").getValue(String::class.java)
                 //Log.d(TAG, "Current user fetched ${email}")
                 //otherEmail = email ?: ""
                 //may need the callbackOncallback
             }
         })
-        return otherEmail ?: "no email firebase"
     }
 
-
-    fun fetchBio(UserID: String): String {
+    fun fetchBio(UserID: String, callbackbio: PostRepository.FirebaseCallbackItem) {
         //if it does no exist then bio = bio
         val ref = FirebaseDatabase.getInstance().getReference("/users/$UserID")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -163,14 +161,14 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                val bio = p0.child("UserBio").getValue(String::class.java) ?: "no bio"
-                Log.d(TAG, "Current user fetched ${bio}")
-                otherBio = bio
+                callbackbio.onMessage(p0)
             }
         })
-
-        return otherBio ?: "no bio"
     }
+
+
+
+
 
     fun fetchCurrentBio(): String {
         val UserID = firebaseAuth.uid ?: "null"
@@ -2457,6 +2455,10 @@ class FirebaseData @Inject constructor() {
     }
     interface FirebaseCallbackString{
         fun onCallback(subs : MutableList<String>)
+    }
+
+    interface FirebaseCallbackItem{
+        fun onCallback(Item : String)
     }
 
 
