@@ -86,8 +86,22 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                     Log.d("postkey", postkey)
                     FirebaseData.getInstance().readPostValues(crn!!, postkey!!, object : Callback {
                         override fun onCallback(value: ArrayList<String>) {
+                            Log.d("spider", value[0])
+                            intent.putExtra("Text", value[1])
+                            Log.d("spider", "HELLO")
 
-                            if (value.size <= 8) {
+                            intent.putExtra("Title", value[0])
+                            intent.putExtra("Pkey", value[2])
+                            intent.putExtra("Classkey", value[4])
+                            intent.putExtra("UserID", value[5])
+                            intent.putExtra("Author", value[6])
+                            intent.putExtra("subject", crn)
+                            intent.putExtra("Ptime", value[3])
+                            if(value.size == 8){
+                                intent.putExtra("uri", value[7])
+                            }
+                            mContext.startActivity(intent)
+                           /* if (value.size == 7) {
                                 Log.d("spider", value[0])
                                 intent.putExtra("Text", value[1])
                                 Log.d("spider", "HELLO")
@@ -101,10 +115,11 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                                 intent.putExtra("Ptime", value[3])
                                 //intent.putExtra("uri", value[7])
                                 mContext.startActivity(intent)
-                            } else {
+                            }
+                            else if(value.size == 8){
                                 Log.d("spider", value[0])
                                 intent.putExtra("Text", value[1])
-                                Log.d("spider", "HELLO")
+                                Log.d("spider", "Open for image")
 
                                 intent.putExtra("Title", value[0])
                                 intent.putExtra("Pkey", value[2])
@@ -115,9 +130,11 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                                 intent.putExtra("Ptime", value[3])
                                 intent.putExtra("uri", value[7])
                                 mContext.startActivity(intent)
-
-
                             }
+                            else{
+                                Log.d("spider", "failed to open either comment")
+                            }*/
+
                         }
                     })
 
