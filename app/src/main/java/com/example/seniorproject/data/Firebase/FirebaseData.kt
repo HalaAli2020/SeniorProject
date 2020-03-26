@@ -29,10 +29,12 @@ import java.util.logging.Handler
 import javax.security.auth.Subject
 import kotlin.collections.HashMap
 import com.example.seniorproject.data.models.User
+import com.example.seniorproject.data.repositories.PostRepository
 import com.google.firebase.auth.ActionCodeSettings
 import java.lang.IllegalArgumentException
 import kotlin.collections.ArrayList
 import com.example.seniorproject.viewModels.NewPostFragmentViewModel
+import com.example.seniorproject.viewModels.SearchViewModel
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
@@ -81,7 +83,7 @@ class FirebaseData @Inject constructor() {
     var cList: MutableList<String> = mutableListOf()
     var classPostList: PostLiveData = PostLiveData()
     var MainPosts: MutableList<Post> = mutableListOf()
-    var UserSUB: MutableList<String>? = null
+    var UserSUB : MutableLiveData<MutableList<String>> = MutableLiveData()
     fun CurrentUser() = FirebaseAuth.getInstance().currentUser
 
 
@@ -657,7 +659,7 @@ class FirebaseData @Inject constructor() {
     }*/
 
 
-    fun listenForUserProfilePosts(uid: String): PostLiveData {
+    fun listenForUserProfilePosts(uid: String, callbackPost: PostRepository.FirebaseCallbackPost): PostLiveData {
         Log.d(TAG, "getUserProfilePosts listener called")
 
         //set list to empty here?
@@ -710,17 +712,55 @@ class FirebaseData @Inject constructor() {
     }
 
     fun noPostsChecker(userID: String): Boolean {
-        listenForUserProfilePosts(userID)
+        listenForUserProfilePosts(userID, object : PostRepository.FirebaseCallbackPost {
+            override fun onFailure() {
+
+            }
+
+            override fun onStart() {
+
+            }
+
+            override fun onSuccess(data: DataSnapshot) {
+                if (data.child("Posts").exists() == false) {
+                    Log.d("comment", "doesn't exist")
+                    val emptyPost = Post("no Posts","" ,"","")
+                    var profilePostL: MutableList<Post> = mutableListOf()
+                    profilePostL.add(emptyPost)
+                    profilePosts.value = profilePostL
+                    noPostsCheck = true
+                }
+            }
+        })
         return noPostsCheck
     }
 
     fun noCommentsChecker(userID: String): Boolean {
-        listenForUserProfilePosts(userID)
+        listenForUserProfilePosts(userID, object : PostRepository.FirebaseCallbackPost {
+            override fun onFailure() {
+
+            }
+
+            override fun onStart() {
+
+            }
+
+            override fun onSuccess(data: DataSnapshot) {
+                if (data.child("Posts").exists() == false) {
+                    Log.d("comment", "doesn't exist")
+                    val emptyPost = Post("no Posts","" ,"","")
+                    var profilePostL: MutableList<Post> = mutableListOf()
+                    profilePostL.add(emptyPost)
+                    profilePosts.value = profilePostL
+                    noPostsCheck = true
+                }
+            }
+        })
         return noCommentsCheck
     }
 
 
-    fun listenForUserProfileComments(uid: String): CommentLive {
+    fun listenForUserProfileComments(uid: String, callbackComment: PostRepository.FirebaseCallbackComment): CommentLive {
         Log.d(TAG, "getUserProfile comments listener called")
 
         callbackComment.onStart()
@@ -775,37 +815,79 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    fun getUserProfilePosts(userID: String): PostLiveData {
+    fun getUserProfilePosts(userID: String,  call : PostRepository.FirebaseCallbackPost): PostLiveData {
         Log.d(TAG, "getUserProfilePosts called")
         if (userID == "null") {
             var uid = FirebaseAuth.getInstance().uid ?: "error"
-            listenForUserProfilePosts(uid)
+            listenForUserProfilePosts(uid, call )
         } else {
             var uid = userID
-            listenForUserProfilePosts(uid)
+            listenForUserProfilePosts(uid, call)
         }
         return profilePosts
     }
 
 
-    fun getUserProfileComments(userID: String): CommentLive {
+    fun getUserProfileComments(userID: String, call : PostRepository.FirebaseCallbackComment): CommentLive {
         Log.d(TAG, "getUserProfile comments called")
         if (userID == "null") {
             var uid = FirebaseAuth.getInstance().uid ?: "error"
-            listenForUserProfilePosts(uid)
+            listenForUserProfileComments(uid, call)
         } else {
             var uid = userID
-            listenForUserProfileComments(uid)
+            listenForUserProfileComments(uid, call)
         }
         return Comments
     }
-
-
-    fun getCommentsCO(Key: String): CommentLive {
-
+    fun listenComments(Key: String, subject: String, callbackComment: FirebaseCallbackComment)
+    {
         val uid = FirebaseAuth.getInstance().uid
         val reference =
             FirebaseDatabase.getInstance().getReference("Subjects/$subject/Posts/$Key/Comments")
+
+        reference.addChildEventListener(object : ChildEventListener {
+            var savedCommentList: MutableList<Comment> = mutableListOf()
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                val newComment = p0.getValue(Comment::class.java)
+
+                if (newComment != null) {
+                    Log.d("ACCESSING", newComment?.text)
+                    if (savedCommentList.isNullOrEmpty()) {
+                        savedCommentList.add(newComment)
+                    }
+                    savedCommentList.add(newComment)
+                    //repository.saveNewPost(newPost)
+                    //adapter.add(PostFrag(newPost.title, newPost.text))
+                }
+                Comments.value = savedCommentList
+
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+            }
+
+
+        })
+        callbackComment.onCallback(Comments)
+
+    }
+
+
+    fun getCommentsCO(Key: String, callback : PostRepository.FirebaseCallbackComment): CommentLive {
+
+        val uid = FirebaseAuth.getInstance().uid
+        val reference =
+            FirebaseDatabase.getInstance().getReference("Subjects/Posts/$Key/Comments")
 
         reference.addChildEventListener(object : ChildEventListener {
             var savedCommentList: MutableList<Comment> = mutableListOf()
@@ -840,7 +922,8 @@ class FirebaseData @Inject constructor() {
 
 
         })
-       callbackComment.onCallback(Comments)
+       //callbackComment.onCallback(Comments)
+        return Comments
 
     }
 
@@ -1453,7 +1536,7 @@ class FirebaseData @Inject constructor() {
                     Log.d("usersub", x.getValue(String::class.java)!!)
                     SubList.add(x.getValue(String::class.java)!!)
                 }
-                UserSUB.value = SubList
+                //UserSUB.value = SubList
             }
         })
     }
@@ -1849,7 +1932,7 @@ class FirebaseData @Inject constructor() {
 
             }
         })
-        MainforumListener = reference.addChildEventListener(object : ChildEventListener {
+         reference.addChildEventListener(object : ChildEventListener {
             var savedPostsList: MutableList<Post> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

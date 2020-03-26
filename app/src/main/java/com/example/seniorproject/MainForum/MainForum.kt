@@ -15,6 +15,7 @@ import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
@@ -23,8 +24,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.Fragments.FragmentHome
-import com.example.seniorproject.MainForum.Fragments.FragmentNewImagePost
 import com.example.seniorproject.MainForum.Fragments.FragmentSubscriptions
+import com.example.seniorproject.MainForum.NewPost.NewPost
 import com.example.seniorproject.Messages.ChatLog
 import com.example.seniorproject.Messages.FragmentLatestMessages
 import com.example.seniorproject.R

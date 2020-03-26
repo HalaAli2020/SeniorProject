@@ -11,7 +11,7 @@ import com.example.seniorproject.R
 import kotlinx.android.synthetic.main.rv_list.view.communityName_TV
 import kotlinx.android.synthetic.main.rv_subs.view.*
 
-class SubsriptionAdapter(context: Context, private val classList: MutableList<String>) : RecyclerView.Adapter<ListHolder12>() {
+class SubsriptionAdapter(context: Context, private val classList: MutableList<String>?) : RecyclerView.Adapter<ListHolder12>() {
 
     val mContext: Context = context
 
@@ -24,12 +24,16 @@ class SubsriptionAdapter(context: Context, private val classList: MutableList<St
     }
 
     override fun getItemCount(): Int {
-          return classList.size
+        return if(!classList.isNullOrEmpty())
+            classList.size
+        else {
+            0
+        }
     }
 
     override fun onBindViewHolder(holder: ListHolder12, position: Int) {
 
-        val classes: String = classList[position]
+        val classes: String = classList!![position]
         holder.itemView.communityName_TV.text = classes
 
 

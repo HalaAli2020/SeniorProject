@@ -69,9 +69,9 @@ class ClickedPost : AppCompatActivity() {
         //add userid and send
         myViewModel.CommentsLiveList.observe(this, Observer {
             Log.d("Swap", "Swapping")
-            swap(binding, title, text, author, crn,intent.getStringExtra("UserID").toString(), time, uri)
+            swap(binding, title, text, author, crn,intent.getStringExtra("UserID").toString(), ptime, uri)
         })
-        adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString(), time, uri)
+        adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString(), ptime, uri)
         comment_RecyclerView.adapter = adapter
         comment_RecyclerView.layoutManager = LinearLayoutManager(this)
 
