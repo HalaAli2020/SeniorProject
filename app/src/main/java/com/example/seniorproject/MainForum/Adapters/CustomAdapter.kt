@@ -40,10 +40,10 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
     private val TYPE_IMAGE: Int = 1
 
     override fun getItemViewType(position: Int): Int {
-        if (savedPosts.value!![position].uri != "null") {
-            return TYPE_IMAGE
+        if (savedPosts.value!![position].uri == null || savedPosts.value!![position].uri == "null") {
+            return TYPE_TEXT
         }
-        return TYPE_TEXT
+        return TYPE_IMAGE
     }
 
 

@@ -31,7 +31,7 @@ class LoginActivity : AppCompatActivity(), AuthenticationListener {
     override fun onSuccess() {
         val myIntent = Intent(this@LoginActivity, MainForum::class.java)
         this@LoginActivity.startActivity(myIntent)
-        Toast.makeText(this, "successful login", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Successfully logged in!", Toast.LENGTH_SHORT).show()
     }
 
     override fun onFailure(message: String) {
