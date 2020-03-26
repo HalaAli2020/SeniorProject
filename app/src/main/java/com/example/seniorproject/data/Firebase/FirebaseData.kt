@@ -551,8 +551,22 @@ class FirebaseData @Inject constructor() {
         val ref = FirebaseDatabase.getInstance().getReference("users/$uid")
         //val refP = FirebaseDatabase.getInstance().getReference("users/$uid")
         val user = User(username, email, password, profileImageUrl)
-        val userin = user.toMap()
 
+        val usern = CurrentUser()
+        val profileUpdates =
+            UserProfileChangeRequest.Builder().setDisplayName(username).build()
+        usern?.updateProfile(profileUpdates)
+            ?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d(
+                        TAG, "profile updated, emitter complete?:  ${CurrentUser()?.displayName} ."
+                    )
+                } else {
+                    Log.d(TAG, "in else in fetch current user")
+                }
+            }
+
+        val userin = user.toMap()
         ref.setValue(userin).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 Log.d(TAG, "saving to database worked")
