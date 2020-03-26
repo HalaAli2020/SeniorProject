@@ -75,6 +75,10 @@ class UserProfileActivity : AppCompatActivity() {
             in_profile_username.text = author
             in_profile_email.text = email
             if (bio == "null"){
+                in_profile_bio.text = myViewModel.fetchBio(test)
+            }
+            else if (bio == "no bio")
+            {
                 in_profile_bio.text = "no bio"
             }
             else{

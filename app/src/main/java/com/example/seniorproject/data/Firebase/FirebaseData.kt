@@ -152,7 +152,6 @@ class FirebaseData @Inject constructor() {
     fun fetchBio(UserID: String): String {
 
         //if it does no exist then bio = bio
-
         val ref = FirebaseDatabase.getInstance().getReference("/users/$UserID")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
