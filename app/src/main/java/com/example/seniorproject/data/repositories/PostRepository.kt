@@ -31,6 +31,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     var Comments : CommentLive = CommentLive()
     var newProfileComments: Comment? = null
     var savedPostsList: MutableList<Post> = mutableListOf()
+    var otherEmail : String? = null
 
 
     private var getCommentsJob: Job? = null
@@ -486,7 +487,24 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         return Comments
     }
 
-    fun fetchEmail(UserID: String) = Firebase.fetchEmail(UserID)
+    fun fetchEmail(UserID: String) : String{
+        Firebase.fetchEmail(UserID, object : PostRepository.FirebaseCallbackString{
+            override fun onStart() {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onFailure() {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onSuccess(p0: DataSnapshot) {
+                val email = p0.child("email").getValue(String::class.java)
+                otherEmail = email ?: "no email in success"
+            }
+
+        })
+        return otherEmail ?: "no email"
+    }
 
     fun saveNewUsername(username: String) = Firebase.saveNewUsername(username)
 

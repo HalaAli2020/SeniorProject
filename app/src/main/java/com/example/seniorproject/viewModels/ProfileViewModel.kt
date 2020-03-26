@@ -22,6 +22,7 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     private var PostKey : String? = null
     val CommentListener : PostListener? = null
     val userbio : String = fetchBio(FirebaseAuth.getInstance().currentUser?.uid ?: "null")
+    var otherEmail : String? = null
 
 
 
@@ -76,7 +77,10 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
 
     var user = repository.currentUser()
 
-    fun fetchEmail(UserID: String) = repository.fetchEmail(UserID)
+    fun fetchEmail(UserID: String) : String {
+        otherEmail = repository.fetchEmail(UserID)
+        return otherEmail ?: "no email in viewmodel"
+    }
     //fun getEmail() = repository.getEmail()
 
     fun getclassnamesforusername() = repository.getclassnamesforusername()

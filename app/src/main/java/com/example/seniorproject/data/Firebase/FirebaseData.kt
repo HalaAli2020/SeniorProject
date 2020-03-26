@@ -38,6 +38,9 @@ import com.example.seniorproject.viewModels.SearchViewModel
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 
 //import kotlin.reflect.jvm.internal.impl.load.java.lazy.ContextKt.child
@@ -133,8 +136,7 @@ class FirebaseData @Inject constructor() {
 
     }
 
-    fun fetchEmail(UserID: String): String {
-
+    fun fetchEmail(UserID: String, callbackString: PostRepository.FirebaseCallbackString ){
         val ref = FirebaseDatabase.getInstance().getReference("/users/$UserID")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -142,17 +144,17 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                val email = p0.child("email").getValue(String::class.java)
-                Log.d(TAG, "Current user fetched ${email}")
-                otherEmail = email ?: ""
+                callbackString.onSuccess(p0)
+                //val email = p0.child("email").getValue(String::class.java)
+                //Log.d(TAG, "Current user fetched ${email}")
+                //otherEmail = email ?: ""
+                //may need the callbackOncallback
             }
         })
-
-        return otherEmail ?: ""
     }
 
-    fun fetchBio(UserID: String): String {
 
+    fun fetchBio(UserID: String): String {
         //if it does no exist then bio = bio
         val ref = FirebaseDatabase.getInstance().getReference("/users/$UserID")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -654,8 +656,7 @@ class FirebaseData @Inject constructor() {
         }.addOnFailureListener {
             Log.d(TAG, "Error ${it.message}")
         }
-
-       FirebaseDatabase.getInstance().getReference("users/$uid/bio").setValue("no bio")
+       FirebaseDatabase.getInstance().getReference("users/$uid/UserBio").setValue("no bio")
     }
 
 
