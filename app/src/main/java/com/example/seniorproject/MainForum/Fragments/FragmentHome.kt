@@ -36,6 +36,20 @@ class FragmentHome : Fragment() {
         var currentUser: User? = null
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        activity?.title = "Home"
+        LoginVerification()
+
+        val factory = InjectorUtils.providePostViewModelFactory()
+
+        myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
+        //val view = inflater.inflate(R.layout.fragment_home, container, false)
+        //postLiveData = myViewModel.getSavedPosts()
+        myViewModel.posts.observe(this, Observer {
+            swap()
+        })
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,16 +64,10 @@ class FragmentHome : Fragment() {
 
         activity?.title = "Home"
         LoginVerification()
-
-        val factory = InjectorUtils.providePostViewModelFactory()
         val binding: FragmentHomeBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-        myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
+
         val view = inflater.inflate(R.layout.fragment_home, container, false)
-        //postLiveData = myViewModel.getSavedPosts()
-        myViewModel.posts.observe(this, Observer {
-            swap()
-        })
 
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.reverseLayout = true

@@ -24,11 +24,18 @@ class FragmentSubscriptions : Fragment() {
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: SubscriptionsViewModel
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        activity?.title = "Subscriptions"
+        myViewModel = ViewModelProviders.of(this, factory).get(SubscriptionsViewModel::class.java)
+         factory = InjectorUtils.provideSubscriptionsPostViewModelFactory()
+
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         activity?.title = "Subscriptions"
         val view = inflater.inflate(R.layout.fragment_subscriptions, container, false)
-        val factory = InjectorUtils.provideSubscriptionsPostViewModelFactory()
-        myViewModel = ViewModelProviders.of(this, factory).get(SubscriptionsViewModel::class.java)
+
 
         view.subs_recyclerView.layoutManager = LinearLayoutManager(context)
 
