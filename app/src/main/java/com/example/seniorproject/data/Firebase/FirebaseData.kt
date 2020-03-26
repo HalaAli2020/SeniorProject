@@ -136,13 +136,12 @@ class FirebaseData @Inject constructor() {
 
     }
 
-    fun fetchEmail(UserID: String, callbackString: PostRepository.FirebaseCallbackString ){
+    fun fetchEmail(UserID: String, callbackString: PostRepository.FirebaseCallbackString ) : String{
         val ref = FirebaseDatabase.getInstance().getReference("/users/$UserID")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
             }
-
             override fun onDataChange(p0: DataSnapshot) {
                 callbackString.onSuccess(p0)
                 //val email = p0.child("email").getValue(String::class.java)
@@ -151,6 +150,7 @@ class FirebaseData @Inject constructor() {
                 //may need the callbackOncallback
             }
         })
+        return otherEmail ?: "no email firebase"
     }
 
 
