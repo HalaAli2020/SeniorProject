@@ -16,6 +16,7 @@ import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Adapters.CustomAdapter
 import com.example.seniorproject.R
+import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.User
 import com.example.seniorproject.databinding.FragmentHomeBinding
 import com.example.seniorproject.viewModels.HomeFragmentViewModel
@@ -30,6 +31,11 @@ class FragmentHome : Fragment() {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: HomeFragmentViewModel
+
+    var obse =  Observer<MutableList<Post>> {
+
+        swap()
+    }
 
 
     companion object {
@@ -46,6 +52,7 @@ class FragmentHome : Fragment() {
         myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
         //val view = inflater.inflate(R.layout.fragment_home, container, false)
         //postLiveData = myViewModel.getSavedPosts()
+
     }
 
     override fun onCreateView(
@@ -58,13 +65,9 @@ class FragmentHome : Fragment() {
         myViewModel = ViewModelProviders.of(this,factory).get(HomeFragmentViewModel::class.java)
         val binding: FragmentHomeBinding = inflate(inflater, R.layout.fragment_home, container, false)
         val view = inflater.inflate(R.layout.fragment_home, container, false)*/
-
-        myViewModel.posts.observe(this, Observer {
-            swap()
-        })
-
+        myViewModel.posts.observe(this, obse)
         activity?.title = "Home"
-        LoginVerification()
+        //LoginVerification()
         val binding: FragmentHomeBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
 
@@ -114,9 +117,19 @@ class FragmentHome : Fragment() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        myViewModel.posts.removeObserver(obse)
+    }
+
     override fun onResume() {
         super.onResume()
-        swap()
+        myViewModel.posts.observe(this, obse)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        myViewModel.posts.observe(this, obse)
     }
 
 
