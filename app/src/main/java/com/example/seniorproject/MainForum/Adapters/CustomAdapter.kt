@@ -142,13 +142,12 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
             holder.itemView.username.text = post.author
             holder.itemView.post_timestamp.text = post.Ptime
 
-              if (post.uri != null) {
-               Glide.with(mContext).load(post.uri).placeholder(R.color.white)
-                   .into(holder.itemView.post_image)
+          /*    if (post.uri != null){
+               Glide.with(mContext).load(post.uri).placeholder(R.color.white).into(holder.itemView.post_image)
            } else {
                Glide.with(mContext).clear(holder.itemView.post_image)
                holder.itemView.post_image.setImageDrawable(null)
-           }
+           }*/
 
             if (type == 0) {
                 holder.itemView.username.text = post.subject

@@ -87,7 +87,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                     FirebaseData.getInstance().readPostValues(crn!!, postkey!!, object : Callback {
                         override fun onCallback(value: ArrayList<String>) {
 
-                            if (value.size <= 8) {
+                            if (value.size == 7) {
                                 Log.d("spider", value[0])
                                 intent.putExtra("Text", value[1])
                                 Log.d("spider", "HELLO")
