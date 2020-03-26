@@ -3,6 +3,7 @@ package com.example.seniorproject.data.repositories
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.data.Firebase.FirebaseData
 
 import com.example.seniorproject.data.models.*
@@ -460,6 +461,11 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         })
         return profilePosts
     }
+
+    fun readPhotoValue(useridm: String, callback: EmailCallback) {
+        Firebase.readPhotoValue(useridm, callback)
+    }
+
 
     fun getUserProfileComments(userID: String) : CommentLive {
         var profileCommentList : MutableList<Comment> = mutableListOf()

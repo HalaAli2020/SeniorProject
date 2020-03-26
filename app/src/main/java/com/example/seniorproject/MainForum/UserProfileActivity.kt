@@ -31,6 +31,7 @@ import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.R
+import android.net.Uri
 import com.example.seniorproject.Utils.EmailCallback
 import io.reactivex.Observable
 
@@ -63,6 +64,7 @@ class UserProfileActivity : AppCompatActivity() {
 
         var test : String = intent.getStringExtra("UserID") ?: "null"
         val author : String =  intent.getStringExtra("Author") ?: "null"
+        val photo : String = intent.getStringExtra("profileImageUrl") ?: "null"
         var ID = test
         //myViewModel.fetchEmail(test)
 
@@ -143,15 +145,33 @@ class UserProfileActivity : AppCompatActivity() {
 
         val image : ImageView = findViewById(com.example.seniorproject.R.id.in_profile_image)
 
-        Glide.with(this) //1
-            .load(FirebaseAuth.getInstance().currentUser?.photoUrl)
-            .placeholder(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
-            .error(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
-            .skipMemoryCache(true) //2
-            .diskCacheStrategy(DiskCacheStrategy.NONE) //3
-            .apply(RequestOptions().circleCrop())//4
-            .into(image)
+        if(author == "null"){
+            Glide.with(this) //1
+                .load(FirebaseAuth.getInstance().currentUser?.photoUrl)
+                .placeholder(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
+                .error(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
+                .skipMemoryCache(true) //2
+                .diskCacheStrategy(DiskCacheStrategy.NONE) //3
+                .apply(RequestOptions().circleCrop())//4
+                .into(image)
+        }
+        else{
+            Log.d("Soup", "$test")
+            myViewModel.readPhotoValue(test, object: EmailCallback{
+                override fun getEmail(string: String) {
+                    Log.d("Soup", "file name is $string")
+                    Glide.with(this@UserProfileActivity) //1
+                        .load(Uri.parse(string))
+                        .placeholder(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
+                        .error(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
+                        .skipMemoryCache(true) //2
+                        .diskCacheStrategy(DiskCacheStrategy.NONE) //3
+                        .apply(RequestOptions().circleCrop())//4
+                        .into(image)
 
+                }
+            })
+        }
 
     }
 

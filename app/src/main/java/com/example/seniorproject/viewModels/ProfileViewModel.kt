@@ -80,6 +80,10 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
 
     var user = repository.currentUser()
 
+    fun readPhotoValue(useridm: String, callback: EmailCallback) {
+        repository.readPhotoValue(useridm, callback)
+    }
+
     fun fetchEmail(UserID: String, callback : EmailCallback) : String {
         repository.fetchEmail(UserID, object : PostRepository.FirebaseCallbackItem{
             override fun onStart() {

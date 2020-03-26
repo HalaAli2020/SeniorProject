@@ -4,9 +4,9 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 
 data class User(
-    var username: String?, val email: String?, var uid: String?, var profileImageUrl: Uri?
+    var username: String?, val email: String?, var uid: String?, var profileImageUrl: String?
 ) {
-    constructor() : this("", "", "", Uri.EMPTY)
+    constructor() : this("", "", "", "")
 
     var Posts = mutableListOf<Post>()
     //lateinit var Subscriptions : List<String>
