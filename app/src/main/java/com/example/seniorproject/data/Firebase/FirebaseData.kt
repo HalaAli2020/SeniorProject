@@ -38,6 +38,9 @@ import com.example.seniorproject.viewModels.SearchViewModel
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 
 //import kotlin.reflect.jvm.internal.impl.load.java.lazy.ContextKt.child
@@ -133,28 +136,24 @@ class FirebaseData @Inject constructor() {
 
     }
 
-    fun fetchEmail(UserID: String): String {
-
+    fun fetchEmail(UserID: String, callbackEmail: PostRepository.FirebaseCallbackItem ) {
         val ref = FirebaseDatabase.getInstance().getReference("/users/$UserID")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
             }
-
             override fun onDataChange(p0: DataSnapshot) {
-                val email = p0.child("email").getValue(String::class.java)
-                Log.d(TAG, "Current user fetched ${email}")
-                otherEmail = email ?: ""
+                callbackEmail.onMessage(p0)
+                //val email = p0.child("email").getValue(String::class.java)
+                //Log.d(TAG, "Current user fetched ${email}")
+                //otherEmail = email ?: ""
+                //may need the callbackOncallback
             }
         })
-
-        return otherEmail ?: ""
     }
 
-    fun fetchBio(UserID: String): String {
-
+    fun fetchBio(UserID: String, callbackbio: PostRepository.FirebaseCallbackItem) {
         //if it does no exist then bio = bio
-
         val ref = FirebaseDatabase.getInstance().getReference("/users/$UserID")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -162,14 +161,14 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                val bio = p0.child("UserBio").getValue(String::class.java) ?: "no bio"
-                Log.d(TAG, "Current user fetched ${bio}")
-                otherBio = bio
+                callbackbio.onMessage(p0)
             }
         })
-
-        return otherBio ?: "no bio"
     }
+
+
+
+
 
     fun fetchCurrentBio(): String {
         val UserID = firebaseAuth.uid ?: "null"
@@ -630,8 +629,22 @@ class FirebaseData @Inject constructor() {
         val ref = FirebaseDatabase.getInstance().getReference("users/$uid")
         //val refP = FirebaseDatabase.getInstance().getReference("users/$uid")
         val user = User(username, email, password, profileImageUrl)
-        val userin = user.toMap()
 
+        val usern = CurrentUser()
+        val profileUpdates =
+            UserProfileChangeRequest.Builder().setDisplayName(username).build()
+        usern?.updateProfile(profileUpdates)
+            ?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d(
+                        TAG, "profile updated, emitter complete?:  ${CurrentUser()?.displayName} ."
+                    )
+                } else {
+                    Log.d(TAG, "in else in fetch current user")
+                }
+            }
+
+        val userin = user.toMap()
         ref.setValue(userin).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 Log.d(TAG, "saving to database worked")
@@ -641,6 +654,7 @@ class FirebaseData @Inject constructor() {
         }.addOnFailureListener {
             Log.d(TAG, "Error ${it.message}")
         }
+       FirebaseDatabase.getInstance().getReference("users/$uid/UserBio").setValue("no bio")
     }
 
 
@@ -2438,6 +2452,10 @@ class FirebaseData @Inject constructor() {
     }
     interface FirebaseCallbackString{
         fun onCallback(subs : MutableList<String>)
+    }
+
+    interface FirebaseCallbackItem{
+        fun onCallback(Item : String)
     }
 
 

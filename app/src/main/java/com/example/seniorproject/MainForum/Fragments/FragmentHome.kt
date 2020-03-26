@@ -46,9 +46,6 @@ class FragmentHome : Fragment() {
         myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
         //val view = inflater.inflate(R.layout.fragment_home, container, false)
         //postLiveData = myViewModel.getSavedPosts()
-        myViewModel.posts.observe(this, Observer {
-            swap()
-        })
     }
 
     override fun onCreateView(
@@ -61,6 +58,10 @@ class FragmentHome : Fragment() {
         myViewModel = ViewModelProviders.of(this,factory).get(HomeFragmentViewModel::class.java)
         val binding: FragmentHomeBinding = inflate(inflater, R.layout.fragment_home, container, false)
         val view = inflater.inflate(R.layout.fragment_home, container, false)*/
+
+        myViewModel.posts.observe(this, Observer {
+            swap()
+        })
 
         activity?.title = "Home"
         LoginVerification()
