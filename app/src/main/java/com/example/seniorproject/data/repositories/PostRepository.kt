@@ -36,9 +36,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     private var getCommentsJob: Job? = null
 
-    fun saveNewPost(text: String, title: String, CRN: String) {
-        Firebase.saveNewPosttoUser(text, title, CRN)
-    }
+    fun saveNewPost(text: String, title: String, CRN: String) = Firebase.saveNewPosttoUser(text, title, CRN)
 
     fun uploadUserProfileImage(selectedPhotoUri: Uri) =
         Firebase.uploadImageToFirebaseStorage(selectedPhotoUri)
@@ -384,7 +382,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                     var profilePostL: MutableList<Post> = mutableListOf()
                     profilePostL.add(emptyPost)
                     profilePosts.value = profilePostL
-                    //noPostsCheck = true
+                    Firebase.noPostsCheck = true
                 }
                 else {
                     //noPostsCheck = false
@@ -428,6 +426,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                     profilePosts.value = profilePostsList
                     //Log.d("TAG", "Comments loaded")
                 }
+
                 //return profile posts?
             }
         })

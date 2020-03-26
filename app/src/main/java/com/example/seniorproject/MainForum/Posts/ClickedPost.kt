@@ -44,6 +44,7 @@ class ClickedPost : AppCompatActivity() {
     lateinit var myViewModel: ClickedPostViewModel
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_clicked_post)
@@ -51,6 +52,7 @@ class ClickedPost : AppCompatActivity() {
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this, factory).get(ClickedPostViewModel::class.java)
         val binding: ActivityClickedPostBinding = DataBindingUtil.setContentView(this, R.layout.activity_clicked_post)
+
 
         val title: String = intent.getStringExtra("Title") ?: "no title"
         val text: String = intent.getStringExtra("Text") ?: "no text"

@@ -1404,12 +1404,9 @@ class FirebaseData @Inject constructor() {
                 list.add(4, classkey!!)
                 list.add(5, user!!)
                 list.add(6, author!!)
-                if (uri != null) {
+                if(!uri.isNullOrEmpty()){
                     list.add(7, uri)
                 }
-                else
-
-
                 callBack.onCallback(list)
             }
             /*override fun onDataChange(p0: DataSnapshot){
@@ -1988,7 +1985,7 @@ class FirebaseData @Inject constructor() {
                                             it.subject = p3.child("subject").value.toString()
                                             it.Ptime=p3.child("Ptime").value.toString()
                                             it.author = p3.child("author").value.toString()
-                                            it.uri = p0.child("uri").value.toString()
+                                            it.uri = p3.child("uri").value.toString()
                                         }
                                     } catch (e: Exception) {
                                         Log.d("Data Error", "error converting to post")
@@ -2283,7 +2280,7 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    fun sendMessage(message: String, toID: String, username: String){
+    fun sendMessage(message: String?, toID: String?, username: String?){
         //val message = editText_chatLog.text.toString()
 
         val fromID = FirebaseAuth.getInstance().uid
@@ -2298,7 +2295,7 @@ class FirebaseData @Inject constructor() {
             reference.key!!,
             message,
             fromID!!,
-            toID,
+            toID!!,
             System.currentTimeMillis() / 1000
         )
 

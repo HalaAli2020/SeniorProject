@@ -13,7 +13,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="12dp"
-        android:background="@color/blue_theme"
+        android:background="#FFFFFF"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

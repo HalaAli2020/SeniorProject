@@ -48,7 +48,6 @@ class FragmentLatestMessages : Fragment() {
     override fun onResume() {
         super.onResume()
 
-
         recyclerView_latest_messages.layoutManager = LinearLayoutManager(context)
 
         myViewModel.getRecentMessages().observe(this, object : Observer<List<LatestMessage>> {
