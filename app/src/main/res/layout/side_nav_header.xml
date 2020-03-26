@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="16dp"
-            android:text="@{viewmodell.user.email}"
+            android:text="@{viewmodell.user.email}}"
             android:textColor="@color/TextColor"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -91,7 +91,9 @@ class ProfileCommentFragment : Fragment() {
         //so is the problem in firebase with the list?
 
 
-
+        myViewModel.comments.observe(this, androidx.lifecycle.Observer {
+            swap(ID)
+        } )
         view.profile_comment_recyclerView.adapter = ProfileCommentsAdapter(
             view.context,
             myViewModel.getUserProfileComments(ID)
@@ -389,6 +391,11 @@ class ProfileCommentFragment : Fragment() {
 
         binding.executePendingBindings()
         return view
+    }
+    fun swap(ID: String)
+    {
+        var ada = ProfileCommentsAdapter(view!!.context, myViewModel.getUserProfileComments(ID))
+        view!!.profile_comment_recyclerView.swapAdapter(ada, true)
     }
 
 

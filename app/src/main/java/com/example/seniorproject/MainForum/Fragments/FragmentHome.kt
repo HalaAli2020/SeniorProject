@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -56,7 +57,9 @@ class FragmentHome : Fragment() {
         myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         //postLiveData = myViewModel.getSavedPosts()
-
+        myViewModel.posts.observe(this, Observer {
+            swap()
+        })
 
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.reverseLayout = true
@@ -87,6 +90,11 @@ class FragmentHome : Fragment() {
 
         return view
 
+    }
+    fun swap()
+    {
+        var ada = CustomAdapter(view!!.context, myViewModel.getSubscribedPosts(), 0)
+        view!!.post_recyclerView.swapAdapter(ada, true)
     }
 
 
