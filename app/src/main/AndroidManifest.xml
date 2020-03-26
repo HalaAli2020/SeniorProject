@@ -16,7 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainForum.NewPost.NewPost"></activity>
+        <activity
+            android:name=".MainForum.NewPost.NewPost"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Messages.ChatLog"
             android:windowSoftInputMode="adjustResize|stateVisible" />
