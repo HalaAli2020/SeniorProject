@@ -25,16 +25,16 @@ class ListViewModel @Inject constructor(private val repository: PostRepository) 
     private fun getClasses(){
         listClasses.clear()
 
-        listClasses = repository.getClasses()
+        //listClasses = repository.getClasses()
     }
     private fun getUserSub()
     {
-        UsersSubs = repository.getUserSub()
+       // UsersSubs = repository.getUserSub()
 
     }
     private fun getusersSubs()
     {
-        UsersSubs = repository.getUserSub()
+       // UsersSubs = repository.getUserSub()
     }
     fun combineSubs()
     {
