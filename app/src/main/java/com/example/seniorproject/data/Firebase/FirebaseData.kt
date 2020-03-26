@@ -1879,7 +1879,7 @@ class FirebaseData @Inject constructor() {
                                             it.subject = p3.child("subject").value.toString()
                                             it.Ptime=p3.child("Ptime").value.toString()
                                             it.author = p3.child("author").value.toString()
-                                            it.uri = p0.child("uri").value.toString()
+                                            it.uri = p3.child("uri").value.toString()
                                         }
                                     } catch (e: Exception) {
                                         Log.d("Data Error", "error converting to post")
