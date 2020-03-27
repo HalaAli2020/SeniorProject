@@ -606,12 +606,12 @@ class FirebaseData @Inject constructor() {
                         GlobalScope.launch(Dispatchers.Main) {
                             delay(500)
                             val currentuser = FirebaseAuth.getInstance().currentUser
-    //                        if (currentuser!!.isEmailVerified) {
+                            if (currentuser!!.isEmailVerified) {
                                 emitter.onComplete()
-    //                        }
-      //                      else {
-        //                        emitter.onError(IllegalArgumentException("please verify your email"))
-          //                  }
+                            }
+                            else {
+                                emitter.onError(IllegalArgumentException("please verify your email"))
+                            }
                         }
                         //updateUser()
                        /* val currentuser = FirebaseAuth.getInstance().currentUser
