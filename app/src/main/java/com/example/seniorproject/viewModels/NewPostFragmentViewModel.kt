@@ -1,26 +1,15 @@
 package com.example.seniorproject.viewModels
 
-import android.content.Context
 import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
-import android.widget.Toast
-import androidx.core.net.toUri
+import androidx.databinding.ObservableField
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.seniorproject.MainForum.Fragments.FragmentNewPost
-import com.example.seniorproject.MainForum.Posts.UpdatePost
 //import com.example.seniorproject.Utils.startMainForum
 import com.example.seniorproject.Utils.PostListener
-import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.repositories.PostRepository
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.UploadTask
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class NewPostFragmentViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
@@ -33,6 +22,7 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
     var ctext: String? = null
     var ctitle: String? = null
     var userID: String? = null
+    var bool = MutableLiveData<Boolean>()
     //var author: String? = repository.currentUser()?.displayName
 
 
@@ -62,7 +52,7 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
         }
         Log.d("SELECTED VALUE:", classSpinner)
         repository.saveNewPost(textPost!!,titlePost!!,classSpinner!!)
-
+        bool.value = true
     }
 
    fun saveNewImgPosttoUser(title : String, text:String, Subject: String, CRN: String, uri: Uri, imagePost : Boolean) = repository.saveNewImgPosttoUser(title,text,Subject,CRN,uri,imagePost)

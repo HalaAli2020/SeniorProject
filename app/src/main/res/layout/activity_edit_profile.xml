@@ -14,8 +14,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/pContainer"
         android:layout_width="match_parent"
-        android:background="@color/BackgroundColor"
         android:layout_height="match_parent"
+        android:background="@color/BackgroundColor"
         android:orientation="vertical">
 
 
@@ -70,7 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="@{ProfileEditViewModel.fetchCurrentBio()}"
+                android:hint="Add new Bio"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"

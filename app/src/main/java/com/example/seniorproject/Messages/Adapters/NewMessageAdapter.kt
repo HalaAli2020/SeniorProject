@@ -50,6 +50,11 @@ class NewMessageAdapter(
         //Picasso.get().load(user.profileImageURL).into(viewHolder.itemView.image_new_message)
         Log.d("NewMessageAdapter", user.username)
         Picasso.get().load(user.profileImageUrl).into(holder.itemView.image_new_message)
+
+        if(user.profileImageUrl.toString().isNullOrBlank() || user.profileImageUrl.toString()=="null"){
+            holder.itemView.image_new_message.setImageDrawable(mContext.resources.getDrawable(R.drawable.ic_account_circle_blue_24dp))
+        }
+
         holder.itemView.newMessageUser.setOnClickListener {
             val intent = Intent(mContext, ChatLog::class.java)
             intent.putExtra(USER_KEY, user.uid)

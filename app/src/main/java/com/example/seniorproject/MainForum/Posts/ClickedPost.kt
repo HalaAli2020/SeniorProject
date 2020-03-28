@@ -8,11 +8,13 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -42,6 +44,7 @@ class ClickedPost : AppCompatActivity() {
     lateinit var myViewModel: ClickedPostViewModel
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_clicked_post)
@@ -50,25 +53,31 @@ class ClickedPost : AppCompatActivity() {
         myViewModel = ViewModelProviders.of(this, factory).get(ClickedPostViewModel::class.java)
         val binding: ActivityClickedPostBinding = DataBindingUtil.setContentView(this, R.layout.activity_clicked_post)
 
+
         val title: String = intent.getStringExtra("Title") ?: "no title"
         val text: String = intent.getStringExtra("Text") ?: "no text"
         val crn: String = intent.getStringExtra("subject") ?: "no subject"
         val author: String = intent.getStringExtra("Author") ?: "no author"
         val uri : String = intent.getStringExtra("uri") ?: " "
-        val time: String = intent.getStringExtra("Ptime") ?: "no time"
-
+        val ptime: String = intent.getStringExtra("Ptime") ?: "no time"
+        val uid: String = intent.getStringExtra("UserID") ?: "null"
         myViewModel.PKey = intent.getStringExtra("Pkey")
         myViewModel.Classkey = intent.getStringExtra("Classkey")
-        myViewModel.UserID = intent.getStringExtra("UserID")
+        myViewModel.UserID = uid
         myViewModel.title = title
         myViewModel.text = text
         myViewModel.crn = crn
 
         //add userid and send
-
-        adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString(), time, uri)
+        myViewModel.CommentsLiveList.observe(this, Observer {
+            Log.d("Swap", "Swapping")
+            swap(binding, title, text, author, crn,intent.getStringExtra("UserID").toString(), ptime, uri)
+        })
+        adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString(), ptime, uri)
         comment_RecyclerView.adapter = adapter
         comment_RecyclerView.layoutManager = LinearLayoutManager(this)
+
+
 
 
         binding.clickedViewModel = myViewModel
@@ -78,9 +87,10 @@ class ClickedPost : AppCompatActivity() {
         refreshView.setColorSchemeColors(ContextCompat.getColor(this, R.color.white))
 
         refreshView.setOnRefreshListener {
-            comment_RecyclerView.adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString(), time, uri)
+            comment_RecyclerView.adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,uid, ptime, uri)
             refreshView.isRefreshing = false
         }
+
 
         fun showToast(){
             var toast= Toast.makeText(this@ClickedPost, "We've received your report.", Toast.LENGTH_SHORT)
@@ -223,7 +233,11 @@ class ClickedPost : AppCompatActivity() {
                 }
             }
         }
-
+    fun swap(binding : ActivityClickedPostBinding, title : String, text : String, author : String, crn: String, userid : String, time: String, uri : String)
+    {
+        var ada =  CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString(), time, uri)
+        binding.commentRecyclerView.swapAdapter(ada, false)
+    }
 
 
     }

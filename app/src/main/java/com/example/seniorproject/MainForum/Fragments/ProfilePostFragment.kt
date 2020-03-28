@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -56,6 +57,7 @@ class ProfilePostFragment : Fragment() {
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: ProfileViewModel
 
+    lateinit var obse : Observer<MutableList<Post>>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -84,10 +86,11 @@ class ProfilePostFragment : Fragment() {
             ID = "0"
         }
 
+
             view.profile_post_recyclerView.adapter =
                 CustomAdapter(view.context, myViewModel.getUserProfilePosts(ID),0)
 
-        adapter = CustomAdapter(view.context, myViewModel.getUserProfilePosts(ID),0)
+        adapter = CustomAdapter(view.context, myViewModel.returnProfilePost(),0)
         view.profile_post_recyclerView.adapter= adapter
 
         view.refreshView.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.blue_theme))
@@ -95,15 +98,17 @@ class ProfilePostFragment : Fragment() {
 
         view.refreshView.setOnRefreshListener {
             view.profile_post_recyclerView.adapter =
-                CustomAdapter(view.context, myViewModel.getUserProfilePosts(ID),0)
+                CustomAdapter(view.context, myViewModel.returnProfilePost(),0)
             view.refreshView.isRefreshing = false
         }
-
+        /*myViewModel.posts.observe(this.viewLifecycleOwner, Observer {
+            swap(ID)
+        })*/
 
         binding.profViewModel = myViewModel
         binding.lifecycleOwner = this
 
-        myViewModel.getUserProfilePosts(ID)
+        //myViewModel.getUserProfilePosts(ID)
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true
@@ -208,6 +213,7 @@ class ProfilePostFragment : Fragment() {
                 }
             }
         }
+
        /* val itemTouchHelperCallback =
             object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
                 override fun onSwiped(viewHolders: RecyclerView.ViewHolder, position: Int) {
@@ -317,6 +323,16 @@ class ProfilePostFragment : Fragment() {
 
         binding.executePendingBindings()
         return view
+    }
+
+    override fun onPause() {
+        super.onPause()
+            // myViewModel.posts.removeObserver(this)
+    }
+    fun swap(ID: String)
+    {
+        var ada = CustomAdapter(view!!.context, myViewModel.getUserProfilePosts(ID), 0)
+        view!!.profile_post_recyclerView.swapAdapter(ada, true)
     }
     companion object {
         fun newInstance(ID: String): ProfilePostFragment {

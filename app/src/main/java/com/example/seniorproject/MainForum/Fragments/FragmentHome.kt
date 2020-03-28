@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +16,7 @@ import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Adapters.CustomAdapter
 import com.example.seniorproject.R
+import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.User
 import com.example.seniorproject.databinding.FragmentHomeBinding
 import com.example.seniorproject.viewModels.HomeFragmentViewModel
@@ -30,11 +32,28 @@ class FragmentHome : Fragment() {
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: HomeFragmentViewModel
 
+    var obse =  Observer<MutableList<Post>> {
+
+        swap()
+    }
+
 
     companion object {
         var currentUser: User? = null
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        activity?.title = "Home"
+        LoginVerification()
+
+        val factory = InjectorUtils.providePostViewModelFactory()
+
+        myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
+        //val view = inflater.inflate(R.layout.fragment_home, container, false)
+        //postLiveData = myViewModel.getSavedPosts()
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,17 +65,13 @@ class FragmentHome : Fragment() {
         myViewModel = ViewModelProviders.of(this,factory).get(HomeFragmentViewModel::class.java)
         val binding: FragmentHomeBinding = inflate(inflater, R.layout.fragment_home, container, false)
         val view = inflater.inflate(R.layout.fragment_home, container, false)*/
-
+        myViewModel.posts.observe(this, obse)
         activity?.title = "Home"
-        LoginVerification()
-
-        val factory = InjectorUtils.providePostViewModelFactory()
+        //LoginVerification()
         val binding: FragmentHomeBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-        myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
-        //postLiveData = myViewModel.getSavedPosts()
 
+        val view = inflater.inflate(R.layout.fragment_home, container, false)
 
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.reverseLayout = true
@@ -88,6 +103,11 @@ class FragmentHome : Fragment() {
         return view
 
     }
+    fun swap()
+    {
+        var ada = CustomAdapter(view!!.context, myViewModel.getSubscribedPosts(), 0)
+        view!!.post_recyclerView.swapAdapter(ada, true)
+    }
 
 
     private fun LoginVerification() {
@@ -97,54 +117,20 @@ class FragmentHome : Fragment() {
         }
     }
 
-    /* private fun listenForPosts(){
-         val reference = FirebaseDatabase.getInstance().getReference("/posts")
-
-         reference.addChildEventListener(object: ChildEventListener{
-             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                 val newPost = p0.getValue(Post::class.java)
-
-                 if(newPost!=null) {
-                     Log.d("ForumACT", newPost?.text)
-                     //adapter.add(Post(newPost.title, newPost.text, 0, ""))
-                 }
-             }
-
-             override fun onCancelled(p0: DatabaseError) {
-
-            }
-
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-
-            }
-
-            override fun onChildRemoved(p0: DataSnapshot) {
-
-            }
-        })
+    override fun onPause() {
+        super.onPause()
+        myViewModel.posts.removeObserver(obse)
     }
 
-    private fun performNewPost(){
-        val title = new_post_title.text.toString()
-        val text = new_post_text.text.toString()
-        val reference = FirebaseDatabase.getInstance().getReference("/posts").push()
-
-        if(title.isNotEmpty() && text.isNotEmpty()) {
-            val post = Post(title, text, 0, "")
-
-            reference.setValue(post).addOnSuccessListener {
-                Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
-                new_post_text.setText("")
-                new_post_title.setText("")
-            }
-        }
+    override fun onResume() {
+        super.onResume()
+        myViewModel.posts.observe(this, obse)
     }
 
-*/
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        myViewModel.posts.observe(this, obse)
+    }
 
 
 }
