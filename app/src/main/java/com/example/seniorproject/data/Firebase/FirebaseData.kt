@@ -1,4 +1,5 @@
 package com.example.seniorproject.data.Firebase
+import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
@@ -8,7 +9,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.Utils.Callback
+import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.data.models.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -38,6 +41,7 @@ import com.example.seniorproject.viewModels.SearchViewModel
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
+import kotlinx.android.synthetic.main.rv_post.view.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -103,7 +107,7 @@ class FirebaseData @Inject constructor() {
             override fun onDataChange(p0: DataSnapshot) {
                 val username = p0.child("Username").getValue(String::class.java)
                 val email = p0.child("email").getValue(String::class.java)
-                var profileImageUrl = p0.child("profileImageUrl").getValue(Uri::class.java)
+                var profileImageUrl = p0.child("profileImageUrl").getValue(String::class.java)
                 userprofile = User(username, email, firebaseAuth.uid, profileImageUrl)
 
                 Log.d("USERNAME", username!!)
@@ -574,6 +578,22 @@ class FirebaseData @Inject constructor() {
 
     }
 
+    fun readPhotoValue(useridm: String, callback: EmailCallback) {
+        val userref = FirebaseDatabase.getInstance().getReference("users/$useridm")
+        userref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.exists()) {
+                    val photo = p0.child("profileImageUrl").getValue(String::class.java)
+                    callback.getEmail(photo!!)
+                    }
+                }
+        })
+    }
+
     //@Provides
     fun LoginUser(email: String, password: String) = Completable.create { emitter ->
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
@@ -622,7 +642,7 @@ class FirebaseData @Inject constructor() {
         username: String,
         email: String,
         password: String,
-        profileImageUrl: Uri?
+        profileImageUrl: String?
     ) {
         Log.d("Debug", "entered firebase database function")
         val uid = FirebaseAuth.getInstance().uid
@@ -655,6 +675,7 @@ class FirebaseData @Inject constructor() {
             Log.d(TAG, "Error ${it.message}")
         }
        FirebaseDatabase.getInstance().getReference("users/$uid/UserBio").setValue("no bio")
+        FirebaseDatabase.getInstance().getReference("users/$uid/profileImageUrl").setValue("null")
     }
 
 
@@ -1661,7 +1682,6 @@ class FirebaseData @Inject constructor() {
 
     }
 
-
     fun uploadImageToFirebaseStorage(selectedPhotoUri: Uri) {
         if (selectedPhotoUri == null) {
             return
@@ -1670,18 +1690,24 @@ class FirebaseData @Inject constructor() {
         Log.d(TAG, "photo url is null")
 
         val filename = UUID.randomUUID().toString()
+        val uidm = FirebaseAuth.getInstance().uid
         val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
+
+        val userref = FirebaseDatabase.getInstance().getReference("users/$uidm")
         ref.putFile(selectedPhotoUri)
             .addOnSuccessListener {
                 Log.d("Pic", "Successfully uploaded picture: ${it.metadata?.path}")
 
                 ref.downloadUrl.addOnSuccessListener {
-                    it.toString()
-
+                    val urii = it
+                    saveImageurl = urii.toString()
                     Log.d("Pic", "File location: $it")
 
-
                     var user = CurrentUser()
+
+                    val uid = FirebaseAuth.getInstance().uid
+                    val reference = FirebaseDatabase.getInstance().getReference("users/$uid")
+                    reference.child("/profileImageUrl").setValue(saveImageurl)
 
                     val profileUpdates = UserProfileChangeRequest.Builder().setPhotoUri(it).build()
                     user?.updateProfile(profileUpdates)
@@ -1691,6 +1717,7 @@ class FirebaseData @Inject constructor() {
                                     TAG,
                                     "profile image updated, emitter complete?:  ${CurrentUser()?.photoUrl} ."
                                 )
+
                             } else {
                                 Log.d(TAG, "profile image failed to update")
                             }
@@ -1698,62 +1725,11 @@ class FirebaseData @Inject constructor() {
 
                     //uploadImageToFirebaseDatabase(it)
 
-
                 }
             }
 
-        val uid = FirebaseAuth.getInstance().uid
-        val reference = FirebaseDatabase.getInstance().getReference("users/$uid")
-        reference.child("/profileImageUrl").setValue(FirebaseAuth.getInstance().currentUser?.photoUrl.toString())
-
-
-        /*reference.addChildEventListener(object : ChildEventListener {
-            override fun onChildRemoved(p0: DataSnapshot) {
-
-            }
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-
-            }
-
-        })*/
-
-
-
     }
 
-    //this function is commented out because it fails to retrieve image in Firebase Storage and
-    //store it under user
-
-    /* fun uploadImageToFirebaseDatabase(profileImageUrl: Uri){
-         val uid = FirebaseAuth.getInstance().uid ?: ""
-         val username = FirebaseAuth.getInstance().currentUser?.displayName ?: ""
-         val email = FirebaseAuth.getInstance().currentUser?.email ?: ""
-         val useref = FirebaseDatabase.getInstance().getReference("/users/$uid")
-
-         //val user = User(username, email, uid, profileImageUrl)
-         //var user = CurrentUser()
-         val user = User(username, email, uid, profileImageUrl)
-         val userin = user.toMap()
-
-         useref.setValue(userin).addOnSuccessListener {
-
-
-             Log.d(TAG, "profile image is added to Firebase Database schema")
-
-         }
-
-
-     }*/
     fun listenforClassPosts(className: String, call : PostRepository.FirebaseCallbackPost)
     {
 
@@ -2215,7 +2191,7 @@ class FirebaseData @Inject constructor() {
                     user.uid = p1.child("uid").getValue(String::class.java)
                     val imageProfURL = p1.child("profileImageUrl").getValue(String::class.java)
                     if(!imageProfURL.isNullOrEmpty()) {
-                        user.profileImageUrl = Uri.parse(imageProfURL)
+                        user.profileImageUrl = imageProfURL
                     }
 
                     if (user.uid != null) {
