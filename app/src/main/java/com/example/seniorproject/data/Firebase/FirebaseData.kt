@@ -9,6 +9,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.seniorproject.Utils.AuthenticationListener
 import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.Utils.Callback
 import com.example.seniorproject.Utils.EmailCallback
@@ -39,8 +40,10 @@ import kotlin.collections.ArrayList
 import com.example.seniorproject.viewModels.NewPostFragmentViewModel
 import com.example.seniorproject.viewModels.SearchViewModel
 import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
+import kotlinx.coroutines.tasks.await
 import kotlinx.android.synthetic.main.rv_post.view.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -511,71 +514,40 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    fun RegisterUser(username: String, email: String, password: String, profileImageUrl: Uri) =
-        Completable.create { emitter ->
-            Log.d(TAG, "Entered register user function!!! Email: " + email)
-            Log.d(TAG, "pass: " + password)
-            //Firebase Authentication is being performed inside the completeable
-            //emitter indicated weather the task was completed
-            //double check this code
-            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener {
-                    if (!emitter.isDisposed) {
-                        if (it.isSuccessful) {
-                            emitter.onComplete()
-                            Log.d(TAG, "NEW USER, uid: ${it.result?.user?.uid}")
-                            val uid = FirebaseAuth.getInstance().uid
-                            uid?.let { it1 ->
-                                saveUserToFirebaseDatabase(
-                                    username,
-                                    email,
-                                    it1,
-                                    null
-                                )
-                            }
-                            val user = FirebaseAuth.getInstance().currentUser
-                            user?.sendEmailVerification()
-                                ?.addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        Log.d(TAG, "Email sent.")
-                                        //add toast message that email was sent
-                                    }
-                                }
-                        } else {
-                            emitter.onError(it.exception!!)
-                            //return@addOnCompleteListener
-                        }
-                    }
-
-                }
-        }
-
-
-    fun resetPassword(email: String) = Completable.create { emitter ->
-        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
-            .addOnCompleteListener {
-                if (!emitter.isDisposed) {
-                    if (it.isSuccessful) {
-                        emitter.onComplete()
-                        Log.d(TAG, "Email sent")
-                        //val currentuser = FirebaseAuth.getInstance().currentUser
-                        /*currentuser?.let {
-                            val username = currentuser.displayName
-                            val email = currentuser.email
-                            val uid = currentuser.uid
-                            val profileImageUrl = currentuser.photoUrl
-                            val user = User(username, email, uid, profileImageUrl)
-                        }*/
-
-                    } else {
-                        emitter.onError(it.exception!!)
-                        //should not be using two exclaimation points
-                    }
-
-                }
+    suspend fun RegisterUserEmail(firebaseAuth: FirebaseAuth, email:String ,password:String, username: String): AuthResult?{
+        try {
+            val data = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
+            val uid = FirebaseAuth.getInstance().uid
+            uid?.let { it1 ->
+                saveUserToFirebaseDatabase(
+                    username,
+                    email,
+                    it1,
+                    null
+                )
             }
+            val user = FirebaseAuth.getInstance().currentUser
+            user?.sendEmailVerification()
+                ?.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d(TAG, "Email sent.")
+                        //add toast message that email was sent
+                    }
+                }
+            return data
+        }
+        catch (e: Exception) {
+            return null
+        }
+    }
 
-
+    suspend fun resetUserPassword(firebaseAuth: FirebaseAuth, email: String){
+        try {
+            firebaseAuth.sendPasswordResetEmail(email).await()
+        }
+        catch (e: Exception) {
+            Log.d("Failure", "reset password was not sent to user's email")
+        }
     }
 
     fun readPhotoValue(useridm: String, callback: EmailCallback) {
@@ -595,48 +567,15 @@ class FirebaseData @Inject constructor() {
     }
 
     //@Provides
-    fun LoginUser(email: String, password: String) = Completable.create { emitter ->
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener {
-                if (!emitter.isDisposed) {
-                    if (it.isSuccessful) {
-                        //was this crashing it before?
-                        fetchCurrentUserName()
-                        Log.d(TAG, CurrentUser()!!.displayName ?: "the displayname login1")
-                        GlobalScope.launch(Dispatchers.Main) {
-                            delay(500)
-                            val currentuser = FirebaseAuth.getInstance().currentUser
-                            if (currentuser!!.isEmailVerified) {
-                                emitter.onComplete()
-                            }
-                            else {
-                                emitter.onError(IllegalArgumentException("please verify your email"))
-                            }
-                        }
-                        //updateUser()
-                       /* val currentuser = FirebaseAuth.getInstance().currentUser
-                        currentuser?.let {
-                            val username = currentuser.displayName
-                            val email = currentuser.email
-                            val uid = currentuser.uid
-                            val profileImageUrl = currentuser.photoUrl  // not
-                            //Log.d(TAG,currentuser!!.photoUrl.toString() ?: "the displayname login2")
-                            val user = User(username, email, uid, profileImageUrl)
-                            //user not being used
-                        }*/
-                        Log.d(
-                            TAG,
-                            FirebaseAuth.getInstance().currentUser?.photoUrl.toString()
-
-                        )
-                    } else {
-                        emitter.onError(it.exception!!)
-                        //should not be using two exclaimation points
-                    }
-                }
+    suspend fun LoginUserEmail(firebaseAuth: FirebaseAuth, email:String ,password:String): AuthResult?{
+        try {
+            val data = firebaseAuth.signInWithEmailAndPassword(email, password).await()
+            return data
+            }
+        catch (e: Exception) {
+                return null
             }
     }
-
 
     private fun saveUserToFirebaseDatabase(
         username: String,
