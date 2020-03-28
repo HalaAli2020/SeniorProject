@@ -472,24 +472,12 @@ class FirebaseData @Inject constructor() {
     //@Provides
     suspend fun LoginUserEmail(firebaseAuth: FirebaseAuth, email:String ,password:String): AuthResult?{
         try {
-          /*  authlisteneruser = FirebaseAuth.AuthStateListener(object : FirebaseAuth.AuthStateListener, (FirebaseAuth) -> Unit {
-                override fun invoke(p1: FirebaseAuth) {
-                }
-
-                override fun onAuthStateChanged(p0: FirebaseAuth) {
-                    var user = p0.currentUser
-                    if (user!!.isEmailVerified) {*/
-                        val data = firebaseAuth.signInWithEmailAndPassword(email, password).await()
-                        return data
-           /*         }
-                }
-            })*/
-
+            val data = firebaseAuth.signInWithEmailAndPassword(email, password).await()
+            return data
             }
         catch (e: Exception) {
                 return null
             }
-
     }
 
     private fun saveUserToFirebaseDatabase(

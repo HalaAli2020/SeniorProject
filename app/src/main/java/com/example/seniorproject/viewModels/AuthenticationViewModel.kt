@@ -61,50 +61,18 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
         }
     }
 
-     fun LoginUserEmail(){
-            // authListener?.onFailure("Please enter both your email and/or password.")
-           //  viewModelScope.launch(Dispatchers.Main) {
+     fun LoginUserEmail() {
          viewModelScope.launch(Dispatchers.Main) {
-                 if (email.isNullOrEmpty() || password.isNullOrEmpty()) {
-                     authListener?.onFailure("Please enter both your email and password.")
+             if (email.isNullOrEmpty() || password.isNullOrEmpty()) {
+                 authListener?.onFailure("Please enter both your email and password.")
+             } else{
+                 repository.LoginUserAccount(firebaseAuth, email!!, password!!)
+                 if(FirebaseAuth.getInstance().currentUser!!.isEmailVerified) {
+                     authListener?.onSuccess()
                  }
-                 else{
-                     authlisteneruser = FirebaseAuth.AuthStateListener(object : FirebaseAuth.AuthStateListener, (FirebaseAuth) -> Unit {
-                         override fun invoke(p1: FirebaseAuth) {
-                         }
-
-                         override fun onAuthStateChanged(p0: FirebaseAuth) {
-                             var user = p0.currentUser
-                             usercur = user
-                         /*    if (user!!.isEmailVerified) {
-                                 viewModelScope.launch(Dispatchers.Main) {
-                                     repository.LoginUserAccount(firebaseAuth, email!!, password!!)
-                                     //authListener?.onSuccess()
-                                 }
-                             }*/
-                         }
-                     })
-
-                         delay(10000)
-                         if (usercur!!.isEmailVerified) {
-
-
-                             repository.LoginUserAccount(firebaseAuth, email!!, password!!)
-                             authListener?.onSuccess()
-
-                         }
-                     }
-
-
-                         //setPersistence(firebase.auth.Auth.Persistence.SESSION.then(authListener?.onSuccess())
-
-                   /*  }
-                     else{
-                         authListener?.onFailure("Please verify your account.")
-                     }
-                 }*/
              }
-    }
+         }
+     }
 
     fun resetUserPassword(){
         viewModelScope.launch(Dispatchers.Main) {
