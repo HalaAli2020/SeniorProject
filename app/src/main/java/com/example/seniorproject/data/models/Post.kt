@@ -1,6 +1,7 @@
 package com.example.seniorproject.data.models
 
 import android.net.Uri
+import androidx.annotation.MainThread
 import com.example.seniorproject.R
 import java.text.SimpleDateFormat
 import java.util.*
@@ -52,6 +53,16 @@ data class Post(var title: String?, var text: String?, var subject: String?, var
 
         )
 
+    }
+
+    companion object {
+        private lateinit var sInstance: Post
+
+        @MainThread
+        fun get(): Post {
+            sInstance = if (::sInstance.isInitialized) sInstance else Post()
+            return sInstance
+        }
     }
     // should include database functions later on to correctly get information to fill class with proper query
 }

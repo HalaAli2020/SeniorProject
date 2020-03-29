@@ -24,6 +24,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     val CommentList: MutableList<Comment> = mutableListOf()
     val CommentL = CommentLive()
     var SessionUser: User? = null
+    var listClassesco: Flow<Post> = flow{ }
     var listClasses: PostLiveData = PostLiveData()
     var classList: MutableLiveData<MutableList<CRN>> = MutableLiveData()
     var UserSUB: MutableLiveData<MutableList<String>> = MutableLiveData()
@@ -185,7 +186,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                 Log.d("Children", data.child("Posts").childrenCount.toString())
                 var postdetails: Iterable<DataSnapshot> = data.child("Posts").children
                 for (n in postdetails) {
-                     newPost = Post()
+                    newPost = Post()
                     newPost.let {
 
                         //Log.d("ACCESSING", newPost?.text)
@@ -209,8 +210,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
 
 
-                    savedPostsList.add(newPost)
-                 }
+                        savedPostsList.add(newPost)
+                    }
                 }
 
                 //repository.saveNewPost(newPost)
@@ -232,6 +233,68 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
 
         return listClasses
+    }
+
+    fun getClassPostsco(className: String): Flow<Post> {
+        var newPost = Post()
+        Firebase.getClassPosts(className, object : FirebaseCallbackPost {
+            override fun onSuccess(data: DataSnapshot) {
+
+                //var savedPostsList: MutableList<Post> = mutableListOf()
+                //val newPost = Post()
+                //var postss = data.child("Posts")
+                var savedPostsList: MutableList<Post> = mutableListOf()
+                var listCor: Flow<Post>
+                Log.d("Children", data.child("Posts").childrenCount.toString())
+                var postdetails: Iterable<DataSnapshot> = data.child("Posts").children
+            //    listClassesco = flow{
+                    for (n in postdetails) {
+                        newPost = Post()
+                        newPost.let {
+
+                            //Log.d("ACCESSING", newPost?.text)
+                            it.title = n.child("title").getValue(String::class.java)
+                            //Log.d("Community post", data.child("title").getValue(String::class.java))
+                            it.text = n.child("text").getValue(String::class.java)
+                            //newPost.author = pos.child("author").getValue(String::class.java)
+                            //it.subject = className
+                            Log.d("CRN", data.key!!)
+                            it.subject = n.child("subject").getValue(String::class.java)
+                            it.Ptime = n.child("Timestamp").getValue(String::class.java)
+                            it.key = n.child("key").getValue(String::class.java)
+                            it.Ptime = n.child("Ptime").getValue(String::class.java)
+                            it.Classkey = n.child("Classkey").getValue(String::class.java)
+                            it.UserID = n.child("UserID").getValue(String::class.java)
+                            it.author = n.child("author").getValue(String::class.java)
+                            it.uri = n.child("uri").getValue(String::class.java)
+
+                         //   emit(newPost)
+                            savedPostsList.add(newPost)
+                            // comments might need to be gotten separatley to properly convert values
+                            // savedPostsList.add(newPost)
+                        }
+                    }
+                listCor = savedPostsList.asFlow()
+                    //.flowOn(Dispatchers.Main)
+                listClassesco = listCor
+               // Log.d("soup", "before collect")
+              /*  GlobalScope.launch{
+                    listClassesco.collect {
+                        value -> Log.d("soup", "post value is $value")
+                    }
+                    Log.d("soup", "inside globalscope")
+                }*/
+              //  Log.d("soup", "after collect")
+            }
+            override fun onFailure() {
+                Log.d("Faiure", "onfailurecalled")
+            }
+
+            override fun onStart() {
+
+            }
+        })
+        return listClassesco
     }
 
 
