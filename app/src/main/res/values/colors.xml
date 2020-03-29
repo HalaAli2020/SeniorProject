@@ -6,8 +6,6 @@
     <color name="grey">#E6E4E4</color>
     <color name="darkergrey">#A3A3A3</color>
     <color name="TextColor">#000000</color>
-    <color name="Subscribed">#9acd32</color>
-    <color name="notSub">#0009ff</color>
     <color name="black">#000000</color>
     <color name="BackgroundColor">#FFFFFF</color>
 </resources>

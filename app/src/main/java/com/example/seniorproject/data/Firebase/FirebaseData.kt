@@ -671,7 +671,7 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                if (p0.child("Posts").exists() == false) {
+                if (!p0.child("Posts").exists()) {
                     Log.d("comment", "doesn't exist")
                     val emptyPost = Post("no Posts","" ,"","")
                     var profilePostL: MutableList<Post> = mutableListOf()
@@ -696,7 +696,7 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onSuccess(data: DataSnapshot) {
-                if (data.child("Posts").exists() == false) {
+                if (!data.child("Posts").exists()) {
                     Log.d("comment", "doesn't exist")
                     val emptyPost = Post("no Posts","" ,"","")
                     var profilePostL: MutableList<Post> = mutableListOf()
@@ -720,7 +720,7 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onSuccess(data: DataSnapshot) {
-                if (data.child("Posts").exists() == false) {
+                if (!data.child("Posts").exists()) {
                     Log.d("comment", "doesn't exist")
                     val emptyPost = Post("no Posts","" ,"","")
                     var profilePostL: MutableList<Post> = mutableListOf()
@@ -772,7 +772,7 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                if (p0.child("Comments").exists() == false) {
+                if (!p0.child("Comments").exists()) {
                     Log.d("comment", "doesn't exist")
                     val emptycomment = Comment("no Comments" , "", "", "", "")
                     var profileCommentL: MutableList<Comment> = mutableListOf()
@@ -1267,7 +1267,7 @@ class FirebaseData @Inject constructor() {
          ref.child("BlockedUsers").orderByValue().
             addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(p0: DataSnapshot) {
-                    if(p0.exists() == false){
+                    if(!p0.exists()){
                         ref.child("BlockedUsers").push().setValue(UserID)
                     }
                     if(p0.exists()){

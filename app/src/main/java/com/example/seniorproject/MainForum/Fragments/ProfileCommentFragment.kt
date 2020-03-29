@@ -141,7 +141,7 @@ class ProfileCommentFragment : Fragment() {
         //this?
         //use an if statement to control value of swipe?
         var check = myViewModel.noCommentsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null")
-        if (ID != FirebaseAuth.getInstance().currentUser?.uid || check == true){
+        if (ID != FirebaseAuth.getInstance().currentUser?.uid || check){
             //val swipe = null
         }
         else if (ID == FirebaseAuth.getInstance().currentUser?.uid) {

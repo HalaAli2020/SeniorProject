@@ -123,7 +123,7 @@ class ProfilePostFragment : Fragment() {
         deleteIcon = ContextCompat.getDrawable(activity!!.applicationContext, R.drawable.ic_delete_24px)!!
 
         var check = myViewModel.noPostsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null")
-        if (ID != FirebaseAuth.getInstance().currentUser?.uid || check == true){
+        if (ID != FirebaseAuth.getInstance().currentUser?.uid || check){
             //val swipe = null
         }
         else{

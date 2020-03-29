@@ -405,7 +405,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
             }
 
             override fun onSuccess(p0: DataSnapshot) {
-                if (p0.child("text").exists() == false) {
+                if (!p0.child("text").exists()) {
                     Log.d("post", "doesn't exist")
                     val emptyPost = Post("no Posts","" ,"","")
                     var profilePostL: MutableList<Post> = mutableListOf()
@@ -479,7 +479,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
             }
 
             override fun onSuccess(p0: DataSnapshot) {
-                if (p0.child("text").exists() == false) {
+                if (!p0.child("text").exists()) {
                     Log.d("comment", "doesn't exist")
                     val emptycomment = Comment("No Comments", "", "", "", "")
                     var profileCommentL: MutableList<Comment> = mutableListOf()
