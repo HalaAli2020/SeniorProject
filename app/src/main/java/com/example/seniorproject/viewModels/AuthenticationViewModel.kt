@@ -87,11 +87,16 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
                          if(!string.isNullOrEmpty()){
                              Log.d("soup2", string)
                              if(string == "Successful login!"){
-                                 if(FirebaseAuth.getInstance().currentUser!!.isEmailVerified) {
+                                 if(!FirebaseAuth.getInstance().currentUser!!.isEmailVerified) {
+                                     authListener?.onFailure("Please verify your email.")
+                                 }else{
+                                     Log.d("soup2", "check")
                                      authListener?.onSuccess()
                                  }
+                             }else{
+                                 Log.d("soup2", "fail")
+                                 authListener?.onFailure(string)
                              }
-                             authListener?.onFailure(string)
                          }
                      }
 
