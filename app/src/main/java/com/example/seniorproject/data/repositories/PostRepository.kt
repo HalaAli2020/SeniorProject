@@ -151,7 +151,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
             override fun onSuccess(data: DataSnapshot) {
                 for (datas in data.children) {
                     var classnames = CRN(datas.key!!)
-                    val CC: Long = 2
+                    //val CC: Long = 2
 
                     //if(datas.childrenCount == CC)
                     /*classnames.let { x ->
@@ -179,11 +179,11 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
             override fun onSuccess(data: DataSnapshot) {
 
 
-                var savedPostsList: MutableList<Post> = mutableListOf()
+                val savedPostsList: MutableList<Post> = mutableListOf()
                 //val newPost = Post()
                 //var postss = data.child("Posts")
                 Log.d("Children", data.child("Posts").childrenCount.toString())
-                var postdetails: Iterable<DataSnapshot> = data.child("Posts").children
+                val postdetails: Iterable<DataSnapshot> = data.child("Posts").children
                 for (n in postdetails) {
                      newPost = Post()
                     newPost.let {
@@ -247,11 +247,11 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
             }
 
-            override fun onSuccess(d: DataSnapshot) {
-                val size = d.hasChildren()
+            override fun onSuccess(data: DataSnapshot) {
+                val size = data.hasChildren()
                 Log.d("Size", size.toString())
                 //var has :HashMap<String,String>? = hashMapOf()
-                val Sublist = d.children
+                val Sublist = data.children
                 for (x in Sublist) {
                     Log.d("usersub", x.getValue(String::class.java)!!)
                     SubList.add(x.getValue(String::class.java)!!)
@@ -281,7 +281,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
             override fun onSuccess(data: DataSnapshot) {
                 for (datas in data.children) {
                     var classnames = CRN(datas.key!!)
-                    val CC: Long = 2
+                    //val CC: Long = 2
 
                     //if(datas.childrenCount == CC)
                     /*classnames.let { x ->
@@ -368,11 +368,11 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
             }
 
-            override fun onSuccess(d: DataSnapshot) {
-                val size = d.hasChildren()
+            override fun onSuccess(data: DataSnapshot) {
+                val size = data.hasChildren()
                 Log.d("Size", size.toString())
                 //var has :HashMap<String,String>? = hashMapOf()
-                val Sublist = d.children
+                val Sublist = data.children
                 for (x in Sublist) {
                     Log.d("usersub", x.getValue(String::class.java)!!)
                     SubList.add(x.getValue(String::class.java)!!)
@@ -504,7 +504,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                     }
 
                     if (newComment != null) {
-                        Log.d("profile comments", newComment.text ?: " Accessing profile comment author")
+                        Log.d("profile comments", newComment.text)
                         profileCommentList.add(newComment)
                         //newProfilePosts = newProfilePost
                         newProfileComments = newComment

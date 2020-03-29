@@ -50,7 +50,7 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
         viewModelScope.launch(Dispatchers.Main) {
 
             if (!email.isNullOrEmpty() && !password.isNullOrEmpty() && !username.isNullOrEmpty()) {
-                val currentuser = FirebaseAuth.getInstance().currentUser
+                //val currentuser = FirebaseAuth.getInstance().currentUser
                     repository.RegisterUserEmail(firebaseAuth, email!!, password!!, username!!)
                     authListener?.onSuccess()
 

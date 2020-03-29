@@ -63,7 +63,7 @@ class UserProfileActivity : AppCompatActivity() {
 
         var test : String = intent.getStringExtra("UserID") ?: "null"
         val author : String =  intent.getStringExtra("Author") ?: "null"
-        val photo : String = intent.getStringExtra("profileImageUrl") ?: "null"
+        //val photo : String = intent.getStringExtra("profileImageUrl") ?: "null"
         var ID = test
         //myViewModel.fetchEmail(test)
 
@@ -77,7 +77,7 @@ class UserProfileActivity : AppCompatActivity() {
             nav.visibility = View.INVISIBLE
         }
 
-        val email = myViewModel.otherEmail
+        //val email = myViewModel.otherEmail
         //val bio = myViewModel.fetchBio(test)
         val profilepostfrag = ProfilePostFragment.newInstance(ID)
         val profilecommentfrag = ProfileCommentFragment.newInstance(ID)

@@ -34,7 +34,7 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
     }
 
     fun separateResult(data: DataSnapshot, query: String): CRN {
-        var RList: MutableLiveData<MutableList<CRN>>
+        //var RList: MutableLiveData<MutableList<CRN>>
         var RE = CRN()
         var classResult = CRN()
         if (data.hasChild(query)) {

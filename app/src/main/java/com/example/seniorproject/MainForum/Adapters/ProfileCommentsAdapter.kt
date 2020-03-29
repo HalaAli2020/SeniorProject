@@ -79,12 +79,12 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
             if (comment.author != null || comment.text != "no Comments") {
                 holder.itemView.setOnClickListener {
                     val intent = Intent(mContext, ClickedPost::class.java)
-                    var crn = comment.crn
-                    var postkey = comment.Postkey
+                    var crn = comment.crn ?: "no crn"
+                    var postkey = comment.Postkey ?: "no postkey"
                     //var callback: Callback? = null
                     Log.d("Commetn", crn)
                     Log.d("postkey", postkey)
-                    FirebaseData.getInstance().readPostValues(crn!!, postkey!!, object : Callback {
+                    FirebaseData.getInstance().readPostValues(crn, postkey, object : Callback {
                         override fun onCallback(value: ArrayList<String>) {
                             Log.d("spider", value[0])
                             intent.putExtra("Text", value[1])

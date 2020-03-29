@@ -50,7 +50,7 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
             postListener?.onFailure("please enter a title and text!")
             return
         }
-        Log.d("SELECTED VALUE:", classSpinner)
+        Log.d("SELECTED VALUE:", classSpinner ?: " ")
         repository.saveNewPost(textPost!!,titlePost!!,classSpinner!!)
         bool.value = true
     }
