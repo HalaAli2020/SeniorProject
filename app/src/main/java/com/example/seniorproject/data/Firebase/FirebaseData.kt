@@ -720,7 +720,7 @@ class FirebaseData @Inject constructor() {
     }
 
     fun noCommentsChecker(userID: String): Boolean {
-        listenForUserProfilePosts(userID, object : PostRepository.FirebaseCallbackPost {
+        listenForUserProfileComments(userID, object : PostRepository.FirebaseCallbackComment {
             override fun onFailure() {
 
             }
@@ -730,13 +730,13 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onSuccess(data: DataSnapshot) {
-                if (data.child("Posts").exists() == false) {
+                if (data.child("Comments").exists() == false) {
                     Log.d("comment", "doesn't exist")
-                    val emptyPost = Post("no Posts","" ,"","")
-                    var profilePostL: MutableList<Post> = mutableListOf()
-                    profilePostL.add(emptyPost)
-                    profilePosts.value = profilePostL
-                    noPostsCheck = true
+                    val emptyComment = Comment("no Comments","" ,"","","")
+                    var profileCommentL: MutableList<Comment> = mutableListOf()
+                    profileCommentL.add(emptyComment)
+                    Comments.value = profileCommentL
+                    noCommentsCheck = true
                 }
             }
         })
@@ -823,6 +823,8 @@ class FirebaseData @Inject constructor() {
         }
         return Comments
     }
+
+
     fun listenComments(Key: String, subject: String, callbackComment: FirebaseCallbackComment)
     {
         //val uid = FirebaseAuth.getInstance().uid

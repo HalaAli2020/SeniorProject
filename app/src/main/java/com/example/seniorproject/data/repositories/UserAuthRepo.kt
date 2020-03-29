@@ -1,3 +1,4 @@
+
 package com.example.seniorproject.data.repositories
 import android.net.Uri
 import com.example.seniorproject.Utils.AuthenticationListener
@@ -14,46 +15,24 @@ import javax.inject.Singleton
 @Singleton
 class UserAuthRepo @Inject constructor(private val Firebase: FirebaseData) {
 
-    suspend fun RegisterUserEmail(
-        firebaseAuth: FirebaseAuth,
-        email: String,
-        password: String,
-        username: String,
-        callback: EmailCallback
-    ) {
+    suspend fun RegisterUserEmail(firebaseAuth: FirebaseAuth, email:String ,password:String, username: String, callback: EmailCallback){
         Firebase.RegisterUserEmail(firebaseAuth, email, password, username, callback)
     }
 
+    suspend fun LoginUserAccount(firebaseAuth: FirebaseAuth, email:String, password:String, callback: EmailCallback){
+        Firebase.LoginUserEmail(firebaseAuth, email, password, callback)
+    }
 
-    suspend fun LoginUserAccount(
-        firebaseAuth: FirebaseAuth,
-        email: String,
-        password: String,
-        callback: EmailCallback
-    ) {
-        fun currentUser() = Firebase.CurrentUser()
+    suspend fun resetUserPassword(firebaseAuth: FirebaseAuth, email: String, callback: EmailCallback){
+        Firebase.resetUserPassword(firebaseAuth, email, callback)
+    }
 
-        suspend fun LoginUserAccount(
-            firebaseAuth: FirebaseAuth,
-            email: String,
-            password: String,
-            callback: EmailCallback
-        ) {
-            Firebase.LoginUserEmail(firebaseAuth, email, password, callback)
-        }
+    fun currentUser() = Firebase.CurrentUser()
 
-        suspend fun resetUserPassword(
-            firebaseAuth: FirebaseAuth,
-            email: String,
-            callback: EmailCallback
-        ) {
-            Firebase.resetUserPassword(firebaseAuth, email, callback)
-        }
+    fun fetchCurrentUserName() = Firebase.fetchCurrentUserName()
 
-        fun fetchCurrentUserName() = Firebase.fetchCurrentUserName()
-
-        fun logout(Firebase: FirebaseData) {
-            Firebase.logout()
-        }
+    fun logout(Firebase: FirebaseData)
+    {
+        Firebase.logout()
     }
 }
