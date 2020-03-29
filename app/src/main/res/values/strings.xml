@@ -42,6 +42,36 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="comment">Comment</string>
+    <string name="add_a_comment">Add a comment</string>
+    <string name="add_new_bio">Add new Bio</string>
+    <string name="done">DONE</string>
+    <string name="login">LOGIN</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login_lowercase">Login</string>
+    <string name="register_for_an_account">Register for an account</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="reset_password">RESET PASSWORD</string>
+    <string name="email">Email</string>
+    <string name="reset_password_">Reset Password</string>
+    <string name="registration">REGISTRATION</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="switch">Switch</string>
+    <string name="button">Button</string>
+    <string name="add_image">Add Image</string>
+    <string name="post">Post</string>
+    <string name="enter_a_title">Enter a title...</string>
+    <string name="enter_some_text">Enter some text...</string>
+    <string name="enter_a_title">Enter a title...</string>
+    <string name="enter_some_text">Enter some text...</string>
+    <string name="enter_message">Enter message...</string>
+    <string name="username">Username</string>
+    <string name="latest_message">Latest Message</string>
 
 
 </resources>

@@ -54,7 +54,7 @@
                 android:layout_marginEnd="8dp"
                 android:background="@android:color/transparent"
                 android:ems="10"
-                android:hint="Enter message..."
+                android:hint="@string/enter_message"
                 android:inputType="textMultiLine|textCapSentences"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"

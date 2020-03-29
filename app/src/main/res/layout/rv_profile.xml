@@ -11,7 +11,7 @@
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical">
@@ -41,8 +41,9 @@
         android:id="@+id/profile_post_image"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:layout_gravity="right"
-        android:layout_marginLeft="10dp"
-        android:src="@color/blue_theme" />
+        android:layout_gravity="end"
+        android:layout_marginStart="10dp"
+        android:src="@color/blue_theme"
+        android:contentDescription="TODO" />
 
 </LinearLayout>
