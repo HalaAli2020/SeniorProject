@@ -46,7 +46,7 @@ class EditProfileActivity : AppCompatActivity() {
 
         DaggerAppComponent.create().inject(this)
         val factory = InjectorUtils.provideProfileViewModelFactory()
-        myViewModel = ViewModelProviders.of(this,factory).get(ProfileViewModel::class.java)
+         myViewModel = ViewModelProviders.of(this,factory).get(ProfileViewModel::class.java)
 
         val binding: ActivityEditProfileBinding = DataBindingUtil.setContentView(this,R.layout.activity_edit_profile)
         binding.profileEditViewModel = myViewModel

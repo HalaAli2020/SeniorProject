@@ -46,7 +46,7 @@ class NewMessageAdapter(
 
         val user: User = UserList[position]
 
-        holder.itemView.usernameTextview.text = user.username
+        holder.itemView.usernameTextview.text = user.username ?: "no username"
         //Picasso.get().load(user.profileImageURL).into(viewHolder.itemView.image_new_message)
         Log.d("NewMessageAdapter", user.username)
         Picasso.get().load(user.profileImageUrl).into(holder.itemView.image_new_message)

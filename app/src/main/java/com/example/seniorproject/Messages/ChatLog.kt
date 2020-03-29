@@ -41,7 +41,7 @@ class ChatLog : AppCompatActivity() {
         val binding: MActivityChatLogBinding = DataBindingUtil.setContentView(this,R.layout.m_activity_chat_log)
 
         myViewModel.toID = toID
-        myViewModel.username = username
+        myViewModel.username = username ?: "no username"
 
         recycler_view_chatLog.layoutManager = LinearLayoutManager(context)
 

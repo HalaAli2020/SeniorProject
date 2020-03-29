@@ -80,7 +80,7 @@ class SearchAdapter(context: Context, ViewModel: SearchViewModel, Clist : Mutabl
             for ((index, x) in classlist!!.value!!.withIndex())
             {
                 // query.contains()
-                if(x.name.contains(query!!, true))
+                if(x.name.contains(query, true))
                 {
                     Clist.add(x)
                 }

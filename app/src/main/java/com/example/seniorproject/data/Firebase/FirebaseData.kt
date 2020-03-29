@@ -304,9 +304,9 @@ class FirebaseData @Inject constructor() {
             x++
         }
 
-        x = 0
+        //x = 0
        changeuserpostname(username)
-        x =  0
+        //x =  0
         changeusercommetname(username)
     }
     fun changeuserpostname(name : String)
@@ -740,7 +740,7 @@ class FirebaseData @Inject constructor() {
         callbackComment.onStart()
 
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Comments")
-        val profilePostListen = reference.addChildEventListener(object : ChildEventListener {
+        reference.addChildEventListener(object : ChildEventListener {
             var profileCommentList: MutableList<Comment> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
                 callbackComment.onFailure()
@@ -815,7 +815,7 @@ class FirebaseData @Inject constructor() {
     }
     fun listenComments(Key: String, subject: String, callbackComment: FirebaseCallbackComment)
     {
-        val uid = FirebaseAuth.getInstance().uid
+        //val uid = FirebaseAuth.getInstance().uid
         val reference =
             FirebaseDatabase.getInstance().getReference("Subjects/$subject/Posts/$Key/Comments")
 
@@ -835,7 +835,7 @@ class FirebaseData @Inject constructor() {
                 val newComment = p0.getValue(Comment::class.java)
 
                 if (newComment != null) {
-                    Log.d("ACCESSING", newComment?.text)
+                    Log.d("ACCESSING", newComment.text)
                     if (savedCommentList.isNullOrEmpty()) {
                         savedCommentList.add(newComment)
                     }
@@ -859,7 +859,7 @@ class FirebaseData @Inject constructor() {
 
     fun getCommentsCO(Key: String, callback : PostRepository.FirebaseCallbackComment): CommentLive {
 
-        val uid = FirebaseAuth.getInstance().uid
+        //val uid = FirebaseAuth.getInstance().uid
         val reference =
             FirebaseDatabase.getInstance().getReference("Subjects/Posts/$Key/Comments")
 
@@ -1386,9 +1386,6 @@ class FirebaseData @Inject constructor() {
     // CRN is a placeholder for a class object
     fun saveNewImgPosttoUser(title: String, text: String, Subject: String, CRN: String, uri: Uri, imagePost: Boolean) {
 
-        if (uri == null) {
-            return
-        }
         val filename = UUID.randomUUID().toString()
         val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
         ref.putFile(uri).addOnSuccessListener {
@@ -1545,10 +1542,8 @@ class FirebaseData @Inject constructor() {
 
     //, Subject: String
     fun addUserSUB(crn: String) {
-        if (UserSUB == null) {
-            getUserSub()
-        }
-        var SubAdd = HashMap<String, String>()
+
+        //var SubAdd = HashMap<String, String>()
         //SubAdd[crn] = Subject
         val uid = FirebaseAuth.getInstance().uid
         var ref = FirebaseDatabase.getInstance().getReference("users/$uid/Subscriptions")
@@ -1622,17 +1617,14 @@ class FirebaseData @Inject constructor() {
     }
 
     fun uploadImageToFirebaseStorage(selectedPhotoUri: Uri) {
-        if (selectedPhotoUri == null) {
-            return
-        }
 
-        Log.d(TAG, "photo url is null")
+        //Log.d(TAG, "photo url is null")
 
         val filename = UUID.randomUUID().toString()
-        val uidm = FirebaseAuth.getInstance().uid
+        //val uidm = FirebaseAuth.getInstance().uid
         val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
 
-        val userref = FirebaseDatabase.getInstance().getReference("users/$uidm")
+        //val userref = FirebaseDatabase.getInstance().getReference("users/$uidm")
         ref.putFile(selectedPhotoUri)
             .addOnSuccessListener {
                 Log.d("Pic", "Successfully uploaded picture: ${it.metadata?.path}")
@@ -1700,7 +1692,7 @@ class FirebaseData @Inject constructor() {
     }
 
     fun getClasses(call: PostRepository.FirebaseCallbackCRN) {
-        var csall : MutableLiveData<MutableList<CRN>> = MutableLiveData()
+        //var csall : MutableLiveData<MutableList<CRN>> = MutableLiveData()
         listenClasses(call)
     }
     /*fun getUsersSubsnClass() : MutableLiveData<MutableList<CRN>>
@@ -1881,11 +1873,11 @@ class FirebaseData @Inject constructor() {
                     Log.d("FIRST1-:", p0.key)
                     if (sub.contains(p0.key)) {
                         for (p2 in p0.getChildren()) {
-                            Log.d("FIRST2---:", p2.key)
+                            Log.d("FIRST2---:", p2.key ?: "no key")
                             if (p2.key == "Posts") {
                                 var counter = 0
                                 for (p3 in p2.getChildren().reversed()) {
-                                    Log.d("FIRST3-------:", p3.key)
+                                    Log.d("FIRST3-------:", p3.key ?: "no key")
                                     val newPost = Post()
                                     try {
                                         newPost.let {
@@ -1906,8 +1898,8 @@ class FirebaseData @Inject constructor() {
                                         Log.d("Data Error", "error converting to post")
                                     }
 
-                                    if (newPost != null) {
-                                        Log.d("ACCESSING", newPost?.text)
+                                    if (newPost.key != null) {
+                                        //Log.d("ACCESSING", newPost?.text)
                                         savedPostsList.add(newPost)
                                     }
 
@@ -1957,8 +1949,8 @@ class FirebaseData @Inject constructor() {
 
             }
         })
-        var ref: DatabaseReference? = null
-        var post = PostLiveData()
+        //var ref: DatabaseReference? = null
+        //var post = PostLiveData()
             listenForSubscribedPosts2(sub, object : FirebaseCallbackPost {
                 override fun onCallback(PostL: PostLiveData) {
                     savedPosts.value = PostL.value
@@ -2022,8 +2014,8 @@ class FirebaseData @Inject constructor() {
                 }
 
 
-                if (newPost != null) {
-                    Log.d("ACCESSING", newPost?.text)
+                if (newPost.key != null) {
+                    Log.d("ACCESSING", newPost.text)
                     savedPostsList.add(newPost)
 
                     //repository.saveNewPost(newPost)
@@ -2312,7 +2304,7 @@ class FirebaseData @Inject constructor() {
     }
     fun getallclasses(listen : SearchViewModel.FirebaseResult)
     {
-        var listC : MutableList<CRN> = mutableListOf()
+        //var listC : MutableList<CRN> = mutableListOf()
         listen.onStart()
         val ref = FirebaseDatabase.getInstance().getReference("Subjects")
         ref.addValueEventListener(object : ValueEventListener{

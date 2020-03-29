@@ -45,7 +45,7 @@ class SearchActivity: AppCompatActivity()
         menuInflater.inflate(R.menu.search_top_nav_menu, menu)
 
         // Associate searchable configuration with the SearchView
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        //val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchview = (menu.findItem(R.id.seach_men).actionView as SearchView)
         setupsearchview()
         return true

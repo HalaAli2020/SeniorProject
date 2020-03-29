@@ -6,7 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.util.Log
+import android.view.ContextMenu
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.MainForum.Posts.CommunityPosts
 import com.example.seniorproject.R
@@ -26,12 +28,12 @@ class SearchViewHolder(parent: View) : RecyclerView.ViewHolder(parent) {
         if (crn.Subscribed) {
             Log.d("subB", "true")
             itemView.Subscibe_B.setBackgroundResource(R.drawable.sub_button)
-            itemView.Subscibe_B.setTextColor(mContext.resources.getColor(R.color.white))
+            itemView.Subscibe_B.setTextColor(ContextCompat.getColor(mContext,R.color.white))
             itemView.Subscibe_B.text = mContext.resources.getString(R.string.Sub)
         } else {
             Log.d("subB", "false")
             itemView.Subscibe_B.setBackgroundResource(R.drawable.circle_border)
-            itemView.Subscibe_B.setTextColor(mContext.resources.getColor(R.color.blue_theme))
+            itemView.Subscibe_B.setTextColor(ContextCompat.getColor(mContext,R.color.blue_theme))
             itemView.Subscibe_B.text = mContext.resources.getString(R.string.notSub)
         }
 
@@ -42,14 +44,14 @@ class SearchViewHolder(parent: View) : RecyclerView.ViewHolder(parent) {
                 Log.d("subB", "else")
                 mViewModel.removeSub(crn.name)
                 itemView.Subscibe_B.setBackgroundResource(R.drawable.circle_border)
-                itemView.Subscibe_B.setTextColor(mContext.resources.getColor(R.color.blue_theme))
+                itemView.Subscibe_B.setTextColor(ContextCompat.getColor(mContext,R.color.blue_theme))
                 itemView.Subscibe_B.text = mContext.resources.getString(R.string.notSub)
                 crn.Subscribed = false
             } else {
                 Log.d("subB", "ifffffff")
                 mViewModel.addSub(crn.name)
                 itemView.Subscibe_B.setBackgroundResource(R.drawable.sub_button)
-                itemView.Subscibe_B.setTextColor(mContext.resources.getColor(R.color.white))
+                itemView.Subscibe_B.setTextColor(ContextCompat.getColor(mContext,R.color.white))
                 itemView.Subscibe_B.text = mContext.resources.getString(R.string.Sub)
                 crn.Subscribed = true
             }
