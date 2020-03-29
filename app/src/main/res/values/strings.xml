@@ -50,7 +50,6 @@
     <string name="register">Register</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="add_image">Add Image</string>
-    <string name="post">Post</string>
     <string name="enter_a_title">Enter a title...</string>
     <string name="enter_some_text">Enter some text...</string>
     <string name="enter_message">Enter message...</string>
@@ -59,6 +58,11 @@
     <string name="posts_">Posts</string>
     <string name="comments">Comments</string>
     <string name="search">search</string>
+    <string name="enter_new_displayname">Enter new displayname</string>
+    <string name="profile_image">profile image</string>
+    <string name="post_image">post image</string>
+    <string name="post">Post</string>
+    <string name="arrow">➤</string>
 
 
 </resources>

@@ -6,14 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.util.Log
-import android.view.ContextMenu
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.MainForum.Posts.CommunityPosts
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.CRN
-import com.example.seniorproject.viewModels.ListViewModel
 import com.example.seniorproject.viewModels.SearchViewModel
 import kotlinx.android.synthetic.main.rv_list.view.*
 

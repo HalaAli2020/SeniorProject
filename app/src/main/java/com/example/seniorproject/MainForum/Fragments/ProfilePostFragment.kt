@@ -1,9 +1,8 @@
 package com.example.seniorproject.MainForum.Fragments
 
-import android.content.Context
+
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -13,14 +12,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.DaggerAppComponent
@@ -28,18 +25,15 @@ import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Adapters.CustomAdapter
 import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
 import com.example.seniorproject.MainForum.Posts.UpdatePost
-import com.example.seniorproject.MainForum.UserProfileActivity
 
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
 import com.example.seniorproject.Utils.ProfileButton
 import com.example.seniorproject.Utils.SwipeHelper
-import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.databinding.FragmentProfilePostBinding
 import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_community_posts.*
 import kotlinx.android.synthetic.main.fragment_profile__post.view.*
 import kotlinx.android.synthetic.main.fragment_profile__post.view.refreshView
 import javax.inject.Inject
@@ -48,16 +42,16 @@ import javax.inject.Inject
 class ProfilePostFragment : Fragment() {
 
     private lateinit var adapter: CustomAdapter
-    private lateinit var linearLayoutManager: LinearLayoutManager
+    //private lateinit var linearLayoutManager: LinearLayoutManager
 
-    var swipeBackground: ColorDrawable = ColorDrawable(Color.parseColor("#FF0000"))
+    //var swipeBackground: ColorDrawable = ColorDrawable(Color.parseColor("#FF0000"))
     lateinit var deleteIcon: Drawable
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: ProfileViewModel
 
-    lateinit var obse : Observer<MutableList<Post>>
+    //lateinit var obse : Observer<MutableList<Post>>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -68,9 +62,9 @@ class ProfilePostFragment : Fragment() {
 
         //this is only place we dont have the ID
         var currentuser = FirebaseAuth.getInstance().currentUser?.uid ?: "null"
-        var ID = this.getArguments()?.getString("ID") ?: "null"
-        if (ID == "null"){
-            ID = currentuser
+        var iD = this.getArguments()?.getString("ID") ?: "null"
+        if (iD == "null"){
+            iD = currentuser
         }
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_profile__post, container, false)
@@ -81,14 +75,14 @@ class ProfilePostFragment : Fragment() {
         myViewModel = ViewModelProviders.of(this,factory).get(ProfileViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_profile__post, container, false)
 
-        if (myViewModel.getUserProfilePosts(ID).value == null){
+        if (myViewModel.getUserProfilePosts(iD).value == null){
             //need to clear the recyclerview
-            ID = "0"
+            iD = "0"
         }
 
 
             view.profile_post_recyclerView.adapter =
-                CustomAdapter(view.context, myViewModel.getUserProfilePosts(ID),0)
+                CustomAdapter(view.context, myViewModel.getUserProfilePosts(iD),0)
 
         adapter = CustomAdapter(view.context, myViewModel.returnProfilePost(),0)
         view.profile_post_recyclerView.adapter= adapter
@@ -116,7 +110,7 @@ class ProfilePostFragment : Fragment() {
         view.profile_post_recyclerView.adapter =
             CustomAdapter(
                 view.context,
-                myViewModel.getUserProfilePosts(ID),
+                myViewModel.getUserProfilePosts(iD),
                 0
             )
 
@@ -124,10 +118,10 @@ class ProfilePostFragment : Fragment() {
         binding.executePendingBindings()
 
         var check = myViewModel.noPostsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null")
-        if (ID != FirebaseAuth.getInstance().currentUser?.uid || check){
+        if (iD != FirebaseAuth.getInstance().currentUser?.uid || check){
             //val swipe = null
         }
-        if (ID == FirebaseAuth.getInstance().currentUser?.uid) {
+        if (iD == FirebaseAuth.getInstance().currentUser?.uid) {
             object : SwipeHelper(context!!, view.profile_post_recyclerView, 200) {
                 override fun initButton(
                     viewHolders: RecyclerView.ViewHolder,
@@ -330,11 +324,11 @@ class ProfilePostFragment : Fragment() {
         super.onPause()
             // myViewModel.posts.removeObserver(this)
     }
-    fun swap(ID: String)
+    /*fun swap(ID: String)
     {
         var ada = CustomAdapter(view!!.context, myViewModel.getUserProfilePosts(ID), 0)
         view!!.profile_post_recyclerView.swapAdapter(ada, true)
-    }
+    }*/
     companion object {
         fun newInstance(ID: String): ProfilePostFragment {
             val bundle : Bundle = Bundle()

@@ -9,7 +9,7 @@ import dagger.Module
 import dagger.multibindings.IntoMap
 
 @Module
-internal abstract class multibindingmodule{
+internal abstract class Multibindingmodule{
     @Binds
 abstract fun bindviewmodelFactory(factory: DaggerViewModelFactory):ViewModelProvider.Factory
 

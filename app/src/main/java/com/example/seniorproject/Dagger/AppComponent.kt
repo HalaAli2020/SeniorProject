@@ -11,7 +11,7 @@ import com.example.seniorproject.MainForum.Posts.ClickedPost
 import com.example.seniorproject.MainForum.Posts.EditProfileActivity
 import com.example.seniorproject.MainForum.Posts.UpdateComment
 import com.example.seniorproject.MainForum.Posts.UpdatePost
-import com.example.seniorproject.Utils.multibindingmodule
+import com.example.seniorproject.Utils.Multibindingmodule
 import com.example.seniorproject.search.SearchActivity
 import dagger.Component
 import javax.inject.Singleton
@@ -21,7 +21,7 @@ import javax.inject.Singleton
 //usually by use of overriden injection methods
 
 @Singleton
-@Component(modules = [AppModule::class,multibindingmodule::class])
+@Component(modules = [AppModule::class, Multibindingmodule::class])
 interface AppComponent {
 
     fun inject(activity: RegisterActivity)

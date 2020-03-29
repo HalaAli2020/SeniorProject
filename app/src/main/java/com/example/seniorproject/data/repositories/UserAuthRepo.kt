@@ -1,11 +1,6 @@
 package com.example.seniorproject.data.repositories
-import android.net.Uri
-import com.example.seniorproject.Utils.AuthenticationListener
 import com.example.seniorproject.data.Firebase.FirebaseData
-import com.example.seniorproject.data.models.User
 import com.google.firebase.auth.FirebaseAuth
-import dagger.Module
-import dagger.Provides
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,10 +24,10 @@ class UserAuthRepo @Inject constructor(private val Firebase: FirebaseData) {
 
     fun currentUser() = Firebase.CurrentUser()
 
-    fun fetchCurrentUserName() = Firebase.fetchCurrentUserName()
+    //fun fetchCurrentUserName() = Firebase.fetchCurrentUserName()
 
-    fun logout(Firebase: FirebaseData)
+    /*fun logout(Firebase: FirebaseData)
     {
         Firebase.logout()
-    }
+    }*/
 }

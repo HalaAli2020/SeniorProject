@@ -58,7 +58,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/ic_account_circle_blue_24dp"
-                android:contentDescription="TODO" />
+                android:contentDescription="@string/add_image" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <EditText
@@ -78,7 +78,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/clupdate" />
+            app:layout_constraintTop_toBottomOf="@+id/clupdate"
+            android:hint="@string/comment"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

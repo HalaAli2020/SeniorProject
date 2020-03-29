@@ -27,8 +27,8 @@ import javax.inject.Inject
 
 class EditProfileActivity : AppCompatActivity() {
 
-    private lateinit var adaptercomments: ProfileCommentsAdapter
-    private lateinit var adapterposts: CustomAdapter
+    //private lateinit var adaptercomments: ProfileCommentsAdapter
+    //private lateinit var adapterposts: CustomAdapter
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -79,8 +79,8 @@ class EditProfileActivity : AppCompatActivity() {
             myViewModel.saveUserbio(newBio.text.toString())
 
             val intent = Intent(this, UserProfileActivity::class.java)
-            val ID = FirebaseAuth.getInstance().currentUser?.uid
-            intent.putExtra("UserID",ID).also {
+            val iD = FirebaseAuth.getInstance().currentUser?.uid
+            intent.putExtra("UserID",iD).also {
                 startActivity(it)
             }
             //Intent(this, UserProfileActivity::class.java).also { }

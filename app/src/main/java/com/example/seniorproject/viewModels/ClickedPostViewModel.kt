@@ -20,7 +20,7 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
     var crn : String? = null
     var title: String? = null
     var text: String? = null
-    private var getCommentsJob: Job? = null
+    //private var getCommentsJob: Job? = null
     private var PostKey : String? = null
     var comuserid: String? = null
     var usercomkey: String?= null
@@ -47,7 +47,7 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
 
 
     fun editComment(){
-        repository.editNewComment(comuserid!!, usercomkey!!, ctext!!, Comment!!, usercrn!!, postukey!!)
+        repository.editNewComment(comuserid!!, usercomkey!!, Comment!!, usercrn!!, postukey!!)
     }
 
 
@@ -58,7 +58,7 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
     }
     fun checkcomments() : Boolean
     {
-        if(CommentsList != null)
+        if(CommentsList.size != -1)
         {
             return true
         }

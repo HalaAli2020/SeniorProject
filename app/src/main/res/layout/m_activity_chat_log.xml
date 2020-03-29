@@ -38,7 +38,7 @@
                 android:layout_height="40dp"
                 android:layout_marginEnd="7dp"
                 android:background="@drawable/rounded_btn"
-                android:text="➤"
+                android:text="@string/arrow"
                 android:textColor="@android:color/white"
                 android:textSize="24sp"
                 android:textStyle="bold"

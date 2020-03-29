@@ -23,21 +23,21 @@ class AuthenticationViewModelTest {
     //private val view: LoginActivity = mockk()
 
     var username: String? = "John"
-    var profileImageUrl: Uri? = Uri.EMPTY
+    //var profileImageUrl: Uri? = Uri.EMPTY
 
-    var authListener: AuthenticationListener? = null
+    //var authListener: AuthenticationListener? = null
 
-    private val disposables = CompositeDisposable()
+    ////private val disposables = CompositeDisposable()
 
     @MockK
     val factory= mockk<DaggerViewModelFactory>()
 
-    val firecheck= mockkStatic(FirebaseData::class)
+    //val firecheck= mockkStatic(FirebaseData::class)
 
 
-    var firebaseData: FirebaseData = mockk<FirebaseData>() //fails
+    //var firebaseData: FirebaseData = mockk<FirebaseData>() //fails
 
-    val repos= mockk<UserAuthRepo>()
+    //val repos= mockk<UserAuthRepo>()
 //    var viewModel= mockkObject(AuthenticationViewModel(repo))
     // val repospy=spyk(UserAuthRepo(firebasespy))
 

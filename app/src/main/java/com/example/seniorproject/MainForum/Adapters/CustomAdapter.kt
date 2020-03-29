@@ -7,15 +7,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.seniorproject.MainForum.Posts.ClickedPost
 import com.example.seniorproject.MainForum.Posts.CommunityPosts
 import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
-import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.PostLiveData
 import com.google.firebase.auth.FirebaseAuth
@@ -23,13 +20,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.rv_post.view.*
 import kotlinx.android.synthetic.main.rv_post.view.post_timestamp
 import kotlinx.android.synthetic.main.rv_post.view.post_title
 import kotlinx.android.synthetic.main.rv_post.view.username
-import kotlinx.android.synthetic.main.rv_post.view.imageView4
-import kotlinx.android.synthetic.main.rv_post_comment.view.*
-import kotlinx.android.synthetic.main.rv_post_header.view.*
 import kotlinx.android.synthetic.main.rv_post_image.view.*
 
 class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: Int) :
@@ -194,11 +187,11 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
         //}
     }
 
-    fun hideBlockedPosts(holder: CustomViewHolders){
+    /*fun hideBlockedPosts(holder: CustomViewHolders){
         //val post: Post = savedPosts.value!![holder.adapterPosition]
         holder.itemView.visibility=View.GONE
 
-    }
+    }*/
     fun removeItem(holder: RecyclerView.ViewHolder): String {
         //position=customViewHolders.adapterPosition
 
@@ -261,12 +254,12 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
         return posttext!!
     }
 
-    fun getNewCount(): Int {
+    /*fun getNewCount(): Int {
         if (savedPosts.value != null)
             return savedPosts.value!!.size - 1
         else
             return 0
-    }
+    }*/
 
 
         //notifyD

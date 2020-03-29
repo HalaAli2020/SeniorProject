@@ -1,8 +1,7 @@
 package com.example.seniorproject.data.repositories
 
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
+
 import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.viewModels.SearchViewModel
 import javax.inject.Inject
@@ -19,7 +18,7 @@ class SearchRepo @Inject constructor(private val Firebase: FirebaseData) {
     {
         Firebase.getallclasses(listen)
     }
-    fun getSubscribedPosts() = Firebase.getSubscribedPosts()
+    //fun getSubscribedPosts() = Firebase.getSubscribedPosts()
     //fun getClasses() = Firebase.getClasses()
 
     //fun getClassPosts(className: String) = Firebase.getClassPosts(className)

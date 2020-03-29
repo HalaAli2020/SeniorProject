@@ -18,7 +18,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/post_timestamp"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/add_image" />
 
     <TextView
         android:id="@+id/username"
@@ -40,7 +40,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_account_circle_blue_24dp"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/add_image" />
 
     <TextView
         android:id="@+id/post_timestamp"

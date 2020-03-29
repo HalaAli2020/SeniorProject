@@ -4,11 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
@@ -25,21 +23,15 @@ import javax.inject.Inject
 import android.util.Log
 import android.view.View
 import android.widget.TextView
-import androidx.lifecycle.Observer
-import androidx.core.app.ComponentActivity
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.net.Uri
 import com.example.seniorproject.Utils.EmailCallback
-import io.reactivex.Observable
 
 
 private const val TAG = "profileTAG"
 class UserProfileActivity : AppCompatActivity() {
     private lateinit var adapter: CustomAdapter
-    private lateinit var mDrawerLayout: DrawerLayout
-    private lateinit var linearLayoutManager: LinearLayoutManager
+    //private lateinit var mDrawerLayout: DrawerLayout
+    //private lateinit var linearLayoutManager: LinearLayoutManager
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -64,7 +56,7 @@ class UserProfileActivity : AppCompatActivity() {
         var test : String = intent.getStringExtra("UserID") ?: "null"
         val author : String =  intent.getStringExtra("Author") ?: "null"
         //val photo : String = intent.getStringExtra("profileImageUrl") ?: "null"
-        var ID = test
+        var iD = test
         //myViewModel.fetchEmail(test)
 
         if (test == "null" || test == FirebaseAuth.getInstance().currentUser?.uid){
@@ -79,8 +71,8 @@ class UserProfileActivity : AppCompatActivity() {
 
         //val email = myViewModel.otherEmail
         //val bio = myViewModel.fetchBio(test)
-        val profilepostfrag = ProfilePostFragment.newInstance(ID)
-        val profilecommentfrag = ProfileCommentFragment.newInstance(ID)
+        val profilepostfrag = ProfilePostFragment.newInstance(iD)
+        val profilecommentfrag = ProfileCommentFragment.newInstance(iD)
         replaceFragment(profilepostfrag)
 
         if (author != "null")  {
@@ -145,13 +137,13 @@ class UserProfileActivity : AppCompatActivity() {
         val image : ImageView = findViewById(com.example.seniorproject.R.id.in_profile_image)
 
         if(author == "null"){
-            Glide.with(this) //1
+            Glide.with(image.getContext()) //1
                 .load(FirebaseAuth.getInstance().currentUser?.photoUrl)
                 .placeholder(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
                 .error(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
                 .skipMemoryCache(true) //2
                 .diskCacheStrategy(DiskCacheStrategy.NONE) //3
-                .apply(RequestOptions().circleCrop())//4
+                .apply(RequestOptions().circleCrop()).fitCenter()//4
                 .into(image)
         }
         else{
@@ -165,7 +157,7 @@ class UserProfileActivity : AppCompatActivity() {
                         .error(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
                         .skipMemoryCache(true) //2
                         .diskCacheStrategy(DiskCacheStrategy.NONE) //3
-                        .apply(RequestOptions().circleCrop())//4
+                        .apply(RequestOptions().circleCrop()).fitCenter()//4
                         .into(image)
 
                 }
@@ -194,9 +186,9 @@ class UserProfileActivity : AppCompatActivity() {
         return true
     }
 
-    fun refresh(){
+    /*fun refresh(){
         recreate()
-    }
+    }*/
 
    // fun makeInvisible(view: View){}
 }

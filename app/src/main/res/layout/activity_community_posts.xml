@@ -37,7 +37,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_account_circle_blue_24dp"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/menu_profile" />
 
     <TextView
         android:id="@+id/post_list_community_name_TV"

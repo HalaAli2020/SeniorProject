@@ -1,7 +1,6 @@
 package com.example.seniorproject.viewModels
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.seniorproject.data.models.CRN
 import com.example.seniorproject.data.repositories.PostRepository
@@ -32,10 +31,10 @@ class ListViewModel @Inject constructor(private val repository: PostRepository) 
        // UsersSubs = repository.getUserSub()
 
     }
-    private fun getusersSubs()
+    /*private fun getusersSubs()
     {
        // UsersSubs = repository.getUserSub()
-    }
+    }*/
     fun combineSubs()
     {
         if(UsersSubs == null)

@@ -1,7 +1,6 @@
 package com.example.seniorproject.Dagger
 
 import android.app.Application
-import com.example.seniorproject.Dagger.DaggerAppComponent
 
 class SeniorProjApp : Application(){
 

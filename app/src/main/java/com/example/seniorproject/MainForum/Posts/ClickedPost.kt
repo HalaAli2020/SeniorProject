@@ -1,11 +1,7 @@
 package com.example.seniorproject.MainForum.Posts
 
 import android.content.DialogInterface
-import android.content.Intent
-import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -17,12 +13,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.Adapters.CommentsAdapter
-import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
 import com.example.seniorproject.Utils.ProfileButton
@@ -32,7 +26,6 @@ import com.example.seniorproject.viewModels.ClickedPostViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_clicked_post.*
 import kotlinx.android.synthetic.main.activity_clicked_post.refreshView
-import kotlinx.android.synthetic.main.activity_community_posts.*
 import javax.inject.Inject
 
 class ClickedPost : AppCompatActivity() {
@@ -71,7 +64,7 @@ class ClickedPost : AppCompatActivity() {
         //add userid and send
         myViewModel.CommentsLiveList.observe(this, Observer {
             Log.d("Swap", "Swapping")
-            swap(binding, title, text, author, crn,intent.getStringExtra("UserID").toString(), ptime, uri)
+            swap(binding, title, text, author, crn, ptime, uri)
         })
         adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString(), ptime, uri)
         comment_RecyclerView.adapter = adapter
@@ -92,10 +85,10 @@ class ClickedPost : AppCompatActivity() {
         }
 
 
-        fun showToast(){
+       /* fun showToast(){
             var toast= Toast.makeText(this@ClickedPost, "We've received your report.", Toast.LENGTH_SHORT)
             toast.show()
-        }
+        }*/
 
            object : SwipeHelper(applicationContext, comment_RecyclerView, 200) {
                 override fun initButton(
@@ -233,7 +226,7 @@ class ClickedPost : AppCompatActivity() {
                 }
             }
         }
-    fun swap(binding : ActivityClickedPostBinding, title : String, text : String, author : String, crn: String, userid : String, time: String, uri : String)
+    fun swap(binding : ActivityClickedPostBinding, title : String, text : String, author : String, crn: String, time: String, uri : String)
     {
         var ada =  CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString(), time, uri)
         binding.commentRecyclerView.swapAdapter(ada, false)

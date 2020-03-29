@@ -39,7 +39,7 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="TODO" />
+                android:contentDescription="@string/add_image" />
 
 
             <TextView
@@ -59,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:hint="Enter new displayname"
+                android:hint="@string/enter_new_displayname"
                 android:text="@{ProfileEditViewModel.user.displayName}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
