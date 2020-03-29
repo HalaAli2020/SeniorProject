@@ -21,6 +21,12 @@ class UserAuthRepo @Inject constructor(private val Firebase: FirebaseData) {
         Firebase.RegisterUserEmail(firebaseAuth, email, password, username, callback)
     }
 
+    suspend fun resetUserPassword(firebaseAuth: FirebaseAuth, email: String, callback: EmailCallback){
+        Firebase.resetUserPassword(firebaseAuth, email, callback)
+    }
+
+    fun currentUser() = Firebase.CurrentUser()
+
     suspend fun LoginUserAccount(
         firebaseAuth: FirebaseAuth,
         email: String,
@@ -30,11 +36,4 @@ class UserAuthRepo @Inject constructor(private val Firebase: FirebaseData) {
         Firebase.LoginUserEmail(firebaseAuth, email, password, callback)
     }
 
-    suspend fun resetUserPassword(
-        firebaseAuth: FirebaseAuth,
-        email: String,
-        callback: EmailCallback
-    ) {
-        Firebase.resetUserPassword(firebaseAuth, email, callback)
-    }
 }
