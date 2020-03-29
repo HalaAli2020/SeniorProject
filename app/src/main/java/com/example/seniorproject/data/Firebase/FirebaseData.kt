@@ -2,7 +2,6 @@ package com.example.seniorproject.data.Firebase
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import io.reactivex.Completable
 import javax.inject.Inject
@@ -15,7 +14,6 @@ import com.example.seniorproject.Utils.Callback
 import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.data.models.*
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.database.*
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
@@ -34,13 +32,12 @@ import javax.security.auth.Subject
 import kotlin.collections.HashMap
 import com.example.seniorproject.data.models.User
 import com.example.seniorproject.data.repositories.PostRepository
-import com.google.firebase.auth.ActionCodeSettings
 import java.lang.IllegalArgumentException
 import kotlin.collections.ArrayList
 import com.example.seniorproject.viewModels.NewPostFragmentViewModel
 import com.example.seniorproject.viewModels.SearchViewModel
 import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.*
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import kotlinx.coroutines.tasks.await
@@ -514,7 +511,7 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    suspend fun RegisterUserEmail(firebaseAuth: FirebaseAuth, email:String ,password:String, username: String): AuthResult?{
+    suspend fun RegisterUserEmail(firebaseAuth: FirebaseAuth, email:String ,password:String, username: String, callback: EmailCallback): AuthResult?{
         try {
             val data = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
             val uid = FirebaseAuth.getInstance().uid
@@ -531,22 +528,29 @@ class FirebaseData @Inject constructor() {
                 ?.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Log.d(TAG, "Email sent.")
+                        callback.getEmail("Account created!")
                         //add toast message that email was sent
                     }
                 }
             return data
         }
         catch (e: Exception) {
+            val code = e.message
+            Log.d("soupregister", "error is $code")
+            callback.getEmail(code!!)
             return null
         }
     }
 
-    suspend fun resetUserPassword(firebaseAuth: FirebaseAuth, email: String){
+    suspend fun resetUserPassword(firebaseAuth: FirebaseAuth, email: String, callback: EmailCallback){
         try {
             firebaseAuth.sendPasswordResetEmail(email).await()
+            callback.getEmail("Email sent!")
         }
         catch (e: Exception) {
-            Log.d("Failure", "reset password was not sent to user's email")
+            val code = e.message
+            Log.d("soupreset", "error is $code")
+            callback.getEmail(code!!)
         }
     }
 
@@ -567,13 +571,19 @@ class FirebaseData @Inject constructor() {
     }
 
     //@Provides
-    suspend fun LoginUserEmail(firebaseAuth: FirebaseAuth, email:String ,password:String): AuthResult?{
+    suspend fun LoginUserEmail(firebaseAuth: FirebaseAuth, email:String ,password:String, callback: EmailCallback): AuthResult?{
         try {
             val data = firebaseAuth.signInWithEmailAndPassword(email, password).await()
+            callback.getEmail("Successful login!")
             return data
             }
-        catch (e: Exception) {
-                return null
+        catch (e: FirebaseAuthException) {
+                //callback.getEmail(e.errorCode)
+            val code = e.message
+            Log.d("soup", "error is $code")
+            callback.getEmail(code!!)
+            return null
+               // return e.errorCode
             }
     }
 
