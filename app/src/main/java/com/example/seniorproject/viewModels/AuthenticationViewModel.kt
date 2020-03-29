@@ -3,17 +3,21 @@ package com.example.seniorproject.viewModels
 import android.content.Intent
 import android.net.Uri
 import android.view.View
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Authentication.PasswordResetActivity
 import com.example.seniorproject.Authentication.RegisterActivity
 import com.example.seniorproject.Utils.AuthenticationListener
+import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.data.repositories.UserAuthRepo
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -44,14 +48,24 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
     fun RegisterUserEmail(){
         viewModelScope.launch(Dispatchers.Main) {
 
-            if (!email.isNullOrEmpty() && !password.isNullOrEmpty() && !username.isNullOrEmpty()) {
-                //val currentuser = FirebaseAuth.getInstance().currentUser
-                    repository.RegisterUserEmail(firebaseAuth, email!!, password!!, username!!)
-                    authListener?.onSuccess()
-
+            if (email.isNullOrEmpty() || password.isNullOrEmpty() || username.isNullOrEmpty()) {
+                authListener?.onFailure("Please enter your username, email, and password.")
+            }
+            else if(password!!.length <6){
+                authListener?.onFailure("Password must be at least 6 characters long.")
             }
             else{
-                authListener?.onFailure("Please enter your username, email, and password.")
+                repository.RegisterUserEmail(firebaseAuth, email!!, password!!, username!!, object: EmailCallback{
+                    override fun getEmail(string: String) {
+                        if(!string.isNullOrEmpty()){
+                            Log.d("soup2", string)
+                            if(string == "Account created!"){
+                                authListener?.onSuccess()
+                            }
+                            authListener?.onFailure(string)
+                        }
+                    }
+                })
             }
         }
     }
@@ -60,24 +74,52 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
          viewModelScope.launch(Dispatchers.Main) {
              if (email.isNullOrEmpty() || password.isNullOrEmpty()) {
                  authListener?.onFailure("Please enter both your email and password.")
-             } else{
-                 repository.LoginUserAccount(firebaseAuth, email!!, password!!)
-                 if(FirebaseAuth.getInstance().currentUser!!.isEmailVerified) {
-                     authListener?.onSuccess()
+             } else if(password!!.length <6){
+                 authListener?.onFailure("Password must be at least 6 characters long.")
+             }
+             else
+             {
+                 repository.LoginUserAccount(firebaseAuth, email!!, password!!, object : EmailCallback{
+                     override fun getEmail(string: String) {
+                         if(!string.isNullOrEmpty()){
+                             Log.d("soup2", string)
+                             if(string == "Successful login!"){
+                                 if(!FirebaseAuth.getInstance().currentUser!!.isEmailVerified) {
+                                     authListener?.onFailure("Please verify your email.")
+                                 }else{
+                                     Log.d("soup2", "check")
+                                     authListener?.onSuccess()
+                                 }
+                             }else{
+                                 Log.d("soup2", "fail")
+                                 authListener?.onFailure(string)
+                             }
+                         }
+                     }
+
+                 })
                  }
              }
          }
-     }
 
     fun resetUserPassword(){
         viewModelScope.launch(Dispatchers.Main) {
 
-            if (!email.isNullOrEmpty()) {
-                    repository.resetUserPassword(firebaseAuth, email!!)
-                    authListener?.onSuccess()
+            if (email.isNullOrEmpty()) {
+                authListener?.onFailure("Please enter your email.")
             }
             else{
-                authListener?.onFailure("Please enter your email.")
+                repository.resetUserPassword(firebaseAuth, email!!, object : EmailCallback{
+                    override fun getEmail(string: String) {
+                        if(!string.isNullOrEmpty()){
+                            Log.d("soup2", string)
+                            if(string == "Email sent!"){
+                                authListener?.onSuccess()
+                            }
+                            authListener?.onFailure(string)
+                        }
+                    }
+                })
             }
         }
     }
@@ -98,13 +140,6 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
         Intent(view.context, PasswordResetActivity::class.java).also{
             view.context.startActivity(it)
         }
-    }
-
-    //disposing the disposables
-    override fun onCleared() {
-        super.onCleared()
-        disposables.dispose()
-        //now the register function is no longer being observed
     }
 
 }
