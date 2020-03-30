@@ -1,11 +1,7 @@
 package com.example.seniorproject.MainForum.Posts
 
 import android.content.DialogInterface
-import android.content.Intent
-import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -16,14 +12,10 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.ItemTouchHelper
-//import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Adapters.CustomAdapter
-import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
-import com.example.seniorproject.MainForum.Adapters.PostImageViewHolders
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
 import com.example.seniorproject.Utils.ProfileButton
@@ -32,7 +24,6 @@ import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.viewModels.CommunityPostViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_community_posts.*
-import kotlinx.android.synthetic.main.fragment_profile__post.view.*
 import kotlinx.android.synthetic.main.rv_post.view.*
 import javax.inject.Inject
 
@@ -72,10 +63,10 @@ class CommunityPosts : AppCompatActivity() {
             classes_post_RV.adapter = CustomAdapter(this, myViewModel.returnClassPosts(className), 1)
         }
 
-        fun showToast(){
+        /*fun showToast(){
             var toast= Toast.makeText(this@CommunityPosts, "We've received your report.",Toast.LENGTH_SHORT)
             toast.show()
-        }
+        }*/
 
 
              object : SwipeHelper(applicationContext, classes_post_RV, 200) {
@@ -131,7 +122,7 @@ class CommunityPosts : AppCompatActivity() {
                                             //classes_post_RV.findViewHolderForAdapterPosition(count)!!.itemView.post_title.text="[blocked]"
                                             count++
                                             if(count== classes_post_RV.childCount){
-                                                break;
+                                                break
                                             }
                                             //classes_post_RV.findViewHolderForAdapterPosition(i)!!.itemView.post_title.text="[blocked]"
                                             //classes_post_RV.getChildViewHolder(classes_post_RV.getChildAt(i)).itemView.post_title.text="[blocked]"

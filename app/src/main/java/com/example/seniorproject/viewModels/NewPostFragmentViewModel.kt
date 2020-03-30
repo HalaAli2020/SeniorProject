@@ -4,10 +4,8 @@ import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
-import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-//import com.example.seniorproject.Utils.startMainForum
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.repositories.PostRepository
 import javax.inject.Inject
@@ -55,6 +53,6 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
         bool.value = true
     }
 
-   fun saveNewImgPosttoUser(title : String, text:String, Subject: String, CRN: String, uri: Uri, imagePost : Boolean) = repository.saveNewImgPosttoUser(title,text,Subject,CRN,uri,imagePost)
+   fun saveNewImgPosttoUser(title : String, text:String, CRN: String, uri: Uri, imagePost : Boolean) = repository.saveNewImgPosttoUser(title,text,CRN,uri,imagePost)
 
 }

@@ -26,7 +26,6 @@ import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.Fragments.FragmentHome
 import com.example.seniorproject.MainForum.Fragments.FragmentSubscriptions
 import com.example.seniorproject.MainForum.NewPost.NewPost
-import com.example.seniorproject.Messages.ChatLog
 import com.example.seniorproject.Messages.FragmentLatestMessages
 import com.example.seniorproject.R
 import com.example.seniorproject.search.SearchActivity
@@ -47,9 +46,9 @@ private const val TAGG = "username"
 class MainForum : AppCompatActivity(),
     FirebaseAuth.AuthStateListener {
 
-    private val firebaseAuth: FirebaseAuth by lazy {
+    /*private val firebaseAuth: FirebaseAuth by lazy {
         FirebaseAuth.getInstance()
-    }
+    }*/
     var obse : Observer<User>? = null
     override fun onAuthStateChanged(p0: FirebaseAuth) {
         val currentUser = myViewModel.user

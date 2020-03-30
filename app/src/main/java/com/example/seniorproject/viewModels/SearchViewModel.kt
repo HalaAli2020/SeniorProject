@@ -11,12 +11,12 @@ import com.google.firebase.database.DataSnapshot
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(private val repository: SearchRepo) : ViewModel() {
-    var UsersSubs : MutableLiveData<MutableList<CRN>> = MutableLiveData()
+    //var UsersSubs : MutableLiveData<MutableList<CRN>> = MutableLiveData()
     var Clist : MutableLiveData<MutableList<CRN>> = MutableLiveData()
     var Fullist : MutableLiveData<MutableList<CRN>> = MutableLiveData()
 
     fun Search(query: String): CRN {
-        var Result = CRN()
+        var result = CRN()
         repository.Search(query, object : FirebaseResult {
             override fun onFailure(message: String) {
                 Log.d("onFailure", "On Failure called")
@@ -27,15 +27,15 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
             }
 
             override fun onSuccess(data: DataSnapshot, uid: String) {
-                Result = separateResult(data, query)
+                result = separateResult(data, query)
             }
         })
-        return Result
+        return result
     }
 
     fun separateResult(data: DataSnapshot, query: String): CRN {
         //var RList: MutableLiveData<MutableList<CRN>>
-        var RE = CRN()
+        var rE = CRN()
         var classResult = CRN()
         if (data.hasChild(query)) {
             var snap = data.child(query)
@@ -45,9 +45,9 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
             return classResult
         } else {
             // RE  = CRN()
-            RE.name = "ERROR in Query"
+            rE.name = "ERROR in Query"
         }
-        return RE
+        return rE
 
     }
 
@@ -94,11 +94,11 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
         })
         Fullist.value = listC
     }
-    fun sendlist() : MutableLiveData<MutableList<CRN>>
+    /*fun sendlist() : MutableLiveData<MutableList<CRN>>
     {
 
         return Clist
-    }
+    }*/
     fun sendlistf() : MutableLiveData<MutableList<CRN>>
     {
         Clist.value = Fullist.value

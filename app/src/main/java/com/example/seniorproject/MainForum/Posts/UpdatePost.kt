@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.R
-import com.example.seniorproject.databinding.FragmentNewPostBinding
 import com.example.seniorproject.databinding.UpdatePostBinding
 import com.example.seniorproject.viewModels.NewPostFragmentViewModel
 import javax.inject.Inject

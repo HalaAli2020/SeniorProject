@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/comment_bottom_border">
@@ -15,7 +14,8 @@
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_account_circle_blue_24dp" />
+        app:srcCompat="@drawable/ic_account_circle_blue_24dp"
+        android:contentDescription="@string/menu_profile" />
 
     <TextView
         android:id="@+id/authcom"

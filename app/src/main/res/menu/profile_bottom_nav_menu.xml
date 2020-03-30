@@ -3,10 +3,10 @@
 
     <item
         android:id="@+id/select_posts"
-        android:title="Posts" />
+        android:title="@string/posts_" />
 
     <item
         android:id="@+id/select_comments"
-        android:title="Comments" />
+        android:title="@string/comments" />
 
 </menu>

@@ -1,18 +1,14 @@
 package com.example.seniorproject.viewModels
 
-import android.content.Context
-import android.content.Intent
+
 import android.net.Uri
 import androidx.lifecycle.ViewModel
-import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.Utils.PostListener
-import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.data.models.CommentLive
 
 import com.example.seniorproject.data.models.PostLiveData
 import com.example.seniorproject.data.repositories.PostRepository
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import javax.inject.Inject
 
@@ -60,6 +56,7 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
         }
         repository.deleteNewCommentFromUserProfile(PKey, crn, Classkey, userID)
     }
+
 
     fun deleteCommentFromCommPosts(PKey: String, crn: String, Classkey: String)
     {
@@ -132,7 +129,7 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
 
     fun saveUserbio(bio : String) = repository.saveUserbio(bio)
 
-    fun fetchCurrentBio() = repository.fetchCurrentBio()
+    //fun fetchCurrentBio() = repository.fetchCurrentBio()
 
     fun noPostsChecker(UserID: String) = repository.noPostsChecker(UserID)
 

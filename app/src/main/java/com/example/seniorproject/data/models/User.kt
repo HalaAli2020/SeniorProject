@@ -1,7 +1,5 @@
 package com.example.seniorproject.data.models
 
-import android.net.Uri
-import androidx.lifecycle.LiveData
 
 data class User(
     var username: String?, val email: String?, var uid: String?, var profileImageUrl: String?
