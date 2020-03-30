@@ -56,7 +56,7 @@
                     android:layout_marginEnd="12dp"
                     android:background="@drawable/rounded_btn"
                     android:onClick="@{() -> NewPostViewModel.savePostToDatabase()}"
-                    android:text="Post"
+                    android:text="@string/post"
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="@+id/spinner2"
@@ -75,7 +75,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.0"
-                    app:srcCompat="@drawable/ic_account_circle_blue_24dp" />
+                    app:srcCompat="@drawable/ic_account_circle_blue_24dp"
+                    android:contentDescription="@string/menu_profile" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <EditText
@@ -84,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/comment_bottom_border"
                 android:gravity="top"
-                android:hint="Enter a title..."
+                android:hint="@string/enter_a_title"
                 android:inputType="textMultiLine|textCapSentences"
                 android:maxLength="150"
                 android:paddingStart="12dp"
@@ -107,7 +108,7 @@
                 android:layout_height="0dp"
                 android:background="@color/white"
                 android:gravity="top"
-                android:hint="Enter some text..."
+                android:hint="@string/enter_some_text"
                 android:inputType="textMultiLine|textCapSentences"
                 android:maxLength="2000"
                 android:paddingStart="12dp"

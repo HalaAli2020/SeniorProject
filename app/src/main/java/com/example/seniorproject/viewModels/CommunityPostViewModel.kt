@@ -8,7 +8,7 @@ import javax.inject.Inject
 class CommunityPostViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
 
     private var listClasses : PostLiveData? = null
-    private lateinit var className: String
+    //private lateinit var className: String
 
     private fun getClasses(className: String){
         listClasses = repository.getClassPosts(className)
@@ -27,7 +27,7 @@ class CommunityPostViewModel @Inject constructor(private val repository: PostRep
         repository.reportUserPost(accusedID, complaintext, crn, classkey)
     }
 
-   fun checknull() : Boolean
+   /*fun checknull() : Boolean
    {
        if (listClasses == null)
        {
@@ -37,7 +37,7 @@ class CommunityPostViewModel @Inject constructor(private val repository: PostRep
        {
            return false
        }
-   }
+   }*/
 
 
 

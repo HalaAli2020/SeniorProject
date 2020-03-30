@@ -2,13 +2,9 @@ package com.example.seniorproject.search
 
 
 
-import android.app.SearchManager
-import android.content.Context
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
-import android.widget.LinearLayout
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -22,8 +18,6 @@ import com.example.seniorproject.R
 import com.example.seniorproject.data.models.CRN
 import com.example.seniorproject.databinding.ActivitySearchBinding
 import com.example.seniorproject.viewModels.SearchViewModel
-import com.example.seniorproject.viewModels.SearchViewModel_Factory
-import kotlinx.android.synthetic.main.activity_search.*
 import javax.inject.Inject
 
 class SearchActivity: AppCompatActivity()
@@ -35,7 +29,7 @@ class SearchActivity: AppCompatActivity()
     // lateinit var lit : RecyclerView
     lateinit var lt :RecyclerView
     lateinit var ada : SearchAdapter
-    lateinit var mnu : MenuItem
+    //lateinit var mnu : MenuItem
     lateinit var binding : ActivitySearchBinding
     init {
 

@@ -10,7 +10,6 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.fragment_profile_comment.*
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -33,7 +32,7 @@ abstract class SwipeHelper(context: Context, private val recyclerView: RecyclerV
         override fun onSingleTapUp(e: MotionEvent?): Boolean {
             for(button in buttonList!!)
             {
-                if(button.onClick(e!!.x, e!!.y))
+                if(button.onClick(e!!.x, e.y))
                     break
             }
             return true

@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Messages.ChatLog
 import com.example.seniorproject.R
@@ -52,7 +53,7 @@ class NewMessageAdapter(
         Picasso.get().load(user.profileImageUrl).into(holder.itemView.image_new_message)
 
         if(user.profileImageUrl.toString().isNullOrBlank() || user.profileImageUrl.toString()=="null"){
-            holder.itemView.image_new_message.setImageDrawable(mContext.resources.getDrawable(R.drawable.ic_account_circle_blue_24dp))
+            holder.itemView.image_new_message.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_account_circle_blue_24dp))
         }
 
         holder.itemView.newMessageUser.setOnClickListener {

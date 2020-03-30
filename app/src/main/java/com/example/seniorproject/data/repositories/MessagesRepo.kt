@@ -1,10 +1,5 @@
 package com.example.seniorproject.data.repositories
-import android.net.Uri
 import com.example.seniorproject.data.Firebase.FirebaseData
-import com.example.seniorproject.data.models.ChatMessage
-import com.example.seniorproject.data.models.User
-import dagger.Module
-import dagger.Provides
 import javax.inject.Inject
 import javax.inject.Singleton
 

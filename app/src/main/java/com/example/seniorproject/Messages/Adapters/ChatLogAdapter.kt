@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.ChatMessage
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.m_activity_chat_log.view.*
 import kotlinx.android.synthetic.main.m_rv_chat_from_row.view.*
 import kotlinx.android.synthetic.main.m_rv_chat_to_row.view.*
 
@@ -25,8 +24,8 @@ class ChatLogAdapter(
     private val uid = FirebaseAuth.getInstance().uid
 
     companion object {
-        val USER_KEY = "USER_KEY"
-        val USERNAME = "USERNAME"
+        //val USER_KEY = "USER_KEY"
+        //val USERNAME = "USERNAME"
     }
 
     override fun getItemViewType(position: Int): Int {

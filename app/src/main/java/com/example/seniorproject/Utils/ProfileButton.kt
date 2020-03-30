@@ -3,9 +3,7 @@ package com.example.seniorproject.Utils
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.*
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
-import androidx.core.content.ContextCompat
+
 
 class ProfileButton(private val context: Context, private val text: String, private val textSize: Int,
                     private val imageResId: Int, private val color: Int, private val listener: ButtonClickListener) {

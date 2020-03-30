@@ -10,15 +10,12 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.Utils.AuthenticationListener
 import com.example.seniorproject.viewModels.AuthenticationViewModel
-//trying to get username in nacv
 import com.example.seniorproject.R
-//import com.example.seniorproject.Utils.InjectorUtils
 import com.example.seniorproject.databinding.ActivityLoginBinding
 import com.example.seniorproject.MainForum.MainForum
-import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject
 
-private const val TAG = "MyLogTag"
+//private const val TAG = "MyLogTag"
 class LoginActivity : AppCompatActivity(), AuthenticationListener {
 
 @Inject

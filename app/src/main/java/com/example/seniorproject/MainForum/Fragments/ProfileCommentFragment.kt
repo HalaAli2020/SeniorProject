@@ -145,7 +145,7 @@ class ProfileCommentFragment : Fragment() {
             //val swipe = null
         }
         else if (ID == FirebaseAuth.getInstance().currentUser?.uid) {
-             object : SwipeHelper(context!!, view.profile_comment_recyclerView, 200) {
+            object : SwipeHelper(context!!, view.profile_comment_recyclerView, 200) {
                 override fun initButton(
                     viewHolders: RecyclerView.ViewHolder,
                     buffer: MutableList<ProfileButton>
@@ -265,128 +265,121 @@ class ProfileCommentFragment : Fragment() {
 
         }
 
-            /*val itemTouchHelperCallback =
-            object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        /*val itemTouchHelperCallback =
+        object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            override fun onSwiped(viewHolders: RecyclerView.ViewHolder, position: Int) {
+                val postkeyUP: String? =
+                    adaptercomments.pkeyUserProfile(viewHolders as CustomViewHolders, position)
+                //fails w postkeyCP.
+                val userkey: String? =
+                    adaptercomments.getUserKey(viewHolders as CustomViewHolders, position)
+                val crnkey: String? =
+                    adaptercomments.getCrn(viewHolders as CustomViewHolders, position)
+                val commentkey: String? =
+                    adaptercomments.getCommentKey(viewHolders as CustomViewHolders, position)
+                val classkey: String? =
+                    adaptercomments.getClassKey(viewHolders as CustomViewHolders, position)
+                val classprofilekey: String? =
+                    adaptercomments.getClassProfileKey(viewHolders as CustomViewHolders, position)
+                /*val classkey: String? =
+                    adaptercomments.getClassKey(viewHolders as CustomViewHolders, position)*/
+                //line .getClassKey is null
+                //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
+                var builder = AlertDialog.Builder(view.context, R.style.AppTheme_AlertDialog)
 
-                override fun onSwiped(viewHolders: RecyclerView.ViewHolder, position: Int) {
-                    val postkeyUP: String? =
-                        adaptercomments.pkeyUserProfile(viewHolders as CustomViewHolders, position)
+                //.getStringExtra("Classkey")
+                //val postkey = intent.getStringExtra("author")
+                //myViewModel.deletePost(postkey!!, className)
+                //myViewModel.deletePost()
+                builder.setTitle("Are you sure?")
+                builder.setMessage("You cannot restore comments that have been deleted.")
+                builder.setPositiveButton("DELETE",
+                    { dialogInterface: DialogInterface?, i: Int ->
+                        myViewModel.deleteCommentFromCommPosts(postkeyUP!!, crnkey!!, classkey!!)
+                        myViewModel.deleteCommentFromUserProfile(commentkey!!, crnkey!!, classprofilekey!!,userkey!!)
+                        //myViewModel.deleteCommentFromCommPosts(postkey!!, crnkey!!, commentkey!!, userkey!!)
+                    })
+                builder.setNegativeButton("CANCEL",
+                    { dialogInterface: DialogInterface?, i: Int ->
+                        builder.setCancelable(true)
+                    })
 
-                    //fails w postkeyCP.
-                    val userkey: String? =
-                        adaptercomments.getUserKey(viewHolders as CustomViewHolders, position)
+                val msgdialog: AlertDialog = builder.create()
 
-                    val crnkey: String? =
-                        adaptercomments.getCrn(viewHolders as CustomViewHolders, position)
+                msgdialog.getWindow()!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
 
-                    val commentkey: String? =
-                        adaptercomments.getCommentKey(viewHolders as CustomViewHolders, position)
+                msgdialog.show()
 
-                    val classkey: String? =
-                        adaptercomments.getClassKey(viewHolders as CustomViewHolders, position)
+                //myViewModel.deletePost(postkey!!, className)
+                //classes_post_RV.removeViewAt(viewHolders.adapterPosition)
+                adaptercomments.notifyItemRemoved(viewHolders.adapterPosition)
+                adaptercomments.notifyItemRangeChanged(viewHolders.adapterPosition, adaptercomments.itemCount)
+                view.profile_comment_recyclerView.adapter = adaptercomments
 
-                    val classprofilekey: String? =
-                        adaptercomments.getClassProfileKey(viewHolders as CustomViewHolders, position)
+                //adapter.notifyDataSetChanged()
+                //adapter.notifyItemRangeRemoved(viewHolders.adapterPosition, 1)
+                /*adapter.notifyItemRangeChanged(viewHolders.adapterPosition, adapter.itemCount - viewHolders.adapterPosition+1)*/
+                //adapter.notifyDataSetChanged()
 
-                    /*val classkey: String? =
-                        adaptercomments.getClassKey(viewHolders as CustomViewHolders, position)*/
-                    //line .getClassKey is null
-                    //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
-                    var builder = AlertDialog.Builder(view.context, R.style.AppTheme_AlertDialog)
-
-                    //.getStringExtra("Classkey")
-                    //val postkey = intent.getStringExtra("author")
-                    //myViewModel.deletePost(postkey!!, className)
-                    //myViewModel.deletePost()
-                    builder.setTitle("Are you sure?")
-                    builder.setMessage("You cannot restore comments that have been deleted.")
-                    builder.setPositiveButton("DELETE",
-                        { dialogInterface: DialogInterface?, i: Int ->
-                            myViewModel.deleteCommentFromCommPosts(postkeyUP!!, crnkey!!, classkey!!)
-                            myViewModel.deleteCommentFromUserProfile(commentkey!!, crnkey!!, classprofilekey!!,userkey!!)
-                            //myViewModel.deleteCommentFromCommPosts(postkey!!, crnkey!!, commentkey!!, userkey!!)
-                        })
-                    builder.setNegativeButton("CANCEL",
-                        { dialogInterface: DialogInterface?, i: Int ->
-                            builder.setCancelable(true)
-                        })
-
-                    val msgdialog: AlertDialog = builder.create()
-
-                    msgdialog.getWindow()!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
-
-                    msgdialog.show()
-
-                    //myViewModel.deletePost(postkey!!, className)
-                    //classes_post_RV.removeViewAt(viewHolders.adapterPosition)
-                    adaptercomments.notifyItemRemoved(viewHolders.adapterPosition)
-                    adaptercomments.notifyItemRangeChanged(viewHolders.adapterPosition, adaptercomments.itemCount)
-                    view.profile_comment_recyclerView.adapter = adaptercomments
-
-                    //adapter.notifyDataSetChanged()
-                    //adapter.notifyItemRangeRemoved(viewHolders.adapterPosition, 1)
-                    /*adapter.notifyItemRangeChanged(viewHolders.adapterPosition, adapter.itemCount - viewHolders.adapterPosition+1)*/
-                    //adapter.notifyDataSetChanged()
-
-                    // adapter.notifyItemRangeRemoved(viewHolders.adapterPosition, 1)
-                    // adapter.notifyItemRemoved(viewHolders.adapterPosition)
-                    // adapter.notifyItemRangeChanged(viewHolders.adapterPosition, )
-                    //  obse.onChanged(pos)
-
-                }
-
-                override fun onChildDraw(
-                    c: Canvas,
-                    recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder,
-                    dX: Float,
-                    dY: Float,
-                    actionState: Int,
-                    isCurrentlyActive: Boolean
-                ) {
-                    val itemView = viewHolder.itemView
-                    val iconMargin = (itemView.height - deleteIcon.intrinsicHeight)/2
-
-                    if(dX < 0) {
-                        swipeBackground.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
-                        deleteIcon.setBounds(itemView.right - iconMargin - deleteIcon.intrinsicWidth, itemView.top + iconMargin,
-                            itemView.right - iconMargin, itemView.bottom - iconMargin)
-                    }
-
-                    swipeBackground.draw(c)
-                    deleteIcon.draw(c)
-
-                    super.onChildDraw(
-                        c,
-                        recyclerView,
-                        viewHolder,
-                        dX,
-                        dY,
-                        actionState,
-                        isCurrentlyActive
-                    )
-                }
-
-                /*override fun getMovementFlags(
-                    recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder
-                ): Int {
-                    return super.getMovementFlags(recyclerView, viewHolder)
-                }*/
-
-                override fun onMove(
-                    recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder,
-                    target: RecyclerView.ViewHolder
-                ): Boolean {
-                    return false
-                }
+                // adapter.notifyItemRangeRemoved(viewHolders.adapterPosition, 1)
+                // adapter.notifyItemRemoved(viewHolders.adapterPosition)
+                // adapter.notifyItemRangeChanged(viewHolders.adapterPosition, )
+                //  obse.onChanged(pos)
 
             }
 
-        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                val itemView = viewHolder.itemView
+                val iconMargin = (itemView.height - deleteIcon.intrinsicHeight)/2
 
-        itemTouchHelper.attachToRecyclerView(view.profile_comment_recyclerView)*/
+                if(dX < 0) {
+                    swipeBackground.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                    deleteIcon.setBounds(itemView.right - iconMargin - deleteIcon.intrinsicWidth, itemView.top + iconMargin,
+                        itemView.right - iconMargin, itemView.bottom - iconMargin)
+                }
+
+                swipeBackground.draw(c)
+                deleteIcon.draw(c)
+
+                super.onChildDraw(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+            }
+
+            /*override fun getMovementFlags(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ): Int {
+                return super.getMovementFlags(recyclerView, viewHolder)
+            }*/
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+        }
+
+    val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+
+    itemTouchHelper.attachToRecyclerView(view.profile_comment_recyclerView)*/
 
 
         binding.executePendingBindings()

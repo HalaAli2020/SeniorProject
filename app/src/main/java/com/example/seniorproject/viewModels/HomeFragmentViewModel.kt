@@ -1,20 +1,18 @@
 package com.example.seniorproject.viewModels
-
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.PostLiveData
 import com.example.seniorproject.data.repositories.PostRepository
 import javax.inject.Inject
 
-private const val TAG = "MyLogTag"
+//private const val TAG = "MyLogTag"
 
 class HomeFragmentViewModel @Inject constructor(private val repository: PostRepository) :
     ViewModel() {
 
 
     var posts: PostLiveData = PostLiveData()
-    var postdata: PostLiveData = PostLiveData.get()
+    //var postdata: PostLiveData = PostLiveData.get()
     var p: MutableList<Post>? = null
 
     init {
