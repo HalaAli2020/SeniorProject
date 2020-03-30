@@ -1,6 +1,6 @@
 package com.example.seniorproject.data.models
 
-import android.net.Uri
+
 import com.example.seniorproject.R
 import java.text.SimpleDateFormat
 import java.util.*
@@ -27,9 +27,9 @@ data class Post(var title: String?, var text: String?, var subject: String?, var
         Ptime = simple.format(calendar.time)
     }
 
-    fun getLayout(): Int {
+    /*fun getLayout(): Int {
         return R.layout.rv_post
-    }
+    }*/
 
    /* fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.post_text.text = text

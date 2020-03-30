@@ -24,7 +24,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_account_circle_blue_24dp" />
+            app:srcCompat="@drawable/ic_account_circle_blue_24dp"
+            android:contentDescription="@string/add_image" />
 
         <TextView
             android:id="@+id/communityName_TV"

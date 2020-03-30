@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.example.seniorproject.data.repositories.PostRepository
 import javax.inject.Inject
 
-private const val TAG = "MyLogTag"
+//private const val TAG = "MyLogTag"
 
 class SubscriptionsViewModel @Inject constructor(private val repository: PostRepository) :
     ViewModel() {
