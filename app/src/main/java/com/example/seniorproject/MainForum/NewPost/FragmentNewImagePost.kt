@@ -102,7 +102,7 @@ class FragmentNewImagePost : Fragment() {
                                 if (p0.exists()) {
                                     for (sub in p0.children) {
                                         // val refc= comment.getValue(Comment::class.java)
-                                        if (sub.getValue() == subject) {
+                                        if (sub.value == subject) {
                                             viewModel.saveNewImgPosttoUser(
                                                 title,
                                                 text,

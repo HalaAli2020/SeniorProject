@@ -95,7 +95,7 @@ class CommentsAdapter(
             }
 
         }else {
-            if (Comments?.value == null || getItemCount() == 0) {
+            if (Comments?.value == null || itemCount == 0) {
                 holder.itemView.comment_text.text = "No Comments yet"
                 //need to get the No comments yet to show up
 
@@ -107,7 +107,7 @@ class CommentsAdapter(
                         override fun onDataChange(p0: DataSnapshot) {
                             if (p0.exists()) {
                                 for (block in p0.children) {
-                                    if (block.getValue() == comment.PosterID) {
+                                    if (block.value == comment.PosterID) {
                                         holder.itemView.comment_text.text ="[blocked]"
                                     }
                                 }
@@ -172,14 +172,10 @@ class CommentsAdapter(
         return commentkey!!
     }
 
-    class CustomViewHolders(v: View) : RecyclerView.ViewHolder(v) {
-
-    }
+    class CustomViewHolders(v: View) : RecyclerView.ViewHolder(v)
 
 
-    class CustomViewHoldersHeader(v: View) : RecyclerView.ViewHolder(v) {
-
-    }
+    class CustomViewHoldersHeader(v: View) : RecyclerView.ViewHolder(v)
 
 
 }

@@ -52,7 +52,7 @@ dependencies {
 
 
     implementation 'com.github.ittianyu:BottomNavigationViewEx:2.0.4'
-
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-alpha01"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.2'
