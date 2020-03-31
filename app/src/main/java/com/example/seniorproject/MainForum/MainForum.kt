@@ -1,7 +1,12 @@
 package com.example.seniorproject.MainForum
 
+import android.app.AlertDialog
+import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -112,17 +117,44 @@ class MainForum : AppCompatActivity(),
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        loginVerification()
         super.onCreate(savedInstanceState)
 
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
         val binding: ActivityMainForumBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_main_forum)
-        replaceFragment(FragmentHome())
         bottom_navigation.onNavigationItemSelectedListener = mOnNavigationItemSelectedListener
-        replaceFragment(FragmentHome())
-        loginVerification()
-        //here
+
+
+        val cm = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+        val isConnected: Boolean = activeNetwork?.isConnectedOrConnecting == true
+
+        if(isConnected){ Log.d(TAGG, "Connected to internet")}
+        else{
+            Log.d(TAGG, "Not connected")
+
+
+            val dialogBuilder = AlertDialog.Builder(this)
+
+            // set message of alert dialog
+            dialogBuilder.setMessage("There is no internet!")
+                // if the dialog is cancelable
+                .setCancelable(false)
+                // negative button text and action
+                .setNegativeButton("Cancel", DialogInterface.OnClickListener {
+                        dialog, id -> dialog.cancel()
+                })
+
+            // create dialog box
+            val alert = dialogBuilder.create()
+            // set title for alert dialog box
+            alert.setTitle("AlertDialogExample")
+            // show alert dialog
+            alert.show()
+
+        }
 
         FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
         setSupportActionBar(findViewById(R.id.toolbar))
@@ -195,6 +227,8 @@ class MainForum : AppCompatActivity(),
             .diskCacheStrategy(DiskCacheStrategy.NONE) //3
             .apply(RequestOptions().circleCrop())//4
             .into(imageView)
+
+        replaceFragment(FragmentHome())
 
     }
 

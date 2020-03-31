@@ -7,12 +7,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.seniorproject.MainForum.Posts.ClickedPost
 import com.example.seniorproject.MainForum.Posts.CommunityPosts
 import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
+import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.PostLiveData
 import com.google.firebase.auth.FirebaseAuth
@@ -20,9 +24,13 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.android.synthetic.main.rv_post.view.*
 import kotlinx.android.synthetic.main.rv_post.view.post_timestamp
 import kotlinx.android.synthetic.main.rv_post.view.post_title
 import kotlinx.android.synthetic.main.rv_post.view.username
+import kotlinx.android.synthetic.main.rv_post.view.imageView4
+import kotlinx.android.synthetic.main.rv_post_comment.view.*
+import kotlinx.android.synthetic.main.rv_post_header.view.*
 import kotlinx.android.synthetic.main.rv_post_image.view.*
 
 class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: Int) :
@@ -64,7 +72,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
         val post: Post = savedPosts.value!![holder.adapterPosition]
-        val postkey: String?= post.UserID
+        val postkey: String? = post.UserID
         //notifyItemRemoved(customViewHolders.adapterPosition)
         //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
 
@@ -85,7 +93,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
             val userID = FirebaseAuth.getInstance().uid
 
             val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
-            ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
+            ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent(object :
                 ValueEventListener {
                 override fun onDataChange(p0: DataSnapshot) {
                     if (p0.exists()) {
@@ -105,13 +113,12 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
             holder.itemView.username.text = post.author
             holder.itemView.post_timestamp.text = post.Ptime
 
-               if (post.uri != null) {
-               Glide.with(mContext).load(post.uri).placeholder(R.color.white)
-                   .into(holder.itemView.post_image)
-           } else {
-               Glide.with(mContext).clear(holder.itemView.post_image)
-               holder.itemView.post_image.setImageDrawable(null)
-           }
+            if (post.uri != null) {
+                Glide.with(mContext).load(post.uri).placeholder(R.color.white).transform(RoundedCorners(25)).into(holder.itemView.post_image)
+            } else {
+                Glide.with(mContext).clear(holder.itemView.post_image)
+                holder.itemView.post_image.setImageDrawable(null)
+            }
 
             if (type == 0) {
                 holder.itemView.username.text = post.subject
@@ -135,12 +142,12 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
             holder.itemView.username.text = post.author
             holder.itemView.post_timestamp.text = post.Ptime
 
-          /*    if (post.uri != null){
-               Glide.with(mContext).load(post.uri).placeholder(R.color.white).into(holder.itemView.post_image)
-           } else {
-               Glide.with(mContext).clear(holder.itemView.post_image)
-               holder.itemView.post_image.setImageDrawable(null)
-           }*/
+            /*    if (post.uri != null){
+                 Glide.with(mContext).load(post.uri).placeholder(R.color.white).into(holder.itemView.post_image)
+             } else {
+                 Glide.with(mContext).clear(holder.itemView.post_image)
+                 holder.itemView.post_image.setImageDrawable(null)
+             }*/
 
             if (type == 0) {
                 holder.itemView.username.text = post.subject
@@ -164,12 +171,10 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
             if (post.title == "no Posts" || post.title == "No Posts") {
                 Log.d("Tag", "no post")
                 //toast needed
-            }
-            else if(holder.itemView.post_title.text == "[blocked]"){
+            } else if (holder.itemView.post_title.text == "[blocked]") {
                 //var pauth = post.author
-                Log.d("Tag","blocked post will not open to clicked post screen")
-            }
-            else {
+                Log.d("Tag", "blocked post will not open to clicked post screen")
+            } else {
                 val intent = Intent(mContext, ClickedPost::class.java)
                 intent.putExtra("Title", post.title)
                 intent.putExtra("Text", post.text)
@@ -187,11 +192,12 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
         //}
     }
 
-    /*fun hideBlockedPosts(holder: CustomViewHolders){
+    fun hideBlockedPosts(holder: CustomViewHolders) {
         //val post: Post = savedPosts.value!![holder.adapterPosition]
-        holder.itemView.visibility=View.GONE
+        holder.itemView.visibility = View.GONE
 
-    }*/
+    }
+
     fun removeItem(holder: RecyclerView.ViewHolder): String {
         //position=customViewHolders.adapterPosition
 
@@ -205,13 +211,12 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
     }
 
 
-
     fun getCrn(holder: RecyclerView.ViewHolder): String {
         //position=customViewHolders.adapterPosition
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
         val post: Post = savedPosts.value!![holder.adapterPosition]
-        val postcrn: String?= post.subject
+        val postcrn: String? = post.subject
         //notifyItemRemoved(customViewHolders.adapterPosition)
         //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
 
@@ -223,7 +228,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
         val post: Post = savedPosts.value!![holder.adapterPosition]
-        val posttitle: String?= post.title
+        val posttitle: String? = post.title
         //notifyItemRemoved(customViewHolders.adapterPosition)
         //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
 
@@ -235,7 +240,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
         val post: Post = savedPosts.value!![holder.adapterPosition]
-        val postauth: String?= post.author
+        val postauth: String? = post.author
         //notifyItemRemoved(customViewHolders.adapterPosition)
         //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
 
@@ -254,39 +259,39 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
         return posttext!!
     }
 
-    /*fun getNewCount(): Int {
+    fun getNewCount(): Int {
         if (savedPosts.value != null)
             return savedPosts.value!!.size - 1
         else
             return 0
-    }*/
-
-
-        //notifyD
-        //notifyItemRemoved(customViewHolders.adapterPosition)
-
-        //adapter.notifyItemRangeRemoved(customViewHolders.adapterPosition, 1)
-        //adapter.notifyItemRangeChanged(viewHolders.adapterPosition, adapter.itemCount - viewHolders.adapterPosition+1)
     }
 
-    /*fun alertItem(customViewHolders: CustomViewHolders, position: Int): AlertDialog.Builder {
 
-        var builder = AlertDialog.Builder(customViewHolders.itemView.context)
+    //notifyD
+    //notifyItemRemoved(customViewHolders.adapterPosition)
 
-        builder.setTitle("Are you sure?")
-        builder.setMessage("You cannot restore posts that have been deleted")
-        builder.setPositiveButton("DELETE",
-            { dialogInterface: DialogInterface?, i: Int ->
-                builder.show()
-            })
-        builder.setNegativeButton("CANCEL",
-            { dialogInterface: DialogInterface?, i: Int ->
-                builder.show()
-            })
+    //adapter.notifyItemRangeRemoved(customViewHolders.adapterPosition, 1)
+    //adapter.notifyItemRangeChanged(viewHolders.adapterPosition, adapter.itemCount - viewHolders.adapterPosition+1)
+}
 
-        return builder
+/*fun alertItem(customViewHolders: CustomViewHolders, position: Int): AlertDialog.Builder {
 
-    }*/
+    var builder = AlertDialog.Builder(customViewHolders.itemView.context)
+
+    builder.setTitle("Are you sure?")
+    builder.setMessage("You cannot restore posts that have been deleted")
+    builder.setPositiveButton("DELETE",
+        { dialogInterface: DialogInterface?, i: Int ->
+            builder.show()
+        })
+    builder.setNegativeButton("CANCEL",
+        { dialogInterface: DialogInterface?, i: Int ->
+            builder.show()
+        })
+
+    return builder
+
+}*/
 
 
 

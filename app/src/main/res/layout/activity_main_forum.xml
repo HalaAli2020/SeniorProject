@@ -13,7 +13,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/LContainer"
-        android:background="@color/BackgroundColor"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -33,10 +33,10 @@
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
+                    android:elevation="10dp"
+                    android:background="@drawable/titlebar_shadow"
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="@color/BackgroundColor"
-                    android:theme="@style/ThemeOverlay.AppCompat.Light" />
+                    android:layout_height="?attr/actionBarSize" />
             </FrameLayout>
 
 
@@ -63,7 +63,7 @@
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/BackgroundColor"
+            android:background="@drawable/titlebar_shadow_top"
             app:itemIconTint="@menu/bottom_navigation_selected"
             app:itemTextColor="@menu/bottom_navigation_selected"
             app:labelVisibilityMode="unlabeled"
