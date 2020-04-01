@@ -74,9 +74,6 @@ class FirebaseData @Inject constructor() {
     fun CurrentUserL() {
         val reference =
             FirebaseDatabase.getInstance().getReference("users").child(firebaseAuth.uid!!)
-
-
-
         postlistener = object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 val username = p0.child("Username").getValue(String::class.java)
@@ -86,26 +83,21 @@ class FirebaseData @Inject constructor() {
 
                 Log.d("USERNAME", username!!)
                 Log.d("USER", userprofile.username!!)
-
             }
-
             override fun onCancelled(p0: DatabaseError) {
-
             }
-
-
         }
         reference.addValueEventListener(postlistener)
-
     }
 
 
-
+//calls Firebase Auth to Logout user
     fun logout() {
         firebaseAuth.signOut()
-
     }
 
+/*Query to fetch another users email, if the the email is located successfully in the database
+    callbackEmail.onMessage is called to bring the email up to the frontend in real time*/
     fun fetchEmail(UserID: String, callbackEmail: PostRepository.FirebaseCallbackItem ) {
         val ref = FirebaseDatabase.getInstance().getReference("/users/$UserID")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -118,26 +110,24 @@ class FirebaseData @Inject constructor() {
         })
     }
 
+/*Query to fetch another user's user bio, if the bio is found in the database then
+ callbackEmail.onMessage is called to bring the email up to the frontend in real time*/
     fun fetchBio(UserID: String, callbackbio: PostRepository.FirebaseCallbackItem) {
         val ref = FirebaseDatabase.getInstance().getReference("/users/$UserID")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
-
+            override fun onCancelled(p0: DatabaseError) {}
             override fun onDataChange(p0: DataSnapshot) {
                 callbackbio.onMessage(p0)
             }
         })
     }
 
+//gets the current users bio, unsure if we need this function
     fun fetchCurrentBio(): String {
         val userID = firebaseAuth.uid ?: "null"
         val ref = FirebaseDatabase.getInstance().getReference("/users/$userID")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
+            override fun onCancelled(p0: DatabaseError) {}
 
             override fun onDataChange(p0: DataSnapshot) {
                 val bio = p0.child("UserBio").getValue(String::class.java) ?: "no bio"
@@ -150,6 +140,7 @@ class FirebaseData @Inject constructor() {
     }
 
 
+//saves the user bio to the database
     fun saveUserbio(bio: String) {
 
         val userID = firebaseAuth.uid ?: "null"
@@ -158,7 +149,7 @@ class FirebaseData @Inject constructor() {
     }
 
 
-
+//saves new username for a user while changing the username for every post and comment that user made
     fun saveNewUsername(username: String) {
         val userID = firebaseAuth.uid ?: "null"
 
@@ -166,21 +157,13 @@ class FirebaseData @Inject constructor() {
             .child("/Username").setValue(username)
 
         listenForUserProfilePosts(userID, object : PostRepository.FirebaseCallbackPost{
-            override fun onFailure() {
-
-            }
-
-            override fun onStart() {
-
-            }
-
-            override fun onSuccess(data: DataSnapshot) {
-
-            }
-        })
+            override fun onFailure() {}
+            override fun onStart() {}
+            override fun onSuccess(data: DataSnapshot) {} })
 
         var x = 0
 
+    //change username in profile posts
         while (x < profilePosts.value!!.size) {
             val post: Post = profilePosts.value!![x]
             val pkey: String = post.key.toString()
@@ -194,6 +177,7 @@ class FirebaseData @Inject constructor() {
             x++
         }
 
+    //changes username in firebase user profile
         val user = CurrentUser()
         val profileUpdates =
             UserProfileChangeRequest.Builder().setDisplayName(username).build()
@@ -212,6 +196,7 @@ class FirebaseData @Inject constructor() {
         getclassnamesforusername()
         sendClassnameForUsername()
         x = 0
+    //change username in all class lists
         while (x < sendClassnameForUsername().size) {
             var classn = sendClassnameForUsername()[x]
             val ref = FirebaseDatabase.getInstance().getReference("/Subjects/${classn}/Posts")
@@ -257,6 +242,11 @@ class FirebaseData @Inject constructor() {
         changeuserpostname(username)
         changeusercommetname(username)
     }
+
+
+    /*
+      NEEDS COMMENT
+     */
     fun changeuserpostname(name : String)
     {
         var uid = FirebaseAuth.getInstance().uid
@@ -282,6 +272,11 @@ class FirebaseData @Inject constructor() {
         changeclassPname(plist, name)
         changePname(plist, name)
     }
+
+
+    /*
+      NEEDS COMMENT
+     */
     fun changeclassPname(l : MutableList<Post>, name: String)
     {
         for (x in l.iterator())
@@ -290,6 +285,11 @@ class FirebaseData @Inject constructor() {
             ref.child("author").setValue(name)
         }
     }
+
+
+    /*
+      NEEDS COMMENT
+     */
     fun changePname(l : MutableList<Post>, name: String)
     {
         var uid = FirebaseAuth.getInstance().uid
@@ -299,6 +299,11 @@ class FirebaseData @Inject constructor() {
             ref.child("author").setValue(name)
         }
     }
+
+
+    /*
+      NEEDS COMMENT
+     */
     fun changeusercommetname(name : String)
     {
         var uid = FirebaseAuth.getInstance().uid
@@ -325,6 +330,11 @@ class FirebaseData @Inject constructor() {
         changeCname(plist, name)
 
     }
+
+
+    /*
+      NEEDS COMMENT
+     */
     fun changeclassCPname(l : MutableList<Comment>, name: String)
     {
         for (x in l.iterator())
@@ -333,6 +343,11 @@ class FirebaseData @Inject constructor() {
             ref.child("author").setValue(name)
         }
     }
+
+
+    /*
+      NEEDS COMMENT
+     */
     fun changeCname(l : MutableList<Comment>, name: String)
     {
         var uid = FirebaseAuth.getInstance().uid
@@ -343,6 +358,9 @@ class FirebaseData @Inject constructor() {
         }
     }
 
+    /*
+      NEEDS COMMENT
+     */
     fun changeCommunityCommentUsername(username: String, classname: String, pkey: String) {
         // you can get the username, and class via parameter
         //then you can just fill them in and make the query
@@ -389,7 +407,8 @@ class FirebaseData @Inject constructor() {
 
     }
 
-
+/*returns all of the classnames in the database so they can be used by the
+save new username function so they can be iterated through */
     fun getclassnamesforusername() {
 
         val reference = FirebaseDatabase.getInstance().reference.child("/Subjects")
@@ -420,51 +439,24 @@ class FirebaseData @Inject constructor() {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
         })
-        //if userid matched then change the author
     }
 
+    //returns a list of classnames
     fun sendClassnameForUsername(): MutableList<String> {
         getclassnamesforusername()
         //val check = cList.size
         return cList
     }
 
-
-    fun fetchCurrentUserName() {
-        var uid = FirebaseAuth.getInstance().uid
-        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-
-                val currentUser = p0.child("Username").getValue(String::class.java)
-                Log.d(TAG, "Current user fetched ${currentUser}")
-                var usernameForum = currentUser
-                val user = CurrentUser()
-                val profileUpdates =
-                    UserProfileChangeRequest.Builder().setDisplayName(usernameForum).build()
-                user?.updateProfile(profileUpdates)
-                    ?.addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            Log.d(
-                                TAG,
-                                "profile updated, emitter complete?:  ${CurrentUser()?.displayName} ."
-                            )
-                        } else {
-                            Log.d(TAG, "in else in fetch current user")
-                        }
-                    }
-            }
-        })
-    }
-
-
+/* registers the user using firebase authentication, a verification email is sent to the
+user as well. The user can only log in once the verification link from that email is clicked on
+this is a suspend function because of the user of coroutines the function waits for the completion of
+user creation, the interface that handles toast messages and redirect can be found in the RegisterActivity*/
     suspend fun RegisterUserEmail(firebaseAuth: FirebaseAuth, email:String ,password:String, username: String, callback: EmailCallback): AuthResult?{
         try {
+            //await functioned used to perform async task
             val data = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
+            //saving user to Firebase database
             val uid = FirebaseAuth.getInstance().uid
             uid?.let { it1 ->
                 saveUserToFirebaseDatabase(
@@ -474,6 +466,7 @@ class FirebaseData @Inject constructor() {
                     null
                 )
             }
+            //sending verification email
             val user = FirebaseAuth.getInstance().currentUser
             user?.sendEmailVerification()
                 ?.addOnCompleteListener { task ->
@@ -493,6 +486,10 @@ class FirebaseData @Inject constructor() {
         }
     }
 
+    /*
+    resets user password, suspend function becuase of the aysnc task of wating for the sendPasswordEmail
+    function to complete.
+     */
     suspend fun resetUserPassword(firebaseAuth: FirebaseAuth, email: String, callback: EmailCallback){
         try {
             firebaseAuth.sendPasswordResetEmail(email).await()
@@ -505,6 +502,9 @@ class FirebaseData @Inject constructor() {
         }
     }
 
+    /*
+      NEEDS COMMENT
+     */
     fun readPhotoValue(useridm: String, callback: EmailCallback) {
         val userref = FirebaseDatabase.getInstance().getReference("users/$useridm")
         userref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -521,7 +521,12 @@ class FirebaseData @Inject constructor() {
         })
     }
 
-    //@Provides
+    /*
+    User Login user's Firebase Auth to Log the user into the application, this is a suspend to support the
+    async await function. the function will waut until the user is logged to display the successful email
+    toast message and redirect to the application's homepage the authentication listener interface that implements
+    redirection and toast message can be found in the Login activity
+     */
     suspend fun LoginUserEmail(firebaseAuth: FirebaseAuth, email:String ,password:String, callback: EmailCallback): AuthResult?{
         try {
             val data = firebaseAuth.signInWithEmailAndPassword(email, password).await()
@@ -538,6 +543,9 @@ class FirebaseData @Inject constructor() {
             }
     }
 
+    /*
+    saves user to firebase database
+     */
     private fun saveUserToFirebaseDatabase(
         username: String,
         email: String,
@@ -551,6 +559,7 @@ class FirebaseData @Inject constructor() {
         val user = User(username, email, password, profileImageUrl)
 
         val usern = CurrentUser()
+        //updates the user profile with the user's username
         val profileUpdates =
             UserProfileChangeRequest.Builder().setDisplayName(username).build()
         usern?.updateProfile(profileUpdates)
@@ -564,6 +573,8 @@ class FirebaseData @Inject constructor() {
                 }
             }
 
+        //maps the values inputted buy the users to the the correllating to their
+        //correct locations in the database, the map can be found in the User model file
         val userin = user.toMap()
         ref.setValue(userin).addOnCompleteListener { task ->
             if (task.isSuccessful) {
@@ -574,11 +585,15 @@ class FirebaseData @Inject constructor() {
         }.addOnFailureListener {
             Log.d(TAG, "Error ${it.message}")
         }
-       FirebaseDatabase.getInstance().getReference("users/$uid/UserBio").setValue("no bio")
+        FirebaseDatabase.getInstance().getReference("users/$uid/UserBio").setValue("no bio")
         FirebaseDatabase.getInstance().getReference("users/$uid/profileImageUrl").setValue("null")
     }
 
 
+    /*
+    Database query for getting all the posts a user has made, a callback located in the post repository
+    is used to get the posts in real time.
+     */
     fun listenForUserProfilePosts(uid: String, callbackPost: PostRepository.FirebaseCallbackPost): PostLiveData {
         Log.d(TAG, "getUserProfilePosts listener called")
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Posts")
@@ -611,6 +626,10 @@ class FirebaseData @Inject constructor() {
         return profilePosts
     }
 
+    /*
+    Database query for getting all the comments a user has made, a callback located in the post repository
+    is used to get the comments in real time.
+     */
     fun listenForUserProfileComments(uid: String, callbackComment: PostRepository.FirebaseCallbackComment): CommentLive {
         Log.d(TAG, "getUserProfile comments listener called")
         //callbackComment.onStart()
@@ -638,7 +657,9 @@ class FirebaseData @Inject constructor() {
         return Comments
     }
 
-
+/*
+Checks if a user has made any posts, a callback is implemented in the ProfileViewModel
+ */
     fun noPostsChecker(userID: String, callbackbool: PostRepository.FirebaseCallbackBool): Boolean {
         val comref = FirebaseDatabase.getInstance().getReference("users/$userID")
         comref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -658,6 +679,9 @@ class FirebaseData @Inject constructor() {
         return noPostsCheck
     }
 
+    /*
+Checks if a user has made any comments, a callback is implemented in the ProfileViewModel
+ */
     fun noCommentsChecker(userID: String, callbackbool: PostRepository.FirebaseCallbackBool): Boolean {
         val com = FirebaseDatabase.getInstance().getReference("users/$userID")
         com.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -677,18 +701,22 @@ class FirebaseData @Inject constructor() {
         return noCommentsCheck
     }
 
+    //checks if the profile being opened belongs to the current user and gets the appropriate posts
     fun getUserProfilePosts(userID: String,  call : PostRepository.FirebaseCallbackPost): PostLiveData {
         Log.d(TAG, "getUserProfilePosts called")
         if (userID == "null") {
+            //the profile being opened does not belong to the the current user
             var uid = FirebaseAuth.getInstance().uid ?: "error"
             listenForUserProfilePosts(uid, call )
         } else {
+            //the profile being opened belongs to the current user
             var uid = userID
             listenForUserProfilePosts(uid, call)
         }
         return profilePosts
     }
 
+    //checks if the profile being opened belongs to the current user and gets the appropriate comments
     fun getUserProfileComments(userID: String, call : PostRepository.FirebaseCallbackComment): CommentLive {
         Log.d(TAG, "getUserProfile comments called")
         if (userID == "null") {
@@ -702,6 +730,7 @@ class FirebaseData @Inject constructor() {
     }
 
 
+    //Database query for getting all the comments for a post
     fun listenComments(Key: String, subject: String, callbackComment: FirebaseCallbackComment)
     {
 
@@ -744,7 +773,9 @@ class FirebaseData @Inject constructor() {
 
     }
 
-
+/*
+NEEDS COMMENT
+ */
     fun getCommentsCO(Key: String): CommentLive {
 
         //val uid = FirebaseAuth.getInstance().uid
@@ -789,6 +820,9 @@ class FirebaseData @Inject constructor() {
 
     }
 
+    /*
+    NEEDS COMMENT
+     */
     fun getComments(Key: String, subject: String): CommentLive {
         var com = CommentLive()
        listenComments(Key, subject, object : FirebaseCallbackComment{
@@ -799,26 +833,26 @@ class FirebaseData @Inject constructor() {
         return com
     }
 
-
+    /*
+    NEEDS COMMENT
+     */
     fun saveNewCommentC(
         text: String, postID: String, crn: String
     ) {
 
-
-
         val userID = firebaseAuth.uid
         val comment = Comment(text, "", userID, crn, postID)
+        //creates key for comments so they dont overwrite each other
         val user_key = FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID")
             .child("Comments").push().key
-
-
-
+        //maps comment values to appropriate slots in database
         val comementvalues = comment.toMap()
         FirebaseDatabase.getInstance().getReference("users/$userID/Post/$postID")
             .child("Comments/$user_key").setValue(comementvalues)
 
     }
 
+    //deletes a posts from all places that it appears, this can only be done from the user profile
     fun deleteNewPost(postKey: String, crn: String, userID: String) {
         val refSubPath = FirebaseDatabase.getInstance().getReference("/Subjects/$crn")
 
@@ -886,7 +920,7 @@ class FirebaseData @Inject constructor() {
     }
 
 
-
+//deletes comments from the user profile
     fun deleteNewCommentFromUserProfile(postKey: String, crn: String, comKey: String, userID: String)
     {
         val refkeyuser = FirebaseDatabase.getInstance().getReference("/users/$userID")
@@ -912,6 +946,8 @@ class FirebaseData @Inject constructor() {
         })
 
     }
+
+    //deletes comments from community posts
     fun deleteNewCommentFromCommPosts(postKey: String, crn: String, classkey: String)
     {
         val refkey2 = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$postKey")
@@ -938,6 +974,7 @@ class FirebaseData @Inject constructor() {
 
     }
 
+    //saves comment to the two places in the database, a list under user and under the post it was made
     fun saveNewComment(text: String, postID: String, ClassKey: String, UserID: String, crn: String
     ) {
 
@@ -954,6 +991,7 @@ class FirebaseData @Inject constructor() {
                 if(p0.exists()){
                     for(sub in p0.children){
                         if(sub.getValue() == crn){
+                            //creating keys in database for the new comment
                             val class_key = FirebaseDatabase.getInstance().getReference("/Subjects/$crn/Posts/$ClassKey").child("Comments").push().key
                             val user_key = FirebaseDatabase.getInstance().getReference("/users/$UserID/Posts/$postID").child("Comments").push().key
                             val profile_key = FirebaseDatabase.getInstance().getReference("/users/$UserID").child("Comments").push().key
@@ -966,6 +1004,7 @@ class FirebaseData @Inject constructor() {
                             comment.ProfileComKey = profile_key
                             comment.Postkey = post_key
 
+                            //mapping comment values to database
                             val dataupdates = HashMap<String, Any>()
                             val comementvalues = comment.toMap()
                             dataupdates["Subjects/$crn/Posts/$ClassKey/Comments/$class_key"] = comementvalues
@@ -988,6 +1027,7 @@ class FirebaseData @Inject constructor() {
         })
     }
 
+    //change comment value in every place it appears in the database
     fun editComment(userID: String, usercomkey:String, ntext: String, crn: String, postKey: String){
         var comkey = FirebaseDatabase.getInstance().getReference("/users/$userID")
 
@@ -1029,7 +1069,7 @@ class FirebaseData @Inject constructor() {
 
     }
 
-
+//change post value for every place it appears in the database
     fun editPost(crn: String, postKey: String, ctext: String, ctitle: String, ntext: String, ntitle: String,
                  userID: String){
         val refsubpath = FirebaseDatabase.getInstance().getReference("/Subjects/$crn")
@@ -1073,6 +1113,7 @@ class FirebaseData @Inject constructor() {
         })
     }
 
+    //blocking user functionality, adds blocked userID in list stored under current user
     fun blockUser(UserID: String) {
 
         val userID = firebaseAuth.uid
@@ -1101,6 +1142,7 @@ class FirebaseData @Inject constructor() {
 
     }
 
+    //saves reported user id, the accuser id and the report text to a list in the database labelled reports
     fun reportUserPost(accusedID: String, complaintext: String, crn: String, classkey: String){
 
         val accuserID = firebaseAuth.currentUser?.email
@@ -1111,13 +1153,9 @@ class FirebaseData @Inject constructor() {
         val user = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$accusedID").key
         val text = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$complaintext").key
 
-
         report.classkey= post!!
         report.complaintext= text!!
         report.accusedID = user!!
-
-
-
 
         val dataupdates = HashMap<String, Any>()
         val reportvalues = report.toMap()
@@ -1125,6 +1163,7 @@ class FirebaseData @Inject constructor() {
         FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
     }
 
+    //saves reported user id, the accuser id and the report text to a list in the database labelled reports
     fun reportUserComment(accusedID: String, complaintext: String, crn: String, classkey: String, comkey: String){
 
         val accuserID = firebaseAuth.currentUser?.email
@@ -1135,14 +1174,9 @@ class FirebaseData @Inject constructor() {
         val user = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$classkey/Comments/$accusedID").key
         val text = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$classkey/Comments/$complaintext").key
 
-
         report.classkey= post!!
         report.complaintext= text!!
         report.accusedID = user!!
-
-
-
-
 
         val dataupdates = HashMap<String, Any>()
         val reportvalues = report.toMap()
@@ -1151,7 +1185,9 @@ class FirebaseData @Inject constructor() {
     }
 
 
-
+    /*
+    NEEDS COMMENT
+     */
     fun readPostValues(crn: String, postkey: String, callBack : Callback){
         FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$postkey").addValueEventListener(object :
             ValueEventListener {
@@ -1221,8 +1257,9 @@ class FirebaseData @Inject constructor() {
     }
 
 
-
-
+    /*
+    NEEDS COMMENT
+     */
     fun saveNewPosttoUser(text: String, title:String, CRN: String) {
         val userID = firebaseAuth.uid
         val author= firebaseAuth.currentUser?.displayName
@@ -1234,15 +1271,11 @@ class FirebaseData @Inject constructor() {
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     for(sub in p0.children){
-                        // val refc= comment.getValue(Comment::class.java)
                         if(sub.getValue() == CRN){
                             val user_key = FirebaseDatabase.getInstance().getReference("/users/$userID").child("Posts").push().key
                             val class_key = FirebaseDatabase.getInstance().getReference("/Subjects/$CRN").child("Posts").push().key
                             post.key = user_key
                             post.Classkey = class_key
-                            //post.author= auth_key
-                            // implement in viewmodel
-                            //if (post.title.isNotEmpty() && post.text.isNotEmpty()) {
                             val dataupdates = HashMap<String, Any>()
                             val postvalues = post.toMap()
                             dataupdates["/Subjects/$CRN/Posts/$class_key"] = postvalues
@@ -1262,9 +1295,10 @@ class FirebaseData @Inject constructor() {
             }
         })
     }
+
+    //database query to get the classes that a user is subscribed to
     fun listenUserSub(callbackString: PostRepository.FirebaseCallbackString){
         val uid = FirebaseAuth.getInstance().uid
-//        Log.d("uid", uid!!)
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid/Subscriptions").orderByValue()
         callbackString.onStart()
         reference.addValueEventListener(object : ValueEventListener {
@@ -1279,10 +1313,9 @@ class FirebaseData @Inject constructor() {
         })
     }
 
+    //gets user subscriptions for the front end.
     fun getUserSub() {
-
         val uid = FirebaseAuth.getInstance().uid
-//        Log.d("uid", uid!!)
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid/Subscriptions").orderByValue()
         reference.addValueEventListener(object : ValueEventListener {
             val SubList: MutableList<String> = mutableListOf()
@@ -1304,10 +1337,14 @@ class FirebaseData @Inject constructor() {
         })
     }
 
+    /*
+    NEEDS COMMENT
+     */
     fun sendUserSUB(call :PostRepository.FirebaseCallbackString) {
         listenUserSub(call)
     }
 
+    //added a subscription to a user when they subscribe for a class
     fun addUserSUB(crn: String) {
 
         val uid = FirebaseAuth.getInstance().uid
@@ -1318,6 +1355,7 @@ class FirebaseData @Inject constructor() {
 
     }
 
+    //removes a subscription when a user unsubscribes from a class
     fun removeUserSub(crn: String) {
         val uid = FirebaseAuth.getInstance().uid
         Log.d("uid", uid!!)
@@ -1349,6 +1387,9 @@ class FirebaseData @Inject constructor() {
         })
     }
 
+    /*NEEDS COMMENT
+
+     */
     fun removeClassSub(crn: String) {
         val uid = FirebaseAuth.getInstance().uid
         Log.d("uid", uid!!)
@@ -1381,15 +1422,15 @@ class FirebaseData @Inject constructor() {
 
     }
 
+    /*
+    uploads user profile image to firebase storages, saves image to the database and saves it to the user's
+    firebase auth profile, now it can be access using currentuser.displayname
+     */
     fun uploadImageToFirebaseStorage(selectedPhotoUri: Uri) {
 
-        //Log.d(TAG, "photo url is null")
-
         val filename = UUID.randomUUID().toString()
-        //val uidm = FirebaseAuth.getInstance().uid
         val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
 
-        //val userref = FirebaseDatabase.getInstance().getReference("users/$uidm")
         ref.putFile(selectedPhotoUri)
             .addOnSuccessListener {
                 Log.d("Pic", "Successfully uploaded picture: ${it.metadata?.path}")
@@ -1401,10 +1442,12 @@ class FirebaseData @Inject constructor() {
 
                     var user = CurrentUser()
 
+                    //save image to database
                     val uid = FirebaseAuth.getInstance().uid
                     val reference = FirebaseDatabase.getInstance().getReference("users/$uid")
                     reference.child("/profileImageUrl").setValue(saveImageurl)
 
+                    //firebase profile updaye
                     val profileUpdates = UserProfileChangeRequest.Builder().setPhotoUri(it).build()
                     user?.updateProfile(profileUpdates)
                         ?.addOnCompleteListener { task ->
@@ -1419,13 +1462,14 @@ class FirebaseData @Inject constructor() {
                             }
                         }
 
-                    //uploadImageToFirebaseDatabase(it)
-
                 }
             }
 
     }
 
+    /*
+    Query for getting class posts
+     */
     fun listenforClassPosts(className: String, call : PostRepository.FirebaseCallbackPost)
     {
 
@@ -1449,14 +1493,19 @@ class FirebaseData @Inject constructor() {
 
     }
 
+    //gets class posts for the frontend
     fun getClassPosts(className: String, call : PostRepository.FirebaseCallbackPost) {
         listenforClassPosts(className, call)
     }
 
+    //gets classes for the frontend
     fun getClasses(call: PostRepository.FirebaseCallbackCRN) {
         listenClasses(call)
     }
 
+    /*
+    NEEDS COMMENT
+     */
     fun combineSubs(listClasses : MutableLiveData<MutableList<CRN>>, UsersSubs :MutableList<String>) : Int
     {
         if(listClasses.value.isNullOrEmpty() || UsersSubs.isNullOrEmpty())
@@ -1482,6 +1531,8 @@ class FirebaseData @Inject constructor() {
         }
 
     }
+
+    //Query to get available classes
     fun listenClasses(call: PostRepository.FirebaseCallbackCRN)
     {
         val reference = FirebaseDatabase.getInstance().getReference("Subjects")
@@ -1499,7 +1550,9 @@ class FirebaseData @Inject constructor() {
 
     }
 
-
+    /*
+       NEEDS COMMENT
+        */
     fun SeparateList(p0: DataSnapshot): List<String>? {
         var subList: MutableList<String> = mutableListOf()
         for (datas in p0.children) {
@@ -1509,7 +1562,9 @@ class FirebaseData @Inject constructor() {
         return subList
     }
 
-
+    /*
+       NEEDS COMMENT
+        */
     private fun listenForSubscribedPosts2(callbackPost: FirebaseCallbackPost) {
         savedPosts = PostLiveData()
         val reference = FirebaseDatabase.getInstance().getReference("Subjects")
@@ -1606,6 +1661,7 @@ class FirebaseData @Inject constructor() {
     }
 
 
+    //gets posts for the users homepage, this includes the posts of all classes they are subscribed to
     fun getSubscribedPosts(): PostLiveData {
 
         var sub: MutableList<String> = mutableListOf()
@@ -1645,6 +1701,9 @@ class FirebaseData @Inject constructor() {
 
     }
 
+    /*
+   NEEDS COMMENT
+    */
     fun getUserPost() : PostLiveData
     {
         var post = PostLiveData()
@@ -1656,7 +1715,9 @@ class FirebaseData @Inject constructor() {
         return post
     }
 
-
+    /*
+       NEEDS COMMENT
+        */
     private fun listenforUserPosts(callbackPost: FirebaseCallbackPost) {
         val reference =
             FirebaseDatabase.getInstance().getReference("users/1XN3H62rMJhe6CiCbN4os2TNp5H2")
@@ -1711,7 +1772,7 @@ class FirebaseData @Inject constructor() {
     }
 
 
-
+//database query that returns all users
     fun getUsers(): MutableLiveData<List<User>>?{
 
         var userList: MutableLiveData<List<User>>? = MutableLiveData()
@@ -1724,6 +1785,9 @@ class FirebaseData @Inject constructor() {
         return userList
     }
 
+    /*
+   NEEDS COMMENT
+    */
     private fun setUsers(firebaseCallback: FirebaseCallback) {
         val ref = FirebaseDatabase.getInstance().getReference("users")
 
@@ -1753,7 +1817,9 @@ class FirebaseData @Inject constructor() {
         })
     }
 
-
+    /*
+       NEEDS COMMENT
+        */
     fun getMessages(toId: String?): MutableLiveData<List<ChatMessage>>?{
         var messages: MutableLiveData<List<ChatMessage>>? = MutableLiveData()
         listenForMessages(object: FirebaseMessagseCallback{
@@ -1765,6 +1831,9 @@ class FirebaseData @Inject constructor() {
         return messages
     }
 
+    /*
+   NEEDS COMMENT
+    */
     fun listenForMessages(firebaseCallback: FirebaseMessagseCallback, toId: String?){
         val fromId = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId")
@@ -1800,7 +1869,7 @@ class FirebaseData @Inject constructor() {
         })
     }
 
-
+//sends message to another user
     fun sendMessage(message: String?, toID: String?, username: String?){
 
         val fromID = FirebaseAuth.getInstance().uid
@@ -1849,7 +1918,9 @@ class FirebaseData @Inject constructor() {
         latestMessageToRef.setValue(latestChatMessage2)
     }
 
-
+    /*
+       NEEDS COMMENT
+        */
     fun getRecentMessages(): MutableLiveData<List<LatestMessage>>{
         val latestMessagesMap = MutableLiveData<List<LatestMessage>>()
         listenForLatestMessage(object: FirebaseRecentMessagseCallback{
@@ -1861,6 +1932,9 @@ class FirebaseData @Inject constructor() {
         return latestMessagesMap
     }
 
+    /*
+   NEEDS COMMENT
+    */
     private fun listenForLatestMessage(firebaseCallback: FirebaseRecentMessagseCallback){
         val fromId = FirebaseAuth.getInstance().uid
 
@@ -1898,6 +1972,8 @@ class FirebaseData @Inject constructor() {
             }
         })
     }
+
+    //query used to search for a certain user
     fun UsersSearch(query: String, result : SearchViewModel.FirebaseResult)
     {
         result.onStart()
@@ -1912,6 +1988,10 @@ class FirebaseData @Inject constructor() {
            }
        })
     }
+
+    /*
+   NEEDS COMMENT
+    */
     fun getallclasses(listen : SearchViewModel.FirebaseResult)
     {
         listen.onStart()
@@ -1927,6 +2007,10 @@ class FirebaseData @Inject constructor() {
         })
 
     }
+
+    /*
+   NEEDS COMMENT
+    */
     fun blockedusersPosts()
     {
         val uid = FirebaseAuth.getInstance().uid
@@ -1945,7 +2029,7 @@ class FirebaseData @Inject constructor() {
 
 
 
-
+//interfaces used to get database query results in realtime
     interface FirebaseCallback {
         fun onCallback(list: MutableList<User>?)
     }
