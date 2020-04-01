@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.seniorproject.MainForum.Posts.ClickedPost
@@ -114,11 +115,20 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
            }
 
             if (type == 0) {
+                if (post.title == "No Posts")
+                {
+                    holder.itemView.username.text = " "
+                    holder.itemView.post_timestamp.text = " "
+                    holder.itemView.imageView4.isInvisible
+                }
+                else
+                {
                 holder.itemView.username.text = post.subject
                 holder.itemView.username.setOnClickListener {
                     val intent = Intent(mContext, CommunityPosts::class.java)
                     intent.putExtra("ClassName", post.subject)
                     mContext.startActivity(intent)
+                }
 
                 }
             } else if (type == 1) {
@@ -135,15 +145,9 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
             holder.itemView.username.text = post.author
             holder.itemView.post_timestamp.text = post.Ptime
 
-          /*    if (post.uri != null){
-               Glide.with(mContext).load(post.uri).placeholder(R.color.white).into(holder.itemView.post_image)
-           } else {
-               Glide.with(mContext).clear(holder.itemView.post_image)
-               holder.itemView.post_image.setImageDrawable(null)
-           }*/
-
             if (type == 0) {
                 holder.itemView.username.text = post.subject
+
                 holder.itemView.username.setOnClickListener {
                     val intent = Intent(mContext, CommunityPosts::class.java)
                     intent.putExtra("ClassName", post.subject)

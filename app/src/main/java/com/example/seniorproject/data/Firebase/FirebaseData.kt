@@ -96,14 +96,6 @@ class FirebaseData @Inject constructor() {
                 Log.d("USERNAME", username!!)
                 Log.d("USER", userprofile.username!!)
 
-                /*if (userprofile != null) {
-                    Log.d("ACCESSING", userprofile.username)
-                    //savedPostsList.add(newPost)
-                    //repository.saveNewPost(newPost)
-                    //adapter.add(PostFrag(newPost.title, newPost.text))
-                }*/
-
-
             }
 
             override fun onCancelled(p0: DatabaseError) {
@@ -131,10 +123,6 @@ class FirebaseData @Inject constructor() {
             }
             override fun onDataChange(p0: DataSnapshot) {
                 callbackEmail.onMessage(p0)
-                //val email = p0.child("email").getValue(String::class.java)
-                //Log.d(TAG, "Current user fetched ${email}")
-                //otherEmail = email ?: ""
-                //may need the callbackOncallback
             }
         })
     }
@@ -152,10 +140,6 @@ class FirebaseData @Inject constructor() {
             }
         })
     }
-
-
-
-
 
     fun fetchCurrentBio(): String {
         val userID = firebaseAuth.uid ?: "null"
@@ -191,9 +175,6 @@ class FirebaseData @Inject constructor() {
         FirebaseDatabase.getInstance().getReference("/users/$userID")
             .child("/Username").setValue(username)
 
-        //var to get old username to compare
-        //a nested for loop to check comments in every post
-
         listenForUserProfilePosts(userID, object : PostRepository.FirebaseCallbackPost{
             override fun onFailure() {
 
@@ -220,7 +201,6 @@ class FirebaseData @Inject constructor() {
                 FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$pkey")
                     .child("/author").setValue(username)
             }
-            //this should be the problem
             x++
         }
 
@@ -284,9 +264,7 @@ class FirebaseData @Inject constructor() {
             x++
         }
 
-        //x = 0
-       changeuserpostname(username)
-        //x =  0
+        changeuserpostname(username)
         changeusercommetname(username)
     }
     fun changeuserpostname(name : String)
@@ -611,176 +589,100 @@ class FirebaseData @Inject constructor() {
     }
 
 
-    /*fun saveNewPost(postTitle: String, postText: String, postSubject: String) {
-        val reference = FirebaseDatabase.getInstance().getReference("/posts").push()
-
-        if (postTitle.isNotEmpty() && postText.isNotEmpty()) {
-            val post = Post(postTitle, postText, postSubject)
-
-            reference.setValue(post).addOnSuccessListener {
-                Log.d("PostForum", "Saved our post sucessfully to database: ${reference.key}")
-            }.addOnFailureListener {
-                Log.d(TAG, "Error ${it.message}")
-            }
-        }
-    }*/
-
-
     fun listenForUserProfilePosts(uid: String, callbackPost: PostRepository.FirebaseCallbackPost): PostLiveData {
         Log.d(TAG, "getUserProfilePosts listener called")
-
-        //set list to empty here?
-
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Posts")
          reference.addChildEventListener(object : ChildEventListener {
             var profilePostsList: MutableList<Post> = mutableListOf()
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+            override fun onCancelled(p0: DatabaseError) {}
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {}
+             override fun onChildChanged(p0: DataSnapshot, p1: String?) {}
+             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                callbackPost.onSuccess(p0)
             }
-
-            override fun onChildRemoved(p0: DataSnapshot) {
-            }
-
-
+             override fun onChildRemoved(p0: DataSnapshot) {}
         })
         Log.d("Post function return", "Post function return")
 
-        //only do this for the current user?
-        // for other users just check the value?
         val comref = FirebaseDatabase.getInstance().getReference("users/$uid")
          comref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
+             override fun onCancelled(p0: DatabaseError) {
+                 TODO("not implemented")
+             }
 
-            override fun onDataChange(p0: DataSnapshot) {
-                if (!p0.child("Posts").exists()) {
-                    Log.d("comment", "doesn't exist")
-                    val emptyPost = Post("no Posts","" ,"","")
-                    var profilePostL: MutableList<Post> = mutableListOf()
-                    profilePostL.add(emptyPost)
-                    profilePosts.value = profilePostL
-                    noPostsCheck = true
-                }
-            }
-        })
+             override fun onDataChange(p0: DataSnapshot) {
+                 if (!p0.child("Posts").exists()) {
+                     callbackPost.onSuccess(p0)
+                     //noPostsCheck = true
+                 }
+             }
+         })
 
         return profilePosts
     }
 
-    fun noPostsChecker(userID: String): Boolean {
-        listenForUserProfilePosts(userID, object : PostRepository.FirebaseCallbackPost {
-            override fun onFailure() {
-
+    fun listenForUserProfileComments(uid: String, callbackComment: PostRepository.FirebaseCallbackComment): CommentLive {
+        Log.d(TAG, "getUserProfile comments listener called")
+        //callbackComment.onStart()
+        //is commenting this out why it noComments stopped showinf up?
+        val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Comments")
+        reference.addChildEventListener(object : ChildEventListener {
+            var profileCommentList: MutableList<Comment> = mutableListOf()
+            override fun onCancelled(p0: DatabaseError) {}
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {}
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {}
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                callbackComment.onSuccess(p0)
             }
+            override fun onChildRemoved(p0: DataSnapshot) {}
+        })
+        Log.d("Post function return", "Post function return")
+        val comref = FirebaseDatabase.getInstance().getReference("users/$uid")
+        comref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) { TODO("not implemented") }
+            override fun onDataChange(p0: DataSnapshot) {
 
-            override fun onStart() {
+              } })
+        return Comments
+    }
 
-            }
 
-            override fun onSuccess(data: DataSnapshot) {
-                if (!data.child("Posts").exists()) {
-                    Log.d("comment", "doesn't exist")
-                    val emptyPost = Post("no Posts","" ,"","")
-                    var profilePostL: MutableList<Post> = mutableListOf()
-                    profilePostL.add(emptyPost)
-                    profilePosts.value = profilePostL
+    fun noPostsChecker(userID: String, callbackbool: PostRepository.FirebaseCallbackBool): Boolean {
+        val comref = FirebaseDatabase.getInstance().getReference("users/$userID")
+        comref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) { TODO("not implemented") }
+            override fun onDataChange(p0: DataSnapshot) {
+                if (!p0.child("Posts").exists()) {
+                    callbackbool.onSuccess(p0)
                     noPostsCheck = true
                 }
+                else {
+                    noPostsCheck = false
+                    callbackbool.onSuccess(p0)
+                    //unsure
+                } //here
             }
         })
         return noPostsCheck
     }
 
-    fun noCommentsChecker(userID: String): Boolean {
-        listenForUserProfileComments(userID, object : PostRepository.FirebaseCallbackComment {
-            override fun onFailure() {
-
-            }
-
-            override fun onStart() {
-
-            }
-
-            override fun onSuccess(data: DataSnapshot) {
-                if (data.child("Comments").exists() == false) {
-                    Log.d("comment", "doesn't exist")
-                    val emptyComment = Comment("no Comments","" ,"","","")
-                    var profileCommentL: MutableList<Comment> = mutableListOf()
-                    profileCommentL.add(emptyComment)
-                    Comments.value = profileCommentL
+    fun noCommentsChecker(userID: String, callbackbool: PostRepository.FirebaseCallbackBool): Boolean {
+        val comref = FirebaseDatabase.getInstance().getReference("users/$userID")
+        comref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) { TODO("not implemented") }
+            override fun onDataChange(p0: DataSnapshot) {
+                if (!p0.child("Posts").exists()) {
+                    callbackbool.onSuccess(p0)
                     noCommentsCheck = true
+                }
+                else {
+                    noCommentsCheck = false
+                    callbackbool.onSuccess(p0)
                 }
             }
         })
         return noCommentsCheck
     }
-
-
-    fun listenForUserProfileComments(uid: String, callbackComment: PostRepository.FirebaseCallbackComment): CommentLive {
-        Log.d(TAG, "getUserProfile comments listener called")
-
-        callbackComment.onStart()
-
-        val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Comments")
-        reference.addChildEventListener(object : ChildEventListener {
-            var profileCommentList: MutableList<Comment> = mutableListOf()
-            override fun onCancelled(p0: DatabaseError) {
-                callbackComment.onFailure()
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                callbackComment.onSuccess(p0)
-
-
-            }
-
-            override fun onChildRemoved(p0: DataSnapshot) {
-            }
-
-
-        })
-        Log.d("Post function return", "Post function return")
-
-        val comref = FirebaseDatabase.getInstance().getReference("users/$uid")
-        comref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                if (!p0.child("Comments").exists()) {
-                    Log.d("comment", "doesn't exist")
-                    val emptycomment = Comment("no Comments" , "", "", "", "")
-                    var profileCommentL: MutableList<Comment> = mutableListOf()
-                    profileCommentL.add(emptycomment)
-                    Comments.value = profileCommentL
-                    noCommentsCheck = true
-                } else {
-                    noCommentsCheck = false
-                }
-            }
-        })
-
-        return Comments
-    }
-
 
     fun getUserProfilePosts(userID: String,  call : PostRepository.FirebaseCallbackPost): PostLiveData {
         Log.d(TAG, "getUserProfilePosts called")
@@ -793,7 +695,6 @@ class FirebaseData @Inject constructor() {
         }
         return profilePosts
     }
-
 
     fun getUserProfileComments(userID: String, call : PostRepository.FirebaseCallbackComment): CommentLive {
         Log.d(TAG, "getUserProfile comments called")
@@ -828,7 +729,6 @@ class FirebaseData @Inject constructor() {
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 val newComment = p0.getValue(Comment::class.java)
-
                 if (newComment != null) {
                     Log.d("ACCESSING", newComment.text)
                     if (savedCommentList.isNullOrEmpty()) {
@@ -2355,6 +2255,10 @@ class FirebaseData @Inject constructor() {
 
     interface FirebaseCallbackItem{
         fun onCallback(Item : String)
+    }
+
+    interface FirebaseCallbackBool{
+        fun onCallback(Item : Boolean)
     }
 
 
