@@ -46,7 +46,7 @@ class RegisterActivity : AppCompatActivity(),
         setContentView(R.layout.activity_register)
         //initializeUI()
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
 
         Log.d("REG","entered register activity")
