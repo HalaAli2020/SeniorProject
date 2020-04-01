@@ -4,7 +4,6 @@ package com.example.seniorproject.MainForum.Fragments
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
@@ -13,11 +12,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,13 +24,11 @@ import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Adapters.CustomAdapter
 import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
 import com.example.seniorproject.MainForum.Posts.UpdatePost
-
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
 import com.example.seniorproject.Utils.ProfileButton
 import com.example.seniorproject.Utils.SwipeHelper
 import com.example.seniorproject.Utils.checkCallback
-import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.databinding.FragmentProfilePostBinding
 import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -45,9 +40,6 @@ import javax.inject.Inject
 class ProfilePostFragment : Fragment() {
 
     private lateinit var adapter: CustomAdapter
-    //private lateinit var linearLayoutManager: LinearLayoutManager
-
-    //var swipeBackground: ColorDrawable = ColorDrawable(Color.parseColor("#FF0000"))
     lateinit var deleteIcon: Drawable
 
     @Inject
@@ -70,24 +62,26 @@ class ProfilePostFragment : Fragment() {
             iD = currentuser
         }
 
-
+        //initalization of the viewmodel and dagger app component
         DaggerAppComponent.create().inject(this)
         val factory = InjectorUtils.provideProfileViewModelFactory()
-        val binding: FragmentProfilePostBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_profile__post, container, false)
+        //initialization of binding variable, binded variables are located in the corresponding XML file
+        val binding: FragmentProfilePostBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile__post, container, false)
         myViewModel = ViewModelProviders.of(this,factory).get(ProfileViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_profile__post, container, false)
 
+        //making sure id never equals null to avoid errors
         if (myViewModel.getUserProfilePosts(iD).value == null){
             iD = "0"
         }
 
-
-            view.profile_post_recyclerView.adapter = CustomAdapter(view.context, myViewModel.getUserProfilePosts(iD),0)
+        //setting adapter
+        view.profile_post_recyclerView.adapter = CustomAdapter(view.context, myViewModel.getUserProfilePosts(iD),0)
 
         adapter = CustomAdapter(view.context, myViewModel.returnProfilePost(),0)
         view.profile_post_recyclerView.adapter= adapter
 
+        //refreshview UI
         view.refreshView.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.blue_theme))
         view.refreshView.setColorSchemeColors(ContextCompat.getColor(view.context, R.color.white))
 
@@ -101,7 +95,7 @@ class ProfilePostFragment : Fragment() {
         binding.profViewModel = myViewModel
         binding.lifecycleOwner = this
 
-
+       //ordering the posts from newest to latest
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true
@@ -113,15 +107,18 @@ class ProfilePostFragment : Fragment() {
                 0
             )
 
+        //delete icon for swipe UI
         deleteIcon = ContextCompat.getDrawable(activity!!.applicationContext, R.drawable.ic_delete_24px)!!
         binding.executePendingBindings()
 
+        //checking if a user has no posts, the no post message is not swipable but all other posts are
         myViewModel.noPostsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null", object : checkCallback{
             override fun check(chk: Boolean) {
                 if (iD != FirebaseAuth.getInstance().currentUser?.uid || chk == true){
                     Log.d("wrong","one")
                 }
                 else if (chk == false) {
+                    //setting swipe UI
                     object : SwipeHelper(context!!, view.profile_post_recyclerView, 200) {
                         override fun initButton(
                             viewHolders: RecyclerView.ViewHolder,

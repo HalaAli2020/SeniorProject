@@ -448,6 +448,37 @@ save new username function so they can be iterated through */
         return cList
     }
 
+    fun fetchCurrentUserName() {
+        var uid = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+
+                val currentUser = p0.child("Username").getValue(String::class.java)
+                Log.d(TAG, "Current user fetched ${currentUser}")
+                var usernameForum = currentUser
+                val user = CurrentUser()
+                val profileUpdates =
+                    UserProfileChangeRequest.Builder().setDisplayName(usernameForum).build()
+                user?.updateProfile(profileUpdates)
+                    ?.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Log.d(
+                                TAG,
+                                "profile updated, emitter complete?:  ${CurrentUser()?.displayName} ."
+                            )
+                        } else {
+                            Log.d(TAG, "in else in fetch current user")
+                        }
+                    }
+            }
+        })
+    }
+
 /* registers the user using firebase authentication, a verification email is sent to the
 user as well. The user can only log in once the verification link from that email is clicked on
 this is a suspend function because of the user of coroutines the function waits for the completion of
@@ -485,6 +516,7 @@ user creation, the interface that handles toast messages and redirect can be fou
             return null
         }
     }
+
 
     /*
     resets user password, suspend function becuase of the aysnc task of wating for the sendPasswordEmail
