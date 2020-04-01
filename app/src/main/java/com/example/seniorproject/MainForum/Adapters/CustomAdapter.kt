@@ -90,7 +90,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
                 override fun onDataChange(p0: DataSnapshot) {
                     if (p0.exists()) {
                         for (block in p0.children) {
-                            if (block.getValue() == post.UserID) {
+                            if (block.value == post.UserID) {
                                 holder.itemView.post_title.text = "[blocked]"
                             }
                         }

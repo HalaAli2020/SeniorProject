@@ -81,7 +81,7 @@ class SearchActivity: AppCompatActivity()
 
     private fun setupsearchview()
     {
-        searchview.setIconifiedByDefault(false)
+        searchview.isIconifiedByDefault = false
         searchview.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextChange(newText: String?): Boolean {
 
@@ -96,8 +96,8 @@ class SearchActivity: AppCompatActivity()
                 return true
             }
         })
-        searchview.setSubmitButtonEnabled(true)
-        searchview.setQueryHint("Search Here")
+        searchview.isSubmitButtonEnabled = true
+        searchview.queryHint = "Search Here"
     }
 
 }

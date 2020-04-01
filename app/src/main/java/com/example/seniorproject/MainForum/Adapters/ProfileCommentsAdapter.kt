@@ -29,7 +29,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolders {
         val layoutInflater = LayoutInflater.from(parent.context)
         val cellForRow = layoutInflater.inflate(R.layout.rv_post_comment, parent, false)
-        getItemCount()
+        itemCount
         return CustomViewHolders(cellForRow)
     }
 
@@ -56,7 +56,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
     }*/
 
     override fun onBindViewHolder(holder: CustomViewHolders, position: Int) {
-        if (ProfileComments.value == null || getItemCount() == 0) {
+        if (ProfileComments.value == null || itemCount == 0) {
             holder.itemView.comment_text.text = "No Comments yet"
             //this is not showing up
         } else {

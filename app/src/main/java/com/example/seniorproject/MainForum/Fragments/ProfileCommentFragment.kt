@@ -62,12 +62,6 @@ class ProfileCommentFragment : Fragment() {
     lateinit var viewModel: ProfileViewModel
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -75,7 +69,7 @@ class ProfileCommentFragment : Fragment() {
 
 
         var currentuser = FirebaseAuth.getInstance().currentUser?.uid ?: "null"
-        var ID = this.getArguments()?.getString("ID") ?: "null"
+        var ID = this.arguments?.getString("ID") ?: "null"
         if (ID == "null") {
             ID = currentuser
         }
@@ -210,7 +204,7 @@ class ProfileCommentFragment : Fragment() {
                                     })
 
                                 val msgdialog: AlertDialog = builder.create()
-                                msgdialog.getWindow()!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
+                                msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
                                 msgdialog.show()
 
                             }
@@ -397,7 +391,7 @@ class ProfileCommentFragment : Fragment() {
             val bundle : Bundle = Bundle()
             bundle.putString("ID",ID)
             val fragment = ProfileCommentFragment()
-            fragment.setArguments(bundle)
+            fragment.arguments = bundle
             return fragment
         }
     }
