@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -118,9 +119,9 @@ class ProfilePostFragment : Fragment() {
         myViewModel.noPostsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null", object : checkCallback{
             override fun check(chk: Boolean) {
                 if (iD != FirebaseAuth.getInstance().currentUser?.uid || chk == true){
-
+                    Log.d("wrong","one")
                 }
-                else if (chk== false) {
+                else if (chk == false) {
                     object : SwipeHelper(context!!, view.profile_post_recyclerView, 200) {
                         override fun initButton(
                             viewHolders: RecyclerView.ViewHolder,

@@ -641,7 +641,9 @@ class FirebaseData @Inject constructor() {
         comref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) { TODO("not implemented") }
             override fun onDataChange(p0: DataSnapshot) {
-
+                if (!p0.child("Comments").exists()) {
+                    callbackComment.onSuccess(p0)
+                }
               } })
         return Comments
     }
@@ -659,7 +661,7 @@ class FirebaseData @Inject constructor() {
                 else {
                     noPostsCheck = false
                     callbackbool.onSuccess(p0)
-                    //unsure
+
                 } //here
             }
         })
@@ -667,17 +669,18 @@ class FirebaseData @Inject constructor() {
     }
 
     fun noCommentsChecker(userID: String, callbackbool: PostRepository.FirebaseCallbackBool): Boolean {
-        val comref = FirebaseDatabase.getInstance().getReference("users/$userID")
-        comref.addListenerForSingleValueEvent(object : ValueEventListener {
+        val com = FirebaseDatabase.getInstance().getReference("users/$userID")
+        com.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) { TODO("not implemented") }
             override fun onDataChange(p0: DataSnapshot) {
-                if (!p0.child("Posts").exists()) {
+                if (!p0.child("Comments").exists()) {
                     callbackbool.onSuccess(p0)
                     noCommentsCheck = true
+
                 }
-                else {
-                    noCommentsCheck = false
+                else if (p0.child("Comments").exists()){
                     callbackbool.onSuccess(p0)
+                    noCommentsCheck = false
                 }
             }
         })

@@ -92,7 +92,9 @@ class ProfileCommentFragment : Fragment() {
         myViewModel = ViewModelProviders.of(this, factory).get(ProfileViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_profile_comment, container, false)
 
-        //so is the problem in firebase with the list?
+        if (myViewModel.getUserProfilePosts(ID).value == null){
+            ID = "0"
+        }
 
 
         myViewModel.comments.observe(this, androidx.lifecycle.Observer {
@@ -135,6 +137,7 @@ class ProfileCommentFragment : Fragment() {
         view.profile_comment_recyclerView.layoutManager = linearLayoutManager
         view.profile_comment_recyclerView.adapter = ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(ID))
 
+        deleteIcon = ContextCompat.getDrawable(activity!!.applicationContext, R.drawable.ic_delete_24px)!!
         binding.executePendingBindings()
 
          myViewModel.noCommentsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null", object : checkCallback {
@@ -272,7 +275,7 @@ class ProfileCommentFragment : Fragment() {
 
 
 
-        //binding.executePendingBindings()
+        binding.executePendingBindings()
         return view
     }
     fun swap(ID: String)

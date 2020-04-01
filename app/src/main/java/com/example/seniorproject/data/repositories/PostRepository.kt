@@ -24,7 +24,6 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     var newProfilePosts: Post? = null
     var Comments : CommentLive = CommentLive()
     var newProfileComments: Comment? = null
-    var noCommentsCheck : Boolean? = false
 
     fun saveNewPost(text: String, title: String, CRN: String) = Firebase.saveNewPosttoUser(text, title, CRN)
 
@@ -269,8 +268,6 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                     val emptyComment = Comment("No Comments","" ,"","","")
                     profileCommentList.add(emptyComment)
                     Comments.value = profileCommentList
-                    Firebase.noCommentsCheck = true
-                    noCommentsCheck = true
                 }
                 else if (data.child("text").exists()) {
                     var newComment = Comment()
@@ -312,7 +309,10 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun noPostsChecker(UserID: String, callbackBool: FirebaseCallbackBool) = Firebase.noPostsChecker(UserID, callbackBool)
 
-    fun noCommentsChecker(UserID: String, callbackBool: FirebaseCallbackBool) = Firebase.noPostsChecker(UserID, callbackBool)
+    fun noCommentsChecker(UserID: String, callbackBool: FirebaseCallbackBool) = Firebase.noCommentsChecker(UserID, callbackBool)
+
+
+
 
     companion object {
         @Volatile

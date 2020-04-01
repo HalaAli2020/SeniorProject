@@ -163,7 +163,7 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
             override fun onFailure() { TODO("not implemented") }
 
             override fun onSuccess(data: DataSnapshot) : Boolean {
-                if (data.child("Posts").exists() == false)
+                if (data.child("Comments").exists() == false)
                 {
                     noCommentsCheck = true
                     callback.check(noCommentsCheck ?: false)
