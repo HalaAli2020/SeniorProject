@@ -34,7 +34,6 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
     }
 
     fun separateResult(data: DataSnapshot, query: String): CRN {
-        //var RList: MutableLiveData<MutableList<CRN>>
         var rE = CRN()
         var classResult = CRN()
         if (data.hasChild(query)) {
@@ -94,11 +93,7 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
         })
         Fullist.value = listC
     }
-    /*fun sendlist() : MutableLiveData<MutableList<CRN>>
-    {
 
-        return Clist
-    }*/
     fun sendlistf() : MutableLiveData<MutableList<CRN>>
     {
         Clist.value = Fullist.value

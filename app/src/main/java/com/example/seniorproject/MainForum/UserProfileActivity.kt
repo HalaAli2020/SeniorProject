@@ -30,8 +30,6 @@ import com.example.seniorproject.Utils.EmailCallback
 private const val TAG = "profileTAG"
 class UserProfileActivity : AppCompatActivity() {
     private lateinit var adapter: CustomAdapter
-    //private lateinit var mDrawerLayout: DrawerLayout
-    //private lateinit var linearLayoutManager: LinearLayoutManager
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -54,9 +52,7 @@ class UserProfileActivity : AppCompatActivity() {
 
         var test : String = intent.getStringExtra("UserID") ?: "null"
         val author : String =  intent.getStringExtra("Author") ?: "null"
-        //val photo : String = intent.getStringExtra("profileImageUrl") ?: "null"
         var iD = test
-        //myViewModel.fetchEmail(test)
 
         if (test == "null" || test == FirebaseAuth.getInstance().currentUser?.uid){
             val nav: TextView = findViewById(com.example.seniorproject.R.id.NavToEdit)
@@ -68,8 +64,7 @@ class UserProfileActivity : AppCompatActivity() {
             nav.visibility = View.INVISIBLE
         }
 
-        //val email = myViewModel.otherEmail
-        //val bio = myViewModel.fetchBio(test)
+
         val profilepostfrag = ProfilePostFragment.newInstance(iD)
         val profilecommentfrag = ProfileCommentFragment.newInstance(iD)
         replaceFragment(profilepostfrag)
@@ -100,9 +95,6 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
 
-       /* val binding: ActivityUserProfileBinding = DataBindingUtil.setContentView(this,R.layout.activity_user_profile)
-        binding.profileViewModell = myViewModel
-        binding.lifecycleOwner = this */
         actionbar.setDisplayHomeAsUpEnabled(true)
 
         pro_bottom_navigation.setIconVisibility(false)
@@ -185,9 +177,4 @@ class UserProfileActivity : AppCompatActivity() {
         return true
     }
 
-    /*fun refresh(){
-        recreate()
-    }*/
-
-   // fun makeInvisible(view: View){}
 }

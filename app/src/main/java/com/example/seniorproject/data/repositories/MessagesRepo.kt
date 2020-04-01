@@ -3,7 +3,7 @@ import com.example.seniorproject.data.Firebase.FirebaseData
 import javax.inject.Inject
 import javax.inject.Singleton
 
-//private val Firebase: FirebaseData
+
 @Singleton
 class MessagesRepo @Inject constructor(private val Firebase: FirebaseData) {
 

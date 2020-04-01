@@ -216,20 +216,15 @@ class ProfilePostFragment : Fragment() {
 
 
 
-        //var noPostsCheck = myViewModel.noPostsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null")
+
         binding.executePendingBindings()
         return view
     }
 
     override fun onPause() {
         super.onPause()
-            // myViewModel.posts.removeObserver(this)
+
     }
-    /*fun swap(ID: String)
-    {
-        var ada = CustomAdapter(view!!.context, myViewModel.getUserProfilePosts(ID), 0)
-        view!!.profile_post_recyclerView.swapAdapter(ada, true)
-    }*/
     companion object {
         fun newInstance(ID: String): ProfilePostFragment {
             val bundle : Bundle = Bundle()

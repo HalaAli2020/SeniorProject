@@ -21,7 +21,6 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     var comments: CommentLive = CommentLive()
     private var PostKey : String? = null
     val CommentListener : PostListener? = null
-    //val userbio : String = fetchBio(FirebaseAuth.getInstance().currentUser?.uid ?: "null")
     var otherEmail : String = "no email available"
     var otherBio : String = "no bio available"
     var noPostCheck : Boolean? = null

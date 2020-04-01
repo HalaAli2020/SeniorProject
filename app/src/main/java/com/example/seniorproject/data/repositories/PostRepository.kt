@@ -42,7 +42,6 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun newComment(PKey: String, Comment: String, Classkey: String, UserID: String, crn: String) {
         Firebase.saveNewComment(Comment, PKey, Classkey, UserID, crn)
-        //Firebase.saveNewCommentClass(Comment ,PKey, Classkey, UserID, crn)
     }
 
     fun deleteNewPost(postKey: String, crn: String, userID: String){
@@ -77,9 +76,6 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         Firebase.blockUser(UserID)
     }
 
-    /*fun blockPost(UserID: String, crn: String, classkey: String) {
-        Firebase.blockUserPost(UserID, crn, classkey)
-    }*/
 
     fun reportUserPost(accusedID: String, complaintext: String, crn: String, classkey: String){
         Firebase.reportUserPost(accusedID, complaintext, crn, classkey)
@@ -205,7 +201,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
             override fun onSuccess(data: DataSnapshot) {
                 if (!data.child("text").exists()) {
                     Log.d("post", "doesn't exist")
-                    val emptyPost = Post("no Posts","" ,"","")
+                    val emptyPost = Post("No Posts","" ,"","")
                     var profilePostL: MutableList<Post> = mutableListOf()
                     profilePostL.add(emptyPost)
                     profilePosts.value = profilePostL
@@ -293,7 +289,6 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                 }
     })
         return Comments
-        //look into comments and change var here
     }
 
     fun fetchEmail(UserID: String,callbackItem : FirebaseCallbackItem) = Firebase.fetchEmail(UserID,callbackItem)
