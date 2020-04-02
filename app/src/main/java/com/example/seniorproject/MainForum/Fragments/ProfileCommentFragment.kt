@@ -58,10 +58,10 @@ class ProfileCommentFragment : Fragment() {
     ): View? {
 
 
-        var currentuser = FirebaseAuth.getInstance().currentUser?.uid ?: "null"
-        var ID = this.arguments?.getString("ID") ?: "null"
-        if (ID == "null") {
-            ID = currentuser
+        val currentuser = FirebaseAuth.getInstance().currentUser?.uid ?: "null"
+        var iD = this.arguments?.getString("ID") ?: "null"
+        if (iD == "null") {
+            iD = currentuser
         }
 
         //initalization of the viewmodel and dagger app component
@@ -74,20 +74,20 @@ class ProfileCommentFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_profile_comment, container, false)
 
         //making sure id never equals null to avoid errors
-        if (myViewModel.getUserProfilePosts(ID).value == null){
-            ID = "0"
+        if (myViewModel.getUserProfilePosts(iD).value == null){
+            iD = "0"
         }
 
         //setting the observer so comments appear in realtime
         myViewModel.comments.observe(this, androidx.lifecycle.Observer {
-            swap(ID)
+            swap(iD)
         } )
 
 
         //setting recycleview adapter
-       view.profile_comment_recyclerView.adapter = ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(ID))
+       view.profile_comment_recyclerView.adapter = ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(iD))
 
-       adaptercomments = ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(ID))
+       adaptercomments = ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(iD))
 
 
         //settting refreshview UI
@@ -106,7 +106,7 @@ class ProfileCommentFragment : Fragment() {
 
         view.refreshView.setOnRefreshListener {
             view.profile_comment_recyclerView.adapter =
-                ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(ID))
+                ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(iD))
             view.refreshView.isRefreshing = false
         }
 
@@ -119,7 +119,7 @@ class ProfileCommentFragment : Fragment() {
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true
         view.profile_comment_recyclerView.layoutManager = linearLayoutManager
-        view.profile_comment_recyclerView.adapter = ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(ID))
+        view.profile_comment_recyclerView.adapter = ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(iD))
 
         deleteIcon = ContextCompat.getDrawable(activity!!.applicationContext, R.drawable.ic_delete_24px)!!
         binding.executePendingBindings()
@@ -127,10 +127,10 @@ class ProfileCommentFragment : Fragment() {
         //checking if a user has no posts, the no comments message is not swipable but all other comments are
          myViewModel.noCommentsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null", object : checkCallback {
              override fun check(chk: Boolean) {
-                 if (ID != FirebaseAuth.getInstance().currentUser?.uid || chk == true){
+                 if (iD != FirebaseAuth.getInstance().currentUser?.uid || chk){
                      Log.d("wrong","one")
                  }
-                 else if (chk == false) {
+                 else if (!chk) {
                      //setting swipe UI
                      object : SwipeHelper(context!!, view.profile_comment_recyclerView, 200) {
                          override fun initButton(
@@ -170,7 +170,7 @@ class ProfileCommentFragment : Fragment() {
                                                  viewHolders
                                              )
 
-                                         var builder = AlertDialog.Builder(
+                                         val builder = AlertDialog.Builder(
                                              view.context,
                                              R.style.AppTheme_AlertDialog
                                          )
@@ -197,7 +197,7 @@ class ProfileCommentFragment : Fragment() {
                                              })
 
                                          val msgdialog: AlertDialog = builder.create()
-                                         msgdialog.getWindow()!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
+                                         msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
                                          msgdialog.show()
 
                                      }
@@ -266,7 +266,7 @@ class ProfileCommentFragment : Fragment() {
     }
     fun swap(ID: String)
     {
-        var ada = ProfileCommentsAdapter(view!!.context, myViewModel.getUserProfileComments(ID))
+        val ada = ProfileCommentsAdapter(view!!.context, myViewModel.getUserProfileComments(ID))
         view!!.profile_comment_recyclerView.swapAdapter(ada, true)
     }
 

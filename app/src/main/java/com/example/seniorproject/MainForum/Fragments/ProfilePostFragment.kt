@@ -56,8 +56,8 @@ class ProfilePostFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
 
-        var currentuser = FirebaseAuth.getInstance().currentUser?.uid ?: "null"
-        var iD = this.getArguments()?.getString("ID") ?: "null"
+        val currentuser = FirebaseAuth.getInstance().currentUser?.uid ?: "null"
+        var iD = this.arguments?.getString("ID") ?: "null"
         if (iD == "null"){
             iD = currentuser
         }
@@ -114,10 +114,10 @@ class ProfilePostFragment : Fragment() {
         //checking if a user has no posts, the no post message is not swipable but all other posts are
         myViewModel.noPostsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null", object : checkCallback{
             override fun check(chk: Boolean) {
-                if (iD != FirebaseAuth.getInstance().currentUser?.uid || chk == true){
+                if (iD != FirebaseAuth.getInstance().currentUser?.uid || chk){
                     Log.d("wrong","one")
                 }
-                else if (chk == false) {
+                else if (!chk) {
                     //setting swipe UI
                     object : SwipeHelper(context!!, view.profile_post_recyclerView, 200) {
                         override fun initButton(
@@ -138,7 +138,7 @@ class ProfilePostFragment : Fragment() {
                                             adapter.getCrn(viewHolders)
 
                                         //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
-                                        var builder = AlertDialog.Builder(
+                                        val builder = AlertDialog.Builder(
                                             view.context,
                                             R.style.AppTheme_AlertDialog
                                         )
@@ -160,7 +160,7 @@ class ProfilePostFragment : Fragment() {
 
                                         val msgdialog: AlertDialog = builder.create()
 
-                                        msgdialog.getWindow()!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
+                                        msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
 
                                         msgdialog.show()
 
@@ -227,7 +227,7 @@ class ProfilePostFragment : Fragment() {
             val bundle : Bundle = Bundle()
             bundle.putString("ID",ID)
             val fragment = ProfilePostFragment()
-            fragment.setArguments(bundle)
+            fragment.arguments = bundle
             return fragment
         }
     }

@@ -114,7 +114,7 @@ class ClickedPost : AppCompatActivity() {
                                      //   adapter.getCrn(viewHolders)
 
                                     //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
-                                    var builder = AlertDialog.Builder(
+                                    val builder = AlertDialog.Builder(
                                         this@ClickedPost,
                                         R.style.AppTheme_AlertDialog
                                     )
@@ -128,7 +128,7 @@ class ClickedPost : AppCompatActivity() {
                                     builder.setPositiveButton("BLOCK"
                                     ) { _: DialogInterface?, _: Int ->
                                         myViewModel.blockUser(userkey!!)
-                                        var toast = Toast.makeText(
+                                        val toast = Toast.makeText(
                                             this@ClickedPost,
                                             "This user has been blocked",
                                             Toast.LENGTH_SHORT
@@ -168,12 +168,12 @@ class ClickedPost : AppCompatActivity() {
 
                                     val textkey: String? = adapter.getText(viewHolders)
 
-                                    var builder = AlertDialog.Builder(
+                                    val builder = AlertDialog.Builder(
                                         this@ClickedPost,
                                         R.style.AppTheme_AlertDialog
                                     )
 
-                                    var listreason = arrayOf(
+                                    val listreason = arrayOf(
                                         "This is spam",
                                         "This is abusive or harassing",
                                         "Other issues"
@@ -192,7 +192,7 @@ class ClickedPost : AppCompatActivity() {
                                     builder.setPositiveButton("SUBMIT"
                                     ) { _: DialogInterface?, _: Int ->
 
-                                        var toast = Toast.makeText(
+                                        val toast = Toast.makeText(
                                             this@ClickedPost,
                                             "We've received your report.",
                                             Toast.LENGTH_SHORT
@@ -228,7 +228,7 @@ class ClickedPost : AppCompatActivity() {
         }
     fun swap(binding : ActivityClickedPostBinding, title : String, text : String, author : String, crn: String, time: String, uri : String)
     {
-        var ada =  CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString(), time, uri)
+        val ada =  CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString(), time, uri)
         binding.commentRecyclerView.swapAdapter(ada, false)
     }
 

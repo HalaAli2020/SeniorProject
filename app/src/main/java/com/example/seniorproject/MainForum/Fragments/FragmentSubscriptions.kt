@@ -45,7 +45,7 @@ class FragmentSubscriptions : Fragment() {
         myViewModel.UsersSubs?.observe(this, obse)
         view.subs_recyclerView.layoutManager = LinearLayoutManager(context)
 
-        var ada = myViewModel.getUserSub()?.let {
+        val ada = myViewModel.getUserSub()?.let {
             SubsriptionAdapter(
                 view.context,
                 it
@@ -72,13 +72,13 @@ class FragmentSubscriptions : Fragment() {
     }
     fun swap()
     {
-        var ada = SubsriptionAdapter(view!!.context, myViewModel.retsubs())
+        val ada = SubsriptionAdapter(view!!.context, myViewModel.retsubs())
         view!!.subs_recyclerView.swapAdapter(ada, true)
     }
 
     override fun onResume() {
         super.onResume()
-        var ada = myViewModel.getUserSub()?.let {
+        val ada = myViewModel.getUserSub()?.let {
             SubsriptionAdapter(
                 view!!.context,
                 it

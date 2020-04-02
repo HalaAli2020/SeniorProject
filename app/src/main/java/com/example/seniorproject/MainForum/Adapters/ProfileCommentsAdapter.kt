@@ -53,7 +53,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
             } else {
                 holder.itemView.comment_text.text = comment.text
                 holder.itemView.authcom.text = comment.crn
-                var size: Float = 12F
+                val size: Float = 12F
                 holder.itemView.authcom.textSize = size
                 holder.itemView.comment_timestamp.text = comment.Ptime
                 //holder.itemView.username.text = post.author
@@ -67,8 +67,8 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                 if (comment.author != null || comment.text != "No Comments") {
                     holder.itemView.setOnClickListener {
                         val intent = Intent(mContext, ClickedPost::class.java)
-                        var crn = comment.crn ?: "no crn"
-                        var postkey = comment.Postkey ?: "no postkey"
+                        val crn = comment.crn ?: "no crn"
+                        val postkey = comment.Postkey ?: "no postkey"
                         //var callback: Callback? = null
                         Log.d("Commetn", crn)
                         Log.d("postkey", postkey)

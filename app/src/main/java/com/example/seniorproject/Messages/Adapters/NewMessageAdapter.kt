@@ -25,8 +25,8 @@ class NewMessageAdapter(
     var filterlist : MutableList<User> = UserList as MutableList<User>
 
     companion object{
-        val USER_KEY = "USER_KEY"
-        val USERNAME = "USERNAME"
+        const val USER_KEY = "USER_KEY"
+        const val USERNAME = "USERNAME"
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserListHolder {
@@ -71,7 +71,7 @@ class NewMessageAdapter(
     }
     fun onfilter(query : String?)
     {
-        var Nlist = mutableListOf<User>()
+        val nlist = mutableListOf<User>()
         if(query.isNullOrEmpty())
         {
              filterlist = UserList as MutableList<User>
@@ -87,10 +87,10 @@ class NewMessageAdapter(
                 // query.contains()
                 if(x.username!!.contains(query, true))
                 {
-                    Nlist.add(x)
+                    nlist.add(x)
                 }
             }
-            filterlist = Nlist
+            filterlist = nlist
             notifyDataSetChanged()
         }
 

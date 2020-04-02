@@ -57,11 +57,11 @@ class SearchActivity: AppCompatActivity()
         this.title = ""
         //searchview = binding.SearchR
         lt = binding.SearchL
-        var obse = Observer<MutableList<CRN>> {
+        val obse = Observer<MutableList<CRN>> {
             swap(lt)
         }
 
-        var lin : LinearLayoutManager = LinearLayoutManager(this)
+        val lin : LinearLayoutManager = LinearLayoutManager(this)
         lt.layoutManager = lin
         lt.adapter = ada
 

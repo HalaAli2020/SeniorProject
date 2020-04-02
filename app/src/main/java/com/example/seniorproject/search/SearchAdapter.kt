@@ -76,7 +76,7 @@ class SearchAdapter(context: Context, ViewModel: SearchViewModel, Clist : Mutabl
         {
             //classlist!!.value!!.removeAt()
             classlist = mViewModel.sendlistf()
-            var clist: MutableList<CRN> = mutableListOf()
+            val clist: MutableList<CRN> = mutableListOf()
             for ((index, x) in classlist!!.value!!.withIndex())
             {
                 // query.contains()

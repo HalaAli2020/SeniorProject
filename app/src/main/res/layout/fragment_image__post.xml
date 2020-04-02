@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/comment_bottom_border"
                 android:paddingBottom="15dp"
-                app:layout_constraintBottom_toTopOf="@+id/new_post_title"
+                app:layout_constraintBottom_toTopOf="@+id/img_post_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"

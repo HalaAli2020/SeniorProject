@@ -8,8 +8,8 @@ data class User(
 
     var Posts = mutableListOf<Post>()
     //lateinit var Subscriptions : List<String>
-    var Admin: Boolean = true
-    var Subscriptions: HashMap<String, String> = hashMapOf()
+    private var Admin: Boolean = true
+    private var Subscriptions: HashMap<String, String> = hashMapOf()
 
     init {
 

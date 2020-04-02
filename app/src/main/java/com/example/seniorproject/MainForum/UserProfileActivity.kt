@@ -56,9 +56,9 @@ class UserProfileActivity : AppCompatActivity() {
 
 
          //getting the Userid and author from the post the user selected to get to this activity
-        var test : String = intent.getStringExtra("UserID") ?: "null"
+        val test : String = intent.getStringExtra("UserID") ?: "null"
         val author : String =  intent.getStringExtra("Author") ?: "null"
-        var iD = test
+        val iD = test
 
         //if test is null we can assume that the user's own profile is being opened
         if (test == "null" || test == FirebaseAuth.getInstance().currentUser?.uid){
@@ -136,7 +136,7 @@ class UserProfileActivity : AppCompatActivity() {
         val image : ImageView = findViewById(com.example.seniorproject.R.id.in_profile_image)
         if(author == "null"){
             //getting the profile image for the current user
-            Glide.with(image.getContext()) //1
+            Glide.with(image.context) //1
                 .load(FirebaseAuth.getInstance().currentUser?.photoUrl)
                 .placeholder(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
                 .error(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
