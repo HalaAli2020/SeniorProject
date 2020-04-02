@@ -10,10 +10,10 @@ import javax.inject.Inject
 
 class ClickedPostViewModel @Inject constructor(private val repository : PostRepository) : ViewModel(){
 
-    val CommentListener : PostListener? = null
+    private val CommentListener : PostListener? = null
     var CommentsLiveList : CommentLive = CommentLive()
     var Comment : String? = null
-    var CommentsList = mutableListOf<Comment>()
+    private var CommentsList = mutableListOf<Comment>()
     var PKey: String? = null
     var UserID : String? = null
     var Classkey : String? = null

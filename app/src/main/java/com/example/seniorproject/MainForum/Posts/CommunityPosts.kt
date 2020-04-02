@@ -34,7 +34,7 @@ class CommunityPosts : AppCompatActivity() {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: CommunityPostViewModel
-    lateinit var obse: Observer<in MutableList<Post>>
+    private lateinit var obse: Observer<in MutableList<Post>>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,7 +95,7 @@ class CommunityPosts : AppCompatActivity() {
                                         adapter.getAuthor(viewHolders)
 
                                     //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
-                                    var builder = AlertDialog.Builder(
+                                    val builder = AlertDialog.Builder(
                                         this@CommunityPosts,
                                         R.style.AppTheme_AlertDialog
                                     )
@@ -127,7 +127,7 @@ class CommunityPosts : AppCompatActivity() {
                                             //classes_post_RV.findViewHolderForAdapterPosition(i)!!.itemView.post_title.text="[blocked]"
                                             //classes_post_RV.getChildViewHolder(classes_post_RV.getChildAt(i)).itemView.post_title.text="[blocked]"
                                         }
-                                        var toast = Toast.makeText(
+                                        val toast = Toast.makeText(
                                             this@CommunityPosts,
                                             "This user has been blocked",
                                             Toast.LENGTH_SHORT
@@ -165,12 +165,12 @@ class CommunityPosts : AppCompatActivity() {
 
                                     val textkey: String? = adapter.getText(viewHolders)
 
-                                    var builder = AlertDialog.Builder(
+                                    val builder = AlertDialog.Builder(
                                         this@CommunityPosts,
                                         R.style.AppTheme_AlertDialog
                                     )
 
-                                    var listreason = arrayOf(
+                                    val listreason = arrayOf(
                                         "This is spam",
                                         "This is abusive or harassing",
                                         "Other issues"
@@ -184,7 +184,7 @@ class CommunityPosts : AppCompatActivity() {
                                     }
                                     builder.setPositiveButton("SUBMIT"
                                     ) { _: DialogInterface?, _: Int ->
-                                        var toast = Toast.makeText(
+                                        val toast = Toast.makeText(
                                             this@CommunityPosts,
                                             "We've received your report.",
                                             Toast.LENGTH_SHORT

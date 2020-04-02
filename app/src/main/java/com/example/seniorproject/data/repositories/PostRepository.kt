@@ -102,7 +102,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                 Log.d("Children", data.child("Posts").childrenCount.toString())
                 val postdetails: Iterable<DataSnapshot> = data.child("Posts").children
                 for (n in postdetails) {
-                     var newPost = Post()
+                     val newPost = Post()
                     newPost.let {
 
                         //Log.d("ACCESSING", newPost?.text)
@@ -157,7 +157,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun getsublist2() : MutableLiveData<MutableList<String>>
     {
-        var subList : MutableList<String> = mutableListOf()
+        val subList : MutableList<String> = mutableListOf()
         Firebase.listenUserSub(object : FirebaseCallbackString {
             override fun onFailure() {
 
@@ -193,7 +193,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     fun sendClassnameForUsername() = Firebase.sendClassnameForUsername()
 
     fun getUserProfilePosts(userID: String) : PostLiveData {
-        var profilePostsList: MutableList<Post> = mutableListOf()
+        val profilePostsList: MutableList<Post> = mutableListOf()
         Firebase.listenForUserProfilePosts(userID, object : FirebaseCallbackPost{
             override fun onFailure() {}
             override fun onStart() {}
@@ -202,7 +202,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                 if (!data.child("text").exists()) {
                     Log.d("post", "doesn't exist")
                     val emptyPost = Post("No Posts","" ,"","")
-                    var profilePostL: MutableList<Post> = mutableListOf()
+                    val profilePostL: MutableList<Post> = mutableListOf()
                     profilePostL.add(emptyPost)
                     profilePosts.value = profilePostL
                 }
@@ -254,7 +254,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     }
 
     fun getUserProfileComments(userID: String) : CommentLive {
-        var profileCommentList : MutableList<Comment> = mutableListOf()
+        val profileCommentList : MutableList<Comment> = mutableListOf()
         Firebase.listenForUserProfileComments(userID, object :FirebaseCallbackComment {
             override fun onFailure() {}
             override fun onStart() {}
@@ -266,7 +266,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                     Comments.value = profileCommentList
                 }
                 else if (data.child("text").exists()) {
-                    var newComment = Comment()
+                    val newComment = Comment()
                     try {
                         newComment.let {
                             it.text = data.child("text").value.toString()

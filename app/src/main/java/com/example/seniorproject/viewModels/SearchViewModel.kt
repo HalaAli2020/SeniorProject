@@ -34,10 +34,10 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
     }
 
     fun separateResult(data: DataSnapshot, query: String): CRN {
-        var rE = CRN()
-        var classResult = CRN()
+        val rE = CRN()
+        val classResult = CRN()
         if (data.hasChild(query)) {
-            var snap = data.child(query)
+            val snap = data.child(query)
             classResult.let { result ->
                 result.name = snap.key.toString()
             }
@@ -51,7 +51,7 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
     }
 
     fun getallclasses() {
-        var listC : MutableList<CRN> = mutableListOf()
+        val listC : MutableList<CRN> = mutableListOf()
         repository.getallclasses(object : FirebaseResult {
             override fun onFailure(message: String) {
                 Log.d("Failure", "onFailure called")
@@ -65,13 +65,13 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
                 Log.d("onSuccess", " called")
 
                 for (x in data.children) {
-                    var crn = CRN()
+                    val crn = CRN()
 
                     Log.d("key", x.key.toString())
                     crn.name = x.key.toString()
                     Log.d("crn.name", crn.name)
                     if (x.hasChild("SubList")) {
-                        var sub = x.child("SubList").children
+                        val sub = x.child("SubList").children
                         for (s in sub)
                         {
                             if(uid == s.value.toString())

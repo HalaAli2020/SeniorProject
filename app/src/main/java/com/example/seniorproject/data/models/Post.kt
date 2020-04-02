@@ -22,8 +22,8 @@ data class Post(var title: String?, var text: String?, var subject: String?, var
     var imagePost : Boolean? = null
 
     init {
-        var calendar: Calendar = Calendar.getInstance()
-            var simple: SimpleDateFormat = SimpleDateFormat("M-d-yy 'at' h:mm a")
+        val calendar: Calendar = Calendar.getInstance()
+            val simple: SimpleDateFormat = SimpleDateFormat("M-d-yy 'at' h:mm a")
         Ptime = simple.format(calendar.time)
     }
 

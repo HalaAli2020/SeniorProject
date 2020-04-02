@@ -91,7 +91,7 @@ class MainForum : AppCompatActivity(),
                     FAB.backgroundTintList =
                         ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
-                    var intent = Intent(this, SearchActivity::class.java)
+                    val intent = Intent(this, SearchActivity::class.java)
                     startActivity(intent)
 
                 }

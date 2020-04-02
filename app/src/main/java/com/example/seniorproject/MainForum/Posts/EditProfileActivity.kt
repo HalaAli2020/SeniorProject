@@ -15,8 +15,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.Dagger.InjectorUtils
-import com.example.seniorproject.MainForum.Adapters.CustomAdapter
-import com.example.seniorproject.MainForum.Adapters.ProfileCommentsAdapter
 import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
 import com.example.seniorproject.databinding.ActivityEditProfileBinding
@@ -27,8 +25,7 @@ import javax.inject.Inject
 
 class EditProfileActivity : AppCompatActivity() {
 
-    //private lateinit var adaptercomments: ProfileCommentsAdapter
-    //private lateinit var adapterposts: CustomAdapter
+
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -39,15 +36,17 @@ class EditProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
 
+        //setting actionbar title
         val actionbar = supportActionBar
         actionbar!!.title = "Edit Profile"
 
-        //val viewcheck = findViewById<EditText>(R.id.in_profile_bio)
 
+        //initalization of the viewmodel and dagger app component
         DaggerAppComponent.create().inject(this)
         val factory = InjectorUtils.provideProfileViewModelFactory()
          myViewModel = ViewModelProviders.of(this,factory).get(ProfileViewModel::class.java)
 
+        //initialization of binding variable, binded variables are located in the corresponding XML file
         val binding: ActivityEditProfileBinding = DataBindingUtil.setContentView(this,R.layout.activity_edit_profile)
         binding.profileEditViewModel = myViewModel
         binding.lifecycleOwner = this
@@ -55,6 +54,7 @@ class EditProfileActivity : AppCompatActivity() {
         myViewModel.getclassnamesforusername()
         myViewModel.sendClassnameForUsername()
 
+        //setting button to change the users profile image
       val img : ImageButton = findViewById<ImageButton>(R.id.img_button)
 
         Glide.with(this) //1
@@ -67,10 +67,12 @@ class EditProfileActivity : AppCompatActivity() {
             .into(img)
 
         img.setOnClickListener {
+            //opens gallery
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
             startActivityForResult(intent, 0)}
 
+        //button to click that saves the users profile changes
         doneButton.setOnClickListener {
 
             val newUsername : EditText = findViewById(R.id.in_profile_username)
@@ -83,15 +85,15 @@ class EditProfileActivity : AppCompatActivity() {
             intent.putExtra("UserID",iD).also {
                 startActivity(it)
             }
-            //Intent(this, UserProfileActivity::class.java).also { }
         }
     }
 
-    var selectedPhotoUri: Uri? = null
+    private var selectedPhotoUri: Uri? = null
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 0 && resultCode == Activity.RESULT_OK && data !=null)
         {
+            //choosing and saving new image
             val img : ImageButton = findViewById<ImageButton>(R.id.img_button)
 
             selectedPhotoUri= data.data

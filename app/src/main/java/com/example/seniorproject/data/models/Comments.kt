@@ -16,11 +16,11 @@ class Comment(var text: String, var Ptime : String?, var PosterID : String?, var
     var UserComkey : String? = null
     var author : String? = null
     var ProfileComKey : String? = null
-    var UserPostkey : String? = null
+    private var UserPostkey : String? = null
 
     init {
-    var calendar: Calendar = Calendar.getInstance()
-        var simple: SimpleDateFormat = SimpleDateFormat("M-d-yy h:mm a")
+    val calendar: Calendar = Calendar.getInstance()
+        val simple: SimpleDateFormat = SimpleDateFormat("M-d-yy h:mm a")
     Ptime = simple.format(calendar.time)
     }
     /*fun getLayout(): Int {

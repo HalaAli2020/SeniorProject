@@ -29,7 +29,6 @@ class UserAuthRepo @Inject constructor(private val Firebase: FirebaseData) {
 
     fun currentUser() = Firebase.CurrentUser()
 
-    fun fetchCurrentUserName() = Firebase.fetchCurrentUserName()
 
     fun logout(Firebase: FirebaseData)
     {

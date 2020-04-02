@@ -1,26 +1,20 @@
 package com.example.seniorproject.MainForum.Fragments
 
-import android.content.Context
+
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.ImageView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.core.view.isInvisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.DaggerAppComponent
@@ -28,7 +22,6 @@ import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Adapters.CustomAdapter
 import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
 import com.example.seniorproject.MainForum.Adapters.ProfileCommentsAdapter
-import com.example.seniorproject.MainForum.Posts.CommunityPosts
 import com.example.seniorproject.MainForum.Posts.UpdateComment
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
@@ -37,17 +30,10 @@ import com.example.seniorproject.Utils.SwipeHelper
 import com.example.seniorproject.Utils.checkCallback
 import com.example.seniorproject.data.models.CommentLive
 import com.example.seniorproject.databinding.FragmentProfileCommentBinding
-import com.example.seniorproject.viewModels.CommunityPostViewModel
 import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.*
-import kotlinx.android.synthetic.main.fragment_profile__post.view.*
-import kotlinx.android.synthetic.main.fragment_profile_comment.*
 import kotlinx.android.synthetic.main.fragment_profile_comment.view.*
 import kotlinx.android.synthetic.main.fragment_profile_comment.view.refreshView
-import kotlinx.android.synthetic.main.rv_post_comment.*
-import kotlinx.coroutines.withContext
-import java.util.*
 import javax.inject.Inject
 
 
@@ -72,35 +58,39 @@ class ProfileCommentFragment : Fragment() {
     ): View? {
 
 
-        var currentuser = FirebaseAuth.getInstance().currentUser?.uid ?: "null"
-        var ID = this.arguments?.getString("ID") ?: "null"
-        if (ID == "null") {
-            ID = currentuser
+        val currentuser = FirebaseAuth.getInstance().currentUser?.uid ?: "null"
+        var iD = this.arguments?.getString("ID") ?: "null"
+        if (iD == "null") {
+            iD = currentuser
         }
 
-        //call the lister up here
+        //initalization of the viewmodel and dagger app component
         DaggerAppComponent.create().inject(this)
         val factory = InjectorUtils.provideProfileViewModelFactory()
+        //initialization of binding variable, binded variables are located in the corresponding XML file
         val binding: FragmentProfileCommentBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_profile_comment, container, false)
         myViewModel = ViewModelProviders.of(this, factory).get(ProfileViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_profile_comment, container, false)
 
-        if (myViewModel.getUserProfilePosts(ID).value == null){
-            ID = "0"
+        //making sure id never equals null to avoid errors
+        if (myViewModel.getUserProfilePosts(iD).value == null){
+            iD = "0"
         }
 
-
+        //setting the observer so comments appear in realtime
         myViewModel.comments.observe(this, androidx.lifecycle.Observer {
-            swap(ID)
+            swap(iD)
         } )
 
 
-       view.profile_comment_recyclerView.adapter = ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(ID))
+        //setting recycleview adapter
+       view.profile_comment_recyclerView.adapter = ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(iD))
 
-       adaptercomments = ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(ID))
+       adaptercomments = ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(iD))
 
 
+        //settting refreshview UI
         view.refreshView.setProgressBackgroundColorSchemeColor(
             ContextCompat.getColor(
                 view.context,
@@ -116,7 +106,7 @@ class ProfileCommentFragment : Fragment() {
 
         view.refreshView.setOnRefreshListener {
             view.profile_comment_recyclerView.adapter =
-                ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(ID))
+                ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(iD))
             view.refreshView.isRefreshing = false
         }
 
@@ -124,22 +114,24 @@ class ProfileCommentFragment : Fragment() {
         binding.profileViewModelCom = myViewModel
         binding.lifecycleOwner = this
 
-
+       //setting layout so newest comments load first
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true
         view.profile_comment_recyclerView.layoutManager = linearLayoutManager
-        view.profile_comment_recyclerView.adapter = ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(ID))
+        view.profile_comment_recyclerView.adapter = ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(iD))
 
         deleteIcon = ContextCompat.getDrawable(activity!!.applicationContext, R.drawable.ic_delete_24px)!!
         binding.executePendingBindings()
 
+        //checking if a user has no posts, the no comments message is not swipable but all other comments are
          myViewModel.noCommentsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null", object : checkCallback {
              override fun check(chk: Boolean) {
-                 if (ID != FirebaseAuth.getInstance().currentUser?.uid || chk == true){
+                 if (iD != FirebaseAuth.getInstance().currentUser?.uid || chk){
                      Log.d("wrong","one")
                  }
-                 else if (chk == false) {
+                 else if (!chk) {
+                     //setting swipe UI
                      object : SwipeHelper(context!!, view.profile_comment_recyclerView, 200) {
                          override fun initButton(
                              viewHolders: RecyclerView.ViewHolder,
@@ -178,7 +170,7 @@ class ProfileCommentFragment : Fragment() {
                                                  viewHolders
                                              )
 
-                                         var builder = AlertDialog.Builder(
+                                         val builder = AlertDialog.Builder(
                                              view.context,
                                              R.style.AppTheme_AlertDialog
                                          )
@@ -205,7 +197,7 @@ class ProfileCommentFragment : Fragment() {
                                              })
 
                                          val msgdialog: AlertDialog = builder.create()
-                                         msgdialog.getWindow()!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
+                                         msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
                                          msgdialog.show()
 
                                      }
@@ -274,7 +266,7 @@ class ProfileCommentFragment : Fragment() {
     }
     fun swap(ID: String)
     {
-        var ada = ProfileCommentsAdapter(view!!.context, myViewModel.getUserProfileComments(ID))
+        val ada = ProfileCommentsAdapter(view!!.context, myViewModel.getUserProfileComments(ID))
         view!!.profile_comment_recyclerView.swapAdapter(ada, true)
     }
 

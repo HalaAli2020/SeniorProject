@@ -24,7 +24,6 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
         posts = repository.getSubscribedPosts()
         return posts
     }
-    
 
 
     fun fetchCurrentUserName() = repository.fetchCurrentUserName()

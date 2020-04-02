@@ -27,13 +27,13 @@ import kotlinx.android.synthetic.main.rv_post_header.view.posts_timestamp
 
 class CommentsAdapter(
     var mContext: Context,
-    var Comments: CommentLive?,
+    private var Comments: CommentLive?,
     var title: String,
     var text: String,
     var author: String,
     var crn: String,
-    var asUserID: String,
-    var ptime: String,
+    private var asUserID: String,
+    private var ptime: String,
     var uri: String
 
 ) :
@@ -41,7 +41,7 @@ class CommentsAdapter(
 
     private val TYPE_HEADER: Int = 0
     private val TYPE_LIST: Int = 1
-    val userID = FirebaseAuth.getInstance().uid
+    private val userID = FirebaseAuth.getInstance().uid
     override fun getItemViewType(position: Int): Int {
         if (position == 0) {
             return TYPE_HEADER

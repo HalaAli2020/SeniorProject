@@ -32,7 +32,7 @@ class FragmentHome : Fragment() {
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: HomeFragmentViewModel
 
-    var obse =  Observer<MutableList<Post>> {
+    private var obse =  Observer<MutableList<Post>> {
 
         swap()
     }
@@ -96,9 +96,9 @@ class FragmentHome : Fragment() {
         return view
 
     }
-    fun swap()
+    private fun swap()
     {
-        var ada = CustomAdapter(view!!.context, myViewModel.getSubscribedPosts(), 0)
+        val ada = CustomAdapter(view!!.context, myViewModel.getSubscribedPosts(), 0)
         view!!.post_recyclerView.swapAdapter(ada, true)
     }
 

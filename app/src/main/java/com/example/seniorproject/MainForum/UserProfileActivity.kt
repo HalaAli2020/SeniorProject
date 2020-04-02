@@ -40,20 +40,27 @@ class UserProfileActivity : AppCompatActivity() {
         setContentView(com.example.seniorproject.R.layout.activity_user_profile)
 
 
+        //setting the actionbar title
         val actionbar = supportActionBar
         actionbar!!.title = "Profile"
+
+        //the first visible fragment will display profile posts
         replaceFragment(ProfilePostFragment())
 
+        //creating the dagger application component
         DaggerAppComponent.create().inject(this)
+        //initializing viewmodel factory
         val factory = InjectorUtils.provideProfileViewModelFactory()
+        //setting the profileViewmodel as the viewmodel for this activity
         myViewModel = ViewModelProviders.of(this,factory).get(ProfileViewModel::class.java)
 
 
-
-        var test : String = intent.getStringExtra("UserID") ?: "null"
+         //getting the Userid and author from the post the user selected to get to this activity
+        val test : String = intent.getStringExtra("UserID") ?: "null"
         val author : String =  intent.getStringExtra("Author") ?: "null"
-        var iD = test
+        val iD = test
 
+        //if test is null we can assume that the user's own profile is being opened
         if (test == "null" || test == FirebaseAuth.getInstance().currentUser?.uid){
             val nav: TextView = findViewById(com.example.seniorproject.R.id.NavToEdit)
             Log.d(TAG,"user profile opened")
@@ -64,11 +71,12 @@ class UserProfileActivity : AppCompatActivity() {
             nav.visibility = View.INVISIBLE
         }
 
-
+        //initializing fragments as per id variable
         val profilepostfrag = ProfilePostFragment.newInstance(iD)
         val profilecommentfrag = ProfileCommentFragment.newInstance(iD)
         replaceFragment(profilepostfrag)
 
+        // if the author is null then the email must be taken from the database
         if (author != "null")  {
             myViewModel.fetchEmail(test,object : EmailCallback{
                 override fun getEmail(string: String) {
@@ -76,7 +84,7 @@ class UserProfileActivity : AppCompatActivity() {
                     in_profile_email.text = string
                 }
             })
-
+            //same for the bio
             myViewModel.fetchBio(test,object : EmailCallback{
                 override fun getEmail(string: String) {
                     in_profile_bio.text = string
@@ -85,6 +93,7 @@ class UserProfileActivity : AppCompatActivity() {
 
         }
         else {
+            //fetch the current users bio
             myViewModel.fetchBio(FirebaseAuth.getInstance().currentUser?.uid ?: "no bio",object : EmailCallback{
                 override fun getEmail(string: String) {
                     in_profile_bio.text = string
@@ -94,14 +103,13 @@ class UserProfileActivity : AppCompatActivity() {
             in_profile_email.text = myViewModel.user?.email
         }
 
-
+        //UI settings for the actionbar and navigation
         actionbar.setDisplayHomeAsUpEnabled(true)
-
         pro_bottom_navigation.setIconVisibility(false)
         pro_bottom_navigation.enableAnimation(false)
         pro_bottom_navigation.setTextSize(20F)
 
-
+//navigation menu for controlling the visible fragment
         pro_bottom_navigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 com.example.seniorproject.R.id.select_posts -> {
@@ -119,16 +127,16 @@ class UserProfileActivity : AppCompatActivity() {
 
 
 
-
+//setting the edit button to navigated to the EditProfileActivity
         NavToEdit.setOnClickListener {
                navToEdit()
             }
 
 
         val image : ImageView = findViewById(com.example.seniorproject.R.id.in_profile_image)
-
         if(author == "null"){
-            Glide.with(image.getContext()) //1
+            //getting the profile image for the current user
+            Glide.with(image.context) //1
                 .load(FirebaseAuth.getInstance().currentUser?.photoUrl)
                 .placeholder(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
                 .error(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
@@ -138,6 +146,7 @@ class UserProfileActivity : AppCompatActivity() {
                 .into(image)
         }
         else{
+            //getting the profile image for the another user
             Log.d("Soup", "$test")
             myViewModel.readPhotoValue(test, object: EmailCallback{
                 override fun getEmail(string: String) {
@@ -157,19 +166,21 @@ class UserProfileActivity : AppCompatActivity() {
 
     }
 
+    //boilerplate code to replace a fragment
     private fun replaceFragment(fragment: Fragment) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(com.example.seniorproject.R.id.fContainer, fragment)
         fragmentTransaction.commit()
     }
 
+    //boilerplate code for navigation
     private fun navToEdit() {
         Intent(this, EditProfileActivity::class.java).also {
             startActivity(it)
         }
     }
 
-
+//setting up the back button to navigate to the previous screen
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         val intent = Intent(this, MainForum::class.java)
