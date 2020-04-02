@@ -21,16 +21,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-//private const val TAG = "MyLogTag"
+
 class AuthenticationViewModel @Inject constructor(private val repository : UserAuthRepo) : ViewModel(){
 
-    //email and password for the input
+
     var email: String? = null
     var password: String? = null
     var username: String? = null
-    //var profileImageUrl: Uri? = null
-    //var authlisteneruser : FirebaseAuth.AuthStateListener? = null
-   // var usercur : FirebaseUser? = null
 
     private val firebaseAuth: FirebaseAuth by lazy {
         FirebaseAuth.getInstance()

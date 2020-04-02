@@ -21,7 +21,7 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
     var ctitle: String? = null
     var userID: String? = null
     var bool = MutableLiveData<Boolean>()
-    //var author: String? = repository.currentUser()?.displayName
+
 
 
     val clicksListener = object : AdapterView.OnItemSelectedListener {

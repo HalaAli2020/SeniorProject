@@ -27,17 +27,7 @@ class CommunityPostViewModel @Inject constructor(private val repository: PostRep
         repository.reportUserPost(accusedID, complaintext, crn, classkey)
     }
 
-   /*fun checknull() : Boolean
-   {
-       if (listClasses == null)
-       {
-           return true
-       }
-       else
-       {
-           return false
-       }
-   }*/
+
 
 
 

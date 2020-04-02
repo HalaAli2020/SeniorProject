@@ -46,9 +46,7 @@ private const val TAGG = "username"
 class MainForum : AppCompatActivity(),
     FirebaseAuth.AuthStateListener {
 
-    /*private val firebaseAuth: FirebaseAuth by lazy {
-        FirebaseAuth.getInstance()
-    }*/
+
     var obse : Observer<User>? = null
     override fun onAuthStateChanged(p0: FirebaseAuth) {
         val currentUser = myViewModel.user
@@ -93,10 +91,9 @@ class MainForum : AppCompatActivity(),
                     FAB.backgroundTintList =
                         ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
-                    //replaceFragment(FragmentList())
                     var intent = Intent(this, SearchActivity::class.java)
                     startActivity(intent)
-                   // return@OnNavigationItemSelectedListener true
+
                 }
                 R.id.messages -> {
                     FAB.backgroundTintList =
@@ -146,15 +143,11 @@ class MainForum : AppCompatActivity(),
         )
         binding.navView.addHeaderView(sideNavHeaderBinding.root)
         sideNavHeaderBinding.viewmodell = myViewModel
-        //Log.d(TAG,myViewModel.rsomthing())
         obse = Observer {
             this.email_display.text = it.email
             this.username_display.text = it.username
         }
-        //myViewModel.user.observe(this, obse!!)
 
-
-        //Log.d(TAG, myViewModel.SessionUser!!.username ?: "the displayname in main activity")
 
 
         navigationView.setNavigationItemSelectedListener { menuItem ->

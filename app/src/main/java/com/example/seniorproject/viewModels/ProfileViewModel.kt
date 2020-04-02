@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.Utils.PostListener
+import com.example.seniorproject.Utils.checkCallback
 import com.example.seniorproject.data.models.CommentLive
 
 import com.example.seniorproject.data.models.PostLiveData
@@ -20,9 +21,10 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     var comments: CommentLive = CommentLive()
     private var PostKey : String? = null
     val CommentListener : PostListener? = null
-    //val userbio : String = fetchBio(FirebaseAuth.getInstance().currentUser?.uid ?: "null")
     var otherEmail : String = "no email available"
     var otherBio : String = "no bio available"
+    var noPostCheck : Boolean? = null
+    var noCommentsCheck : Boolean? = null
 
 
     fun getUserProfilePosts(UserID : String): PostLiveData {
@@ -131,8 +133,49 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
 
     //fun fetchCurrentBio() = repository.fetchCurrentBio()
 
-    fun noPostsChecker(UserID: String) = repository.noPostsChecker(UserID)
+    fun noPostsChecker(UserID: String, callback: checkCallback) : Boolean
+    {
+        repository.noPostsChecker(UserID, object : PostRepository.FirebaseCallbackBool {
+            override fun onStart() { TODO("not implemented") }
+            override fun onFailure() { TODO("not implemented") }
 
-    fun noCommentsChecker(UserID: String) = repository.noCommentsChecker(UserID)
+            override fun onSuccess(data: DataSnapshot) : Boolean {
+                if (data.child("Posts").exists() == false)
+                {
+                    noPostCheck = true
+                    callback.check(noPostCheck ?: false)
+                }
+                else
+                {
+                    noPostCheck = false //here
+                    callback.check(noPostCheck ?: false)
+                }
+                return  noPostCheck ?: false
+            }
+        })
+        return  noPostCheck ?: false
+    }
+
+    fun noCommentsChecker(UserID: String, callback: checkCallback) : Boolean {
+        repository.noCommentsChecker(UserID, object : PostRepository.FirebaseCallbackBool {
+            override fun onStart() { TODO("not implemented") }
+            override fun onFailure() { TODO("not implemented") }
+
+            override fun onSuccess(data: DataSnapshot) : Boolean {
+                if (data.child("Comments").exists() == false)
+                {
+                    noCommentsCheck = true
+                    callback.check(noCommentsCheck ?: false)
+                }
+                else
+                {
+                    noCommentsCheck = false //here
+                    callback.check(noCommentsCheck ?: false)
+                }
+                return  noCommentsCheck ?: false
+            }
+        })
+        return  noCommentsCheck ?: false
+    }
 
 }

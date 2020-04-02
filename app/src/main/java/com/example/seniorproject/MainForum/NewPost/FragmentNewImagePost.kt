@@ -62,12 +62,10 @@ class FragmentNewImagePost : Fragment() {
         }
 
         return view
-        //or return binding.root
     }
 
     var selectedPhotoUri: Uri? = null
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        //super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 0 && resultCode == Activity.RESULT_OK && data !=null) {
             val img: ImageView = view!!.image_preview
             selectedPhotoUri = data.data

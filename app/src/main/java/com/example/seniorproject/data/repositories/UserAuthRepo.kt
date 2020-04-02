@@ -11,7 +11,7 @@ import dagger.Provides
 import javax.inject.Inject
 import javax.inject.Singleton
 
-//private val Firebase: FirebaseData
+
 @Singleton
 class UserAuthRepo @Inject constructor(private val Firebase: FirebaseData) {
 
