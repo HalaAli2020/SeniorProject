@@ -1,9 +1,13 @@
 package com.example.seniorproject.MainForum
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -16,15 +20,11 @@ import com.example.seniorproject.MainForum.Adapters.CustomAdapter
 import com.example.seniorproject.MainForum.Fragments.ProfileCommentFragment
 import com.example.seniorproject.MainForum.Fragments.ProfilePostFragment
 import com.example.seniorproject.MainForum.Posts.EditProfileActivity
+import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import javax.inject.Inject
-import android.util.Log
-import android.view.View
-import android.widget.TextView
-import android.net.Uri
-import com.example.seniorproject.Utils.EmailCallback
 
 
 private const val TAG = "profileTAG"

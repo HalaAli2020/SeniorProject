@@ -19,11 +19,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.rv_post_comment.view.*
 import kotlinx.android.synthetic.main.rv_post_header.view.*
-import kotlinx.android.synthetic.main.rv_post_header.view.author_name_TV
-import kotlinx.android.synthetic.main.rv_post_header.view.click_post_text
-import kotlinx.android.synthetic.main.rv_post_header.view.click_post_title
-import kotlinx.android.synthetic.main.rv_post_header.view.community_name_TV
-import kotlinx.android.synthetic.main.rv_post_header.view.posts_timestamp
 
 class CommentsAdapter(
     var mContext: Context,

@@ -2,7 +2,6 @@ package com.example.seniorproject.MainForum
 
 import android.content.Intent
 import android.content.res.ColorStateList
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -10,6 +9,7 @@ import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
@@ -28,10 +28,10 @@ import com.example.seniorproject.MainForum.Fragments.FragmentSubscriptions
 import com.example.seniorproject.MainForum.NewPost.NewPost
 import com.example.seniorproject.Messages.FragmentLatestMessages
 import com.example.seniorproject.R
-import com.example.seniorproject.search.SearchActivity
 import com.example.seniorproject.data.models.User
-import com.example.seniorproject.databinding.SideNavHeaderBinding
 import com.example.seniorproject.databinding.ActivityMainForumBinding
+import com.example.seniorproject.databinding.SideNavHeaderBinding
+import com.example.seniorproject.search.SearchActivity
 import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView

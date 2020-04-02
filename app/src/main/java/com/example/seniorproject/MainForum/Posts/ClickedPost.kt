@@ -2,12 +2,12 @@ package com.example.seniorproject.MainForum.Posts
 
 import android.content.DialogInterface
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -25,7 +25,6 @@ import com.example.seniorproject.databinding.ActivityClickedPostBinding
 import com.example.seniorproject.viewModels.ClickedPostViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_clicked_post.*
-import kotlinx.android.synthetic.main.activity_clicked_post.refreshView
 import javax.inject.Inject
 
 class ClickedPost : AppCompatActivity() {
@@ -42,11 +41,14 @@ class ClickedPost : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_clicked_post)
 
+        //initilaization of dagger app componen
         DaggerAppComponent.create().inject(this)
+        //initializing viewmodel using factory
         myViewModel = ViewModelProviders.of(this, factory).get(ClickedPostViewModel::class.java)
+        //binding variable to bind viewmodel to activity clicked post xml file
         val binding: ActivityClickedPostBinding = DataBindingUtil.setContentView(this, R.layout.activity_clicked_post)
 
-
+        //getting post information via intent
         val title: String = intent.getStringExtra("Title") ?: "no title"
         val text: String = intent.getStringExtra("Text") ?: "no text"
         val crn: String = intent.getStringExtra("subject") ?: "no subject"
@@ -62,33 +64,33 @@ class ClickedPost : AppCompatActivity() {
         myViewModel.crn = crn
 
         //add userid and send
+        //observer for user comments
         myViewModel.CommentsLiveList.observe(this, Observer {
             Log.d("Swap", "Swapping")
             swap(binding, title, text, author, crn, ptime, uri)
         })
+
+        //setting adapter equal to the comments adapter
         adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString(), ptime, uri)
         comment_RecyclerView.adapter = adapter
         comment_RecyclerView.layoutManager = LinearLayoutManager(this)
 
 
-
-
+        //updating viewmodel
         binding.clickedViewModel = myViewModel
+        //setting lifecyler owner witlh current context
         binding.lifecycleOwner = this
 
+        //setting refresh UI
         refreshView.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(this, R.color.blue_theme))
         refreshView.setColorSchemeColors(ContextCompat.getColor(this, R.color.white))
 
+        //calling adapter again when the page is refreshed
         refreshView.setOnRefreshListener {
             comment_RecyclerView.adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,uid, ptime, uri)
             refreshView.isRefreshing = false
         }
 
-
-       /* fun showToast(){
-            var toast= Toast.makeText(this@ClickedPost, "We've received your report.", Toast.LENGTH_SHORT)
-            toast.show()
-        }*/
 
            object : SwipeHelper(applicationContext, comment_RecyclerView, 200) {
                 override fun initButton(
@@ -97,32 +99,22 @@ class ClickedPost : AppCompatActivity() {
                 ) {
                     val userk: String? = adapter.getUserKey(viewHolders)
                     if (FirebaseAuth.getInstance().currentUser?.uid == userk){
-                        //val swipe = null
+
                     }
                     else {
                         buffer.add(
                             ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
                                 ("#FF0000"), object : ButtonClickListener {
                                 override fun onClick(pos: Int) {
-                                    //val postkey: String? =
-                                    //    adapter.removeItem(viewHolders)
 
                                     val userkey: String? =
                                         adapter.getUserKey(viewHolders)
 
-                                    //val crnkey: String? =
-                                     //   adapter.getCrn(viewHolders)
-
-                                    //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
                                     val builder = AlertDialog.Builder(
                                         this@ClickedPost,
                                         R.style.AppTheme_AlertDialog
                                     )
 
-                                    //.getStringExtra("Classkey")
-                                    //val postkey = intent.getStringExtra("author")
-                                    //myViewModel.deletePost(postkey!!, className)
-                                    //myViewModel.deletePost()
                                     builder.setTitle("Are you sure?")
                                     builder.setMessage("You won't see posts or comments from this user.")
                                     builder.setPositiveButton("BLOCK"
@@ -178,10 +170,6 @@ class ClickedPost : AppCompatActivity() {
                                         "This is abusive or harassing",
                                         "Other issues"
                                     )
-                                    //.getStringExtra("Classkey")
-                                    //val postkey = intent.getStringExtra("author")
-                                    //myViewModel.deletePost(postkey!!, className)
-                                    //myViewModel.deletePost()
                                     builder.setTitle("Report Post")
                                     builder.setSingleChoiceItems(
                                         listreason,
@@ -235,14 +223,3 @@ class ClickedPost : AppCompatActivity() {
 
     }
 
-    /* coroutines attempt init {
-         lifecycleScope.launch{
-             myViewModel.getComments()
-         }
-     }*/
-    /*Log.d("postkey", intent?.getStringExtra("Pkey"))
-    Log.d("Pkey", myViewModel.PKey!!)
-    click_post_title.text = intent.getStringExtra("Title")
-    click_post_text.text = intent.getStringExtra("Text")
-    CKEY is for class key
-    Comments = myViewModel.getComments(bundle?.getString("CKey")!!)*/

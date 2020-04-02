@@ -1,11 +1,10 @@
 package com.example.seniorproject.viewModels
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.CommentLive
 import com.example.seniorproject.data.repositories.PostRepository
-import kotlinx.coroutines.Job
 import javax.inject.Inject
 
 class ClickedPostViewModel @Inject constructor(private val repository : PostRepository) : ViewModel(){

@@ -2,6 +2,7 @@ package com.example.seniorproject.Dagger
 
 import android.app.Application
 
+//base application component used to generate dagger app component
 class SeniorProjApp : Application(){
 
     lateinit var app_component: AppComponent
@@ -15,7 +16,6 @@ class SeniorProjApp : Application(){
         DaggerAppComponent.builder()
         .appModule(AppModule(app))
         .build()
-    //unsure of what this does
 }
 
 

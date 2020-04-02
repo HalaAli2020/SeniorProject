@@ -9,11 +9,6 @@ import com.example.seniorproject.MainForum.Posts.ClickedPost
 import kotlinx.android.synthetic.main.rv_post.view.*
 
 open class PostViewHolder(parent: View) : RecyclerView.ViewHolder(parent) {
-    //var mPost = Post()
-
-
-
-
 
     fun bind(post: Post, mContext : Context) {
 

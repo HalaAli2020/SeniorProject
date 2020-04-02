@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.seniorproject.data.repositories.PostRepository
 import com.example.seniorproject.viewModels.SubscriptionsViewModel
 
+//initialization of Subscription view model factory
 @Suppress("UNCHECKED_CAST")
 class SubscriptionsViewModelFactory(private val repository: PostRepository) :
     ViewModelProvider.NewInstanceFactory() {

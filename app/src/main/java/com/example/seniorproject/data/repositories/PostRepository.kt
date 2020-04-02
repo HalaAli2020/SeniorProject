@@ -5,10 +5,8 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.data.Firebase.FirebaseData
-
 import com.example.seniorproject.data.models.*
 import com.google.firebase.database.DataSnapshot
-import kotlinx.coroutines.*
 import javax.inject.Inject
 import javax.inject.Singleton
 

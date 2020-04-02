@@ -1,32 +1,23 @@
 package com.example.seniorproject.data.Firebase
 import android.net.Uri
 import android.util.Log
-import com.google.firebase.database.FirebaseDatabase
-import javax.inject.Inject
-import javax.inject.Singleton
 import androidx.lifecycle.MutableLiveData
 import com.example.seniorproject.Utils.Callback
 import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.data.models.*
-import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.database.*
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.storage.FirebaseStorage
-import java.util.*
-import kotlin.collections.HashMap
-import com.example.seniorproject.data.models.User
 import com.example.seniorproject.data.repositories.PostRepository
-import kotlin.collections.ArrayList
 import com.example.seniorproject.viewModels.SearchViewModel
 import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
-
-
-
-
+import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
+import kotlin.collections.HashMap
 
 
 private const val TAG = "MyLogTag"

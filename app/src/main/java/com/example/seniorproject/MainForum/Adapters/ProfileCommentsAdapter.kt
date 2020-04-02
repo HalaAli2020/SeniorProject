@@ -4,9 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.MainForum.Posts.ClickedPost
 import com.example.seniorproject.MainForum.Posts.CommunityPosts
@@ -15,12 +13,6 @@ import com.example.seniorproject.Utils.Callback
 import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.CommentLive
-import com.example.seniorproject.data.models.Post
-import com.example.seniorproject.data.models.PostLiveData
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.rv_post_comment.view.*
 
 class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive) :
