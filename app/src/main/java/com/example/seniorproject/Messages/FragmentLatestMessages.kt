@@ -32,7 +32,7 @@ class FragmentLatestMessages : Fragment() {
 
         view.recyclerView_latest_messages.layoutManager = LinearLayoutManager(context)
 
-        myViewModel.getRecentMessages().observe(this, object : Observer<List<LatestMessage>> {
+        myViewModel.getRecentMessages().observe(viewLifecycleOwner, object : Observer<List<LatestMessage>> {
             override
             fun onChanged(@Nullable messages: List<LatestMessage>) {
                 view.recyclerView_latest_messages.adapter?.notifyDataSetChanged()
@@ -59,9 +59,9 @@ class FragmentLatestMessages : Fragment() {
         })
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater!!.inflate(R.menu.fragment_new_message_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
+        super.onCreateOptionsMenu(menu!!, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

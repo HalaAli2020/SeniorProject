@@ -45,6 +45,8 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import kotlinx.coroutines.tasks.await
 import kotlinx.android.synthetic.main.rv_post.view.*
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -83,6 +85,7 @@ class FirebaseData @Inject constructor() {
     var noPostsCheck: Boolean = false
     var noCommentsCheck: Boolean = false
     var saveImageurl: String? = null
+    var listClassesco: Flow<Post> = flow{ }
 
 
     var newProfilePosts: Post? = null
@@ -1669,17 +1672,76 @@ class FirebaseData @Inject constructor() {
 
     }
 
+    @InternalCoroutinesApi
+    fun getpostsforclass(className: String): Flow<Post> {
+        val reference = FirebaseDatabase.getInstance().getReference("Subjects/$className/Posts")
+
+        reference.addChildEventListener(object : ChildEventListener {
+            var savedPostsList: MutableList<Post> = mutableListOf()
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                val post = p0.getValue()
+                //val newPost = Post()
+                var postdetails: Iterable<DataSnapshot> = p0.children
+                //for (n in postdetails) {
+                var newPost = Post()
+                newPost.let {
+
+                    //Log.d("ACCESSING", newPost?.text)
+                    it.title = p0.child("title").getValue(String::class.java)
+                    it.text = p0.child("text").getValue(String::class.java)
+                    //newPost.author = pos.child("author").getValue(String::class.java)
+                    it.crn = className
+                    Log.d("CRN", p0.key!!)
+                    //newPost.subject = post.child("subject").getValue(String ::class.java)
+                    //newPost.ptime = pos.child("Timestamp").getValue(Long::class.java)
+                    it.key = p0.child("key").getValue(String::class.java)
+                    it.Classkey = p0.child("Classkey").getValue(String::class.java)
+                    it.UserID = p0.child("UserID").getValue(String::class.java)
+                    it.author= p0.child("author").getValue(String::class.java)
+
+                    // comments might need to be gotten separatley to properly convert values
+                    savedPostsList.add(newPost)
+
+                }
+                //repository.saveNewPost(newPost)
+                //adapter.add(PostFrag(newPost.title, newPost.text))
+                var listCor = savedPostsList.asFlow()
+                listClassesco = listCor
+                var uiScope = CoroutineScope(Dispatchers.IO)
+            uiScope.launch {
+                listClassesco.collect {
+                        values -> Log.d("soup","try me $values")
+                }
+            }
+        }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+            }
+        })
+
+
+        return listClassesco
+    }
+
     fun listenforClassPosts(className: String, call : PostRepository.FirebaseCallbackPost)
     {
 
         val reference = FirebaseDatabase.getInstance().getReference("Subjects/$className")
-        call.onStart()
         reference.addValueEventListener(object : ValueEventListener {
             var savedPostsList: MutableList<Post> = mutableListOf()
             override fun onCancelled(p0: DatabaseError) {
                 call.onFailure()
             }
-
 
             override fun onDataChange(p0: DataSnapshot) {
                 call.onSuccess(p0)

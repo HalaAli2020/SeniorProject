@@ -31,16 +31,14 @@ import com.example.seniorproject.Utils.ButtonClickListener
 import com.example.seniorproject.Utils.ProfileButton
 import com.example.seniorproject.Utils.SwipeHelper
 import com.example.seniorproject.data.models.Post
+import com.example.seniorproject.data.models.PostLiveData
 import com.example.seniorproject.viewModels.CommunityPostViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_community_posts.*
 import kotlinx.android.synthetic.main.fragment_profile__post.view.*
 import kotlinx.android.synthetic.main.rv_post.view.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.broadcastIn
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.flow.*
 import java.time.Duration
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
@@ -49,13 +47,30 @@ import kotlin.coroutines.EmptyCoroutineContext
 class CommunityPosts : AppCompatActivity() {
 
     //private lateinit var adapter: CustomAdapter
-    private lateinit var adapter: PostAdapter
+    private lateinit var adapter: CustomAdapter
+    var mutablepostlist: ArrayList<Post> = arrayListOf()
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: CommunityPostViewModel
     lateinit var obse: Observer<in MutableList<Post>>
 
+    /*@InternalCoroutinesApi
+    fun changeFlow(className: String): ArrayList<Post>{
+        Log.d("soup", "see my class")
+        val uiScope = CoroutineScope(Dispatchers.Main)
+        var mutableplist: ArrayList<Post> = arrayListOf()
+        uiScope.launch {
+            var listClassesco = myViewModel.getClassesco(className).flowOn(Dispatchers.Default)
+            Log.d("soup", "before collect")
+            listClassesco.buffer().collect{ values ->
+                mutableplist.add(values)
+            }
+        }
+        mutablepostlist = mutableplist
+
+        return mutablepostlist
+    }*/
 
     @InternalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,24 +87,19 @@ class CommunityPosts : AppCompatActivity() {
 
         classes_post_RV.layoutManager = LinearLayoutManager(this)
 
-        Log.d("soup", "see my class")
-        val uiScope = CoroutineScope(Dispatchers.Main)
-        uiScope.launch {
-            var mutablepostlist : ArrayList<Post> = arrayListOf()
-            var listClassesco = myViewModel.getClassesco(className)
-            Log.d("soup", "before collect")
-            listClassesco.collect{
-                    value -> mutablepostlist.add(value)
-                    //value -> Log.d("soup", "this is the post $value")
+           /*listClassesco.collect {
+                values -> mutablepostlist.add(values)
             }
             Log.d("soup","after collect")
             var mutablepost = listClassesco.toList()
             for(item in mutablepost){
                 Log.d("soup2", "list post value is $item")
-            }
+            }*/
             // listClassesco.asLiveData() unresolved reference
             //adapter = CustomAdapter(this@CommunityPosts, myViewModel.returnClassPosts(className!!), 1)
-            adapter = PostAdapter(this@CommunityPosts, mutablepostlist, 1)
+            var compostlist = myViewModel.getClassesco(className) as PostLiveData
+
+            adapter = CustomAdapter(this@CommunityPosts, compostlist, 1)
             classes_post_RV.adapter = adapter
 
             refreshView.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(this@CommunityPosts, R.color.blue_theme))
@@ -98,7 +108,7 @@ class CommunityPosts : AppCompatActivity() {
             refreshView.setOnRefreshListener {
                 refreshView.isRefreshing = false
                 //classes_post_RV.adapter = CustomAdapter(this@CommunityPosts, myViewModel.returnClassPosts(className), 1)
-                classes_post_RV.adapter = PostAdapter(this@CommunityPosts, mutablepostlist, 1)
+                classes_post_RV.adapter = CustomAdapter(this@CommunityPosts, compostlist, 1)
             }
 
             fun showToast(){
@@ -263,7 +273,6 @@ class CommunityPosts : AppCompatActivity() {
                 Log.d("obser", " blah")
 
             }
-        }
 
         /*adapter = CustomAdapter(this, myViewModel.returnClassPosts(className!!), 1)
         classes_post_RV.adapter = adapter
@@ -440,6 +449,7 @@ class CommunityPosts : AppCompatActivity() {
         }*/
 
     }
+
     //myViewModel.listClasses?.observe(this, obse)
 
 
