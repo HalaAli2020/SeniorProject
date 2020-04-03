@@ -128,13 +128,13 @@ class ProfilePostFragment : Fragment() {
                                     ("#FF0000"), object : ButtonClickListener {
                                     override fun onClick(pos: Int) {
                                         val postkey: String? =
-                                            adapter.removeItem(viewHolders as CustomViewHolders)
+                                            adapter.removeItem(viewHolders as CustomViewHolders,pos)
 
                                         val userkey: String? =
                                             adapter.getUserKey(viewHolders)
 
                                         val crnkey: String? =
-                                            adapter.getCrn(viewHolders)
+                                            adapter.getCrn(viewHolders,pos)
 
                                         //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
                                         val builder = AlertDialog.Builder(
@@ -175,19 +175,19 @@ class ProfilePostFragment : Fragment() {
                                         val intent = Intent(context, UpdatePost::class.java)
 
                                         val postkey: String? =
-                                            adapter.removeItem(viewHolders as CustomViewHolders)
+                                            adapter.removeItem(viewHolders as CustomViewHolders,pos)
 
                                         val userkey: String? =
                                             adapter.getUserKey(viewHolders)
 
                                         val crnkey: String? =
-                                            adapter.getCrn(viewHolders)
+                                            adapter.getCrn(viewHolders,pos)
 
                                         val titlekey: String? =
-                                            adapter.getTitle(viewHolders)
+                                            adapter.getTitle(viewHolders,pos)
 
                                         val textkey: String? =
-                                            adapter.getText(viewHolders)
+                                            adapter.getText(viewHolders,pos)
 
                                         intent.putExtra("crn", crnkey)
                                         intent.putExtra("Classkey", postkey)

@@ -1,6 +1,7 @@
 package com.example.seniorproject.MainForum.Adapters
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
@@ -25,7 +26,7 @@ import kotlinx.android.synthetic.main.rv_post.view.post_title
 import kotlinx.android.synthetic.main.rv_post.view.username
 import kotlinx.android.synthetic.main.rv_post_image.view.*
 
-class CustomAdapter(context: Context, private var savedPosts: PostLiveData, var type: Int) :
+class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: Int) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val mContext: Context = context
 
@@ -53,15 +54,16 @@ class CustomAdapter(context: Context, private var savedPosts: PostLiveData, var 
     }
 
     override fun getItemCount(): Int {
-        return if (!savedPosts.value.isNullOrEmpty()) {
-            savedPosts.value!!.size
+        if (!savedPosts.value.isNullOrEmpty()) {
+            return savedPosts.value!!.size
         } else
-            0
+            return 0
     }
 
     fun getUserKey(holder: RecyclerView.ViewHolder): String {
         val post: Post = savedPosts.value!![holder.adapterPosition]
         val postkey: String?= post.userID
+
         return postkey!!
     }
 
@@ -92,13 +94,13 @@ class CustomAdapter(context: Context, private var savedPosts: PostLiveData, var 
             holder.itemView.username.text = post.author
             holder.itemView.post_timestamp.text = post.Ptime
 
-               if (post.uri != null) {
-               Glide.with(mContext).load(post.uri).placeholder(R.color.white)
-                   .into(holder.itemView.post_image)
-           } else {
-               Glide.with(mContext).clear(holder.itemView.post_image)
-               holder.itemView.post_image.setImageDrawable(null)
-           }
+            if (post.uri != null) {
+                Glide.with(mContext).load(post.uri).placeholder(R.color.white)
+                    .into(holder.itemView.post_image)
+            } else {
+                Glide.with(mContext).clear(holder.itemView.post_image)
+                holder.itemView.post_image.setImageDrawable(null)
+            }
 
             if (type == 0) {
                 if (post.title == "No Posts")
@@ -109,12 +111,12 @@ class CustomAdapter(context: Context, private var savedPosts: PostLiveData, var 
                 }
                 else
                 {
-                holder.itemView.username.text = post.subject
-                holder.itemView.username.setOnClickListener {
-                    val intent = Intent(mContext, CommunityPosts::class.java)
-                    intent.putExtra("ClassName", post.subject)
-                    mContext.startActivity(intent)
-                }
+                    holder.itemView.username.text = post.subject
+                    holder.itemView.username.setOnClickListener {
+                        val intent = Intent(mContext, CommunityPosts::class.java)
+                        intent.putExtra("ClassName", post.subject)
+                        mContext.startActivity(intent)
+                    }
 
                 }
             } else if (type == 1) {
@@ -178,7 +180,7 @@ class CustomAdapter(context: Context, private var savedPosts: PostLiveData, var 
     }
 
 
-    fun removeItem(holder: RecyclerView.ViewHolder): String {
+    fun removeItem(holder: RecyclerView.ViewHolder, position: Int): String {
         val post: Post = savedPosts.value!![holder.adapterPosition]
         val postkey: String? = post.classkey
 
@@ -187,21 +189,21 @@ class CustomAdapter(context: Context, private var savedPosts: PostLiveData, var 
 
 
 
-    fun getCrn(holder: RecyclerView.ViewHolder): String {
+    fun getCrn(holder: RecyclerView.ViewHolder,position: Int): String {
         val post: Post = savedPosts.value!![holder.adapterPosition]
         val postcrn: String?= post.subject
 
         return postcrn!!
     }
 
-    fun getTitle(holder: RecyclerView.ViewHolder): String {
+    fun getTitle(holder: RecyclerView.ViewHolder, position: Int): String {
         val post: Post = savedPosts.value!![holder.adapterPosition]
         val posttitle: String?= post.title
 
         return posttitle!!
     }
 
-    fun getAuthor(holder: RecyclerView.ViewHolder): String {
+    fun getAuthor(holder: RecyclerView.ViewHolder, position: Int): String {
 
         val post: Post = savedPosts.value!![holder.adapterPosition]
         val postauth: String?= post.author
@@ -210,7 +212,7 @@ class CustomAdapter(context: Context, private var savedPosts: PostLiveData, var 
         return postauth!!
     }
 
-    fun getText(holder: RecyclerView.ViewHolder): String {
+    fun getText(holder: RecyclerView.ViewHolder, position: Int): String {
 
         val post: Post = savedPosts.value!![holder.adapterPosition]
         val posttext: String? = post.text
@@ -219,7 +221,7 @@ class CustomAdapter(context: Context, private var savedPosts: PostLiveData, var 
         return posttext!!
     }
 
-    }
+}
 
 
 

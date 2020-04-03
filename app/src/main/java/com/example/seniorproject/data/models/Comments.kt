@@ -1,5 +1,8 @@
 package com.example.seniorproject.data.models
 
+import com.example.seniorproject.R
+import com.xwray.groupie.GroupieViewHolder
+import kotlinx.android.synthetic.main.rv_post_comment.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -19,6 +22,15 @@ class Comment(var text: String, var Ptime : String?, var PosterID : String?, var
     val calendar: Calendar = Calendar.getInstance()
         val simple: SimpleDateFormat = SimpleDateFormat("M-d-yy h:mm a")
     Ptime = simple.format(calendar.time)
+    }
+
+    fun getLayout(): Int {
+        return R.layout.rv_post_comment
+    }
+
+    fun bind(viewHolder: GroupieViewHolder, position: Int) {
+        viewHolder.itemView.comment_text.text = text
+
     }
 
     //mapping of comment data to database
