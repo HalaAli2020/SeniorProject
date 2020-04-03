@@ -49,7 +49,7 @@ class AuthenticationViewModelTest {
 
         val firemock =mockkClass(FirebaseData::class)
 
-        every { firemock.CurrentUser()} returns mockk(relaxed = true)
+        every { firemock.currentUser()} returns mockk(relaxed = true)
 
         val repobehavior: BehaviorSubject<AuthenticationViewModel>
 

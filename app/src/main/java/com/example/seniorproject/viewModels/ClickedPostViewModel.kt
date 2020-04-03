@@ -10,12 +10,12 @@ import javax.inject.Inject
 class ClickedPostViewModel @Inject constructor(private val repository : PostRepository) : ViewModel(){
 
     private val CommentListener : PostListener? = null
-    var CommentsLiveList : CommentLive = CommentLive()
-    var Comment : String? = null
+    var commentsLiveList : CommentLive = CommentLive()
+    var comment : String? = null
     private var CommentsList = mutableListOf<Comment>()
-    var PKey: String? = null
-    var UserID : String? = null
-    var Classkey : String? = null
+    var pKey: String? = null
+    var userID : String? = null
+    var classkey : String? = null
     var crn : String? = null
     var title: String? = null
     var text: String? = null
@@ -34,26 +34,26 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
 
     fun getComments() : CommentLive
     {
-       if(PKey.isNullOrEmpty())
+       if(pKey.isNullOrEmpty())
        {
-           PostKey = PKey
+           PostKey = pKey
            CommentListener?.onFailure("Post key not found")
        }
-        CommentsLiveList = repository.getComments(Classkey!!, crn!!)
+        commentsLiveList = repository.getComments(classkey!!, crn!!)
 
-        return CommentsLiveList
+        return commentsLiveList
     }
 
 
     fun editComment(){
-        repository.editNewComment(comuserid!!, usercomkey!!, Comment!!, usercrn!!, postukey!!)
+        repository.editNewComment(comuserid!!, usercomkey!!, comment!!, usercrn!!, postukey!!)
     }
 
 
     fun newComment()
     {
 
-        repository.newComment(PKey!!,Comment!!, Classkey!!, UserID!!, crn!!)
+        repository.newComment(pKey!!,comment!!, classkey!!, userID!!, crn!!)
     }
     fun checkcomments() : Boolean
     {

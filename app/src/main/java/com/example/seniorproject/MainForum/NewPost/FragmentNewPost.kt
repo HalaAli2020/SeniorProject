@@ -25,7 +25,7 @@ class FragmentNewPost : Fragment() {
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
-    lateinit var viewModel: NewPostFragmentViewModel
+    private lateinit var viewModel: NewPostFragmentViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         activity?.title = "New Text Post"

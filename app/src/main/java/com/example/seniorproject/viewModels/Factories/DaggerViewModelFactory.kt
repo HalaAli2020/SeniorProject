@@ -17,7 +17,7 @@ class DaggerViewModelFactory @Inject constructor(private val creators: Map<Class
 
         creators.asIterable().firstOrNull { modelClass.isAssignableFrom(it.key) }?.value
 
-        ?: throw IllegalArgumentException("unknown model class " + modelClass)
+        ?: throw IllegalArgumentException("unknown model class $modelClass")
 
         return try {
 

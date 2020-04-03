@@ -22,7 +22,7 @@ class NewMessageAdapter(
     RecyclerView.Adapter<UserListHolder>() {
 
     val mContext: Context = context
-    var filterlist : MutableList<User> = UserList as MutableList<User>
+    private var filterlist : MutableList<User> = UserList as MutableList<User>
 
     companion object{
         const val USER_KEY = "USER_KEY"
@@ -53,7 +53,7 @@ class NewMessageAdapter(
         Log.d("NewMessageAdapter", user.username)
         //Picasso.get().load(user.profileImageUrl).into(holder.itemView.image_new_message)
 
-        if(user.profileImageUrl.toString().isNullOrBlank() || user.profileImageUrl.toString()=="null"){
+        if(user.profileImageUrl.toString().isBlank() || user.profileImageUrl.toString()=="null"){
             holder.itemView.image_new_message.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_account_circle_blue_24dp))
         }
         else

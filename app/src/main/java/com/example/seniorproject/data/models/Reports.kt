@@ -1,7 +1,7 @@
 package com.example.seniorproject.data.models
 
 //model class for reporting a user
-class Reports(val accuserID: String, var accusedID: String, var complaintext: String, var crn: String, var classkey: String)
+class Reports(private val accuserID: String, var accusedID: String, var complaintext: String, var crn: String, var classkey: String)
 {
     //constructor() : this("","","", "", "")
 

@@ -14,13 +14,13 @@ import javax.inject.Singleton
 @Singleton
 class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     val post: Post? = null
-    var SessionUser: User? = null
+    //var SessionUser: User? = null
     var listClasses: PostLiveData = PostLiveData()
     var classList: MutableLiveData<MutableList<CRN>> = MutableLiveData()
-    var UserSUB: MutableLiveData<MutableList<String>> = MutableLiveData()
+    var userSUB: MutableLiveData<MutableList<String>> = MutableLiveData()
     var profilePosts: PostLiveData = PostLiveData()
     var newProfilePosts: Post? = null
-    var Comments : CommentLive = CommentLive()
+    var comments : CommentLive = CommentLive()
     var newProfileComments: Comment? = null
 
     fun saveNewPost(text: String, title: String, CRN: String) = Firebase.saveNewPosttoUser(text, title, CRN)
@@ -86,7 +86,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     }
     fun fetchCurrentUserName() = Firebase.fetchCurrentUserName()
 
-    fun currentUser() = Firebase.CurrentUser()
+    fun currentUser() = Firebase.currentUser()
 
     fun getClassPosts(className: String): PostLiveData {
         //var newPost = Post()
@@ -114,8 +114,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                         it.Ptime = n.child("Timestamp").getValue(String::class.java)
                         it.key = n.child("key").getValue(String::class.java)
                         it.Ptime = n.child("Ptime").getValue(String::class.java)
-                        it.Classkey = n.child("Classkey").getValue(String::class.java)
-                        it.UserID = n.child("UserID").getValue(String::class.java)
+                        it.classkey = n.child("Classkey").getValue(String::class.java)
+                        it.userID = n.child("UserID").getValue(String::class.java)
                         it.author = n.child("author").getValue(String::class.java)
                         it.uri = n.child("uri").getValue(String::class.java)
 
@@ -157,13 +157,9 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     {
         val subList : MutableList<String> = mutableListOf()
         Firebase.listenUserSub(object : FirebaseCallbackString {
-            override fun onFailure() {
+            override fun onFailure() {}
 
-            }
-
-            override fun onStart() {
-
-            }
+            override fun onStart() {}
 
             override fun onSuccess(data: DataSnapshot) {
                 val size = data.hasChildren()
@@ -174,11 +170,11 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                     Log.d("usersub", x.getValue(String::class.java)!!)
                     subList.add(x.getValue(String::class.java)!!)
                 }
-                UserSUB.value = subList
+                userSUB.value = subList
             }
         })
 
-        return UserSUB
+        return userSUB
     }
 
     fun remUsersub(crn: String) {
@@ -213,9 +209,9 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                             it.title = data.child("title").value.toString()
                             it.key = data.child("key").value.toString()
                             // class key is key for this post
-                            it.Classkey = data.child("Classkey").value.toString()
+                            it.classkey = data.child("Classkey").value.toString()
                             // user who posted id
-                            it.UserID = data.child("UserID").value.toString()
+                            it.userID = data.child("UserID").value.toString()
                             // need to change this later subject should be subject crn should be different
                             it.subject = data.child("subject").value.toString()
                             it.Ptime=data.child("Ptime").value.toString()
@@ -231,8 +227,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                         Log.d("profileposts", newProfilePost.title ?: " Accessing profile post title")
                         Log.d("profileposts", newProfilePost.text ?: " Accessing profile post text")
                         Log.d("profileposts", newProfilePost.key ?: " Accessing profile post title")
-                        Log.d("profileposts", newProfilePost.Classkey ?: " Accessing profile post title")
-                        Log.d("profileposts", newProfilePost.UserID ?: " Accessing profile post title")
+                        Log.d("profileposts", newProfilePost.classkey ?: " Accessing profile post title")
+                        Log.d("profileposts", newProfilePost.userID ?: " Accessing profile post title")
                         Log.d("profileposts", newProfilePost.crn ?: " Accessing profile post title")
 
                         profilePostsList.add(newProfilePost)
@@ -261,19 +257,19 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                     Log.d("comment", "doesn't exist")
                     val emptyComment = Comment("No Comments","" ,"","","")
                     profileCommentList.add(emptyComment)
-                    Comments.value = profileCommentList
+                    comments.value = profileCommentList
                 }
                 else if (data.child("text").exists()) {
                     val newComment = Comment()
                     try {
                         newComment.let {
                             it.text = data.child("text").value.toString()
-                            it.Classkey = data.child("Classkey").value.toString()
+                            it.classkey = data.child("Classkey").value.toString()
                             it.PosterID = data.child("PosterID").value.toString()
                             it.Postkey = data.child("Postkey").value.toString()
-                            it.ProfileComKey = data.child("ProfileComKey").value.toString()
+                            it.profileComKey = data.child("ProfileComKey").value.toString()
                             it.Ptime = data.child("Ptime").value.toString()
-                            it.UserComkey = data.child("UserComkey").value.toString()
+                            it.userComkey = data.child("UserComkey").value.toString()
                             it.author = data.child("author").value.toString()
                             it.crn = data.child("crn").value.toString()
                         }
@@ -283,14 +279,13 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                         profileCommentList.add(newComment)
                         newProfileComments = newComment
                     }
-                    Comments.value = profileCommentList
+                    comments.value = profileCommentList
                 }
     })
-        return Comments
+        return comments
     }
 
     fun fetchEmail(UserID: String,callbackItem : FirebaseCallbackItem) = Firebase.fetchEmail(UserID,callbackItem)
-
 
     fun saveNewUsername(username: String) = Firebase.saveNewUsername(username)
 
@@ -298,7 +293,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun fetchBio(UserID: String,callbackItem: FirebaseCallbackItem) = Firebase.fetchBio(UserID,callbackItem)
 
-    fun fetchCurrentBio() = Firebase.fetchCurrentBio()
+    //fun fetchCurrentBio() = Firebase.fetchCurrentBio()
 
     fun noPostsChecker(UserID: String, callbackBool: FirebaseCallbackBool) = Firebase.noPostsChecker(UserID, callbackBool)
 

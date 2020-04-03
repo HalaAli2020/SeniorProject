@@ -30,7 +30,7 @@ import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
 import com.example.seniorproject.Utils.ProfileButton
 import com.example.seniorproject.Utils.SwipeHelper
-import com.example.seniorproject.Utils.checkCallback
+import com.example.seniorproject.Utils.CheckCallback
 import com.example.seniorproject.data.models.CommentLive
 import com.example.seniorproject.databinding.FragmentProfileCommentBinding
 import com.example.seniorproject.viewModels.ProfileViewModel
@@ -46,7 +46,7 @@ class ProfileCommentFragment : Fragment() {
     private lateinit var linearLayoutManager: LinearLayoutManager
 
     var swipeBackground: ColorDrawable = ColorDrawable(Color.parseColor("#FF0000"))
-    lateinit var deleteIcon: Drawable
+    private lateinit var deleteIcon: Drawable
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -127,7 +127,7 @@ class ProfileCommentFragment : Fragment() {
         binding.executePendingBindings()
 
         //checking if a user has no posts, the no comments message is not swipable but all other comments are
-         myViewModel.noCommentsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null", object : checkCallback {
+         myViewModel.noCommentsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null", object : CheckCallback {
              override fun check(chk: Boolean) {
                  if (iD != FirebaseAuth.getInstance().currentUser?.uid || chk){
                      Log.d("wrong","one")
@@ -266,7 +266,7 @@ class ProfileCommentFragment : Fragment() {
         binding.executePendingBindings()
         return view
     }
-    fun swap(ID: String)
+    private fun swap(ID: String)
     {
         val ada = ProfileCommentsAdapter(view!!.context, myViewModel.getUserProfileComments(ID))
         view!!.profile_comment_recyclerView.swapAdapter(ada, true)

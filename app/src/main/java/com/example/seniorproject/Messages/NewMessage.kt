@@ -23,7 +23,7 @@ class NewMessage : AppCompatActivity() {
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: NewMessageViewModel
 
-    lateinit var searchview : SearchView
+    private lateinit var searchview : SearchView
     lateinit var ada : NewMessageAdapter
     //lateinit var binding : ActivityNewMessageBinding
     val context = this

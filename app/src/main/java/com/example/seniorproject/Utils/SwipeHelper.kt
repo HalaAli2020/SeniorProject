@@ -22,10 +22,10 @@ abstract class SwipeHelper(context: Context, private val recyclerView: RecyclerV
     private lateinit var gestureDetector: GestureDetector
     private lateinit var buttonQueue: LinkedList<Int>
 
-    var buttonBuffer: MutableMap<Int, MutableList<ProfileButton>>
+    private var buttonBuffer: MutableMap<Int, MutableList<ProfileButton>>
     private var buttonList: MutableList<ProfileButton>? = null
-    var swipePosition = -1
-    var swipeThreshold =0.5f
+    private var swipePosition = -1
+    private var swipeThreshold =0.5f
 
 
     private val gestureListener = object: GestureDetector.SimpleOnGestureListener(){

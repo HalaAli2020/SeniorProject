@@ -12,12 +12,12 @@ import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(private val repository: SearchRepo) : ViewModel() {
     //var UsersSubs : MutableLiveData<MutableList<CRN>> = MutableLiveData()
-    var Clist : MutableLiveData<MutableList<CRN>> = MutableLiveData()
-    var Fullist : MutableLiveData<MutableList<CRN>> = MutableLiveData()
+    var clist : MutableLiveData<MutableList<CRN>> = MutableLiveData()
+    var fullist : MutableLiveData<MutableList<CRN>> = MutableLiveData()
 
-    fun Search(query: String): CRN {
+    fun search(query: String): CRN {
         var result = CRN()
-        repository.Search(query, object : FirebaseResult {
+        repository.search(query, object : FirebaseResult {
             override fun onFailure(message: String) {
                 Log.d("onFailure", "On Failure called")
             }
@@ -76,7 +76,7 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
                         {
                             if(uid == s.value.toString())
                             {
-                                crn.Subscribed = true
+                                crn.subscribed = true
                             }
                         }
 
@@ -91,23 +91,23 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
 
 
         })
-        Fullist.value = listC
+        fullist.value = listC
     }
 
     fun sendlistf() : MutableLiveData<MutableList<CRN>>
     {
-        Clist.value = Fullist.value
+        clist.value = fullist.value
 
-        return Clist
+        return clist
     }
     fun addSub(crn : String)
     {
         repository.addUsersub(crn)
-        for (x in Clist.value!!.iterator())
+        for (x in clist.value!!.iterator())
         {
             if(x.name.contentEquals(crn))
             {
-                x.Subscribed = true
+                x.subscribed = true
             }
         }
 
@@ -115,11 +115,11 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
     fun removeSub(crn : String)
     {
         repository.remUsersub(crn)
-        for (x in Clist.value!!.iterator())
+        for (x in clist.value!!.iterator())
         {
             if(x.name.contentEquals(crn))
             {
-                x.Subscribed = false
+                x.subscribed = false
             }
         }
 

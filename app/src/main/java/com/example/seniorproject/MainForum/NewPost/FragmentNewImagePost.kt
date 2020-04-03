@@ -89,7 +89,7 @@ class FragmentNewImagePost : Fragment() {
                 val spinner: Spinner = view!!.spinner3
                 val subject = spinner.selectedItem.toString()
 
-                if (title.isNullOrEmpty() || text.isNullOrEmpty() || subject.isNullOrEmpty())
+                if (title.isEmpty() || text.isEmpty() || subject.isEmpty())
                 {
                     Toast.makeText(activity?.applicationContext, "Please add a title, post text and select a subject.", Toast.LENGTH_SHORT).show()
                 }

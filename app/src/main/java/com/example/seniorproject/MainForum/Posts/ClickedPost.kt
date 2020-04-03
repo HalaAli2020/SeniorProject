@@ -56,16 +56,16 @@ class ClickedPost : AppCompatActivity() {
         val uri : String = intent.getStringExtra("uri") ?: " "
         val ptime: String = intent.getStringExtra("Ptime") ?: "no time"
         val uid: String = intent.getStringExtra("UserID") ?: "null"
-        myViewModel.PKey = intent.getStringExtra("Pkey")
-        myViewModel.Classkey = intent.getStringExtra("Classkey")
-        myViewModel.UserID = uid
+        myViewModel.pKey = intent.getStringExtra("Pkey")
+        myViewModel.classkey = intent.getStringExtra("Classkey")
+        myViewModel.userID = uid
         myViewModel.title = title
         myViewModel.text = text
         myViewModel.crn = crn
 
         //add userid and send
         //observer for user comments
-        myViewModel.CommentsLiveList.observe(this, Observer {
+        myViewModel.commentsLiveList.observe(this, Observer {
             Log.d("Swap", "Swapping")
             swap(binding, title, text, author, crn, ptime, uri)
         })
@@ -98,10 +98,7 @@ class ClickedPost : AppCompatActivity() {
                     buffer: MutableList<ProfileButton>
                 ) {
                     val userk: String? = adapter.getUserKey(viewHolders)
-                    if (FirebaseAuth.getInstance().currentUser?.uid == userk){
-
-                    }
-                    else {
+                    if (FirebaseAuth.getInstance().currentUser?.uid != userk){
                         buffer.add(
                             ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
                                 ("#FF0000"), object : ButtonClickListener {
@@ -214,7 +211,7 @@ class ClickedPost : AppCompatActivity() {
                 }
             }
         }
-    fun swap(binding : ActivityClickedPostBinding, title : String, text : String, author : String, crn: String, time: String, uri : String)
+    private fun swap(binding : ActivityClickedPostBinding, title : String, text : String, author : String, crn: String, time: String, uri : String)
     {
         val ada =  CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString(), time, uri)
         binding.commentRecyclerView.swapAdapter(ada, false)

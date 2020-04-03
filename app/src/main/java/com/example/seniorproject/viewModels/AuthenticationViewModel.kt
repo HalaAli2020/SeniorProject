@@ -35,7 +35,7 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
     //returns current user
     val user = repository.currentUser()
 
-    fun RegisterUserEmail(){
+    fun registerUserEmail(){
         viewModelScope.launch(Dispatchers.Main) {
      //Launchting the coroutine on in the viewmodel scope on the main thread
             if (email.isNullOrEmpty() || password.isNullOrEmpty() || username.isNullOrEmpty()) {
@@ -47,9 +47,9 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
                 //auth listener failure if the email length is less then 6 characters
             }
             else{
-                repository.RegisterUserEmail(firebaseAuth, email!!, password!!, username!!, object: EmailCallback{
+                repository.registerUserEmail(firebaseAuth, email!!, password!!, username!!, object: EmailCallback{
                     override fun getEmail(string: String) {
-                        if(!string.isNullOrEmpty()){
+                        if(string.isNotEmpty()){
                             Log.d("soup2", string)
                             if(string == "Account created!"){
                                 authListener?.onSuccess()
@@ -64,7 +64,7 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
         }
     }
 
-     fun LoginUserEmail() {
+     fun loginUserEmail() {
          viewModelScope.launch(Dispatchers.Main) {
              //Launchting the coroutine on in the viewmodel scope on the main thread
              if (email.isNullOrEmpty() || password.isNullOrEmpty()) {
@@ -76,9 +76,9 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
              }
              else
              {
-                 repository.LoginUserAccount(firebaseAuth, email!!, password!!, object : EmailCallback{
+                 repository.loginUserAccount(firebaseAuth, email!!, password!!, object : EmailCallback{
                      override fun getEmail(string: String) {
-                         if(!string.isNullOrEmpty()){
+                         if(string.isNotEmpty()){
                              Log.d("soup2", string)
                              if(string == "Successful login!"){
                                  if(!FirebaseAuth.getInstance().currentUser!!.isEmailVerified) {
@@ -113,7 +113,7 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
             else{
                 repository.resetUserPassword(firebaseAuth, email!!, object : EmailCallback{
                     override fun getEmail(string: String) {
-                        if(!string.isNullOrEmpty()){
+                        if(string.isNotEmpty()){
                             Log.d("soup2", string)
                             if(string == "Email sent!"){
                                 authListener?.onSuccess()

@@ -8,10 +8,10 @@ class Comment(var text: String, var Ptime : String?, var PosterID : String?, var
 {
     constructor() : this("", null,"", "", "")
 
-    var Classkey : String? = null
-    var UserComkey : String? = null
+    var classkey : String? = null
+    var userComkey : String? = null
     var author : String? = null
-    var ProfileComKey : String? = null
+    var profileComKey : String? = null
     private var UserPostkey : String? = null
 
     //initialization of timestamp
@@ -31,9 +31,9 @@ class Comment(var text: String, var Ptime : String?, var PosterID : String?, var
             "crn" to crn,
             "Postkey" to Postkey,
             "UserPostkey" to UserPostkey,
-            "Classkey" to Classkey,
-            "UserComkey" to UserComkey,
-            "ProfileComKey" to ProfileComKey
+            "Classkey" to classkey,
+            "UserComkey" to userComkey,
+            "ProfileComKey" to profileComKey
 
         )
 

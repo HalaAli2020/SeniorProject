@@ -12,8 +12,8 @@ data class Post(var title: String?, var text: String?, var subject: String?, var
     private  var comments : List<Comment> = emptyList()
     var author : String? = null
     var crn : String? = null
-    var Classkey : String? = null
-    var UserID : String? = null
+    var classkey : String? = null
+    var userID : String? = null
     var key : String? = null
     var uri : String? = null
     var imagePost : Boolean? = null
@@ -34,8 +34,8 @@ data class Post(var title: String?, var text: String?, var subject: String?, var
             "subject" to subject,
             "crn" to crn,
             "comments" to comments,
-            "UserID" to UserID,
-            "Classkey" to Classkey,
+            "UserID" to userID,
+            "Classkey" to classkey,
             "key" to key,
             "uri" to uri,
             "imagePost" to imagePost

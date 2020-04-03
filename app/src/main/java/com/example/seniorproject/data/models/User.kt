@@ -1,12 +1,12 @@
 package com.example.seniorproject.data.models
 
-//model class for an application users
+//model class for an application user
 data class User(
     var username: String?, val email: String?, var uid: String?, var profileImageUrl: String?
 ) {
     constructor() : this("", "", "", "")
 
-    var Posts = mutableListOf<Post>()
+    var posts = mutableListOf<Post>()
     private var Admin: Boolean = true
     private var Subscriptions: HashMap<String, String> = hashMapOf()
 
@@ -21,7 +21,7 @@ data class User(
             "profileImageUrl" to profileImageUrl,
             "Admin" to Admin,
             "Subscriptions" to Subscriptions,
-            "Posts" to Posts
+            "Posts" to posts
 
         )
 

@@ -28,7 +28,7 @@ import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
 import com.example.seniorproject.Utils.ProfileButton
 import com.example.seniorproject.Utils.SwipeHelper
-import com.example.seniorproject.Utils.checkCallback
+import com.example.seniorproject.Utils.CheckCallback
 import com.example.seniorproject.databinding.FragmentProfilePostBinding
 import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -39,7 +39,7 @@ import javax.inject.Inject
 class ProfilePostFragment : Fragment() {
 
     private lateinit var adapter: CustomAdapter
-    lateinit var deleteIcon: Drawable
+    private lateinit var deleteIcon: Drawable
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -111,7 +111,7 @@ class ProfilePostFragment : Fragment() {
         binding.executePendingBindings()
 
         //checking if a user has no posts, the no post message is not swipable but all other posts are
-        myViewModel.noPostsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null", object : checkCallback{
+        myViewModel.noPostsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null", object : CheckCallback{
             override fun check(chk: Boolean) {
                 if (iD != FirebaseAuth.getInstance().currentUser?.uid || chk){
                     Log.d("wrong","one")

@@ -10,7 +10,7 @@ import javax.inject.Inject
 class NewMessageViewModel @Inject constructor(private val repository: MessagesRepo) :
     ViewModel() {
 
-    var users: MutableLiveData<List<User>>? = null
+    private var users: MutableLiveData<List<User>>? = null
 
     fun fetchUsers(): MutableLiveData<List<User>>? {
         if (users == null) {

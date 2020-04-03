@@ -45,7 +45,7 @@ class FragmentHome : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity?.title = "Home"
-        LoginVerification()
+        loginVerification()
 
         val factory = InjectorUtils.providePostViewModelFactory()
 
@@ -103,7 +103,7 @@ class FragmentHome : Fragment() {
     }
 
 
-    private fun LoginVerification() {
+    private fun loginVerification() {
         if (FirebaseAuth.getInstance().uid == null) {
             val intent = Intent(activity, LoginActivity::class.java)
             startActivity(intent)

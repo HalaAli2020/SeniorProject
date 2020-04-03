@@ -77,10 +77,8 @@ class CommunityPosts : AppCompatActivity() {
                     val userk: String? =
                         adapter.getUserKey(viewHolders)
 
-                    if (FirebaseAuth.getInstance().currentUser?.uid == userk){
-                        //val swipe = null
-                    }
-                    else{
+                    if (FirebaseAuth.getInstance().currentUser?.uid != userk)
+                    {
                         buffer.add(
                             ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
                                 ("#FF0000"), object : ButtonClickListener {

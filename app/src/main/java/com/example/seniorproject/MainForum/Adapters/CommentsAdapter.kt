@@ -134,7 +134,7 @@ class CommentsAdapter(
 
     fun removeItem(holder: RecyclerView.ViewHolder): String {
         val comment: Comment = Comments?.value!![holder.adapterPosition]
-        val commentkey: String? = comment.Classkey
+        val commentkey: String? = comment.classkey
 
         return commentkey!!
     }

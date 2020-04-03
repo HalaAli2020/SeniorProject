@@ -15,7 +15,7 @@ import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.CommentLive
 import kotlinx.android.synthetic.main.rv_post_comment.view.*
 
-class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive) :
+class ProfileCommentsAdapter(context: Context, private var ProfileComments: CommentLive) :
     RecyclerView.Adapter<CustomViewHolders>() {
     val mContext: Context = context
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolders {
@@ -26,10 +26,10 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
     }
 
     override fun getItemCount(): Int {
-        if (ProfileComments.value != null)
-            return ProfileComments.value!!.size
+        return if (ProfileComments.value != null)
+            ProfileComments.value!!.size
         else
-            return 0
+            0
     }
 
     override fun onBindViewHolder(holder: CustomViewHolders, position: Int) {
@@ -104,7 +104,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
 
     fun getCommentKey(customViewHolders: CustomViewHolders): String {
         val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
-        val commentkey: String? = comment.UserComkey
+        val commentkey: String? = comment.userComkey
 
         //notifyItemRemoved(customViewHolders.adapterPosition)
 
@@ -122,7 +122,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
 
     fun getClassKey(customViewHolders: CustomViewHolders): String {
         val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
-        val commentkey: String? = comment.Classkey
+        val commentkey: String? = comment.classkey
 
         //notifyItemRemoved(customViewHolders.adapterPosition)
 
@@ -131,7 +131,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
 
     fun getClassProfileKey(customViewHolders: CustomViewHolders): String {
         val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
-        val commentkey: String? = comment.ProfileComKey
+        val commentkey: String? = comment.profileComKey
 
         //notifyItemRemoved(customViewHolders.adapterPosition)
 

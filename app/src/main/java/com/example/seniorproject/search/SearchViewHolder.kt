@@ -21,9 +21,9 @@ class SearchViewHolder(parent: View) : RecyclerView.ViewHolder(parent) {
         itemView.communityName_TV.text = classes
         itemView.visibility = View.VISIBLE
 
-        Log.d("subB", "ERROR: " + crn.Subscribed)
+        Log.d("subB", "ERROR: " + crn.subscribed)
 
-        if (crn.Subscribed) {
+        if (crn.subscribed) {
             Log.d("subB", "true")
             itemView.Subscibe_B.setBackgroundResource(R.drawable.sub_button)
             itemView.Subscibe_B.setTextColor(ContextCompat.getColor(mContext,R.color.white))
@@ -37,21 +37,21 @@ class SearchViewHolder(parent: View) : RecyclerView.ViewHolder(parent) {
 
         itemView.Subscibe_B.setOnClickListener {
             Log.d("subB", "Button pressed")
-            val sub = crn.Subscribed
+            val sub = crn.subscribed
             if (sub) {
                 Log.d("subB", "else")
                 mViewModel.removeSub(crn.name)
                 itemView.Subscibe_B.setBackgroundResource(R.drawable.circle_border)
                 itemView.Subscibe_B.setTextColor(ContextCompat.getColor(mContext,R.color.blue_theme))
                 itemView.Subscibe_B.text = mContext.resources.getString(R.string.notSub)
-                crn.Subscribed = false
+                crn.subscribed = false
             } else {
                 Log.d("subB", "ifffffff")
                 mViewModel.addSub(crn.name)
                 itemView.Subscibe_B.setBackgroundResource(R.drawable.sub_button)
                 itemView.Subscibe_B.setTextColor(ContextCompat.getColor(mContext,R.color.white))
                 itemView.Subscibe_B.text = mContext.resources.getString(R.string.Sub)
-                crn.Subscribed = true
+                crn.subscribed = true
             }
 
         }

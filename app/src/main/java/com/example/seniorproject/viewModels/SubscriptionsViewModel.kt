@@ -10,7 +10,7 @@ import javax.inject.Inject
 class SubscriptionsViewModel @Inject constructor(private val repository: PostRepository) :
     ViewModel() {
 
-    var UsersSubs: MutableLiveData<MutableList<String>>? = MutableLiveData()
+    var usersSubs: MutableLiveData<MutableList<String>>? = MutableLiveData()
 
 
 
@@ -19,14 +19,14 @@ class SubscriptionsViewModel @Inject constructor(private val repository: PostRep
     }
 
     fun getUserSub(): MutableList<String>? {
-        UsersSubs = repository.getsublist2()
+        usersSubs = repository.getsublist2()
 
-        return UsersSubs!!.value
+        return usersSubs!!.value
 
     }
     fun retsubs(): MutableList<String>?
     {
-        return UsersSubs!!.value
+        return usersSubs!!.value
     }
 
 

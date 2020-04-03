@@ -47,7 +47,7 @@ class MainForum : AppCompatActivity(),
     FirebaseAuth.AuthStateListener {
 
 
-    var obse : Observer<User>? = null
+    private var obse : Observer<User>? = null
     override fun onAuthStateChanged(p0: FirebaseAuth) {
         val currentUser = myViewModel.user
         if (currentUser != null) {

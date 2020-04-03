@@ -5,5 +5,5 @@ package com.example.seniorproject.data.models
 class CRN(var name : String)
 {
     constructor(): this("")
-    var Subscribed : Boolean = false
+    var subscribed : Boolean = false
 }

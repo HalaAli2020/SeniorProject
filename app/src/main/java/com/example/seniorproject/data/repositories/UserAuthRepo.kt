@@ -11,13 +11,13 @@ import javax.inject.Singleton
 class UserAuthRepo @Inject constructor(private val Firebase: FirebaseData) {
 
     //register user function is a suspend because of async properties
-    suspend fun RegisterUserEmail(firebaseAuth: FirebaseAuth, email:String ,password:String, username: String, callback: EmailCallback){
-        Firebase.RegisterUserEmail(firebaseAuth, email, password, username, callback)
+    suspend fun registerUserEmail(firebaseAuth: FirebaseAuth, email:String ,password:String, username: String, callback: EmailCallback){
+        Firebase.registerUserEmail(firebaseAuth, email, password, username, callback)
     }
 
     //Login user function is a suspend function because of async properties
-    suspend fun LoginUserAccount(firebaseAuth: FirebaseAuth, email:String, password:String, callback: EmailCallback){
-        Firebase.LoginUserEmail(firebaseAuth, email, password, callback)
+    suspend fun loginUserAccount(firebaseAuth: FirebaseAuth, email:String, password:String, callback: EmailCallback){
+        Firebase.loginUserEmail(firebaseAuth, email, password, callback)
     }
 
     //ResetUserPassword is a suspend function because of async properties
@@ -26,5 +26,5 @@ class UserAuthRepo @Inject constructor(private val Firebase: FirebaseData) {
     }
 
     //returns current user
-    fun currentUser() = Firebase.CurrentUser()
+    fun currentUser() = Firebase.currentUser()
 }
