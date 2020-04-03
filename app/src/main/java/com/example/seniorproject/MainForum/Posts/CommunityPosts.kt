@@ -75,8 +75,6 @@ class CommunityPosts : AppCompatActivity() {
             var toast= Toast.makeText(this@CommunityPosts, "We've received your report.",Toast.LENGTH_SHORT)
             toast.show()
         }
-
-
         val swipe = object : SwipeHelper(applicationContext, classes_post_RV, 200) {
             override fun initButton(
                 viewHolders: RecyclerView.ViewHolder,
