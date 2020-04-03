@@ -149,7 +149,6 @@ class CommentsAdapter(
     fun getUserKey(holder: RecyclerView.ViewHolder): String {
         val comment: Comment = Comments?.value!![holder.adapterPosition]
         val commentkey: String? = comment.PosterID
-
         return commentkey!!
     }
 

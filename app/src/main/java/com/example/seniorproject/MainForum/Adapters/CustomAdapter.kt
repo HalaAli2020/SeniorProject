@@ -62,7 +62,6 @@ class CustomAdapter(context: Context, private var savedPosts: PostLiveData, var 
     fun getUserKey(holder: RecyclerView.ViewHolder): String {
         val post: Post = savedPosts.value!![holder.adapterPosition]
         val postkey: String?= post.userID
-
         return postkey!!
     }
 
