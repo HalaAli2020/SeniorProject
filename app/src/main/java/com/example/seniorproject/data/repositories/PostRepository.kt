@@ -4,16 +4,31 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.seniorproject.Utils.EmailCallback
+import com.example.seniorproject.Utils.FlowCallback
 import com.example.seniorproject.data.Firebase.FirebaseData
+
 import com.example.seniorproject.data.models.*
 import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.ProducerScope
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.*
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.collections.ArrayList
 
 
 @Singleton
 class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     val post: Post? = null
+    val CommentList: MutableList<Comment> = mutableListOf()
+    val CommentL = CommentLive()
+    var SessionUser: User? = null
+    var listClassesco: Flow<Post> = flow{ }
+    var listClassescopast: Flow<MutableList<Post>> = flow{ }
     //var SessionUser: User? = null
     var listClasses: PostLiveData = PostLiveData()
     var classList: MutableLiveData<MutableList<CRN>> = MutableLiveData()
@@ -22,6 +37,12 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     var newProfilePosts: Post? = null
     var comments : CommentLive = CommentLive()
     var newProfileComments: Comment? = null
+    var finallist: MutableList<Post> = mutableListOf()
+    var otherEmail : String? = null
+
+
+
+    private var getCommentsJob: Job? = null
 
     fun saveNewPost(text: String, title: String, CRN: String) = Firebase.saveNewPosttoUser(text, title, CRN)
 
@@ -88,66 +109,72 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun currentUser() = Firebase.currentUser()
 
-    fun getClassPosts(className: String): PostLiveData {
-        //var newPost = Post()
+    fun getClassPostsco(className: String, callback: FlowCallback){
         Firebase.getClassPosts(className, object : FirebaseCallbackPost {
-            override fun onSuccess(data: DataSnapshot) {
-
-
-                val savedPostsList: MutableList<Post> = mutableListOf()
-                //val newPost = Post()
-                //var postss = data.child("Posts")
-                Log.d("Children", data.child("Posts").childrenCount.toString())
-                val postdetails: Iterable<DataSnapshot> = data.child("Posts").children
-                for (n in postdetails) {
-                     val newPost = Post()
-                    newPost.let {
-
-                        //Log.d("ACCESSING", newPost?.text)
-                        it.title = n.child("title").getValue(String::class.java)
-                        //Log.d("Community post", data.child("title").getValue(String::class.java))
-                        it.text = n.child("text").getValue(String::class.java)
-                        //newPost.author = pos.child("author").getValue(String::class.java)
-                        //it.subject = className
-                        Log.d("CRN", data.key!!)
-                        it.subject = n.child("subject").getValue(String::class.java)
-                        it.Ptime = n.child("Timestamp").getValue(String::class.java)
-                        it.key = n.child("key").getValue(String::class.java)
-                        it.Ptime = n.child("Ptime").getValue(String::class.java)
-                        it.classkey = n.child("Classkey").getValue(String::class.java)
-                        it.userID = n.child("UserID").getValue(String::class.java)
-                        it.author = n.child("author").getValue(String::class.java)
-                        it.uri = n.child("uri").getValue(String::class.java)
-
-                        // comments might need to be gotten separatley to properly convert values
-
-
-
-
-                    savedPostsList.add(newPost)
-                 }
-                }
-
-                //repository.saveNewPost(newPost)
-                //adapter.add(PostFrag(newPost.title, newPost.text))
-                listClasses.value = savedPostsList
-
-
+            override fun onStart() {
             }
 
             override fun onFailure() {
-                Log.d("Faiure", "onfailurecalled")
             }
 
-            override fun onStart() {
+            override fun onSuccess(data: DataSnapshot) {
+                var postdetail: Iterable<DataSnapshot> = data.child("Posts").children
+                var savedPostsList: MutableList<Post> = mutableListOf()
+              // var listCor : Flow<Post> = flow {
+                    for (n in postdetail) {
+                        var newPost = Post()
+                        newPost.let {
 
+                            //Log.d("ACCESSING", newPost?.text)
+                            it.title = n.child("title").getValue(String::class.java)
+                            //Log.d("Community post", data.child("title").getValue(String::class.java))
+                            it.text = n.child("text").getValue(String::class.java)
+                            //newPost.author = pos.child("author").getValue(String::class.java)
+                            //it.subject = className
+                            Log.d("CRN", data.key!!)
+                            it.subject = n.child("subject").getValue(String::class.java)
+                            it.Ptime =  n.child("Timestamp").getValue(String::class.java)
+                            it.key = n.child("key").getValue(String::class.java)
+                            it.Ptime = n.child("Ptime").getValue(String::class.java)
+                            it.classkey = n.child("Classkey").getValue(String::class.java)
+                            it.userID = n.child("UserID").getValue(String::class.java)
+                            it.author = n.child("author").getValue(String::class.java)
+                            it.uri = n.child("uri").getValue(String::class.java)
+
+                            savedPostsList.add(newPost)
+
+                           // emit(newPost)
+                        }
+                    }
+              //  }
+                var listCor : Flow<Post> = savedPostsList.asFlow()
+                callback.onFlow(listCor)
+                var scope = CoroutineScope(Dispatchers.IO)
+            scope.launch {
+                listCor.collect {
+                    Log.d("soupcollect", "post is $it")
+                }
+            var check = listCor.toList()
+            Log.d("souprepo", "start here")
+            for(item in check){
+                Log.d("souprepo", "post is $item")
             }
-
+            Log.d("souprepo", "end here")
+            }
+                //when i convert listCor to list from here it returns only last post
+                /*
+                    var check = listCor.toList()
+                    Log.d("soupfinal","start here")
+                    for(item in check){
+                        Log.d("souplist","post is $item")
+                    }
+                    Log.d("soupfinal","end here")
+                }*/
+                //i can collect in realtime fine here, but when i add each item to arraylist of posts on collect
+                //and then loop inside the arraylist it returns only last post.
+            }
         })
-
-        return listClasses
     }
-
 
     fun addUsersub(crn: String) {
         Firebase.addUserSUB(crn)
@@ -353,3 +380,4 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
 
 }
+
