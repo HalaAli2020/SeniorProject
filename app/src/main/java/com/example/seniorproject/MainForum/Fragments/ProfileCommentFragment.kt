@@ -126,14 +126,15 @@ class ProfileCommentFragment : Fragment() {
         deleteIcon = ContextCompat.getDrawable(activity!!.applicationContext, R.drawable.ic_delete_24px)!!
         binding.executePendingBindings()
 
-        //checking if a user has no posts, the no comments message is not swipable but all other comments are
+        //checking if a user has no posts, the no comments message is not swipeable but all other comments are
          myViewModel.noCommentsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null", object : CheckCallback {
              override fun check(chk: Boolean) {
                  if (iD != FirebaseAuth.getInstance().currentUser?.uid || chk){
                      Log.d("wrong","one")
                  }
                  else if (!chk) {
-                     //setting swipe UI
+                     //setting up swipe UI with a delete and edit button
+                     //if a user has no comments the message should not be swipeable
                      object : SwipeHelper(context!!, view.profile_comment_recyclerView, 200) {
                          override fun initButton(
                              viewHolders: RecyclerView.ViewHolder,
@@ -144,7 +145,7 @@ class ProfileCommentFragment : Fragment() {
                                      ("#FF0000"), object : ButtonClickListener {
                                      override fun onClick(pos: Int) {
                                          val postkeyUP: String? =
-                                             adaptercomments.pkeyUserProfile( //uninitialized property exeption
+                                             adaptercomments.pkeyUserProfile(
                                                  viewHolders as CustomViewHolders
                                              )
                                          val userkey: String? =
@@ -177,6 +178,7 @@ class ProfileCommentFragment : Fragment() {
                                              R.style.AppTheme_AlertDialog
                                          )
 
+                                         //creating dialog box and message to stop user from deleting post on accident
                                          builder.setTitle("Are you sure?")
                                          builder.setMessage("You cannot restore comments that have been deleted.")
                                          builder.setPositiveButton("DELETE",
@@ -235,6 +237,7 @@ class ProfileCommentFragment : Fragment() {
                                                  viewHolders
                                              )
 
+                                         //sending information and starting edit post activity
                                          val intent = Intent(context, UpdateComment::class.java)
                                          intent.putExtra("PosterID", userkey)
                                          intent.putExtra("ProfileComKey", classprofilekey)

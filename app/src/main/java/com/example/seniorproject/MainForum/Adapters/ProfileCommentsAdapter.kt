@@ -84,8 +84,6 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                 holder.itemView.comment_text.text = "no Comments"
             }
 
-
-            //val mContext: Context = context
         }
     }
 
@@ -101,54 +99,36 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
     fun getUserKey(customViewHolders: CustomViewHolders): String {
         val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String? = comment.PosterID
-
-        //notifyItemRemoved(customViewHolders.adapterPosition)
-
         return commentkey!!
     }
 
     fun getClassKey(customViewHolders: CustomViewHolders): String {
         val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String? = comment.classkey
-
-        //notifyItemRemoved(customViewHolders.adapterPosition)
-
         return commentkey!!
     }
 
     fun getClassProfileKey(customViewHolders: CustomViewHolders): String {
         val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String? = comment.profileComKey
-
-        //notifyItemRemoved(customViewHolders.adapterPosition)
-
         return commentkey!!
     }
 
     fun pkeyUserProfile(customViewHolders: CustomViewHolders): String {
         val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String? = comment.Postkey
-
-        //notifyItemRemoved(customViewHolders.adapterPosition)
-
         return commentkey!!
     }
 
     fun getCrn(customViewHolders: CustomViewHolders): String {
         val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String? = comment.crn
-
-        //notifyItemRemoved(customViewHolders.adapterPosition)
-
         return commentkey!!
     }
 
     fun getText(customViewHolders: CustomViewHolders): String {
         val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String? = comment.text
-
-        //notifyItemRemoved(customViewHolders.adapterPosition)
-
         return commentkey!!
     }
 

@@ -129,6 +129,7 @@ class ProfilePostFragment : Fragment() {
                                     ("#FF0000"), object : ButtonClickListener {
                                     override fun onClick(pos: Int) {
                                         var postkey = " "
+                                        //if statement to cover image post case
                                         if (adapter.getItemViewType(pos) == 1)
                                         {
                                             postkey = adapter.removeItem(viewHolders as PostImageViewHolders)
@@ -144,12 +145,12 @@ class ProfilePostFragment : Fragment() {
                                         val crnkey: String? =
                                             adapter.getCrn(viewHolders)
 
-                                        //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
+                                        //alert dialog setup
                                         val builder = AlertDialog.Builder(
                                             view.context,
                                             R.style.AppTheme_AlertDialog
                                         )
-
+                                        //creating message to stop user from deleting posts on accident
                                         builder.setTitle("Are you sure?")
                                         builder.setMessage("You cannot restore posts that have been deleted.")
                                         builder.setPositiveButton("DELETE",
@@ -171,13 +172,14 @@ class ProfilePostFragment : Fragment() {
 
                                 })
                             )
-
+                              //adding an edit butto on onswipe
                             buffer.add(
                                 ProfileButton(context!!, "Edit", 30, 0, Color.parseColor
                                     ("#D3D3D3"), object : ButtonClickListener {
                                     override fun onClick(pos: Int) {
                                         val intent = Intent(context, UpdatePost::class.java)
                                         var postkey = " "
+                                        //if statement to cover image post case
                                         if (adapter.getItemViewType(pos) == 1)
                                         {
                                              postkey = adapter.removeItem(viewHolders as PostImageViewHolders)
@@ -198,7 +200,7 @@ class ProfilePostFragment : Fragment() {
 
                                         val textkey: String? =
                                             adapter.getText(viewHolders)
-
+                                        //sending information and setting up edit post activity
                                         intent.putExtra("crn", crnkey)
                                         intent.putExtra("Classkey", postkey)
                                         intent.putExtra("UserID", userkey)

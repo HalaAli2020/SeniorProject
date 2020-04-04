@@ -1244,21 +1244,10 @@ NEEDS COMMENT
                 list.add(7,uri)
                 callBack.onCallback(list)
             }
-            /*override fun onDataChange(p0: DataSnapshot){
-                if(p0.exists()){
-                    var ptext = p0.getValue().toString()
-                    callBack.onCallback(ptext)
-                }
-
-            }
-
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }*/
         })
     }
 
-    // CRN is a placeholder for a class object
+    //
     fun saveNewImgPosttoUser(title: String, text: String, CRN: String, uri: Uri, imagePost: Boolean) {
 
         val filename = UUID.randomUUID().toString()
