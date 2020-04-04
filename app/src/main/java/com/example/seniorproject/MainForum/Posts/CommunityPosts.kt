@@ -1,11 +1,7 @@
 package com.example.seniorproject.MainForum.Posts
 
 import android.content.DialogInterface
-import android.content.Intent
-import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -16,13 +12,10 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.ItemTouchHelper
-//import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Adapters.CustomAdapter
-import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
 import com.example.seniorproject.Utils.ProfileButton
@@ -31,7 +24,6 @@ import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.viewModels.CommunityPostViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_community_posts.*
-import kotlinx.android.synthetic.main.fragment_profile__post.view.*
 import kotlinx.android.synthetic.main.rv_post.view.*
 import javax.inject.Inject
 
@@ -42,7 +34,7 @@ class CommunityPosts : AppCompatActivity() {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: CommunityPostViewModel
-    lateinit var obse: Observer<in MutableList<Post>>
+    private lateinit var obse: Observer<in MutableList<Post>>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,44 +60,50 @@ class CommunityPosts : AppCompatActivity() {
 
         refreshView.setOnRefreshListener {
             refreshView.isRefreshing = false
-            classes_post_RV.adapter = CustomAdapter(this, myViewModel.returnClassPosts(className!!), 1)
+            classes_post_RV.adapter = CustomAdapter(this, myViewModel.returnClassPosts(className), 1)
         }
 
-        fun showToast(){
+        /*fun showToast(){
             var toast= Toast.makeText(this@CommunityPosts, "We've received your report.",Toast.LENGTH_SHORT)
             toast.show()
-        }
-        val swipe = object : SwipeHelper(applicationContext, classes_post_RV, 200) {
+        }*/
+
+
+        object : SwipeHelper(applicationContext, classes_post_RV, 200) {
             override fun initButton(
                 viewHolders: RecyclerView.ViewHolder,
                 buffer: MutableList<ProfileButton>
             ) {
                 val userk: String? =
-                    adapter.getUserKey(viewHolders as CustomViewHolders)
+                    adapter.getUserKey(viewHolders)
 
                 if (FirebaseAuth.getInstance().currentUser?.uid == userk){
-                    val swipe = null
+                    //val swipe = null
                 }
                 else{
                     buffer.add(
                         ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
                             ("#FF0000"), object : ButtonClickListener {
                             override fun onClick(pos: Int) {
-                                val crnkey: String? =
-                                    adapter.getCrn(viewHolders as CustomViewHolders,pos)
+                                //val crnkey: String? =
+                                //   adapter.getCrn(viewHolders)
 
                                 val userkey: String? =
-                                    adapter.getUserKey(viewHolders as CustomViewHolders)
+                                    adapter.getUserKey(viewHolders)
 
                                 val authkey: String? =
-                                    adapter.getAuthor(viewHolders as CustomViewHolders,pos)
+                                    adapter.getAuthor(viewHolders)
 
                                 //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
-                                var builder = AlertDialog.Builder(
+                                val builder = AlertDialog.Builder(
                                     this@CommunityPosts,
                                     R.style.AppTheme_AlertDialog
                                 )
 
+                                //.getStringExtra("Classkey")
+                                //val postkey = intent.getStringExtra("author")
+                                //myViewModel.deletePost(postkey!!, className)
+                                //myViewModel.deletePost()
                                 builder.setTitle("Are you sure?")
                                 builder.setMessage("You won't see posts or comments from this user.")
                                 builder.setPositiveButton("BLOCK"
@@ -124,12 +122,12 @@ class CommunityPosts : AppCompatActivity() {
                                         //classes_post_RV.findViewHolderForAdapterPosition(count)!!.itemView.post_title.text="[blocked]"
                                         count++
                                         if(count== classes_post_RV.childCount){
-                                            break;
+                                            break
                                         }
                                         //classes_post_RV.findViewHolderForAdapterPosition(i)!!.itemView.post_title.text="[blocked]"
                                         //classes_post_RV.getChildViewHolder(classes_post_RV.getChildAt(i)).itemView.post_title.text="[blocked]"
                                     }
-                                    var toast = Toast.makeText(
+                                    val toast = Toast.makeText(
                                         this@CommunityPosts,
                                         "This user has been blocked",
                                         Toast.LENGTH_SHORT
@@ -157,22 +155,22 @@ class CommunityPosts : AppCompatActivity() {
                             ("#D3D3D3"), object : ButtonClickListener {
                             override fun onClick(pos: Int) {
                                 val postkey: String? =
-                                    adapter.removeItem(viewHolders as CustomViewHolders,pos)
+                                    adapter.removeItem(viewHolders)
 
                                 val userkey: String? =
-                                    adapter.getUserKey(viewHolders as CustomViewHolders)
+                                    adapter.getUserKey(viewHolders)
 
                                 val crnkey: String? =
-                                    adapter.getCrn(viewHolders as CustomViewHolders,pos)
+                                    adapter.getCrn(viewHolders)
 
-                                val textkey: String? = adapter.getText(viewHolders,pos)
+                                val textkey: String? = adapter.getText(viewHolders)
 
-                                var builder = AlertDialog.Builder(
+                                val builder = AlertDialog.Builder(
                                     this@CommunityPosts,
                                     R.style.AppTheme_AlertDialog
                                 )
 
-                                var listreason = arrayOf(
+                                val listreason = arrayOf(
                                     "This is spam",
                                     "This is abusive or harassing",
                                     "Other issues"
@@ -182,11 +180,11 @@ class CommunityPosts : AppCompatActivity() {
                                     listreason,
                                     0
                                 ) { _, i ->
-                                    var complaint = listreason[i]
+                                    //var complaint = listreason[i]
                                 }
                                 builder.setPositiveButton("SUBMIT"
                                 ) { _: DialogInterface?, _: Int ->
-                                    var toast = Toast.makeText(
+                                    val toast = Toast.makeText(
                                         this@CommunityPosts,
                                         "We've received your report.",
                                         Toast.LENGTH_SHORT
@@ -220,7 +218,6 @@ class CommunityPosts : AppCompatActivity() {
 
             }
         }
-        //}
 
 
         obse = Observer<MutableList<Post>> {
@@ -229,10 +226,11 @@ class CommunityPosts : AppCompatActivity() {
         }
 
     }
-    //myViewModel.listClasses?.observe(this, obse)
 
 
 }
+
+
 
 
 

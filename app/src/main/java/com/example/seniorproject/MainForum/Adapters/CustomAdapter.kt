@@ -1,7 +1,6 @@
 package com.example.seniorproject.MainForum.Adapters
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
@@ -180,7 +179,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
     }
 
 
-    fun removeItem(holder: RecyclerView.ViewHolder, position: Int): String {
+    fun removeItem(holder: RecyclerView.ViewHolder): String {
         val post: Post = savedPosts.value!![holder.adapterPosition]
         val postkey: String? = post.classkey
 
@@ -189,21 +188,21 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
 
 
 
-    fun getCrn(holder: RecyclerView.ViewHolder,position: Int): String {
+    fun getCrn(holder: RecyclerView.ViewHolder): String {
         val post: Post = savedPosts.value!![holder.adapterPosition]
         val postcrn: String?= post.subject
 
         return postcrn!!
     }
 
-    fun getTitle(holder: RecyclerView.ViewHolder, position: Int): String {
+    fun getTitle(holder: RecyclerView.ViewHolder): String {
         val post: Post = savedPosts.value!![holder.adapterPosition]
         val posttitle: String?= post.title
 
         return posttitle!!
     }
 
-    fun getAuthor(holder: RecyclerView.ViewHolder, position: Int): String {
+    fun getAuthor(holder: RecyclerView.ViewHolder): String {
 
         val post: Post = savedPosts.value!![holder.adapterPosition]
         val postauth: String?= post.author
@@ -212,7 +211,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
         return postauth!!
     }
 
-    fun getText(holder: RecyclerView.ViewHolder, position: Int): String {
+    fun getText(holder: RecyclerView.ViewHolder): String {
 
         val post: Post = savedPosts.value!![holder.adapterPosition]
         val posttext: String? = post.text
