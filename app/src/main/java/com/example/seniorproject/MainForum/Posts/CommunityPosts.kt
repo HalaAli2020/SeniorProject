@@ -63,10 +63,6 @@ class CommunityPosts : AppCompatActivity() {
             classes_post_RV.adapter = CustomAdapter(this, myViewModel.returnClassPosts(className), 1)
         }
 
-        /*fun showToast(){
-            var toast= Toast.makeText(this@CommunityPosts, "We've received your report.",Toast.LENGTH_SHORT)
-            toast.show()
-        }*/
 
 
         object : SwipeHelper(applicationContext, classes_post_RV, 200) {

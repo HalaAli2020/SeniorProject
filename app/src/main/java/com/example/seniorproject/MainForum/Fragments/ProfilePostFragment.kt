@@ -23,6 +23,7 @@ import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Adapters.CustomAdapter
 import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
+import com.example.seniorproject.MainForum.Adapters.PostImageViewHolders
 import com.example.seniorproject.MainForum.Posts.UpdatePost
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
@@ -127,8 +128,15 @@ class ProfilePostFragment : Fragment() {
                                 ProfileButton(context!!, "Delete", 30, 0, Color.parseColor
                                     ("#FF0000"), object : ButtonClickListener {
                                     override fun onClick(pos: Int) {
-                                        val postkey: String? =
-                                            adapter.removeItem(viewHolders as CustomViewHolders)
+                                        var postkey = " "
+                                        if (adapter.getItemViewType(pos) == 1)
+                                        {
+                                            postkey = adapter.removeItem(viewHolders as PostImageViewHolders)
+                                        }
+                                        else if (adapter.getItemViewType(pos) == 0){
+
+                                            postkey = adapter.removeItem(viewHolders as CustomViewHolders)
+                                        }
 
                                         val userkey: String? =
                                             adapter.getUserKey(viewHolders)
@@ -142,10 +150,6 @@ class ProfilePostFragment : Fragment() {
                                             R.style.AppTheme_AlertDialog
                                         )
 
-                                        //.getStringExtra("Classkey")
-                                        //val postkey = intent.getStringExtra("author")
-                                        //myViewModel.deletePost(postkey!!, className)
-                                        //myViewModel.deletePost()
                                         builder.setTitle("Are you sure?")
                                         builder.setMessage("You cannot restore posts that have been deleted.")
                                         builder.setPositiveButton("DELETE",
@@ -173,9 +177,15 @@ class ProfilePostFragment : Fragment() {
                                     ("#D3D3D3"), object : ButtonClickListener {
                                     override fun onClick(pos: Int) {
                                         val intent = Intent(context, UpdatePost::class.java)
+                                        var postkey = " "
+                                        if (adapter.getItemViewType(pos) == 1)
+                                        {
+                                             postkey = adapter.removeItem(viewHolders as PostImageViewHolders)
+                                        }
+                                        else if (adapter.getItemViewType(pos) == 0){
 
-                                        val postkey: String? =
-                                            adapter.removeItem(viewHolders as CustomViewHolders)
+                                             postkey = adapter.removeItem(viewHolders as CustomViewHolders)
+                                        }
 
                                         val userkey: String? =
                                             adapter.getUserKey(viewHolders)

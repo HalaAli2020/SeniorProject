@@ -51,11 +51,11 @@ class ClickedPost : AppCompatActivity() {
         val text: String = intent.getStringExtra("Text") ?: "no text"
         val crn: String = intent.getStringExtra("subject") ?: "no subject"
         val author: String = intent.getStringExtra("Author") ?: "no author"
-        val uri : String = intent.getStringExtra("uri") ?: " "
+        val uri : String = intent.getStringExtra("uri") ?: "null"
         val ptime: String = intent.getStringExtra("Ptime") ?: "no time"
         val uid: String = intent.getStringExtra("UserID") ?: "null"
-        myViewModel.pKey = intent.getStringExtra("Pkey")
-        myViewModel.classkey = intent.getStringExtra("Classkey")
+        myViewModel.pKey = intent.getStringExtra("Pkey") ?: " "
+        myViewModel.classkey = intent.getStringExtra("Classkey") ?: " "
         myViewModel.userID = uid
         myViewModel.title = title
         myViewModel.text = text
@@ -85,10 +85,6 @@ class ClickedPost : AppCompatActivity() {
         }
 
 
-        /* fun showToast(){
-             var toast= Toast.makeText(this@ClickedPost, "We've received your report.", Toast.LENGTH_SHORT)
-             toast.show()
-         }*/
 
         object : SwipeHelper(applicationContext, comment_RecyclerView, 200) {
             override fun initButton(
@@ -104,8 +100,8 @@ class ClickedPost : AppCompatActivity() {
                         ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
                             ("#FF0000"), object : ButtonClickListener {
                             override fun onClick(pos: Int) {
-                                val postkey: String? =
-                                    adapter.removeItem(viewHolders)
+                                //val postkey: String? =
+                                 //   adapter.removeItem(viewHolders)
 
                                 val userkey: String? =
                                     adapter.getUserKey(viewHolders)
@@ -119,10 +115,6 @@ class ClickedPost : AppCompatActivity() {
                                     R.style.AppTheme_AlertDialog
                                 )
 
-                                //.getStringExtra("Classkey")
-                                //val postkey = intent.getStringExtra("author")
-                                //myViewModel.deletePost(postkey!!, className)
-                                //myViewModel.deletePost()
                                 builder.setTitle("Are you sure?")
                                 builder.setMessage("You won't see posts or comments from this user.")
                                 builder.setPositiveButton("BLOCK"
@@ -178,10 +170,7 @@ class ClickedPost : AppCompatActivity() {
                                     "This is abusive or harassing",
                                     "Other issues"
                                 )
-                                //.getStringExtra("Classkey")
-                                //val postkey = intent.getStringExtra("author")
-                                //myViewModel.deletePost(postkey!!, className)
-                                //myViewModel.deletePost()
+
                                 builder.setTitle("Report Post")
                                 builder.setSingleChoiceItems(
                                     listreason,

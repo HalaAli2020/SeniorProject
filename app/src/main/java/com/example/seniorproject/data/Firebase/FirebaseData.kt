@@ -1225,23 +1225,23 @@ NEEDS COMMENT
 
 
             override fun onDataChange(p0: DataSnapshot) {
-                var title= p0.child("title").getValue(String::class.java)
-                var text= p0.child("text").getValue(String::class.java)
-                var key = p0.child("key").getValue(String::class.java)
-                var ptime= p0.child("Ptime").getValue(String::class.java)
-                var classkey= p0.child("Classkey").getValue(String::class.java)
-                var user= p0.child("UserID").getValue(String::class.java)
-                var author = p0.child("author").getValue(String::class.java)
-                var uri = p0.child("uri").getValue(String::class.java)
+                var title= p0.child("title").getValue(String::class.java) ?: "This post has been deleted"
+                var text= p0.child("text").getValue(String::class.java) ?: " "
+                var key = p0.child("key").getValue(String::class.java) ?: " "
+                var ptime= p0.child("Ptime").getValue(String::class.java) ?: " "
+                var classkey= p0.child("Classkey").getValue(String::class.java) ?: " "
+                var user= p0.child("UserID").getValue(String::class.java) ?: " "
+                var author = p0.child("author").getValue(String::class.java) ?: " "
+                var uri = p0.child("uri").getValue(String::class.java) ?: "null"
                 var list: ArrayList<String> = arrayListOf()
-                list.add(0, title!!)
-                list.add(1, text!!)
-                list.add(2, key!!)
-                list.add(3, ptime!!)
-                list.add(4, classkey!!)
-                list.add(5, user!!)
-                list.add(6, author!!)
-                list.add(7,uri!!)
+                list.add(0, title)
+                list.add(1, text)
+                list.add(2, key)
+                list.add(3, ptime)
+                list.add(4, classkey)
+                list.add(5, user)
+                list.add(6, author)
+                list.add(7,uri)
                 callBack.onCallback(list)
             }
             /*override fun onDataChange(p0: DataSnapshot){
@@ -1257,6 +1257,7 @@ NEEDS COMMENT
             }*/
         })
     }
+
     // CRN is a placeholder for a class object
     fun saveNewImgPosttoUser(title: String, text: String, CRN: String, uri: Uri, imagePost: Boolean) {
 

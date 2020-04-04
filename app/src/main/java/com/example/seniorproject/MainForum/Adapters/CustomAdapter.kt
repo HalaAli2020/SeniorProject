@@ -46,10 +46,11 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
         if (viewType == 1) {
             val cellForRow = layoutInflater.inflate(R.layout.rv_post_image, parent, false)
             return PostImageViewHolders(cellForRow)
+        }else {
+            val cellForRow = layoutInflater.inflate(R.layout.rv_post, parent, false)
+            return CustomViewHolders(cellForRow)
         }
 
-        val cellForRow = layoutInflater.inflate(R.layout.rv_post, parent, false)
-        return CustomViewHolders(cellForRow)
     }
 
     override fun getItemCount(): Int {
@@ -59,12 +60,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
             return 0
     }
 
-    fun getUserKey(holder: RecyclerView.ViewHolder): String {
-        val post: Post = savedPosts.value!![holder.adapterPosition]
-        val postkey: String?= post.userID
 
-        return postkey!!
-    }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val post: Post = savedPosts.value!![position]
@@ -186,6 +182,12 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
         return postkey!!
     }
 
+    fun getUserKey(holder: RecyclerView.ViewHolder): String {
+        val post: Post = savedPosts.value!![holder.adapterPosition]
+        val postkey: String?= post.userID
+
+        return postkey!!
+    }
 
 
     fun getCrn(holder: RecyclerView.ViewHolder): String {
