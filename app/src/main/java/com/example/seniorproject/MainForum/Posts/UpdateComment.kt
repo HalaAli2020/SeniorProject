@@ -6,7 +6,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.example.seniorproject.Dagger.DaggerAppComponent
-import com.example.seniorproject.MainForum.Adapters.ProfileCommentsAdapter
 import com.example.seniorproject.R
 import com.example.seniorproject.databinding.UpdateCommentBinding
 import com.example.seniorproject.viewModels.ClickedPostViewModel

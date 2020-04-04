@@ -8,7 +8,7 @@
 
         <variable
             name="ProfViewModel"
-            type="com.example.seniorproject.viewModels.ProfileViewModel"></variable>
+            type="com.example.seniorproject.viewModels.ProfileViewModel" />
     </data>
 
 

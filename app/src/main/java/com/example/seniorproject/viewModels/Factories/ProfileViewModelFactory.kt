@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.seniorproject.data.repositories.PostRepository
 import com.example.seniorproject.viewModels.ProfileViewModel
 
-
+//initialization of Profile view model factory
 @Suppress("UNCHECKED_CAST")
 class ProfileViewModelFactory(private val repository: PostRepository):
     ViewModelProvider.NewInstanceFactory() {

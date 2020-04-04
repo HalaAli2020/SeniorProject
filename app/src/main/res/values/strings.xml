@@ -50,9 +50,9 @@
     <string name="register">Register</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="add_image">Add Image</string>
-    <string name="enter_a_title">Enter a title...</string>
-    <string name="enter_some_text">Enter some text...</string>
-    <string name="enter_message">Enter message...</string>
+    <string name="enter_a_title">Enter a title…</string>
+    <string name="enter_some_text">Enter some text…</string>
+    <string name="enter_message">Enter message…</string>
     <string name="username">Username</string>
     <string name="latest_message">Latest Message</string>
     <string name="posts_">Posts</string>

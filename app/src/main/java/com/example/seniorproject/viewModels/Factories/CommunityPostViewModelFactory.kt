@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.seniorproject.data.repositories.PostRepository
 import com.example.seniorproject.viewModels.CommunityPostViewModel
 
+//initialization of CommunityPost view model factory
 @Suppress("UNCHECKED_CAST")
 class CommunityPostViewModelFactory(private val repository: PostRepository) :
     ViewModelProvider.NewInstanceFactory() {

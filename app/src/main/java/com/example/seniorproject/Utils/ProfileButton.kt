@@ -13,6 +13,7 @@ class ProfileButton(private val context: Context, private val text: String, priv
     private var pos: Int =0
 
 
+
     init{
         resources= context.resources
     }
@@ -43,8 +44,8 @@ class ProfileButton(private val context: Context, private val text: String, priv
 
         if(imageResId ==0)
         {
-            var x=cWidth /2f-r.width() /2f-r.left.toFloat()
-            var y= cHeight / 2F+r.height() / 2f-r.bottom.toFloat()
+            val x=cWidth /2f-r.width() /2f-r.left.toFloat()
+            val y= cHeight / 2F+r.height() / 2f-r.bottom.toFloat()
             c.drawText(text, rectF.left+x, rectF.top+y, p)
         }
 

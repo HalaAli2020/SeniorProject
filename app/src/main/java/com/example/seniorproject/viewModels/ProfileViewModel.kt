@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.Utils.PostListener
+import com.example.seniorproject.Utils.CheckCallback
 import com.example.seniorproject.data.models.CommentLive
 
 import com.example.seniorproject.data.models.PostLiveData
@@ -19,10 +20,11 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     var posts: PostLiveData = PostLiveData()
     var comments: CommentLive = CommentLive()
     private var PostKey : String? = null
-    val CommentListener : PostListener? = null
-    //val userbio : String = fetchBio(FirebaseAuth.getInstance().currentUser?.uid ?: "null")
+    val commentListener : PostListener? = null
     var otherEmail : String = "no email available"
     var otherBio : String = "no bio available"
+    var noPostCheck : Boolean? = null
+    var noCommentsCheck : Boolean? = null
 
 
     fun getUserProfilePosts(UserID : String): PostLiveData {
@@ -48,10 +50,10 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
 
     fun deleteCommentFromUserProfile(PKey: String, crn: String, Classkey: String, userID: String)
     {
-        if(PKey.isNullOrEmpty())
+        if(PKey.isEmpty())
         {
             PostKey = PKey
-            CommentListener?.onFailure("Post key not found")
+            commentListener?.onFailure("Post key not found")
 
         }
         repository.deleteNewCommentFromUserProfile(PKey, crn, Classkey, userID)
@@ -60,10 +62,10 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
 
     fun deleteCommentFromCommPosts(PKey: String, crn: String, Classkey: String)
     {
-        if(PKey.isNullOrEmpty())
+        if(PKey.isEmpty())
         {
             PostKey = PKey
-            CommentListener?.onFailure("Post key not found")
+            commentListener?.onFailure("Post key not found")
 
         }
         repository.deleteNewCommentFromCommPosts(PKey, crn, Classkey)
@@ -131,8 +133,49 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
 
     //fun fetchCurrentBio() = repository.fetchCurrentBio()
 
-    fun noPostsChecker(UserID: String) = repository.noPostsChecker(UserID)
+    fun noPostsChecker(UserID: String, callback: CheckCallback) : Boolean
+    {
+        repository.noPostsChecker(UserID, object : PostRepository.FirebaseCallbackBool {
+            override fun onStart() { TODO("not implemented") }
+            override fun onFailure() { TODO("not implemented") }
 
-    fun noCommentsChecker(UserID: String) = repository.noCommentsChecker(UserID)
+            override fun onSuccess(data: DataSnapshot) : Boolean {
+                if (!data.child("Posts").exists())
+                {
+                    noPostCheck = true
+                    callback.check(noPostCheck ?: false)
+                }
+                else
+                {
+                    noPostCheck = false //here
+                    callback.check(noPostCheck ?: false)
+                }
+                return  noPostCheck ?: false
+            }
+        })
+        return  noPostCheck ?: false
+    }
+
+    fun noCommentsChecker(UserID: String, callback: CheckCallback) : Boolean {
+        repository.noCommentsChecker(UserID, object : PostRepository.FirebaseCallbackBool {
+            override fun onStart() { TODO("not implemented") }
+            override fun onFailure() { TODO("not implemented") }
+
+            override fun onSuccess(data: DataSnapshot) : Boolean {
+                if (!data.child("Comments").exists())
+                {
+                    noCommentsCheck = true
+                    callback.check(noCommentsCheck ?: false)
+                }
+                else
+                {
+                    noCommentsCheck = false //here
+                    callback.check(noCommentsCheck ?: false)
+                }
+                return  noCommentsCheck ?: false
+            }
+        })
+        return  noCommentsCheck ?: false
+    }
 
 }

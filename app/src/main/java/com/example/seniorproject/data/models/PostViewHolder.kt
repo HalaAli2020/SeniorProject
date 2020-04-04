@@ -9,11 +9,6 @@ import com.example.seniorproject.MainForum.Posts.ClickedPost
 import kotlinx.android.synthetic.main.rv_post.view.*
 
 open class PostViewHolder(parent: View) : RecyclerView.ViewHolder(parent) {
-    //var mPost = Post()
-
-
-
-
 
     fun bind(post: Post, mContext : Context) {
 
@@ -26,8 +21,8 @@ open class PostViewHolder(parent: View) : RecyclerView.ViewHolder(parent) {
             intent.putExtra("Title", post.title)
             intent.putExtra("Text", post.text)
             intent.putExtra("Pkey", post.key)
-            intent.putExtra("Classkey", post.Classkey)
-            intent.putExtra("UserID", post.UserID)
+            intent.putExtra("Classkey", post.classkey)
+            intent.putExtra("UserID", post.userID)
             intent.putExtra("Author", post.author)
             intent.putExtra("crn", post.crn)
             intent.putExtra("subject", post.subject)

@@ -9,7 +9,7 @@ import javax.inject.Inject
 class ChatLogViewModel @Inject constructor(private val repository: MessagesRepo) :
     ViewModel() {
 
-    //var chatReference: String? = null
+
     var chatMessage: String? = null
     var toID: String? = null
     var messages: MutableLiveData<List<ChatMessage>>? = null

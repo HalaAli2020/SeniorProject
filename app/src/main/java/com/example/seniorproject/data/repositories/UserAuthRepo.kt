@@ -1,38 +1,30 @@
-
 package com.example.seniorproject.data.repositories
-import android.net.Uri
-import com.example.seniorproject.Utils.AuthenticationListener
+
 import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.data.Firebase.FirebaseData
-import com.example.seniorproject.data.models.User
 import com.google.firebase.auth.FirebaseAuth
-import dagger.Module
-import dagger.Provides
 import javax.inject.Inject
 import javax.inject.Singleton
 
-//private val Firebase: FirebaseData
+//repository class layer used to communicate between the viewmodel and the Firebase data file
 @Singleton
 class UserAuthRepo @Inject constructor(private val Firebase: FirebaseData) {
 
-    suspend fun RegisterUserEmail(firebaseAuth: FirebaseAuth, email:String ,password:String, username: String, callback: EmailCallback){
-        Firebase.RegisterUserEmail(firebaseAuth, email, password, username, callback)
+    //register user function is a suspend because of async properties
+    suspend fun registerUserEmail(firebaseAuth: FirebaseAuth, email:String ,password:String, username: String, callback: EmailCallback){
+        Firebase.registerUserEmail(firebaseAuth, email, password, username, callback)
     }
 
-    suspend fun LoginUserAccount(firebaseAuth: FirebaseAuth, email:String, password:String, callback: EmailCallback){
-        Firebase.LoginUserEmail(firebaseAuth, email, password, callback)
+    //Login user function is a suspend function because of async properties
+    suspend fun loginUserAccount(firebaseAuth: FirebaseAuth, email:String, password:String, callback: EmailCallback){
+        Firebase.loginUserEmail(firebaseAuth, email, password, callback)
     }
 
+    //ResetUserPassword is a suspend function because of async properties
     suspend fun resetUserPassword(firebaseAuth: FirebaseAuth, email: String, callback: EmailCallback){
         Firebase.resetUserPassword(firebaseAuth, email, callback)
     }
 
-    fun currentUser() = Firebase.CurrentUser()
-
-    fun fetchCurrentUserName() = Firebase.fetchCurrentUserName()
-
-    fun logout(Firebase: FirebaseData)
-    {
-        Firebase.logout()
-    }
+    //returns current user
+    fun currentUser() = Firebase.currentUser()
 }

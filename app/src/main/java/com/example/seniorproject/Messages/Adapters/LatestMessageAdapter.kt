@@ -23,8 +23,8 @@ class LatestMessageAdapter(
     val mContext: Context = context
 
     companion object{
-        val USER_KEY = "USER_KEY"
-        val USERNAME = "USERNAME"
+        const val USER_KEY = "USER_KEY"
+        const val USERNAME = "USERNAME"
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentMessageHolder {

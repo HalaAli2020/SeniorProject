@@ -1,16 +1,13 @@
 package com.example.seniorproject
 
-import android.net.Uri
 //import com.example.seniorproject.Utils.AuthenticationListener
 import com.example.seniorproject.data.Firebase.FirebaseData
-import com.example.seniorproject.data.repositories.UserAuthRepo
 import com.example.seniorproject.viewModels.AuthenticationViewModel
 import com.example.seniorproject.viewModels.Factories.DaggerViewModelFactory
-import org.junit.Test
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
+import org.junit.Test
 
 
 class AuthenticationViewModelTest {
@@ -52,7 +49,7 @@ class AuthenticationViewModelTest {
 
         val firemock =mockkClass(FirebaseData::class)
 
-        every { firemock.CurrentUser()} returns mockk(relaxed = true)
+        every { firemock.currentUser()} returns mockk(relaxed = true)
 
         val repobehavior: BehaviorSubject<AuthenticationViewModel>
 

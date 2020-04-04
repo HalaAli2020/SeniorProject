@@ -5,14 +5,13 @@ import com.example.seniorproject.data.models.PostLiveData
 import com.example.seniorproject.data.repositories.PostRepository
 import javax.inject.Inject
 
-//private const val TAG = "MyLogTag"
+
 
 class HomeFragmentViewModel @Inject constructor(private val repository: PostRepository) :
     ViewModel() {
 
 
     var posts: PostLiveData = PostLiveData()
-    //var postdata: PostLiveData = PostLiveData.get()
     var p: MutableList<Post>? = null
 
     init {
@@ -25,7 +24,6 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
         posts = repository.getSubscribedPosts()
         return posts
     }
-    
 
 
     fun fetchCurrentUserName() = repository.fetchCurrentUserName()

@@ -13,9 +13,9 @@ import com.example.seniorproject.viewModels.SearchViewModel
 
 class SearchAdapter(context: Context, ViewModel: SearchViewModel, Clist : MutableLiveData<MutableList<CRN>>) :
     RecyclerView.Adapter<SearchViewHolder>(){
-    var classlist : MutableLiveData<MutableList<CRN>>? = Clist
+    private var classlist : MutableLiveData<MutableList<CRN>>? = Clist
     val mContext = context
-    val mViewModel = ViewModel
+    private val mViewModel = ViewModel
     init {
         //mViewModel.getallclasses()
     }
@@ -76,7 +76,7 @@ class SearchAdapter(context: Context, ViewModel: SearchViewModel, Clist : Mutabl
         {
             //classlist!!.value!!.removeAt()
             classlist = mViewModel.sendlistf()
-            var clist: MutableList<CRN> = mutableListOf()
+            val clist: MutableList<CRN> = mutableListOf()
             for ((index, x) in classlist!!.value!!.withIndex())
             {
                 // query.contains()

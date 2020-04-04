@@ -1,11 +1,9 @@
 package com.example.seniorproject.Messages
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.SearchView
 import androidx.annotation.Nullable
-import androidx.core.view.get
-import androidx.databinding.DataBindingUtil
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -19,14 +17,13 @@ import kotlinx.android.synthetic.main.m_activity_new_message.*
 import javax.inject.Inject
 
 
-
 class NewMessage : AppCompatActivity() {
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: NewMessageViewModel
 
-    lateinit var searchview : SearchView
+    private lateinit var searchview : SearchView
     lateinit var ada : NewMessageAdapter
     //lateinit var binding : ActivityNewMessageBinding
     val context = this

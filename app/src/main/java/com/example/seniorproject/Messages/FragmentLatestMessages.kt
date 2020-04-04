@@ -3,18 +3,20 @@ package com.example.seniorproject.Messages
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
 import androidx.annotation.Nullable
-import com.example.seniorproject.Dagger.InjectorUtils
-import com.example.seniorproject.R
-import javax.inject.Inject
-import androidx.lifecycle.*
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Adapters.LatestMessageAdapter
+import com.example.seniorproject.R
 import com.example.seniorproject.data.models.LatestMessage
 import com.example.seniorproject.viewModels.MessagesFragmentViewModel
 import kotlinx.android.synthetic.main.m_fragment_latest_messages.*
-import kotlinx.android.synthetic.main.m_fragment_latest_messages.view.recyclerView_latest_messages
+import kotlinx.android.synthetic.main.m_fragment_latest_messages.view.*
+import javax.inject.Inject
 
 class FragmentLatestMessages : Fragment() {
 
@@ -32,7 +34,7 @@ class FragmentLatestMessages : Fragment() {
 
         view.recyclerView_latest_messages.layoutManager = LinearLayoutManager(context)
 
-        myViewModel.getRecentMessages().observe(this, object : Observer<List<LatestMessage>> {
+        myViewModel.getRecentMessages().observe(viewLifecycleOwner, object : Observer<List<LatestMessage>> {
             override
             fun onChanged(@Nullable messages: List<LatestMessage>) {
                 view.recyclerView_latest_messages.adapter?.notifyDataSetChanged()
@@ -59,9 +61,9 @@ class FragmentLatestMessages : Fragment() {
         })
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater!!.inflate(R.menu.fragment_new_message_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
+        super.onCreateOptionsMenu(menu!!, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

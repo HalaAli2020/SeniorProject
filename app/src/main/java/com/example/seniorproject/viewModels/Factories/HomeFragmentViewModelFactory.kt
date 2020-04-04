@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.seniorproject.data.repositories.PostRepository
 import com.example.seniorproject.viewModels.HomeFragmentViewModel
 
+//initialization of Home Fragment view model factory
 @Suppress("UNCHECKED_CAST")
 class HomeFragmentViewModelFactory(private val repository: PostRepository) :
     ViewModelProvider.NewInstanceFactory() {

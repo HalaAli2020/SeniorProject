@@ -1,22 +1,19 @@
 package com.example.seniorproject.Authentication
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProviders
-import com.example.seniorproject.*
-import com.example.seniorproject.Utils.AuthenticationListener
-import com.example.seniorproject.viewModels.AuthenticationViewModel
-import com.example.seniorproject.databinding.ActivityRegisterBinding
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.example.seniorproject.Dagger.DaggerAppComponent
-//import com.example.seniorproject.Utils.startMainForum
+import com.example.seniorproject.R
+import com.example.seniorproject.Utils.AuthenticationListener
+import com.example.seniorproject.databinding.ActivityRegisterBinding
+import com.example.seniorproject.viewModels.AuthenticationViewModel
 import javax.inject.Inject
-
-//import com.example.seniorproject.Utils.InjectorUtils
 
 
 class RegisterActivity : AppCompatActivity(),
@@ -31,29 +28,30 @@ class RegisterActivity : AppCompatActivity(),
     }
 
     override fun onSuccess() {
+        //called in viewmodel
         Toast.makeText(this, "A verification email has been sent, please verify before you log in", Toast.LENGTH_SHORT).show()
         val myIntent = Intent(this@RegisterActivity, LoginActivity::class.java)
         this@RegisterActivity.startActivity(myIntent)
-        //this.startMainForum()
     }
 
     override fun onFailure(message: String) {
+        //called in viewmodel
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
-        //initializeUI()
+
 
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
-
+        //initalization of the viewmodel and dagger app component
         Log.d("REG","entered register activity")
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this,factory).get(AuthenticationViewModel::class.java)
-        val bindings: ActivityRegisterBinding =
-            DataBindingUtil.setContentView(this, R.layout.activity_register)
+        //initialization of binding variable, binded variables are located in the corresponding XML file
+        val bindings: ActivityRegisterBinding = DataBindingUtil.setContentView(this, R.layout.activity_register)
         bindings.authViewModel = myViewModel
         myViewModel.authListener = this
 

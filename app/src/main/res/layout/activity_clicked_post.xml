@@ -7,7 +7,7 @@
 
         <variable
             name="ClickedViewModel"
-            type="com.example.seniorproject.viewModels.ClickedPostViewModel"></variable>
+            type="com.example.seniorproject.viewModels.ClickedPostViewModel" />
 
     </data>
 
@@ -58,13 +58,14 @@
                 android:inputType="textMultiLine|textCapSentences"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:text="@={ClickedViewModel.Comment}"
+                android:text="@={ClickedViewModel.comment}"
                 android:textColor="@color/TextColor"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/Comment_button"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:importantForAutofill="no" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

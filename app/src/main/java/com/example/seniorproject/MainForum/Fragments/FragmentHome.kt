@@ -32,7 +32,7 @@ class FragmentHome : Fragment() {
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: HomeFragmentViewModel
 
-    var obse =  Observer<MutableList<Post>> {
+    private var obse =  Observer<MutableList<Post>> {
 
         swap()
     }
@@ -45,13 +45,12 @@ class FragmentHome : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity?.title = "Home"
-        LoginVerification()
+        loginVerification()
 
         val factory = InjectorUtils.providePostViewModelFactory()
 
         myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
-        //val view = inflater.inflate(R.layout.fragment_home, container, false)
-        //postLiveData = myViewModel.getSavedPosts()
+
 
     }
 
@@ -60,14 +59,8 @@ class FragmentHome : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        /*DaggerAppComponent.create().inject(this)
-        myViewModel = ViewModelProviders.of(this,factory).get(HomeFragmentViewModel::class.java)
-        val binding: FragmentHomeBinding = inflate(inflater, R.layout.fragment_home, container, false)
-        val view = inflater.inflate(R.layout.fragment_home, container, false)*/
         myViewModel.posts.observe(this, obse)
         activity?.title = "Home"
-        //LoginVerification()
         val binding: FragmentHomeBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
 
@@ -103,14 +96,14 @@ class FragmentHome : Fragment() {
         return view
 
     }
-    fun swap()
+    private fun swap()
     {
-        var ada = CustomAdapter(view!!.context, myViewModel.getSubscribedPosts(), 0)
+        val ada = CustomAdapter(view!!.context, myViewModel.getSubscribedPosts(), 0)
         view!!.post_recyclerView.swapAdapter(ada, true)
     }
 
 
-    private fun LoginVerification() {
+    private fun loginVerification() {
         if (FirebaseAuth.getInstance().uid == null) {
             val intent = Intent(activity, LoginActivity::class.java)
             startActivity(intent)
