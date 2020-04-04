@@ -3,9 +3,7 @@ package com.example.seniorproject.Utils
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.*
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
-import androidx.core.content.ContextCompat
+
 
 class ProfileButton(private val context: Context, private val text: String, private val textSize: Int,
                     private val imageResId: Int, private val color: Int, private val listener: ButtonClickListener) {
@@ -13,6 +11,7 @@ class ProfileButton(private val context: Context, private val text: String, priv
     private val resources: Resources
     private var clickRegion: RectF?=null
     private var pos: Int =0
+
 
 
     init{
@@ -45,8 +44,8 @@ class ProfileButton(private val context: Context, private val text: String, priv
 
         if(imageResId ==0)
         {
-            var x=cWidth /2f-r.width() /2f-r.left.toFloat()
-            var y= cHeight / 2F+r.height() / 2f-r.bottom.toFloat()
+            val x=cWidth /2f-r.width() /2f-r.left.toFloat()
+            val y= cHeight / 2F+r.height() / 2f-r.bottom.toFloat()
             c.drawText(text, rectF.left+x, rectF.top+y, p)
         }
 

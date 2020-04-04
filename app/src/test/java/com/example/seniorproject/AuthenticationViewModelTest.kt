@@ -1,15 +1,13 @@
 package com.example.seniorproject
 
-import android.net.Uri
+//import com.example.seniorproject.Utils.AuthenticationListener
 import com.example.seniorproject.data.Firebase.FirebaseData
-import com.example.seniorproject.data.repositories.UserAuthRepo
 import com.example.seniorproject.viewModels.AuthenticationViewModel
 import com.example.seniorproject.viewModels.Factories.DaggerViewModelFactory
-import org.junit.Test
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
+import org.junit.Test
 
 
 class AuthenticationViewModelTest {
@@ -22,21 +20,21 @@ class AuthenticationViewModelTest {
     //private val view: LoginActivity = mockk()
 
     var username: String? = "John"
-    var profileImageUrl: Uri? = Uri.EMPTY
+    //var profileImageUrl: Uri? = Uri.EMPTY
 
-    //var authListener: AuthenticationListener? = null
+    // var authListener: AuthenticationListener? = null
 
-    private val disposables = CompositeDisposable()
+    ////private val disposables = CompositeDisposable()
 
     @MockK
     val factory= mockk<DaggerViewModelFactory>()
 
-    val firecheck= mockkStatic(FirebaseData::class)
+    //val firecheck= mockkStatic(FirebaseData::class)
 
 
-    var firebaseData: FirebaseData = mockk<FirebaseData>() //fails
+    //var firebaseData: FirebaseData = mockk<FirebaseData>() //fails
 
-    val repos= mockk<UserAuthRepo>()
+    //val repos= mockk<UserAuthRepo>()
 //    var viewModel= mockkObject(AuthenticationViewModel(repo))
     // val repospy=spyk(UserAuthRepo(firebasespy))
 
@@ -51,28 +49,29 @@ class AuthenticationViewModelTest {
 
         val firemock =mockkClass(FirebaseData::class)
 
-        every { firemock.CurrentUser()} returns mockk(relaxed = true)
+        every { firemock.currentUser()} returns mockk(relaxed = true)
 
         val repobehavior: BehaviorSubject<AuthenticationViewModel>
 
 
-        /*verify(exactly=0){
-            firemock.LoginUser(email?: "null", password?: "null")
+        verify(exactly=0){
+            //firemock.LoginUser(email?: "null", password?: "null")
+            //    firemock.LoginUser(email?: "null", password?: "null")
 
-        }*/
+        }
 
-        //confirmVerified(firemock)
+        confirmVerified(firemock)
         //check subscribed calls from view model
 
 
         //assertNotEquals(firebaseData, firecheck)
         //every { firemock.CurrentUser())} returns mockk(relaxed = true)
 
-       /*verify{
-           //firemock.CurrentUser()
+        /*verify{
+            //firemock.CurrentUser()
 
 
-       }*/
+        }*/
 
 
         //confirmVerified(firemock)

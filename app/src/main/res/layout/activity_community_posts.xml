@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/BackgroundColor"
-    tools:context=".MainForum.Posts.CommunityPosts">
+    tools:context=".MainForum.Posts.CommunityPosts"
+    tools:ignore="Overdraw">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refreshView"
@@ -35,14 +36,14 @@
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_account_circle_blue_24dp" />
+        app:srcCompat="@drawable/ic_account_circle_blue_24dp"
+        android:contentDescription="@string/menu_profile" />
 
     <TextView
         android:id="@+id/post_list_community_name_TV"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="TextView"
         android:textColor="@color/TextColor"
         android:textSize="25sp"
         android:textStyle="bold"

@@ -6,6 +6,8 @@ import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
 
+//this factory provides view models for every activity that does not user a recyclerview
+@Suppress("UNCHECKED_CAST")
 @Singleton
 class DaggerViewModelFactory @Inject constructor(private val creators: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>> )
     :ViewModelProvider.Factory {
@@ -15,7 +17,7 @@ class DaggerViewModelFactory @Inject constructor(private val creators: Map<Class
 
         creators.asIterable().firstOrNull { modelClass.isAssignableFrom(it.key) }?.value
 
-        ?: throw IllegalArgumentException("unknown model class " + modelClass)
+        ?: throw IllegalArgumentException("unknown model class $modelClass")
 
         return try {
 

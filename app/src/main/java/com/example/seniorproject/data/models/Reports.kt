@@ -1,14 +1,12 @@
 package com.example.seniorproject.data.models
 
-import com.example.seniorproject.R
-import com.xwray.groupie.GroupieViewHolder
-import kotlinx.android.synthetic.main.rv_post_comment.view.*
-
-class Reports(val accuserID: String, var accusedID: String, var complaintext: String, var crn: String, var classkey: String)
+//model class for reporting a user
+class Reports(private val accuserID: String, var accusedID: String, var complaintext: String, var crn: String, var classkey: String)
 {
-    constructor() : this("","","", "", "")
+    //constructor() : this("","","", "", "")
 
 
+    //mapping of report data to the database
     fun toMap(): Map<String, Any?> {
         return mapOf(
             "complaintext" to complaintext,

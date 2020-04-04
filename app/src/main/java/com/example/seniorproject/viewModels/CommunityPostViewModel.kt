@@ -23,6 +23,7 @@ class CommunityPostViewModel @Inject constructor(private val repository: PostRep
     private var livepostclass: LiveData<Post>? = null
     private var listClasses: PostLiveData? = null
     private lateinit var className: String
+    //private lateinit var className: String
 
     @InternalCoroutinesApi
     fun getClassesco(className: String, callback: MutableListCallback){
@@ -115,8 +116,6 @@ class CommunityPostViewModel @Inject constructor(private val repository: PostRep
     }*/
 
     /*private fun getClasses(className: String){
-        listClasses = repository.getClassPosts(className)
-    }
 
     fun returnClassPosts(className: String): PostLiveData {
         getClasses(className)
@@ -131,17 +130,7 @@ class CommunityPostViewModel @Inject constructor(private val repository: PostRep
         repository.reportUserPost(accusedID, complaintext, crn, classkey)
     }
 
-   fun checknull() : Boolean
-   {
-       if (listClasses == null)
-       {
-           return true
-       }
-       else
-       {
-           return false
-       }
-   }
+
 
 
 

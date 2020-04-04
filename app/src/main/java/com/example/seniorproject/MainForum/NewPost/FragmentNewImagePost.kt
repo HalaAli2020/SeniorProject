@@ -5,20 +5,21 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.Spinner
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.seniorproject.Dagger.DaggerAppComponent
-import com.example.seniorproject.MainForum.Fragments.FragmentHome
 import com.example.seniorproject.MainForum.Fragments.FragmentList
 import com.example.seniorproject.MainForum.MainForum
-
 import com.example.seniorproject.R
 import com.example.seniorproject.viewModels.NewPostFragmentViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -63,12 +64,10 @@ class FragmentNewImagePost : Fragment() {
         }
 
         return view
-        //or return binding.root
     }
 
     var selectedPhotoUri: Uri? = null
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        //super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 0 && resultCode == Activity.RESULT_OK && data !=null) {
             val img: ImageView = view!!.image_preview
             selectedPhotoUri = data.data
@@ -90,7 +89,7 @@ class FragmentNewImagePost : Fragment() {
                 val spinner: Spinner = view!!.spinner3
                 val subject = spinner.selectedItem.toString()
 
-                if (title.isNullOrEmpty() || text.isNullOrEmpty() || subject.isNullOrEmpty())
+                if (title.isEmpty() || text.isEmpty() || subject.isEmpty())
                 {
                     Toast.makeText(activity?.applicationContext, "Please add a title, post text and select a subject.", Toast.LENGTH_SHORT).show()
                 }
@@ -103,11 +102,10 @@ class FragmentNewImagePost : Fragment() {
                                 if (p0.exists()) {
                                     for (sub in p0.children) {
                                         // val refc= comment.getValue(Comment::class.java)
-                                        if (sub.getValue() == subject) {
+                                        if (sub.value == subject) {
                                             viewModel.saveNewImgPosttoUser(
                                                 title,
                                                 text,
-                                                subject,
                                                 subject,
                                                 selectedPhotoUri!!,
                                                 true

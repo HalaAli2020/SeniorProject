@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Messages.ChatLog
 import com.example.seniorproject.R
@@ -16,15 +17,16 @@ import kotlinx.android.synthetic.main.m_rv_new_message.view.*
 
 class NewMessageAdapter(
     context: Context,
-    private val UserList: List<User>
+    private var UserList: List<User>
     ) :
     RecyclerView.Adapter<UserListHolder>() {
 
     val mContext: Context = context
+    private var filterlist : MutableList<User> = UserList as MutableList<User>
 
     companion object{
-        val USER_KEY = "USER_KEY"
-        val USERNAME = "USERNAME"
+        const val USER_KEY = "USER_KEY"
+        const val USERNAME = "USERNAME"
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserListHolder {
@@ -35,8 +37,8 @@ class NewMessageAdapter(
 
     override fun getItemCount(): Int {
 
-        if (!UserList.isNullOrEmpty()) {
-            return UserList.size
+        if (!filterlist.isNullOrEmpty()) {
+            return filterlist.size
         }
 
         return 0
@@ -44,15 +46,19 @@ class NewMessageAdapter(
 
     override fun onBindViewHolder(holder: UserListHolder, position: Int) {
 
-        val user: User = UserList[position]
+        val user: User = filterlist[position]
 
-        holder.itemView.usernameTextview.text = user.username
+        holder.itemView.usernameTextview.text = user.username ?: "no username"
         //Picasso.get().load(user.profileImageURL).into(viewHolder.itemView.image_new_message)
         Log.d("NewMessageAdapter", user.username)
-        Picasso.get().load(user.profileImageUrl).into(holder.itemView.image_new_message)
+        //Picasso.get().load(user.profileImageUrl).into(holder.itemView.image_new_message)
 
-        if(user.profileImageUrl.toString().isNullOrBlank() || user.profileImageUrl.toString()=="null"){
-            holder.itemView.image_new_message.setImageDrawable(mContext.resources.getDrawable(R.drawable.ic_account_circle_blue_24dp))
+        if(user.profileImageUrl.toString().isBlank() || user.profileImageUrl.toString()=="null"){
+            holder.itemView.image_new_message.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_account_circle_blue_24dp))
+        }
+        else
+        {
+            Picasso.get().load(user.profileImageUrl).into(holder.itemView.image_new_message)
         }
 
         holder.itemView.newMessageUser.setOnClickListener {
@@ -60,6 +66,32 @@ class NewMessageAdapter(
             intent.putExtra(USER_KEY, user.uid)
             intent.putExtra(USERNAME, user.username)
             mContext.startActivity(intent)
+        }
+
+    }
+    fun onfilter(query : String?)
+    {
+        val nlist = mutableListOf<User>()
+        if(query.isNullOrEmpty())
+        {
+             filterlist = UserList as MutableList<User>
+            notifyDataSetChanged()
+        }
+        else
+        {
+
+
+
+            for ((index, x) in UserList.withIndex())
+            {
+                // query.contains()
+                if(x.username!!.contains(query, true))
+                {
+                    nlist.add(x)
+                }
+            }
+            filterlist = nlist
+            notifyDataSetChanged()
         }
 
     }

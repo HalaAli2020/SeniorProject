@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.seniorproject.data.repositories.PostRepository
 import com.example.seniorproject.viewModels.ListViewModel
 
+//initialization of ListView view model factory
 @Suppress("UNCHECKED_CAST")
 class ListViewModelFactory(private val repository: PostRepository) :
     ViewModelProvider.NewInstanceFactory() {

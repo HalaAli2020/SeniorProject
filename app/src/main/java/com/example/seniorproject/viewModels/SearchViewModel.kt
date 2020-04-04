@@ -11,13 +11,13 @@ import com.google.firebase.database.DataSnapshot
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(private val repository: SearchRepo) : ViewModel() {
-    var UsersSubs : MutableLiveData<MutableList<CRN>> = MutableLiveData()
-    var Clist : MutableLiveData<MutableList<CRN>> = MutableLiveData()
-    var Fullist : MutableLiveData<MutableList<CRN>> = MutableLiveData()
+    //var UsersSubs : MutableLiveData<MutableList<CRN>> = MutableLiveData()
+    var clist : MutableLiveData<MutableList<CRN>> = MutableLiveData()
+    var fullist : MutableLiveData<MutableList<CRN>> = MutableLiveData()
 
-    fun Search(query: String): CRN {
-        var Result = CRN()
-        repository.Search(query, object : FirebaseResult {
+    fun search(query: String): CRN {
+        var result = CRN()
+        repository.search(query, object : FirebaseResult {
             override fun onFailure(message: String) {
                 Log.d("onFailure", "On Failure called")
             }
@@ -27,32 +27,31 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
             }
 
             override fun onSuccess(data: DataSnapshot, uid: String) {
-                Result = separateResult(data, query)
+                result = separateResult(data, query)
             }
         })
-        return Result
+        return result
     }
 
     fun separateResult(data: DataSnapshot, query: String): CRN {
-        var RList: MutableLiveData<MutableList<CRN>>
-        var RE = CRN()
-        var classResult = CRN()
+        val rE = CRN()
+        val classResult = CRN()
         if (data.hasChild(query)) {
-            var snap = data.child(query)
+            val snap = data.child(query)
             classResult.let { result ->
                 result.name = snap.key.toString()
             }
             return classResult
         } else {
             // RE  = CRN()
-            RE.name = "ERROR in Query"
+            rE.name = "ERROR in Query"
         }
-        return RE
+        return rE
 
     }
 
     fun getallclasses() {
-        var listC : MutableList<CRN> = mutableListOf()
+        val listC : MutableList<CRN> = mutableListOf()
         repository.getallclasses(object : FirebaseResult {
             override fun onFailure(message: String) {
                 Log.d("Failure", "onFailure called")
@@ -66,18 +65,18 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
                 Log.d("onSuccess", " called")
 
                 for (x in data.children) {
-                    var crn = CRN()
+                    val crn = CRN()
 
                     Log.d("key", x.key.toString())
                     crn.name = x.key.toString()
                     Log.d("crn.name", crn.name)
                     if (x.hasChild("SubList")) {
-                        var sub = x.child("SubList").children
+                        val sub = x.child("SubList").children
                         for (s in sub)
                         {
                             if(uid == s.value.toString())
                             {
-                                crn.Subscribed = true
+                                crn.subscribed = true
                             }
                         }
 
@@ -92,27 +91,23 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
 
 
         })
-        Fullist.value = listC
+        fullist.value = listC
     }
-    fun sendlist() : MutableLiveData<MutableList<CRN>>
-    {
 
-        return Clist
-    }
     fun sendlistf() : MutableLiveData<MutableList<CRN>>
     {
-        Clist.value = Fullist.value
+        clist.value = fullist.value
 
-        return Clist
+        return clist
     }
     fun addSub(crn : String)
     {
         repository.addUsersub(crn)
-        for (x in Clist.value!!.iterator())
+        for (x in clist.value!!.iterator())
         {
             if(x.name.contentEquals(crn))
             {
-                x.Subscribed = true
+                x.subscribed = true
             }
         }
 
@@ -120,11 +115,11 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
     fun removeSub(crn : String)
     {
         repository.remUsersub(crn)
-        for (x in Clist.value!!.iterator())
+        for (x in clist.value!!.iterator())
         {
             if(x.name.contentEquals(crn))
             {
-                x.Subscribed = false
+                x.subscribed = false
             }
         }
 

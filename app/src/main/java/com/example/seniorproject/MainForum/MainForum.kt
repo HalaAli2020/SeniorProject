@@ -2,7 +2,6 @@ package com.example.seniorproject.MainForum
 
 import android.content.Intent
 import android.content.res.ColorStateList
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -10,6 +9,7 @@ import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
@@ -26,13 +26,12 @@ import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.Fragments.FragmentHome
 import com.example.seniorproject.MainForum.Fragments.FragmentSubscriptions
 import com.example.seniorproject.MainForum.NewPost.NewPost
-import com.example.seniorproject.Messages.ChatLog
 import com.example.seniorproject.Messages.FragmentLatestMessages
 import com.example.seniorproject.R
-import com.example.seniorproject.search.SearchActivity
 import com.example.seniorproject.data.models.User
-import com.example.seniorproject.databinding.SideNavHeaderBinding
 import com.example.seniorproject.databinding.ActivityMainForumBinding
+import com.example.seniorproject.databinding.SideNavHeaderBinding
+import com.example.seniorproject.search.SearchActivity
 import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
@@ -47,10 +46,8 @@ private const val TAGG = "username"
 class MainForum : AppCompatActivity(),
     FirebaseAuth.AuthStateListener {
 
-    private val firebaseAuth: FirebaseAuth by lazy {
-        FirebaseAuth.getInstance()
-    }
-    var obse : Observer<User>? = null
+
+    private var obse : Observer<User>? = null
     override fun onAuthStateChanged(p0: FirebaseAuth) {
         val currentUser = myViewModel.user
         if (currentUser != null) {
@@ -94,10 +91,9 @@ class MainForum : AppCompatActivity(),
                     FAB.backgroundTintList =
                         ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
-                    //replaceFragment(FragmentList())
-                    var intent = Intent(this, SearchActivity::class.java)
+                    val intent = Intent(this, SearchActivity::class.java)
                     startActivity(intent)
-                   // return@OnNavigationItemSelectedListener true
+
                 }
                 R.id.messages -> {
                     FAB.backgroundTintList =
@@ -147,15 +143,11 @@ class MainForum : AppCompatActivity(),
         )
         binding.navView.addHeaderView(sideNavHeaderBinding.root)
         sideNavHeaderBinding.viewmodell = myViewModel
-        //Log.d(TAG,myViewModel.rsomthing())
         obse = Observer {
             this.email_display.text = it.email
             this.username_display.text = it.username
         }
-        //myViewModel.user.observe(this, obse!!)
 
-
-        //Log.d(TAG, myViewModel.SessionUser!!.username ?: "the displayname in main activity")
 
 
         navigationView.setNavigationItemSelectedListener { menuItem ->
@@ -226,7 +218,7 @@ class MainForum : AppCompatActivity(),
         when (item.itemId) {
             android.R.id.home -> {
                 mDrawerLayout.openDrawer(GravityCompat.START)
-                true
+                //true
             }
 
         }

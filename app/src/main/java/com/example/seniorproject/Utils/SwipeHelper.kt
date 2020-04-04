@@ -10,7 +10,6 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.fragment_profile_comment.*
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap

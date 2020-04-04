@@ -1,26 +1,25 @@
 package com.example.seniorproject.viewModels
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.CommentLive
 import com.example.seniorproject.data.repositories.PostRepository
-import kotlinx.coroutines.Job
 import javax.inject.Inject
 
 class ClickedPostViewModel @Inject constructor(private val repository : PostRepository) : ViewModel(){
 
-    val CommentListener : PostListener? = null
-    var CommentsLiveList : CommentLive = CommentLive()
-    var Comment : String? = null
-    var CommentsList = mutableListOf<Comment>()
-    var PKey: String? = null
-    var UserID : String? = null
-    var Classkey : String? = null
+    private val CommentListener : PostListener? = null
+    var commentsLiveList : CommentLive = CommentLive()
+    var comment : String? = null
+    private var CommentsList = mutableListOf<Comment>()
+    var pKey: String? = null
+    var userID : String? = null
+    var classkey : String? = null
     var crn : String? = null
     var title: String? = null
     var text: String? = null
-    private var getCommentsJob: Job? = null
+    //private var getCommentsJob: Job? = null
     private var PostKey : String? = null
     var comuserid: String? = null
     var usercomkey: String?= null
@@ -35,30 +34,30 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
 
     fun getComments() : CommentLive
     {
-       if(PKey.isNullOrEmpty())
+       if(pKey.isNullOrEmpty())
        {
-           PostKey = PKey
+           PostKey = pKey
            CommentListener?.onFailure("Post key not found")
        }
-        CommentsLiveList = repository.getComments(Classkey!!, crn!!)
+        commentsLiveList = repository.getComments(classkey!!, crn!!)
 
-        return CommentsLiveList
+        return commentsLiveList
     }
 
 
     fun editComment(){
-        repository.editNewComment(comuserid!!, usercomkey!!, ctext!!, Comment!!, usercrn!!, postukey!!)
+        repository.editNewComment(comuserid!!, usercomkey!!, comment!!, usercrn!!, postukey!!)
     }
 
 
     fun newComment()
     {
 
-        repository.newComment(PKey!!,Comment!!, Classkey!!, UserID!!, crn!!)
+        repository.newComment(pKey!!,comment!!, classkey!!, userID!!, crn!!)
     }
     fun checkcomments() : Boolean
     {
-        if(CommentsList != null)
+        if(CommentsList.size != -1)
         {
             return true
         }
@@ -74,16 +73,6 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
         repository.blockUser(UserID)
     }
 
-    /*fun getCommentsCO(PKey: String) : CommentLive? {
-        getCommentsJob = viewModelScope.launch {
-            repository.getCommentsCO(PKey).collect {
-                CommentsLiveList.value = it.value
-                Log.d("valuse", )
-            }
-
-        }
-        return CommentsLiveList
-    }*/
 
 
 

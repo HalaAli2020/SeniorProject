@@ -105,23 +105,23 @@ class CommentsAdapter(
 
             } else {
                 val comment: Comment = Comments?.value!![position]
-                    val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
-                     ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
-                        ValueEventListener {
-                        override fun onDataChange(p0: DataSnapshot) {
-                            if (p0.exists()) {
-                                for (block in p0.children) {
-                                    if (block.getValue() == comment.PosterID) {
-                                        holder.itemView.comment_text.text ="[blocked]"
-                                    }
+                val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
+                ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
+                    ValueEventListener {
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if (p0.exists()) {
+                            for (block in p0.children) {
+                                if (block.getValue() == comment.PosterID) {
+                                    holder.itemView.comment_text.text ="[blocked]"
                                 }
                             }
                         }
+                    }
 
-                        override fun onCancelled(p0: DatabaseError) {
-                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                        }
-                    })
+                    override fun onCancelled(p0: DatabaseError) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+                })
                 //holder.itemView.post_title.text = comment.title
                 holder.itemView.comment_text.text = comment.text
                 holder.itemView.authcom.text = comment.author
@@ -143,7 +143,7 @@ class CommentsAdapter(
 
     fun removeItem(holder: RecyclerView.ViewHolder): String {
         val comment: Comment = Comments?.value!![holder.adapterPosition]
-        val commentkey: String? = comment.Classkey
+        val commentkey: String? = comment.classkey
 
         return commentkey!!
     }
@@ -187,8 +187,3 @@ class CommentsAdapter(
 
 
 }
-
-
-
-
-

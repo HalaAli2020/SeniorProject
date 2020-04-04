@@ -13,9 +13,9 @@ import com.example.seniorproject.viewModels.SearchViewModel
 
 class SearchAdapter(context: Context, ViewModel: SearchViewModel, Clist : MutableLiveData<MutableList<CRN>>) :
     RecyclerView.Adapter<SearchViewHolder>(){
-    var classlist : MutableLiveData<MutableList<CRN>>? = Clist
+    private var classlist : MutableLiveData<MutableList<CRN>>? = Clist
     val mContext = context
-    val mViewModel = ViewModel
+    private val mViewModel = ViewModel
     init {
         //mViewModel.getallclasses()
     }
@@ -41,13 +41,13 @@ class SearchAdapter(context: Context, ViewModel: SearchViewModel, Clist : Mutabl
         Log.d("In list" , classlist!!.value!![position].name)
     }
 
-    fun getFilter(){
+    /*fun getFilter(){
         fun fitlerResults(query : CharSequence?)
         {
-            var Flist : MutableLiveData<MutableList<CRN>> = MutableLiveData()
+            var flist : MutableLiveData<MutableList<CRN>> = MutableLiveData()
             if (classlist!!.value!!.isNullOrEmpty())
             {
-                classlist = Flist
+                classlist = flist
             }
             if(query.isNullOrEmpty())
             {
@@ -57,14 +57,14 @@ class SearchAdapter(context: Context, ViewModel: SearchViewModel, Clist : Mutabl
                     {
                         if(x.name.contains(query!!))
                         {
-                            Flist.value!!.add(x)
+                            flist.value!!.add(x)
                         }
                     }
                 }
             }
         }
 
-    }
+    }*/
     fun onfilter(query : String?)
     {
         if(query.isNullOrEmpty())
@@ -76,27 +76,27 @@ class SearchAdapter(context: Context, ViewModel: SearchViewModel, Clist : Mutabl
         {
             //classlist!!.value!!.removeAt()
             classlist = mViewModel.sendlistf()
-            var Clist: MutableList<CRN> = mutableListOf()
+            val clist: MutableList<CRN> = mutableListOf()
             for ((index, x) in classlist!!.value!!.withIndex())
             {
                 // query.contains()
-                if(x.name.contains(query!!, true))
+                if(x.name.contains(query, true))
                 {
-                    Clist.add(x)
+                    clist.add(x)
                 }
             }
-            classlist!!.value = Clist
+            classlist!!.value = clist
             notifyDataSetChanged()
         }
 
     }
-    fun removeat(position: Int)
+    /*fun removeat(position: Int)
     {
         //notifyItemRemoved(position)
         //notifyItemRangeChanged(position, classlist!!.value!!.size)
         classlist!!.value!!.removeAt(position)
 
-    }
+    }*/
 }
 
 /* override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {

@@ -4,10 +4,8 @@ import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
-import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-//import com.example.seniorproject.Utils.startMainForum
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.repositories.PostRepository
 import javax.inject.Inject
@@ -23,7 +21,7 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
     var ctitle: String? = null
     var userID: String? = null
     var bool = MutableLiveData<Boolean>()
-    //var author: String? = repository.currentUser()?.displayName
+
 
 
     val clicksListener = object : AdapterView.OnItemSelectedListener {
@@ -37,7 +35,7 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
     }
 
 
-    var postListener: PostListener? = null
+    private var postListener: PostListener? = null
 
 
     fun editPost(){
@@ -50,11 +48,11 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
             postListener?.onFailure("please enter a title and text!")
             return
         }
-        Log.d("SELECTED VALUE:", classSpinner)
+        Log.d("SELECTED VALUE:", classSpinner ?: " ")
         repository.saveNewPost(textPost!!,titlePost!!,classSpinner!!)
         bool.value = true
     }
 
-   fun saveNewImgPosttoUser(title : String, text:String, Subject: String, CRN: String, uri: Uri, imagePost : Boolean) = repository.saveNewImgPosttoUser(title,text,Subject,CRN,uri,imagePost)
+   fun saveNewImgPosttoUser(title : String, text:String, CRN: String, uri: Uri, imagePost : Boolean) = repository.saveNewImgPosttoUser(title,text,CRN,uri,imagePost)
 
 }

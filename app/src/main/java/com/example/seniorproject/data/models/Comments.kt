@@ -3,37 +3,37 @@ package com.example.seniorproject.data.models
 import com.example.seniorproject.R
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.rv_post_comment.view.*
-import java.sql.Time
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 
+//data class for user comments
 class Comment(var text: String, var Ptime : String?, var PosterID : String?, var crn : String?, var Postkey : String?)
 {
     constructor() : this("", null,"", "", "")
 
-   // var PosterID : String? = null
-    //var Ptime : Long? = null
-    var Classkey : String? = null
-    var UserComkey : String? = null
+    var classkey : String? = null
+    var userComkey : String? = null
     var author : String? = null
-    var ProfileComKey : String? = null
-    var UserPostkey : String? = null
+    var profileComKey : String? = null
+    private var UserPostkey : String? = null
 
+    //initialization of timestamp
     init {
-    var calendar: Calendar = Calendar.getInstance()
-        var simple: SimpleDateFormat = SimpleDateFormat("M-d-yy h:mm a")
+    val calendar: Calendar = Calendar.getInstance()
+        val simple: SimpleDateFormat = SimpleDateFormat("M-d-yy h:mm a")
     Ptime = simple.format(calendar.time)
     }
+
     fun getLayout(): Int {
         return R.layout.rv_post_comment
     }
 
-    fun bind(viewHolder: GroupieViewHolder) {
+    fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.comment_text.text = text
+
     }
 
+    //mapping of comment data to database
     fun toMap(): Map<String, Any?> {
         return mapOf(
             "text" to text,
@@ -43,9 +43,9 @@ class Comment(var text: String, var Ptime : String?, var PosterID : String?, var
             "crn" to crn,
             "Postkey" to Postkey,
             "UserPostkey" to UserPostkey,
-            "Classkey" to Classkey,
-            "UserComkey" to UserComkey,
-            "ProfileComKey" to ProfileComKey
+            "Classkey" to classkey,
+            "UserComkey" to userComkey,
+            "ProfileComKey" to profileComKey
 
         )
 

@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.MainForum.Posts.ClickedPost
@@ -14,13 +13,6 @@ import com.example.seniorproject.Utils.Callback
 import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.CommentLive
-import com.example.seniorproject.data.models.Post
-import com.example.seniorproject.data.models.PostLiveData
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.rv_post.view.*
 import kotlinx.android.synthetic.main.rv_post_comment.view.*
 
 class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive) :
@@ -39,23 +31,6 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
         else
             return 0
     }
-
-    /* fun readPostValues(crn: String, postkey: String, callBack : Callback){
-        FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$postkey/text").addListenerForSingleValueEvent( object :
-            ValueEventListener {
-            override fun onDataChange(p0: DataSnapshot){
-                if(p0.exists()){
-                    var ptext = p0.getValue().toString()
-                    callBack.onCallback(ptext)
-                }
-
-            }
-
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-        })
-    }*/
 
     override fun onBindViewHolder(holder: CustomViewHolders, position: Int) {
         if (ProfileComments.value == null || getItemCount() == 0) {
@@ -89,7 +64,6 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                             Log.d("spider", value[0])
                             intent.putExtra("Text", value[1])
                             Log.d("spider", "HELLO")
-
                             intent.putExtra("Title", value[0])
                             intent.putExtra("Pkey", value[2])
                             intent.putExtra("Classkey", value[4])
@@ -97,45 +71,9 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                             intent.putExtra("Author", value[6])
                             intent.putExtra("subject", crn)
                             intent.putExtra("Ptime", value[3])
-                            if(value.size == 8){
-                                intent.putExtra("uri", value[7])
-                            }
+                            intent.putExtra("uri", value[7])
                             mContext.startActivity(intent)
-                           /* if (value.size == 7) {
-                                Log.d("spider", value[0])
-                                intent.putExtra("Text", value[1])
-                                Log.d("spider", "HELLO")
-
-                                intent.putExtra("Title", value[0])
-                                intent.putExtra("Pkey", value[2])
-                                intent.putExtra("Classkey", value[4])
-                                intent.putExtra("UserID", value[5])
-                                intent.putExtra("Author", value[6])
-                                intent.putExtra("subject", crn)
-                                intent.putExtra("Ptime", value[3])
-                                //intent.putExtra("uri", value[7])
-                                mContext.startActivity(intent)
                             }
-                            else if(value.size == 8){
-                                Log.d("spider", value[0])
-                                intent.putExtra("Text", value[1])
-                                Log.d("spider", "Open for image")
-
-                                intent.putExtra("Title", value[0])
-                                intent.putExtra("Pkey", value[2])
-                                intent.putExtra("Classkey", value[4])
-                                intent.putExtra("UserID", value[5])
-                                intent.putExtra("Author", value[6])
-                                intent.putExtra("subject", crn)
-                                intent.putExtra("Ptime", value[3])
-                                intent.putExtra("uri", value[7])
-                                mContext.startActivity(intent)
-                            }
-                            else{
-                                Log.d("spider", "failed to open either comment")
-                            }*/
-
-                        }
                     })
 
 
@@ -146,26 +84,14 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                 holder.itemView.comment_text.text = "no Comments"
             }
 
-
-            //val mContext: Context = context
         }
     }
 
 
-    //crn same
-    /*intent.putExtra("Title", post.title) //NEED
-    intent.putExtra("Text", post.text) //NEED
-    intent.putExtra("Pkey", post.key) //postkey, post key
-    intent.putExtra("Classkey", post.Classkey) //class key, same
-    intent.putExtra("UserID", post.UserID)  //posterID = post author's uid
-    intent.putExtra("Author", post.author) //posterID = post author's uid
-    intent.putExtra("crn", post.crn)*/ //same
-
     fun getCommentKey(customViewHolders: CustomViewHolders): String {
         val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
-        val commentkey: String? = comment.UserComkey
+        val commentkey: String? = comment.userComkey
 
-        //notifyItemRemoved(customViewHolders.adapterPosition)
 
         return commentkey!!
     }
@@ -173,54 +99,36 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
     fun getUserKey(customViewHolders: CustomViewHolders): String {
         val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String? = comment.PosterID
-
-        //notifyItemRemoved(customViewHolders.adapterPosition)
-
         return commentkey!!
     }
 
     fun getClassKey(customViewHolders: CustomViewHolders): String {
         val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
-        val commentkey: String? = comment.Classkey
-
-        //notifyItemRemoved(customViewHolders.adapterPosition)
-
+        val commentkey: String? = comment.classkey
         return commentkey!!
     }
 
     fun getClassProfileKey(customViewHolders: CustomViewHolders): String {
         val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
-        val commentkey: String? = comment.ProfileComKey
-
-        //notifyItemRemoved(customViewHolders.adapterPosition)
-
+        val commentkey: String? = comment.profileComKey
         return commentkey!!
     }
 
     fun pkeyUserProfile(customViewHolders: CustomViewHolders): String {
         val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String? = comment.Postkey
-
-        //notifyItemRemoved(customViewHolders.adapterPosition)
-
         return commentkey!!
     }
 
     fun getCrn(customViewHolders: CustomViewHolders): String {
         val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String? = comment.crn
-
-        //notifyItemRemoved(customViewHolders.adapterPosition)
-
         return commentkey!!
     }
 
     fun getText(customViewHolders: CustomViewHolders): String {
         val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
         val commentkey: String? = comment.text
-
-        //notifyItemRemoved(customViewHolders.adapterPosition)
-
         return commentkey!!
     }
 

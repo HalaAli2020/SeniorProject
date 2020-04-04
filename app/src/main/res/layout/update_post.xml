@@ -7,7 +7,7 @@
 
         <variable
             name="NewPostModel"
-            type="com.example.seniorproject.viewModels.NewPostFragmentViewModel"></variable>
+            type="com.example.seniorproject.viewModels.NewPostFragmentViewModel" />
 
     </data>
 
@@ -40,7 +40,7 @@
                 android:layout_marginEnd="12dp"
                 android:background="@drawable/rounded_btn"
                 android:onClick="@{() -> NewPostModel.editPost()}"
-                android:text="Done"
+                android:text="@string/done"
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView2"
@@ -57,7 +57,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/ic_account_circle_blue_24dp" />
+                app:srcCompat="@drawable/ic_account_circle_blue_24dp"
+                android:contentDescription="@string/add_image" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <EditText
@@ -66,7 +67,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/comment_bottom_border"
             android:gravity="top"
-            android:hint="Enter a title..."
+            android:hint="@string/enter_a_title"
             android:inputType="textMultiLine|textCapSentences"
             android:maxLength="150"
             android:paddingStart="12dp"
@@ -80,7 +81,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cl" />
+            app:layout_constraintTop_toBottomOf="@+id/cl"
+            android:importantForAutofill="no" />
 
         <EditText
             android:id="@+id/new_post_text"
@@ -88,7 +90,7 @@
             android:layout_height="0dp"
             android:background="@color/white"
             android:gravity="top"
-            android:hint="Enter some text..."
+            android:hint="@string/enter_some_text"
             android:inputType="textMultiLine|textCapSentences"
             android:maxLength="500"
             android:paddingStart="12dp"
@@ -100,7 +102,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/new_post_title" />
+            app:layout_constraintTop_toBottomOf="@+id/new_post_title"
+            android:importantForAutofill="no" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

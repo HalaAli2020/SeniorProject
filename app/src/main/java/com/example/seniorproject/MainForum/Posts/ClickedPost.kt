@@ -1,11 +1,7 @@
 package com.example.seniorproject.MainForum.Posts
 
 import android.content.DialogInterface
-import android.content.Intent
-import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -17,12 +13,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.Adapters.CommentsAdapter
-import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
 import com.example.seniorproject.Utils.ProfileButton
@@ -32,7 +26,6 @@ import com.example.seniorproject.viewModels.ClickedPostViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_clicked_post.*
 import kotlinx.android.synthetic.main.activity_clicked_post.refreshView
-import kotlinx.android.synthetic.main.activity_community_posts.*
 import javax.inject.Inject
 
 class ClickedPost : AppCompatActivity() {
@@ -58,20 +51,20 @@ class ClickedPost : AppCompatActivity() {
         val text: String = intent.getStringExtra("Text") ?: "no text"
         val crn: String = intent.getStringExtra("subject") ?: "no subject"
         val author: String = intent.getStringExtra("Author") ?: "no author"
-        val uri : String = intent.getStringExtra("uri") ?: " "
+        val uri : String = intent.getStringExtra("uri") ?: "null"
         val ptime: String = intent.getStringExtra("Ptime") ?: "no time"
         val uid: String = intent.getStringExtra("UserID") ?: "null"
-        myViewModel.PKey = intent.getStringExtra("Pkey")
-        myViewModel.Classkey = intent.getStringExtra("Classkey")
-        myViewModel.UserID = uid
+        myViewModel.pKey = intent.getStringExtra("Pkey") ?: " "
+        myViewModel.classkey = intent.getStringExtra("Classkey") ?: " "
+        myViewModel.userID = uid
         myViewModel.title = title
         myViewModel.text = text
         myViewModel.crn = crn
 
         //add userid and send
-        myViewModel.CommentsLiveList.observe(this, Observer {
+        myViewModel.commentsLiveList.observe(this, Observer {
             Log.d("Swap", "Swapping")
-            swap(binding, title, text, author, crn,intent.getStringExtra("UserID").toString(), ptime, uri)
+            swap(binding, title, text, author, crn, ptime, uri)
         })
         adapter = CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString(), ptime, uri)
         comment_RecyclerView.adapter = adapter
@@ -92,164 +85,141 @@ class ClickedPost : AppCompatActivity() {
         }
 
 
-        fun showToast(){
-            var toast= Toast.makeText(this@ClickedPost, "We've received your report.", Toast.LENGTH_SHORT)
-            toast.show()
-        }
 
-           object : SwipeHelper(applicationContext, comment_RecyclerView, 200) {
-                override fun initButton(
-                    viewHolders: RecyclerView.ViewHolder,
-                    buffer: MutableList<ProfileButton>
-                ) {
-                    val userk: String? = adapter.getUserKey(viewHolders)
-                    if (FirebaseAuth.getInstance().currentUser?.uid == userk){
-                        //val swipe = null
-                    }
-                    else {
-                        buffer.add(
-                            ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
-                                ("#FF0000"), object : ButtonClickListener {
-                                override fun onClick(pos: Int) {
-                                    //val postkey: String? =
-                                    //    adapter.removeItem(viewHolders)
+        object : SwipeHelper(applicationContext, comment_RecyclerView, 200) {
+            override fun initButton(
+                viewHolders: RecyclerView.ViewHolder,
+                buffer: MutableList<ProfileButton>
+            ) {
+                val userk: String? = adapter.getUserKey(viewHolders)
+                if (FirebaseAuth.getInstance().currentUser?.uid == userk){
+                    //val swipe = null
+                }
+                else {
+                    buffer.add(
+                        ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
+                            ("#FF0000"), object : ButtonClickListener {
+                            override fun onClick(pos: Int) {
+                                //val postkey: String? =
+                                 //   adapter.removeItem(viewHolders)
 
-                                    val userkey: String? =
-                                        adapter.getUserKey(viewHolders)
+                                val userkey: String? =
+                                    adapter.getUserKey(viewHolders)
 
-                                    //val crnkey: String? =
-                                     //   adapter.getCrn(viewHolders)
+                                //val crnkey: String? =
+                                //   adapter.getCrn(viewHolders)
 
-                                    //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
-                                    var builder = AlertDialog.Builder(
+                                //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
+                                val builder = AlertDialog.Builder(
+                                    this@ClickedPost,
+                                    R.style.AppTheme_AlertDialog
+                                )
+
+                                builder.setTitle("Are you sure?")
+                                builder.setMessage("You won't see posts or comments from this user.")
+                                builder.setPositiveButton("BLOCK"
+                                ) { _: DialogInterface?, _: Int ->
+                                    myViewModel.blockUser(userkey!!)
+                                    val toast = Toast.makeText(
                                         this@ClickedPost,
-                                        R.style.AppTheme_AlertDialog
+                                        "This user has been blocked",
+                                        Toast.LENGTH_SHORT
                                     )
-
-                                    //.getStringExtra("Classkey")
-                                    //val postkey = intent.getStringExtra("author")
-                                    //myViewModel.deletePost(postkey!!, className)
-                                    //myViewModel.deletePost()
-                                    builder.setTitle("Are you sure?")
-                                    builder.setMessage("You won't see posts or comments from this user.")
-                                    builder.setPositiveButton("BLOCK"
-                                    ) { _: DialogInterface?, _: Int ->
-                                        myViewModel.blockUser(userkey!!)
-                                        var toast = Toast.makeText(
-                                            this@ClickedPost,
-                                            "This user has been blocked",
-                                            Toast.LENGTH_SHORT
-                                        )
-                                        toast.show()
-                                    }
-                                    builder.setNegativeButton("CANCEL"
-                                    ) { _: DialogInterface?, _: Int ->
-                                        builder.setCancelable(true)
-                                    }
-
-                                    val msgdialog: AlertDialog = builder.create()
-
-                                    msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
-
-                                    msgdialog.show()
+                                    toast.show()
+                                }
+                                builder.setNegativeButton("CANCEL"
+                                ) { _: DialogInterface?, _: Int ->
+                                    builder.setCancelable(true)
                                 }
 
-                            })
-                        )
+                                val msgdialog: AlertDialog = builder.create()
 
-                        buffer.add(
-                            ProfileButton(applicationContext, "Report Post", 30, 0, Color.parseColor
-                                ("#D3D3D3"), object : ButtonClickListener {
-                                override fun onClick(pos: Int) {
-                                    val comkey: String? =
-                                        adapter.removeItem(viewHolders)
+                                msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
 
-                                    val postkey: String? =
-                                        adapter.getPostKey(viewHolders)
+                                msgdialog.show()
+                            }
 
-                                    val userkey: String? =
-                                        adapter.getUserKey(viewHolders)
+                        })
+                    )
 
-                                    val crnkey: String? =
-                                        adapter.getCrn(viewHolders)
+                    buffer.add(
+                        ProfileButton(applicationContext, "Report Post", 30, 0, Color.parseColor
+                            ("#D3D3D3"), object : ButtonClickListener {
+                            override fun onClick(pos: Int) {
+                                val comkey: String? =
+                                    adapter.removeItem(viewHolders)
 
-                                    val textkey: String? = adapter.getText(viewHolders)
+                                val postkey: String? =
+                                    adapter.getPostKey(viewHolders)
 
-                                    var builder = AlertDialog.Builder(
+                                val userkey: String? =
+                                    adapter.getUserKey(viewHolders)
+
+                                val crnkey: String? =
+                                    adapter.getCrn(viewHolders)
+
+                                val textkey: String? = adapter.getText(viewHolders)
+
+                                val builder = AlertDialog.Builder(
+                                    this@ClickedPost,
+                                    R.style.AppTheme_AlertDialog
+                                )
+
+                                val listreason = arrayOf(
+                                    "This is spam",
+                                    "This is abusive or harassing",
+                                    "Other issues"
+                                )
+
+                                builder.setTitle("Report Post")
+                                builder.setSingleChoiceItems(
+                                    listreason,
+                                    0
+                                ) { dialogInterface, i ->
+                                    //var complaint = listreason[i]
+                                }
+                                builder.setPositiveButton("SUBMIT"
+                                ) { _: DialogInterface?, _: Int ->
+
+                                    val toast = Toast.makeText(
                                         this@ClickedPost,
-                                        R.style.AppTheme_AlertDialog
+                                        "We've received your report.",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                    toast.show()
+                                    myViewModel.reportUserComment(
+                                        userkey!!,
+                                        textkey!!,
+                                        crnkey!!,
+                                        postkey!!, comkey!!
                                     )
 
-                                    var listreason = arrayOf(
-                                        "This is spam",
-                                        "This is abusive or harassing",
-                                        "Other issues"
-                                    )
-                                    //.getStringExtra("Classkey")
-                                    //val postkey = intent.getStringExtra("author")
-                                    //myViewModel.deletePost(postkey!!, className)
-                                    //myViewModel.deletePost()
-                                    builder.setTitle("Report Post")
-                                    builder.setSingleChoiceItems(
-                                        listreason,
-                                        0
-                                    ) { dialogInterface, i ->
-                                        //var complaint = listreason[i]
-                                    }
-                                    builder.setPositiveButton("SUBMIT"
-                                    ) { _: DialogInterface?, _: Int ->
-
-                                        var toast = Toast.makeText(
-                                            this@ClickedPost,
-                                            "We've received your report.",
-                                            Toast.LENGTH_SHORT
-                                        )
-                                        toast.show()
-                                        myViewModel.reportUserComment(
-                                            userkey!!,
-                                            textkey!!,
-                                            crnkey!!,
-                                            postkey!!, comkey!!
-                                        )
-
-                                    }
-                                    builder.setNegativeButton("CANCEL"
-                                    ) { _: DialogInterface?, _: Int ->
-                                        builder.setCancelable(true)
-                                    }
-
-                                    val msgdialog: AlertDialog = builder.create()
-                                    msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
-
-                                    msgdialog.show()
+                                }
+                                builder.setNegativeButton("CANCEL"
+                                ) { _: DialogInterface?, _: Int ->
+                                    builder.setCancelable(true)
                                 }
 
-                            })
-                        )
+                                val msgdialog: AlertDialog = builder.create()
+                                msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
 
+                                msgdialog.show()
+                            }
 
-                    }
+                        })
+                    )
+
 
                 }
+
             }
         }
-    fun swap(binding : ActivityClickedPostBinding, title : String, text : String, author : String, crn: String, userid : String, time: String, uri : String)
+    }
+    fun swap(binding : ActivityClickedPostBinding, title : String, text : String, author : String, crn: String, time: String, uri : String)
     {
-        var ada =  CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString(), time, uri)
+        val ada =  CommentsAdapter(this, myViewModel.getComments(), title, text, author, crn,intent.getStringExtra("UserID").toString(), time, uri)
         binding.commentRecyclerView.swapAdapter(ada, false)
     }
 
 
-    }
-
-    /* coroutines attempt init {
-         lifecycleScope.launch{
-             myViewModel.getComments()
-         }
-     }*/
-    /*Log.d("postkey", intent?.getStringExtra("Pkey"))
-    Log.d("Pkey", myViewModel.PKey!!)
-    click_post_title.text = intent.getStringExtra("Title")
-    click_post_text.text = intent.getStringExtra("Text")
-    CKEY is for class key
-    Comments = myViewModel.getComments(bundle?.getString("CKey")!!)*/
+}

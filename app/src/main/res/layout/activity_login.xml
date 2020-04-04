@@ -7,7 +7,7 @@
 
         <variable
             name="AuthViewModel"
-            type="com.example.seniorproject.viewModels.AuthenticationViewModel"></variable>
+            type="com.example.seniorproject.viewModels.AuthenticationViewModel" />
 
     </data>
 
@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="36dp"
-            android:text="LOGIN"
+            android:text="@string/login"
             android:textColor="@color/TextColor"
             android:textSize="36sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -40,15 +40,17 @@
             android:layout_marginEnd="24dp"
             android:background="@drawable/login_screen_background"
             android:ems="10"
-            android:hint="Email"
+            android:hint="@string/email"
             android:inputType="textEmailAddress"
-            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp"
             android:text="@={AuthViewModel.email}"
             android:textColor="@android:color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView_Login" />
+            app:layout_constraintTop_toBottomOf="@+id/textView_Login"
+            android:importantForAutofill="no" />
 
         <EditText
             android:id="@+id/password_login_editText"
@@ -61,14 +63,16 @@
             android:layout_marginRight="24dp"
             android:background="@drawable/login_screen_background"
             android:ems="10"
-            android:hint="Password"
+            android:hint="@string/password"
             android:inputType="textPassword"
-            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp"
             android:text="@={AuthViewModel.password}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/email_Login_editText" />
+            app:layout_constraintTop_toBottomOf="@+id/email_Login_editText"
+            android:importantForAutofill="no" />
 
 
         <Button
@@ -83,8 +87,8 @@
             android:layout_marginRight="24dp"
             android:layout_marginBottom="92dp"
             android:background="@drawable/rounded_btn"
-            android:onClick="@{() -> AuthViewModel.LoginUserEmail()}"
-            android:text="Login"
+            android:onClick="@{() -> AuthViewModel.loginUserEmail()}"
+            android:text="@string/login_lowercase"
             android:textColor="@android:color/white"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -101,7 +105,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:onClick="@{(v) -> AuthViewModel.redirectToRegister(v)}"
-            android:text="Register for an account"
+            android:text="@string/register_for_an_account"
             android:textColor="@color/TextColor"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -115,7 +119,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:onClick="@{(v) -> AuthViewModel.redirectToPasswordReset(v)}"
-            android:text="Forgot Password?"
+            android:text="@string/forgot_password"
             android:textColor="@color/TextColor"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"

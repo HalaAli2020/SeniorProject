@@ -1,23 +1,18 @@
 <resources>
     <string name="app_name">Forum</string>
-    <string name="title_activity_main_forum">MainForum</string>
 
-    <string name="action_settings">Settings</string>
     <string name="title_home">Home</string>
     <string name="title_subs">Subscriptions</string>
     <string name="title_newPost">New Post</string>
     <string name="title_list">List</string>
     <string name="title_messages">Messages</string>
-    <string name="title_notifications">Notifications</string>
     <string name="menu_profile">Profile</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_log_out">Log Out</string>
-    <string name="comment">Comment</string>
     <string name="Sub">Subscribed</string>
     <string name="notSub">Subscribe</string>
     <string name="newMessage">New Message</string>
     <string name="edit">Edit</string>
-    <string name="refresh">Refresh</string>
 
 
     <string-array name="class_list">
@@ -36,12 +31,38 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="title_Text_Post">Text Post</string>
     <string name="title_Image_post">Image Post</string>
-    <string name="title_activity_new_post">NewPost</string>
-    <string name="tab_text_1">Text Post</string>
-    <string name="tab_text_2">Image Post</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="comment">Comment</string>
+    <string name="add_a_comment">Add a comment</string>
+    <string name="add_new_bio">Add new Bio</string>
+    <string name="done">DONE</string>
+    <string name="login">LOGIN</string>
+    <string name="login_lowercase">Login</string>
+    <string name="register_for_an_account">Register for an account</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="reset_password">RESET PASSWORD</string>
+    <string name="email">Email</string>
+    <string name="reset_password_">Reset Password</string>
+    <string name="registration">REGISTRATION</string>
+    <string name="name">Name</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="add_image">Add Image</string>
+    <string name="enter_a_title">Enter a title…</string>
+    <string name="enter_some_text">Enter some text…</string>
+    <string name="enter_message">Enter message…</string>
+    <string name="username">Username</string>
+    <string name="latest_message">Latest Message</string>
+    <string name="posts_">Posts</string>
+    <string name="comments">Comments</string>
+    <string name="search">search</string>
+    <string name="enter_new_displayname">Enter new displayname</string>
+    <string name="profile_image">profile image</string>
+    <string name="post_image">post image</string>
+    <string name="post">Post</string>
+    <string name="arrow">➤</string>
 
 
 </resources>
