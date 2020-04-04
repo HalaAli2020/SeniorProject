@@ -22,6 +22,12 @@ import kotlin.collections.ArrayList
 import com.example.seniorproject.viewModels.SearchViewModel
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 
@@ -762,7 +768,7 @@ Checks if a user has made any comments, a callback is implemented in the Profile
 
 
     //Database query for getting all the comments for a post
-    private fun listenComments(Key: String, subject: String, callbackComment: FirebaseCallbackComment)
+    fun listenComments(Key: String, subject: String, callbackComment: FirebaseCallbackCommentFlow)
     {
 
         val reference =
@@ -791,54 +797,14 @@ Checks if a user has made any comments, a callback is implemented in the Profile
                     //repository.saveNewPost(newPost)
                     //adapter.add(PostFrag(newPost.title, newPost.text))
                 }
-                comments.value = savedCommentList
-
-            }
-
-            override fun onChildRemoved(p0: DataSnapshot) {
-            }
-
-
-        })
-        callbackComment.onCallback(comments)
-
-    }
-
-/*
-NEEDS COMMENT
- */
-    fun getCommentsCO(Key: String): CommentLive {
-
-        //val uid = FirebaseAuth.getInstance().uid
-        val reference =
-            FirebaseDatabase.getInstance().getReference("Subjects/Posts/$Key/Comments")
-
-        reference.addChildEventListener(object : ChildEventListener {
-            var savedCommentList: MutableList<Comment> = mutableListOf()
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val newComment = p0.getValue(Comment::class.java)
-
-                if (newComment != null) {
-                    Log.d("ACCESSING", newComment.text)
-                    if (savedCommentList.isNullOrEmpty()) {
-                        savedCommentList.add(newComment)
+                var commentFlow = savedCommentList.asFlow()
+                callbackComment.onCallback(commentFlow)
+                var uiScope = CoroutineScope(Dispatchers.IO)
+                uiScope.launch {
+                    commentFlow.collect{
+                        Log.d("soupcollect", "comm is $it")
                     }
-                    savedCommentList.add(newComment)
-                    //repository.saveNewPost(newPost)
-                    //adapter.add(PostFrag(newPost.title, newPost.text))
                 }
-                comments.value = savedCommentList
-
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {
@@ -846,22 +812,6 @@ NEEDS COMMENT
 
 
         })
-       //callbackComment.onCallback(Comments)
-        return comments
-
-    }
-
-    /*
-    NEEDS COMMENT
-     */
-    fun getComments(Key: String, subject: String): CommentLive {
-        val com = CommentLive()
-       listenComments(Key, subject, object : FirebaseCallbackComment{
-           override fun onCallback(CommentL: CommentLive) {
-               com.value = CommentL.value
-           }
-       })
-        return com
     }
 
     /*
@@ -2073,6 +2023,11 @@ NEEDS COMMENT
     interface  FirebaseCallbackComment{
         fun onCallback(CommentL : CommentLive)
     }
+
+    interface  FirebaseCallbackCommentFlow{
+        fun onCallback(flow : Flow<Comment>)
+    }
+
     interface FirebaseCallbackCRN{
         fun onCallback(CRNL : MutableLiveData<MutableList<CRN>>)
     }

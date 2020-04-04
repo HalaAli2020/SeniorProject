@@ -51,8 +51,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun getSubscribedPosts() = Firebase.getSubscribedPosts()
 
-    fun getComments(ClassKey: String, subject: String): CommentLive {
-        return Firebase.getComments(ClassKey, subject)
+    fun getComments(ClassKey: String, subject: String, callback: FirebaseData.FirebaseCallbackCommentFlow){
+        Firebase.listenComments(ClassKey, subject, callback)
     }
 
     fun saveNewImgPosttoUser(title : String, text:String, CRN: String, uri: Uri, imagePost : Boolean)
@@ -149,7 +149,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
               //  }
                 var listCor : Flow<Post> = savedPostsList.asFlow()
                 callback.onFlow(listCor)
-                var scope = CoroutineScope(Dispatchers.IO)
+              /*  var scope = CoroutineScope(Dispatchers.IO)
             scope.launch {
                 listCor.collect {
                     Log.d("soupcollect", "post is $it")
@@ -160,18 +160,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                 Log.d("souprepo", "post is $item")
             }
             Log.d("souprepo", "end here")
-            }
-                //when i convert listCor to list from here it returns only last post
-                /*
-                    var check = listCor.toList()
-                    Log.d("soupfinal","start here")
-                    for(item in check){
-                        Log.d("souplist","post is $item")
-                    }
-                    Log.d("soupfinal","end here")
-                }*/
-                //i can collect in realtime fine here, but when i add each item to arraylist of posts on collect
-                //and then loop inside the arraylist it returns only last post.
+            }*/
             }
         })
     }
