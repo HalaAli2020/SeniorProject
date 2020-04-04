@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.Adapters.CommentsAdapter
+//import com.example.seniorproject.MainForum.Adapters.CommentsListAdapter
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
 import com.example.seniorproject.Utils.ProfileButton
@@ -93,7 +94,7 @@ class ClickedPost : AppCompatActivity() {
             ) {
                 val userk: String? = adapter.getUserKey(viewHolders)
                 if (FirebaseAuth.getInstance().currentUser?.uid == userk){
-                    //val swipe = null
+                    val swipe = null
                 }
                 else {
                     buffer.add(

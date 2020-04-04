@@ -16,11 +16,6 @@ class SearchAdapter(context: Context, ViewModel: SearchViewModel, Clist : Mutabl
     private var classlist : MutableLiveData<MutableList<CRN>>? = Clist
     val mContext = context
     private val mViewModel = ViewModel
-    init {
-        //mViewModel.getallclasses()
-    }
-
-
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {

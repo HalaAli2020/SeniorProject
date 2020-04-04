@@ -147,7 +147,7 @@ class UserProfileActivity : AppCompatActivity() {
         }
         else{
             //getting the profile image for the another user
-            Log.d("Soup", "$test")
+            Log.d("Soup", test)
             myViewModel.readPhotoValue(test, object: EmailCallback{
                 override fun getEmail(string: String) {
                     Log.d("Soup", "file name is $string")

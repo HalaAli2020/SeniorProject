@@ -15,7 +15,7 @@ class Comment(var text: String, var Ptime : String?, var PosterID : String?, var
     var userComkey : String? = null
     var author : String? = null
     var profileComKey : String? = null
-    private var UserPostkey : String? = null
+    private var userPostKey : String? = null
 
     //initialization of timestamp
     init {
@@ -42,7 +42,7 @@ class Comment(var text: String, var Ptime : String?, var PosterID : String?, var
             "Ptime" to Ptime,
             "crn" to crn,
             "Postkey" to Postkey,
-            "UserPostkey" to UserPostkey,
+            "UserPostkey" to userPostKey,
             "Classkey" to classkey,
             "UserComkey" to userComkey,
             "ProfileComKey" to profileComKey

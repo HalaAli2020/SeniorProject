@@ -55,7 +55,7 @@ class EditProfileActivity : AppCompatActivity() {
         myViewModel.sendClassnameForUsername()
 
         //setting button to change the users profile image
-      val img : ImageButton = findViewById<ImageButton>(R.id.img_button)
+      val img : ImageButton = findViewById(R.id.img_button)
 
         Glide.with(this) //1
             .load(R.mipmap.ic_edit_profile_photo_round)
@@ -94,7 +94,7 @@ class EditProfileActivity : AppCompatActivity() {
         if (requestCode == 0 && resultCode == Activity.RESULT_OK && data !=null)
         {
             //choosing and saving new image
-            val img : ImageButton = findViewById<ImageButton>(R.id.img_button)
+            val img : ImageButton = findViewById(R.id.img_button)
 
             selectedPhotoUri= data.data
 

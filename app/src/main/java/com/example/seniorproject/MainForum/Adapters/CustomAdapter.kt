@@ -29,14 +29,14 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val mContext: Context = context
 
-    private val TYPE_TEXT: Int = 0
-    private val TYPE_IMAGE: Int = 1
+    private val typeText: Int = 0
+    private val typeImage: Int = 1
 
     override fun getItemViewType(position: Int): Int {
         if (savedPosts.value!![position].uri == null || savedPosts.value!![position].uri == "null") {
-            return TYPE_TEXT
+            return typeText
         }
-        return TYPE_IMAGE
+        return typeImage
     }
 
 
@@ -85,6 +85,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
                     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 }
             })
+
             holder.itemView.post_title.text = post.title
             holder.itemView.username.text = post.author
             holder.itemView.post_timestamp.text = post.Ptime
@@ -96,6 +97,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
                 Glide.with(mContext).clear(holder.itemView.post_image)
                 holder.itemView.post_image.setImageDrawable(null)
             }
+
 
             if (type == 0) {
                 if (post.title == "No Posts")

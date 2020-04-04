@@ -2,12 +2,12 @@ package com.example.seniorproject.MainForum.Posts
 
 import android.content.DialogInterface
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -15,23 +15,19 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.InjectorUtils
-import com.example.seniorproject.MainForum.Adapters.CustomAdapter
-import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
 import com.example.seniorproject.MainForum.Adapters.PostAdapter
-import com.example.seniorproject.MainForum.Adapters.PostImageViewHolders
 import com.example.seniorproject.R
-import com.example.seniorproject.Utils.*
+import com.example.seniorproject.Utils.ButtonClickListener
+import com.example.seniorproject.Utils.MutableListCallback
+import com.example.seniorproject.Utils.ProfileButton
+import com.example.seniorproject.Utils.SwipeHelper
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.viewModels.CommunityPostViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_community_posts.*
 import kotlinx.android.synthetic.main.rv_post.view.*
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
-import java.time.Duration
+import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 class CommunityPosts : AppCompatActivity() {
 
@@ -88,7 +84,7 @@ class CommunityPosts : AppCompatActivity() {
                     }
 
                     fun showToast(){
-                        var toast= Toast.makeText(this@CommunityPosts, "We've received your report.",Toast.LENGTH_SHORT)
+                        val toast= Toast.makeText(this@CommunityPosts, "We've received your report.",Toast.LENGTH_SHORT)
                         toast.show()
                     }
 
@@ -102,7 +98,7 @@ class CommunityPosts : AppCompatActivity() {
                                 adapter.getUserKey(viewHolders)
 
                             if (FirebaseAuth.getInstance().currentUser?.uid == userk){
-                                //val swipe = null
+                                val swipe = null
                             }
                             else{
                                 buffer.add(
@@ -119,7 +115,7 @@ class CommunityPosts : AppCompatActivity() {
                                                 adapter.getAuthor(viewHolders)
 
                                             //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
-                                            var builder = AlertDialog.Builder(
+                                            val builder = AlertDialog.Builder(
                                                 this@CommunityPosts,
                                                 R.style.AppTheme_AlertDialog
                                             )
@@ -151,7 +147,7 @@ class CommunityPosts : AppCompatActivity() {
                                                     //classes_post_RV.findViewHolderForAdapterPosition(i)!!.itemView.post_title.text="[blocked]"
                                                     //classes_post_RV.getChildViewHolder(classes_post_RV.getChildAt(i)).itemView.post_title.text="[blocked]"
                                                 }
-                                                var toast = Toast.makeText(
+                                                val toast = Toast.makeText(
                                                     this@CommunityPosts,
                                                     "This user has been blocked",
                                                     Toast.LENGTH_SHORT
@@ -189,12 +185,12 @@ class CommunityPosts : AppCompatActivity() {
 
                                             val textkey: String? = adapter.getText(viewHolders)
 
-                                            var builder = AlertDialog.Builder(
+                                            val builder = AlertDialog.Builder(
                                                 this@CommunityPosts,
                                                 R.style.AppTheme_AlertDialog
                                             )
 
-                                            var listreason = arrayOf(
+                                            val listreason = arrayOf(
                                                 "This is spam",
                                                 "This is abusive or harassing",
                                                 "Other issues"
@@ -208,7 +204,7 @@ class CommunityPosts : AppCompatActivity() {
                                             }
                                             builder.setPositiveButton("SUBMIT"
                                             ) { _: DialogInterface?, _: Int ->
-                                                var toast = Toast.makeText(
+                                                val toast = Toast.makeText(
                                                     this@CommunityPosts,
                                                     "We've received your report.",
                                                     Toast.LENGTH_SHORT
@@ -245,7 +241,7 @@ class CommunityPosts : AppCompatActivity() {
                     //}
 
 
-                    obse = Observer<MutableList<Post>> {
+                    obse = Observer {
                         Log.d("obser", " blah")
 
                     }

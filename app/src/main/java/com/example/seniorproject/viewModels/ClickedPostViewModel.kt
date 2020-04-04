@@ -9,10 +9,10 @@ import javax.inject.Inject
 
 class ClickedPostViewModel @Inject constructor(private val repository : PostRepository) : ViewModel(){
 
-    private val CommentListener : PostListener? = null
+    private val commentListener : PostListener? = null
     var commentsLiveList : CommentLive = CommentLive()
     var comment : String? = null
-    private var CommentsList = mutableListOf<Comment>()
+    private var commentsList = mutableListOf<Comment>()
     var pKey: String? = null
     var userID : String? = null
     var classkey : String? = null
@@ -20,7 +20,7 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
     var title: String? = null
     var text: String? = null
     //private var getCommentsJob: Job? = null
-    private var PostKey : String? = null
+    private var postKey : String? = null
     var comuserid: String? = null
     var usercomkey: String?= null
     var ctext: String? = null
@@ -28,16 +28,12 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
     var postukey: String? = null
 
 
-    init {
-
-    }
-
     fun getComments() : CommentLive
     {
        if(pKey.isNullOrEmpty())
        {
-           PostKey = pKey
-           CommentListener?.onFailure("Post key not found")
+           postKey = pKey
+           commentListener?.onFailure("Post key not found")
        }
         commentsLiveList = repository.getComments(classkey!!, crn!!)
 
@@ -57,7 +53,7 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
     }
     fun checkcomments() : Boolean
     {
-        if(CommentsList.size != -1)
+        if(commentsList.size != -1)
         {
             return true
         }
