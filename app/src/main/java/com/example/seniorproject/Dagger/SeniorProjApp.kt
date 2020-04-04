@@ -2,20 +2,20 @@ package com.example.seniorproject.Dagger
 
 import android.app.Application
 
+//base application component used to generate dagger app component
 class SeniorProjApp : Application(){
 
-    lateinit var app_component: AppComponent
+    lateinit var appComponent: AppComponent
 
     override fun onCreate() {
         super.onCreate()
-        app_component = initDagger(this)
+        appComponent = initDagger(this)
     }
 
     private fun initDagger(app: SeniorProjApp): AppComponent =
         DaggerAppComponent.builder()
         .appModule(AppModule(app))
         .build()
-    //unsure of what this does
 }
 
 

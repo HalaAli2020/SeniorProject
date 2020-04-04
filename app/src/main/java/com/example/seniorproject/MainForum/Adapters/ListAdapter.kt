@@ -42,9 +42,9 @@ class ListAdapter(
         val classes: String = classList[position].name
         holder.itemView.communityName_TV.text = classes
 
-        Log.d("subB", "ERROR: " + classList[position].Subscribed)
+        Log.d("subB", "ERROR: " + classList[position].subscribed)
 
-        if (classList[position].Subscribed) {
+        if (classList[position].subscribed) {
             Log.d("subB", "true")
             holder.itemView.Subscibe_B.setBackgroundResource(R.drawable.sub_button)
             holder.itemView.Subscibe_B.setTextColor(ContextCompat.getColor(mContext,R.color.white))
@@ -58,21 +58,21 @@ class ListAdapter(
 
         holder.itemView.Subscibe_B.setOnClickListener {
             Log.d("subB", "Button pressed")
-            val sub = classList[position].Subscribed
+            val sub = classList[position].subscribed
             if (sub) {
                 Log.d("subB", "else")
                 mViewModel.removeSub(classList[position].name)
                 holder.itemView.Subscibe_B.setBackgroundResource(R.drawable.circle_border)
                 holder.itemView.Subscibe_B.setTextColor(ContextCompat.getColor(mContext,R.color.blue_theme))
                 holder.itemView.Subscibe_B.text = mContext.resources.getString(R.string.notSub)
-                classList[position].Subscribed = false
+                classList[position].subscribed = false
             } else {
                 Log.d("subB", "ifffffff")
                 mViewModel.addSub(classList[position].name)
                 holder.itemView.Subscibe_B.setBackgroundResource(R.drawable.sub_button)
                 holder.itemView.Subscibe_B.setTextColor(ContextCompat.getColor(mContext,R.color.white))
                 holder.itemView.Subscibe_B.text = mContext.resources.getString(R.string.Sub)
-                classList[position].Subscribed = true
+                classList[position].subscribed = true
             }
 
         }

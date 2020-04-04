@@ -35,7 +35,7 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
     }
 
 
-    var postListener: PostListener? = null
+    private var postListener: PostListener? = null
 
 
     fun editPost(){

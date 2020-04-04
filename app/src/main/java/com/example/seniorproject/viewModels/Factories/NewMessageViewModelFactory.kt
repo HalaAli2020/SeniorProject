@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.seniorproject.data.repositories.MessagesRepo
 import com.example.seniorproject.viewModels.NewMessageViewModel
 
+//initialization of New Messages view model factory
 @Suppress("UNCHECKED_CAST")
 class NewMessageViewModelFactory(private val repository: MessagesRepo) :
     ViewModelProvider.NewInstanceFactory() {

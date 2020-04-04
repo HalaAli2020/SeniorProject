@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +14,7 @@ import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,24 +23,24 @@ import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Adapters.CustomAdapter
 import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
+import com.example.seniorproject.MainForum.Adapters.PostImageViewHolders
 import com.example.seniorproject.MainForum.Posts.UpdatePost
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
 import com.example.seniorproject.Utils.ProfileButton
 import com.example.seniorproject.Utils.SwipeHelper
-import com.example.seniorproject.Utils.checkCallback
+import com.example.seniorproject.Utils.CheckCallback
 import com.example.seniorproject.databinding.FragmentProfilePostBinding
 import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_profile__post.view.*
-import kotlinx.android.synthetic.main.fragment_profile__post.view.refreshView
 import javax.inject.Inject
 
 
 class ProfilePostFragment : Fragment() {
 
     private lateinit var adapter: CustomAdapter
-    lateinit var deleteIcon: Drawable
+    private lateinit var deleteIcon: Drawable
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -112,7 +112,7 @@ class ProfilePostFragment : Fragment() {
         binding.executePendingBindings()
 
         //checking if a user has no posts, the no post message is not swipable but all other posts are
-        myViewModel.noPostsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null", object : checkCallback{
+        myViewModel.noPostsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null", object : CheckCallback{
             override fun check(chk: Boolean) {
                 if (iD != FirebaseAuth.getInstance().currentUser?.uid || chk){
                     Log.d("wrong","one")
@@ -128,8 +128,16 @@ class ProfilePostFragment : Fragment() {
                                 ProfileButton(context!!, "Delete", 30, 0, Color.parseColor
                                     ("#FF0000"), object : ButtonClickListener {
                                     override fun onClick(pos: Int) {
-                                        val postkey: String? =
-                                            adapter.removeItem(viewHolders as CustomViewHolders)
+                                        var postkey = " "
+                                        //if statement to cover image post case
+                                        if (adapter.getItemViewType(pos) == 1)
+                                        {
+                                            postkey = adapter.removeItem(viewHolders as PostImageViewHolders)
+                                        }
+                                        else if (adapter.getItemViewType(pos) == 0){
+
+                                            postkey = adapter.removeItem(viewHolders as CustomViewHolders)
+                                        }
 
                                         val userkey: String? =
                                             adapter.getUserKey(viewHolders)
@@ -137,16 +145,12 @@ class ProfilePostFragment : Fragment() {
                                         val crnkey: String? =
                                             adapter.getCrn(viewHolders)
 
-                                        //var builder = AlertDialog.Builder(activity!!.baseContext, R.style.AppTheme_AlertDialog)
+                                        //alert dialog setup
                                         val builder = AlertDialog.Builder(
                                             view.context,
                                             R.style.AppTheme_AlertDialog
                                         )
-
-                                        //.getStringExtra("Classkey")
-                                        //val postkey = intent.getStringExtra("author")
-                                        //myViewModel.deletePost(postkey!!, className)
-                                        //myViewModel.deletePost()
+                                        //creating message to stop user from deleting posts on accident
                                         builder.setTitle("Are you sure?")
                                         builder.setMessage("You cannot restore posts that have been deleted.")
                                         builder.setPositiveButton("DELETE",
@@ -168,15 +172,22 @@ class ProfilePostFragment : Fragment() {
 
                                 })
                             )
-
+                              //adding an edit butto on onswipe
                             buffer.add(
                                 ProfileButton(context!!, "Edit", 30, 0, Color.parseColor
                                     ("#D3D3D3"), object : ButtonClickListener {
                                     override fun onClick(pos: Int) {
                                         val intent = Intent(context, UpdatePost::class.java)
+                                        var postkey = " "
+                                        //if statement to cover image post case
+                                        if (adapter.getItemViewType(pos) == 1)
+                                        {
+                                             postkey = adapter.removeItem(viewHolders as PostImageViewHolders)
+                                        }
+                                        else if (adapter.getItemViewType(pos) == 0){
 
-                                        val postkey: String? =
-                                            adapter.removeItem(viewHolders as CustomViewHolders)
+                                             postkey = adapter.removeItem(viewHolders as CustomViewHolders)
+                                        }
 
                                         val userkey: String? =
                                             adapter.getUserKey(viewHolders)
@@ -189,7 +200,7 @@ class ProfilePostFragment : Fragment() {
 
                                         val textkey: String? =
                                             adapter.getText(viewHolders)
-
+                                        //sending information and setting up edit post activity
                                         intent.putExtra("crn", crnkey)
                                         intent.putExtra("Classkey", postkey)
                                         intent.putExtra("UserID", userkey)

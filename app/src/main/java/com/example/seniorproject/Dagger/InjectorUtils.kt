@@ -6,10 +6,8 @@ import com.example.seniorproject.data.repositories.PostRepository
 import com.example.seniorproject.data.repositories.SearchRepo
 import com.example.seniorproject.viewModels.Factories.*
 
-//import com.example.seniorproject.viewModels.AuthenticationViewModelFactory
 
-//import com.example.seniorproject.viewModels.NewPostFragmentViewModelFactory
-
+//declarations of viewmodelfactory provider functions for activities that use recyclerviews
 object InjectorUtils {
 
     fun providePostViewModelFactory(): HomeFragmentViewModelFactory {
@@ -55,15 +53,5 @@ object InjectorUtils {
         val searchrepo = SearchRepo.getInstance(FirebaseData())
         return SearchViewModelFactory(searchrepo)
     }
-
-
-
-
-
-
-   /* fun provideNewPostViewModelFactory(): NewPostFragmentViewModelFactory {
-        val postrepo: PostRepository = PostRepository.getInstance(FirebaseData())
-        return NewPostFragmentViewModelFactory(postrepo)
-    }*/
 
 }

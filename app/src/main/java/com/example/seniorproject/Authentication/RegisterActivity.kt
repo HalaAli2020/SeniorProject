@@ -1,21 +1,19 @@
 package com.example.seniorproject.Authentication
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProviders
-import com.example.seniorproject.*
-import com.example.seniorproject.Utils.AuthenticationListener
-import com.example.seniorproject.viewModels.AuthenticationViewModel
-import com.example.seniorproject.databinding.ActivityRegisterBinding
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.example.seniorproject.Dagger.DaggerAppComponent
+import com.example.seniorproject.R
+import com.example.seniorproject.Utils.AuthenticationListener
+import com.example.seniorproject.databinding.ActivityRegisterBinding
+import com.example.seniorproject.viewModels.AuthenticationViewModel
 import javax.inject.Inject
-
-
 
 
 class RegisterActivity : AppCompatActivity(),
@@ -30,13 +28,14 @@ class RegisterActivity : AppCompatActivity(),
     }
 
     override fun onSuccess() {
-        //called in Firebase Data Register User function navigates to mainforum page
+        //called in viewmodel
         Toast.makeText(this, "A verification email has been sent, please verify before you log in", Toast.LENGTH_SHORT).show()
         val myIntent = Intent(this@RegisterActivity, LoginActivity::class.java)
         this@RegisterActivity.startActivity(myIntent)
     }
 
     override fun onFailure(message: String) {
+        //called in viewmodel
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 

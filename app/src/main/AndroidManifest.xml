@@ -32,6 +32,7 @@
         <activity android:name=".MainForum.Posts.UpdatePost" />
         <activity android:name=".MainForum.Posts.UpdateComment" />
         <activity android:name=".search.SearchActivity"/>
+        <activity android:name=".MainForum.SettingsActivity"/>
         <activity
             android:name=".MainForum.MainForum"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"

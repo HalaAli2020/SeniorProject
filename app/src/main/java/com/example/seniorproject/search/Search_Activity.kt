@@ -4,7 +4,6 @@ package com.example.seniorproject.search
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -25,9 +24,9 @@ class SearchActivity: AppCompatActivity()
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: SearchViewModel
-    lateinit var searchview : SearchView
+    private lateinit var searchview : SearchView
     // lateinit var lit : RecyclerView
-    lateinit var lt :RecyclerView
+    private lateinit var lt :RecyclerView
     lateinit var ada : SearchAdapter
     //lateinit var mnu : MenuItem
     lateinit var binding : ActivitySearchBinding
@@ -68,7 +67,7 @@ class SearchActivity: AppCompatActivity()
         // lt = findViewById<RecyclerView>(R.id.Search_L)
         //setupsearchview()
         //searchview =findViewById<SearchView>(R.id.Search_R)
-        myViewModel.Fullist.observe(this, obse)
+        myViewModel.fullist.observe(this, obse)
 
 
 

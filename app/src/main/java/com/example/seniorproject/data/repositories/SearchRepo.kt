@@ -9,9 +9,9 @@ import javax.inject.Inject
 class SearchRepo @Inject constructor(private val Firebase: FirebaseData) {
 
 
-    fun Search(query : String, reply: SearchViewModel.FirebaseResult)
+    fun search(query : String, reply: SearchViewModel.FirebaseResult)
     {
-        Firebase.UsersSearch(query, reply)
+        Firebase.usersSearch(query, reply)
 
     }
     fun getallclasses(listen : SearchViewModel.FirebaseResult)

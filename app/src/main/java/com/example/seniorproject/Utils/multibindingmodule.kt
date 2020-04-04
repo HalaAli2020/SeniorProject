@@ -8,10 +8,11 @@ import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 
+//how we access the viewmodel provider in the activity after the dagger app component is generated
 @Module
 internal abstract class Multibindingmodule{
     @Binds
-abstract fun bindviewmodelFactory(factory: DaggerViewModelFactory):ViewModelProvider.Factory
+    abstract fun bindviewmodelFactory(factory: DaggerViewModelFactory):ViewModelProvider.Factory
 
     @Binds
     @IntoMap

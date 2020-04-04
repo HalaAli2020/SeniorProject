@@ -13,6 +13,7 @@ class ProfileButton(private val context: Context, private val text: String, priv
     private var pos: Int =0
 
 
+
     init{
         resources= context.resources
     }

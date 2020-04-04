@@ -14,13 +14,13 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-abstract class SwipeHelper(context: Context, private val recyclerView: RecyclerView, private var buttonWidth: Int):
+abstract class SwipeHelper(context: Context, private val recyclerView: RecyclerView, internal var buttonWidth: Int):
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
     abstract fun initButton(viewHolders: RecyclerView.ViewHolder, buffer: MutableList<ProfileButton>)
 
-    private lateinit var gestureDetector: GestureDetector
-    private lateinit var buttonQueue: LinkedList<Int>
+    lateinit var gestureDetector: GestureDetector
+    lateinit var buttonQueue: LinkedList<Int>
 
     var buttonBuffer: MutableMap<Int, MutableList<ProfileButton>>
     private var buttonList: MutableList<ProfileButton>? = null
@@ -32,7 +32,7 @@ abstract class SwipeHelper(context: Context, private val recyclerView: RecyclerV
         override fun onSingleTapUp(e: MotionEvent?): Boolean {
             for(button in buttonList!!)
             {
-                if(button.onClick(e!!.x, e.y))
+                if(button.onClick(e!!.x, e!!.y))
                     break
             }
             return true
@@ -160,7 +160,7 @@ abstract class SwipeHelper(context: Context, private val recyclerView: RecyclerV
 
         val pos = viewHolder.adapterPosition
         var translationX = dX
-        val itemView = viewHolder.itemView
+        var itemView = viewHolder.itemView
         if(pos < 0){
             swipePosition = pos
             return

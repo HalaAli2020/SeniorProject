@@ -1,7 +1,6 @@
 package com.example.seniorproject.MainForum.Adapters
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
@@ -47,10 +46,11 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
         if (viewType == 1) {
             val cellForRow = layoutInflater.inflate(R.layout.rv_post_image, parent, false)
             return PostImageViewHolders(cellForRow)
+        }else {
+            val cellForRow = layoutInflater.inflate(R.layout.rv_post, parent, false)
+            return CustomViewHolders(cellForRow)
         }
 
-        val cellForRow = layoutInflater.inflate(R.layout.rv_post, parent, false)
-        return CustomViewHolders(cellForRow)
     }
 
     override fun getItemCount(): Int {
@@ -60,12 +60,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
             return 0
     }
 
-    fun getUserKey(holder: RecyclerView.ViewHolder): String {
-        val post: Post = savedPosts.value!![holder.adapterPosition]
-        val postkey: String?= post.UserID
 
-        return postkey!!
-    }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val post: Post = savedPosts.value!![position]
@@ -79,7 +74,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
                 override fun onDataChange(p0: DataSnapshot) {
                     if (p0.exists()) {
                         for (block in p0.children) {
-                            if (block.value == post.UserID) {
+                            if (block.value == post.userID) {
                                 holder.itemView.post_title.text = "[blocked]"
                             }
                         }
@@ -94,13 +89,13 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
             holder.itemView.username.text = post.author
             holder.itemView.post_timestamp.text = post.Ptime
 
-               if (post.uri != null) {
-               Glide.with(mContext).load(post.uri).placeholder(R.color.white)
-                   .into(holder.itemView.post_image)
-           } else {
-               Glide.with(mContext).clear(holder.itemView.post_image)
-               holder.itemView.post_image.setImageDrawable(null)
-           }
+            if (post.uri != null) {
+                Glide.with(mContext).load(post.uri).placeholder(R.color.white)
+                    .into(holder.itemView.post_image)
+            } else {
+                Glide.with(mContext).clear(holder.itemView.post_image)
+                holder.itemView.post_image.setImageDrawable(null)
+            }
 
             if (type == 0) {
                 if (post.title == "No Posts")
@@ -111,18 +106,18 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
                 }
                 else
                 {
-                holder.itemView.username.text = post.subject
-                holder.itemView.username.setOnClickListener {
-                    val intent = Intent(mContext, CommunityPosts::class.java)
-                    intent.putExtra("ClassName", post.subject)
-                    mContext.startActivity(intent)
-                }
+                    holder.itemView.username.text = post.subject
+                    holder.itemView.username.setOnClickListener {
+                        val intent = Intent(mContext, CommunityPosts::class.java)
+                        intent.putExtra("ClassName", post.subject)
+                        mContext.startActivity(intent)
+                    }
 
                 }
             } else if (type == 1) {
                 holder.itemView.username.setOnClickListener {
                     val intent = Intent(mContext, UserProfileActivity::class.java)
-                    intent.putExtra("UserID", post.UserID)
+                    intent.putExtra("UserID", post.userID)
                     intent.putExtra("Author", post.author)
                     mContext.startActivity(intent)
                 }
@@ -145,7 +140,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
             } else if (type == 1) {
                 holder.itemView.username.setOnClickListener {
                     val intent = Intent(mContext, UserProfileActivity::class.java)
-                    intent.putExtra("UserID", post.UserID)
+                    intent.putExtra("UserID", post.userID)
                     intent.putExtra("Author", post.author)
                     mContext.startActivity(intent)
                 }
@@ -166,8 +161,8 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
                 intent.putExtra("Title", post.title)
                 intent.putExtra("Text", post.text)
                 intent.putExtra("Pkey", post.key)
-                intent.putExtra("Classkey", post.Classkey)
-                intent.putExtra("UserID", post.UserID)
+                intent.putExtra("Classkey", post.classkey)
+                intent.putExtra("UserID", post.userID)
                 intent.putExtra("Author", post.author)
                 intent.putExtra("crn", post.crn)
                 intent.putExtra("uri", post.uri)
@@ -182,11 +177,17 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
 
     fun removeItem(holder: RecyclerView.ViewHolder): String {
         val post: Post = savedPosts.value!![holder.adapterPosition]
-        val postkey: String? = post.Classkey
+        val postkey: String? = post.classkey
 
         return postkey!!
     }
 
+    fun getUserKey(holder: RecyclerView.ViewHolder): String {
+        val post: Post = savedPosts.value!![holder.adapterPosition]
+        val postkey: String?= post.userID
+
+        return postkey!!
+    }
 
 
     fun getCrn(holder: RecyclerView.ViewHolder): String {
@@ -221,7 +222,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
         return posttext!!
     }
 
-    }
+}
 
 
 

@@ -1,19 +1,19 @@
 package com.example.seniorproject.MainForum.Fragments
 
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Adapters.SubsriptionAdapter
-import com.example.seniorproject.viewModels.SubscriptionsViewModel
 import com.example.seniorproject.R
+import com.example.seniorproject.viewModels.SubscriptionsViewModel
 import kotlinx.android.synthetic.main.fragment_subscriptions.view.*
 import javax.inject.Inject
 
@@ -24,7 +24,7 @@ class FragmentSubscriptions : Fragment() {
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: SubscriptionsViewModel
 
-   var obse = Observer<MutableList<String>>{
+   private var obse = Observer<MutableList<String>>{
        swap()
    }
 
@@ -42,7 +42,7 @@ class FragmentSubscriptions : Fragment() {
         activity?.title = "Subscriptions"
         val view = inflater.inflate(R.layout.fragment_subscriptions, container, false)
 
-        myViewModel.UsersSubs?.observe(this, obse)
+        myViewModel.usersSubs?.observe(this, obse)
         view.subs_recyclerView.layoutManager = LinearLayoutManager(context)
 
         val ada = myViewModel.getUserSub()?.let {
@@ -70,7 +70,7 @@ class FragmentSubscriptions : Fragment() {
         return view
 
     }
-    fun swap()
+    private fun swap()
     {
         val ada = SubsriptionAdapter(view!!.context, myViewModel.retsubs())
         view!!.subs_recyclerView.swapAdapter(ada, true)

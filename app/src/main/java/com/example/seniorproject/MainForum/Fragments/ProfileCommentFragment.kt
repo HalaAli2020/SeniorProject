@@ -8,11 +8,14 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
-import android.view.*
-import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,13 +30,12 @@ import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
 import com.example.seniorproject.Utils.ProfileButton
 import com.example.seniorproject.Utils.SwipeHelper
-import com.example.seniorproject.Utils.checkCallback
+import com.example.seniorproject.Utils.CheckCallback
 import com.example.seniorproject.data.models.CommentLive
 import com.example.seniorproject.databinding.FragmentProfileCommentBinding
 import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_profile_comment.view.*
-import kotlinx.android.synthetic.main.fragment_profile_comment.view.refreshView
 import javax.inject.Inject
 
 
@@ -44,7 +46,7 @@ class ProfileCommentFragment : Fragment() {
     private lateinit var linearLayoutManager: LinearLayoutManager
 
     var swipeBackground: ColorDrawable = ColorDrawable(Color.parseColor("#FF0000"))
-    lateinit var deleteIcon: Drawable
+    private lateinit var deleteIcon: Drawable
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -124,14 +126,15 @@ class ProfileCommentFragment : Fragment() {
         deleteIcon = ContextCompat.getDrawable(activity!!.applicationContext, R.drawable.ic_delete_24px)!!
         binding.executePendingBindings()
 
-        //checking if a user has no posts, the no comments message is not swipable but all other comments are
-         myViewModel.noCommentsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null", object : checkCallback {
+        //checking if a user has no posts, the no comments message is not swipeable but all other comments are
+         myViewModel.noCommentsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null", object : CheckCallback {
              override fun check(chk: Boolean) {
                  if (iD != FirebaseAuth.getInstance().currentUser?.uid || chk){
                      Log.d("wrong","one")
                  }
                  else if (!chk) {
-                     //setting swipe UI
+                     //setting up swipe UI with a delete and edit button
+                     //if a user has no comments the message should not be swipeable
                      object : SwipeHelper(context!!, view.profile_comment_recyclerView, 200) {
                          override fun initButton(
                              viewHolders: RecyclerView.ViewHolder,
@@ -142,7 +145,7 @@ class ProfileCommentFragment : Fragment() {
                                      ("#FF0000"), object : ButtonClickListener {
                                      override fun onClick(pos: Int) {
                                          val postkeyUP: String? =
-                                             adaptercomments.pkeyUserProfile( //uninitialized property exeption
+                                             adaptercomments.pkeyUserProfile(
                                                  viewHolders as CustomViewHolders
                                              )
                                          val userkey: String? =
@@ -175,6 +178,7 @@ class ProfileCommentFragment : Fragment() {
                                              R.style.AppTheme_AlertDialog
                                          )
 
+                                         //creating dialog box and message to stop user from deleting post on accident
                                          builder.setTitle("Are you sure?")
                                          builder.setMessage("You cannot restore comments that have been deleted.")
                                          builder.setPositiveButton("DELETE",
@@ -233,6 +237,7 @@ class ProfileCommentFragment : Fragment() {
                                                  viewHolders
                                              )
 
+                                         //sending information and starting edit post activity
                                          val intent = Intent(context, UpdateComment::class.java)
                                          intent.putExtra("PosterID", userkey)
                                          intent.putExtra("ProfileComKey", classprofilekey)
@@ -264,7 +269,7 @@ class ProfileCommentFragment : Fragment() {
         binding.executePendingBindings()
         return view
     }
-    fun swap(ID: String)
+    private fun swap(ID: String)
     {
         val ada = ProfileCommentsAdapter(view!!.context, myViewModel.getUserProfileComments(ID))
         view!!.profile_comment_recyclerView.swapAdapter(ada, true)

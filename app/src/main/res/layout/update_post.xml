@@ -7,7 +7,7 @@
 
         <variable
             name="NewPostModel"
-            type="com.example.seniorproject.viewModels.NewPostFragmentViewModel"></variable>
+            type="com.example.seniorproject.viewModels.NewPostFragmentViewModel" />
 
     </data>
 
@@ -81,7 +81,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cl" />
+            app:layout_constraintTop_toBottomOf="@+id/cl"
+            android:importantForAutofill="no" />
 
         <EditText
             android:id="@+id/new_post_text"
@@ -101,7 +102,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/new_post_title" />
+            app:layout_constraintTop_toBottomOf="@+id/new_post_title"
+            android:importantForAutofill="no" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
