@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.seniorproject.MainForum.Posts.ClickedPost
@@ -32,7 +34,7 @@ import kotlinx.android.synthetic.main.rv_post_comment.view.*
 import kotlinx.android.synthetic.main.rv_post_header.view.*
 import kotlinx.android.synthetic.main.rv_post_image.view.*
 
-class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: Int) :
+class CustomAdapter(context: Context, var savedPosts: LiveData<MutableList<Post>>?, var type: Int) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val mContext: Context = context
 
@@ -40,7 +42,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
     private val TYPE_IMAGE: Int = 1
 
     override fun getItemViewType(position: Int): Int {
-        if (savedPosts.value!![position].uri == null || savedPosts.value!![position].uri == "null") {
+        if (savedPosts?.value!![position].uri == null || savedPosts?.value!![position].uri == "null") {
             return TYPE_TEXT
         }
         return TYPE_IMAGE
@@ -60,8 +62,8 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
     }
 
     override fun getItemCount(): Int {
-        if (!savedPosts.value.isNullOrEmpty()) {
-            return savedPosts.value!!.size
+        if (!savedPosts?.value.isNullOrEmpty()) {
+            return savedPosts?.value!!.size
         } else
             return 0
     }
@@ -70,7 +72,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
         //position=customViewHolders.adapterPosition
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
-        val post: Post = savedPosts.value!![holder.adapterPosition]
+        val post: Post = savedPosts?.value!![holder.adapterPosition]
         val postkey: String?= post.UserID
         //notifyItemRemoved(customViewHolders.adapterPosition)
         //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
@@ -86,9 +88,9 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
                 "Subscribe to a community to see posts on this screen!"
         }
         else {*/
-        val post: Post = savedPosts.value!![position]
+        val post: Post = savedPosts?.value!![position]
         if (holder is PostImageViewHolders) {
-            val post: Post = savedPosts.value!![position]
+            val post: Post = savedPosts?.value!![position]
             val userID = FirebaseAuth.getInstance().uid
 
             val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
@@ -203,7 +205,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
         //position=customViewHolders.adapterPosition
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
-        val post: Post = savedPosts.value!![holder.adapterPosition]
+        val post: Post = savedPosts?.value!![holder.adapterPosition]
         val postkey: String? = post.Classkey
         //notifyItemRemoved(customViewHolders.adapterPosition)
         //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
@@ -217,7 +219,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
         //position=customViewHolders.adapterPosition
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
-        val post: Post = savedPosts.value!![holder.adapterPosition]
+        val post: Post = savedPosts?.value!![holder.adapterPosition]
         val postcrn: String?= post.subject
         //notifyItemRemoved(customViewHolders.adapterPosition)
         //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
@@ -229,7 +231,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
         //position=customViewHolders.adapterPosition
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
-        val post: Post = savedPosts.value!![holder.adapterPosition]
+        val post: Post = savedPosts?.value!![holder.adapterPosition]
         val posttitle: String?= post.title
         //notifyItemRemoved(customViewHolders.adapterPosition)
         //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
@@ -241,7 +243,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
         //position=customViewHolders.adapterPosition
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
-        val post: Post = savedPosts.value!![holder.adapterPosition]
+        val post: Post = savedPosts?.value!![holder.adapterPosition]
         val postauth: String?= post.author
         //notifyItemRemoved(customViewHolders.adapterPosition)
         //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
@@ -253,7 +255,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
         //position=customViewHolders.adapterPosition
 
         // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
-        val post: Post = savedPosts.value!![holder.adapterPosition]
+        val post: Post = savedPosts?.value!![holder.adapterPosition]
         val posttext: String? = post.text
         //notifyItemRemoved(customViewHolders.adapterPosition)
         //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
@@ -262,8 +264,8 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
     }
 
     fun getNewCount(): Int {
-        if (savedPosts.value != null)
-            return savedPosts.value!!.size - 1
+        if (savedPosts?.value != null)
+            return savedPosts?.value!!.size - 1
         else
             return 0
     }
