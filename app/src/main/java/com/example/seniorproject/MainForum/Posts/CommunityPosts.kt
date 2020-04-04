@@ -111,7 +111,7 @@ class CommunityPosts : AppCompatActivity() {
                                         ) { _: DialogInterface?, _: Int ->
                                             myViewModel.blockUser(userkey!!)
                                             classes_post_RV.findViewHolderForAdapterPosition(pos)!!.itemView.post_title.text="[blocked]"
-                                            var count: Int =0
+                                            /*var count: Int = 0
                                             for( i in 0..classes_post_RV.childCount) {
                                                 if(classes_post_RV.findViewHolderForAdapterPosition(count)!!.itemView.post_title.text =="[blocked]"){
                                                     classes_post_RV.findViewHolderForAdapterPosition(count)!!.itemView.setOnClickListener {
@@ -127,7 +127,7 @@ class CommunityPosts : AppCompatActivity() {
                                                 }
                                                 //classes_post_RV.findViewHolderForAdapterPosition(i)!!.itemView.post_title.text="[blocked]"
                                                 //classes_post_RV.getChildViewHolder(classes_post_RV.getChildAt(i)).itemView.post_title.text="[blocked]"
-                                            }
+                                            }*/
                                             var toast = Toast.makeText(
                                                 this@CommunityPosts,
                                                 "This user has been blocked",

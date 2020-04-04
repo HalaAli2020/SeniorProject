@@ -68,32 +68,34 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
         val post: Post = savedPostList[position]
         if (holder is PostImageViewHolders) {
             val post: Post = savedPostList[position]
-            val userID = FirebaseAuth.getInstance().uid
+             //set it up here so it can be canged
 
-            val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
-            ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
-                ValueEventListener {
-                override fun onDataChange(p0: DataSnapshot) {
-                    if (p0.exists()) {
-                        for (block in p0.children) {
-                            if (block.value == post.userID) {
-                                holder.itemView.post_title.text = "[blocked]"
-                            }
-                        }
-                    }
-                }
-
-                override fun onCancelled(p0: DatabaseError) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-            })
-            holder.itemView.post_title.text = post.title
             holder.itemView.username.text = post.author
             holder.itemView.post_timestamp.text = post.Ptime
+
 
             if (post.uri != null) {
                 Glide.with(mContext).load(post.uri).placeholder(R.color.white)
                     .into(holder.itemView.post_image)
+                holder.itemView.post_title.text = post.title
+                val userID = FirebaseAuth.getInstance().uid
+                val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
+                ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
+                    ValueEventListener {
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if (p0.exists()) {
+                            for (block in p0.children) {
+                                if (block.value == post.userID) {
+                                    holder.itemView.post_title.text = "[blocked]"
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(p0: DatabaseError) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+                })
             } else {
                 Glide.with(mContext).clear(holder.itemView.post_image)
                 holder.itemView.post_image.setImageDrawable(null)
@@ -117,7 +119,25 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
 
             }
         } else {
+            val userID = FirebaseAuth.getInstance().uid
             holder.itemView.post_title.text = post.title
+            val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
+            ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
+                ValueEventListener {
+                override fun onDataChange(p0: DataSnapshot) {
+                    if (p0.exists()) {
+                        for (block in p0.children) {
+                            if (block.value == post.userID) {
+                                holder.itemView.post_title.text = "[blocked]"
+                            }
+                        }
+                    }
+                }
+
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+            })
             holder.itemView.username.text = post.author
             holder.itemView.post_timestamp.text = post.Ptime
 
@@ -140,6 +160,8 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
             }
         }
         holder.itemView.setOnClickListener {
+            //make it so you cant view that users profile?
+            //user mcontext
             if (post.title == "no Posts" || post.title == "No Posts") {
                 Log.d("Tag", "no post")
                 //toast needed
