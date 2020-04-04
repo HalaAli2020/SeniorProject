@@ -67,25 +67,13 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
     }
 
     fun getUserKey(holder: RecyclerView.ViewHolder): String {
-        //position=customViewHolders.adapterPosition
-
-        // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
         val post: Post = savedPostList[holder.adapterPosition]
-        val postkey: String?= post.UserID
-        //notifyItemRemoved(customViewHolders.adapterPosition)
-        //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
+        val postkey: String?= post.userID
 
         return postkey!!
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        /*if (savedPosts.value.isNullOrEmpty()) {
-            Log.d("CustomAdapter", "EMPTY")
-            holder.itemView.imageView4.visibility = View.INVISIBLE
-            holder.itemView.post_title.text =
-                "Subscribe to a community to see posts on this screen!"
-        }
-        else {*/
         val post: Post = savedPostList[position]
         if (holder is PostImageViewHolders) {
             val post: Post = savedPostList[position]
@@ -97,7 +85,7 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
                 override fun onDataChange(p0: DataSnapshot) {
                     if (p0.exists()) {
                         for (block in p0.children) {
-                            if (block.getValue() == post.UserID) {
+                            if (block.getValue() == post.userID) {
                                 holder.itemView.post_title.text = "[blocked]"
                             }
                         }
@@ -131,7 +119,7 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
             } else if (type == 1) {
                 holder.itemView.username.setOnClickListener {
                     val intent = Intent(mContext, UserProfileActivity::class.java)
-                    intent.putExtra("UserID", post.UserID)
+                    intent.putExtra("UserID", post.userID)
                     intent.putExtra("Author", post.author)
                     mContext.startActivity(intent)
                 }
@@ -141,13 +129,6 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
             holder.itemView.post_title.text = post.title
             holder.itemView.username.text = post.author
             holder.itemView.post_timestamp.text = post.Ptime
-
-            /*    if (post.uri != null){
-                 Glide.with(mContext).load(post.uri).placeholder(R.color.white).into(holder.itemView.post_image)
-             } else {
-                 Glide.with(mContext).clear(holder.itemView.post_image)
-                 holder.itemView.post_image.setImageDrawable(null)
-             }*/
 
             if (type == 0) {
                 holder.itemView.username.text = post.subject
@@ -160,7 +141,7 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
             } else if (type == 1) {
                 holder.itemView.username.setOnClickListener {
                     val intent = Intent(mContext, UserProfileActivity::class.java)
-                    intent.putExtra("UserID", post.UserID)
+                    intent.putExtra("UserID", post.userID)
                     intent.putExtra("Author", post.author)
                     mContext.startActivity(intent)
                 }
@@ -173,7 +154,6 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
                 //toast needed
             }
             else if(holder.itemView.post_title.text == "[blocked]"){
-                //var pauth = post.author
                 Log.d("Tag","blocked post will not open to clicked post screen")
             }
             else {
@@ -181,8 +161,8 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
                 intent.putExtra("Title", post.title)
                 intent.putExtra("Text", post.text)
                 intent.putExtra("Pkey", post.key)
-                intent.putExtra("Classkey", post.Classkey)
-                intent.putExtra("UserID", post.UserID)
+                intent.putExtra("Classkey", post.classkey)
+                intent.putExtra("UserID", post.userID)
                 intent.putExtra("Author", post.author)
                 intent.putExtra("crn", post.crn)
                 intent.putExtra("uri", post.uri)
@@ -191,22 +171,17 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
                 mContext.startActivity(intent)
             }
         }
-        //}
     }
 
     fun hideBlockedPosts(holder: CustomViewHolders){
-        //val post: Post = savedPosts.value!![holder.adapterPosition]
         holder.itemView.visibility=View.GONE
 
     }
-    fun removeItem(holder: RecyclerView.ViewHolder): String {
-        //position=customViewHolders.adapterPosition
 
-        // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
+    fun removeItem(holder: RecyclerView.ViewHolder): String {
+
         val post: Post = savedPostList[holder.adapterPosition]
-        val postkey: String? = post.Classkey
-        //notifyItemRemoved(customViewHolders.adapterPosition)
-        //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
+        val postkey: String? = post.classkey
 
         return postkey!!
     }
@@ -214,50 +189,29 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
 
 
     fun getCrn(holder: RecyclerView.ViewHolder): String {
-        //position=customViewHolders.adapterPosition
 
-        // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
         val post: Post = savedPostList[holder.adapterPosition]
         val postcrn: String?= post.subject
-        //notifyItemRemoved(customViewHolders.adapterPosition)
-        //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
-
         return postcrn!!
     }
 
     fun getTitle(holder: RecyclerView.ViewHolder): String {
-        //position=customViewHolders.adapterPosition
-
-        // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
         val post: Post = savedPostList[holder.adapterPosition]
         val posttitle: String?= post.title
-        //notifyItemRemoved(customViewHolders.adapterPosition)
-        //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
 
         return posttitle!!
     }
 
     fun getAuthor(holder: RecyclerView.ViewHolder): String {
-        //position=customViewHolders.adapterPosition
-
-        // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
         val post: Post = savedPostList[holder.adapterPosition]
         val postauth: String?= post.author
-        //notifyItemRemoved(customViewHolders.adapterPosition)
-        //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
 
         return postauth!!
     }
 
     fun getText(holder: RecyclerView.ViewHolder): String {
-        //position=customViewHolders.adapterPosition
-
-        // val post: Post = savedPosts.value!![customViewHolders.adapterPosition]
         val post: Post = savedPostList[holder.adapterPosition]
         val posttext: String? = post.text
-        //notifyItemRemoved(customViewHolders.adapterPosition)
-        //notifyItemRangeChanged(customViewHolders.adapterPosition, itemCount)
-
         return posttext!!
     }
 
@@ -267,35 +221,7 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
         else
             return 0
     }
-
-
-    //notifyD
-    //notifyItemRemoved(customViewHolders.adapterPosition)
-
-    //adapter.notifyItemRangeRemoved(customViewHolders.adapterPosition, 1)
-    //adapter.notifyItemRangeChanged(viewHolders.adapterPosition, adapter.itemCount - viewHolders.adapterPosition+1)
 }
-
-/*fun alertItem(customViewHolders: CustomViewHolders, position: Int): AlertDialog.Builder {
-
-    var builder = AlertDialog.Builder(customViewHolders.itemView.context)
-
-    builder.setTitle("Are you sure?")
-    builder.setMessage("You cannot restore posts that have been deleted")
-    builder.setPositiveButton("DELETE",
-        { dialogInterface: DialogInterface?, i: Int ->
-            builder.show()
-        })
-    builder.setNegativeButton("CANCEL",
-        { dialogInterface: DialogInterface?, i: Int ->
-            builder.show()
-        })
-
-    return builder
-
-}*/
-
-
 
 class CustomListViewHolders(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener {
 
