@@ -153,29 +153,37 @@ class FirebaseData @Inject constructor() {
     fun saveNewUsername(username: String) {
         val userID = firebaseAuth.uid ?: "null"
 
+    //change users username in referenced path
         FirebaseDatabase.getInstance().getReference("/users/$userID")
             .child("/Username").setValue(username)
 
-        listenForUserProfilePosts(userID, object : PostRepository.FirebaseCallbackPost{
-            override fun onFailure() {}
-            override fun onStart() {}
-            override fun onSuccess(data: DataSnapshot) {} })
+//changed users username in all user posts in referenced path
+       val href = FirebaseDatabase.getInstance().getReference("/users/$userID/Posts")
+       href.addChildEventListener(object : ChildEventListener {
+           override fun onCancelled(p0: DatabaseError) {
+               TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+           }
 
-        var x = 0
+           override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+               TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+           }
 
-    //change username in profile posts
-        while (x < profilePosts.value!!.size) {
-            val post: Post = profilePosts.value!![x]
-            val pkey: String = post.key.toString()
-            if (pkey != "null") {
-                Log.d("PTAG", "UNDER HERE")
-                Log.d("PTAG", "the size is :  ${profilePosts.value!!.size}")
-                Log.d("PTAG", "Pkey is:  $pkey")
-                FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$pkey")
-                    .child("/author").setValue(username)
-            }
-            x++
-        }
+           override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+               val key = p0.key.toString()
+              FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$key").child("/Username").setValue(username)
+           }
+
+           override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+               val key = p0.key.toString()
+               FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$key").child("/Username").setValue(username)
+           }
+
+           override fun onChildRemoved(p0: DataSnapshot) {
+               TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+           }
+
+       })
+
 
     //changes username in firebase user profile
         val user = currentUser()
@@ -195,7 +203,7 @@ class FirebaseData @Inject constructor() {
 
         getclassnamesforusername()
         sendClassnameForUsername()
-        x = 0
+        var x = 0
     //change username in all class lists
         while (x < sendClassnameForUsername().size) {
             val classn = sendClassnameForUsername()[x]
@@ -288,7 +296,7 @@ class FirebaseData @Inject constructor() {
 
 
     /*
-      NEEDS COMMENT
+      change profile name in any list
      */
     private fun changePname(l : MutableList<Post>, name: String)
     {

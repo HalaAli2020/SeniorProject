@@ -68,8 +68,6 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
         val post: Post = savedPostList[position]
         if (holder is PostImageViewHolders) {
             val post: Post = savedPostList[position]
-             //set it up here so it can be canged
-
             holder.itemView.username.text = post.author
             holder.itemView.post_timestamp.text = post.Ptime
 
