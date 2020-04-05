@@ -704,9 +704,8 @@ Checks if a user has made any posts, a callback is implemented in the ProfileVie
                     noPostsCheck = true
                 }
                 else {
-                    noPostsCheck = false
                     callbackbool.onSuccess(p0)
-
+                    noPostsCheck = false
                 }
             }
         })
