@@ -99,7 +99,7 @@ class UserProfileActivity : AppCompatActivity() {
                     in_profile_bio.text = string
                 }
             })
-            in_profile_username.text = myViewModel.user?.displayName
+            in_profile_username.text = FirebaseAuth.getInstance().currentUser?.displayName
             in_profile_email.text = myViewModel.user?.email
         }
 
