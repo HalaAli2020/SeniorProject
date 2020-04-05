@@ -15,10 +15,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.InjectorUtils
-import com.example.seniorproject.MainForum.Adapters.CustomAdapter
-import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
 import com.example.seniorproject.MainForum.Adapters.PostAdapter
-import com.example.seniorproject.MainForum.Adapters.PostImageViewHolders
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.*
 import com.example.seniorproject.data.models.Post
@@ -27,11 +24,7 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_community_posts.*
 import kotlinx.android.synthetic.main.rv_post.view.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
-import java.time.Duration
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 class CommunityPosts : AppCompatActivity() {
 

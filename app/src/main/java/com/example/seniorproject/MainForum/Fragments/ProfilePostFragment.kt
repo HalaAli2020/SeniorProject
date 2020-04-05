@@ -119,7 +119,7 @@ class ProfilePostFragment : Fragment() {
                 }
                 else if (!chk) {
                     //setting swipe UI
-                    object : SwipeHelper(context!!, view.profile_post_recyclerView, 200) {
+                    object : SwipeHelper(context, view.profile_post_recyclerView, 200) {
                         override fun initButton(
                             viewHolders: RecyclerView.ViewHolder,
                             buffer: MutableList<ProfileButton>

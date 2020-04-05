@@ -14,7 +14,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-abstract class SwipeHelper(context: Context, private val recyclerView: RecyclerView, internal var buttonWidth: Int):
+abstract class SwipeHelper(context: Context?, private val recyclerView: RecyclerView, internal var buttonWidth: Int):
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
     abstract fun initButton(viewHolders: RecyclerView.ViewHolder, buffer: MutableList<ProfileButton>)

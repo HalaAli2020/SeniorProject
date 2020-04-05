@@ -120,7 +120,7 @@ class MainForum : AppCompatActivity(),
         loginVerification()
         super.onCreate(savedInstanceState)
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+//        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
 
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
