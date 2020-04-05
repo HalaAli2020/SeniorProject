@@ -159,47 +159,30 @@ class FirebaseData @Inject constructor() {
     fun saveNewUsername(username: String) {
         val userID = firebaseAuth.uid ?: "null"
 
-        FirebaseDatabase.getInstance().getReference("/users/$userID")
-            .child("/Username").setValue(username)
+    //sets username in referenced path, this updated the user object
+    FirebaseDatabase.getInstance().getReference("/users/$userID")
+        .child("/Username").setValue(username)
 
-
-       FirebaseDatabase.getInstance().getReference("/users/$userID/Posts")
-           .child("/Username").setValue(username)
-
-        var x = 0
-        //change username in firebase path /users/userID/posts
-        while (x < profilePosts.value!!.size){
-            val post: Post = profilePosts.value!![x]
-            val pkey: String = post.key.toString()
-            if (pkey != "null") {
-                Log.d("PTAG", "UNDER HERE")
-                Log.d("PTAG", "the size is :  ${profilePosts.value!!.size}")
-                Log.d("PTAG", "Pkey is:  $pkey")
-                FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$pkey")
-                    .child("/author").setValue(username)
+    //changes username in firebase auth user profile now it can be accessed by firebaseAuth.currentUser.Displayname
+    val user = currentUser()
+    val profileUpdates =
+        UserProfileChangeRequest.Builder().setDisplayName(username).build()
+    user?.updateProfile(profileUpdates)
+        ?.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d(
+                    TAG, "profile updated, emitter complete?:  ${currentUser()?.displayName} ."
+                )
+            } else {
+                Log.d(TAG, "in else in fetch current user")
             }
-            x++
         }
 
-    //changes username in firebase user profile
-        val user = currentUser()
-        val profileUpdates =
-            UserProfileChangeRequest.Builder().setDisplayName(username).build()
-        user?.updateProfile(profileUpdates)
-            ?.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d(
-                        TAG, "profile updated, emitter complete?:  ${currentUser()?.displayName} ."
-                    )
-                } else {
-                    Log.d(TAG, "in else in fetch current user")
-                }
-            }
-
-
+        changeCommentUsernameInProfile(userID,username)
+        changePostUsernameInProfile(userID,username)
         getclassnamesforusername()
         sendClassnameForUsername()
-        x = 0
+    var x = 0
     //change username in all class lists
         while (x < sendClassnameForUsername().size) {
             val classn = sendClassnameForUsername()[x]
@@ -247,7 +230,76 @@ class FirebaseData @Inject constructor() {
         changeusercommetname(username)
     }
 
+    private fun changePostUsernameInProfile(userID : String,username:String)
+    {
+        //changed users username in all user posts in referenced path
+        val pRef = FirebaseDatabase.getInstance().getReference("/users/$userID/Posts")
+        pRef.addChildEventListener(object : ChildEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
 
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+                for (x in p0.children) {
+                    val key = p0.key.toString()
+                    FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$key").child("/Username").setValue(username)
+                    FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$key").child("/author").setValue(username)
+                }
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                for (x in p0.children) {
+                    val key = p0.key.toString()
+                    FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$key").child("/Username").setValue(username)
+                    FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$key").child("/author").setValue(username)
+                }
+
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+        })
+    }
+    /*
+    takes userID and username as parameters to query comments referenced path
+    and change the user's username
+     */
+    private fun changeCommentUsernameInProfile(userID : String, username: String){
+        val cRef = FirebaseDatabase.getInstance().getReference("/users/$userID/Comments")
+        cRef.addChildEventListener(object : ChildEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+                for (x in p0.children){
+                    val ckey = p0.key.toString()
+                    FirebaseDatabase.getInstance().getReference("/users/$userID/Comments/$ckey").child("/author").setValue(username)
+                }
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                for (x in p0.children){
+                    val ckey = p0.key.toString()
+                    FirebaseDatabase.getInstance().getReference("/users/$userID/Comments/$ckey").child("/author").setValue(username)
+                }
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+        })
+    }
     /*
       NEEDS COMMENT
      */
@@ -332,6 +384,7 @@ class FirebaseData @Inject constructor() {
         })
         changeclassCPname(plist, name)
         changeCname(plist, name)
+
 
     }
 
@@ -704,7 +757,7 @@ Checks if a user has made any posts, a callback is implemented in the ProfileVie
                     noPostsCheck = true
                 }
                 else {
-                    callbackbool.onSuccess(p0)
+//                    callbackbool.onSuccess(p0)
                     noPostsCheck = false
                 }
             }

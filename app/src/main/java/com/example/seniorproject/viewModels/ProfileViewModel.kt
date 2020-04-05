@@ -138,7 +138,6 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
         repository.noPostsChecker(UserID, object : PostRepository.FirebaseCallbackBool {
             override fun onStart() { TODO("not implemented") }
             override fun onFailure() { TODO("not implemented") }
-
             override fun onSuccess(data: DataSnapshot) : Boolean {
                 if (!data.child("Posts").exists())
                 {
@@ -147,8 +146,8 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
                 }
                 else
                 {
-                    noPostCheck = false //here
                     callback.check(noPostCheck ?: false)
+                    noPostCheck = false //here
                 }
                 return  noPostCheck ?: false
             }

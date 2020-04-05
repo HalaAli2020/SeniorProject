@@ -44,9 +44,6 @@ class UserProfileActivity : AppCompatActivity() {
         val actionbar = supportActionBar
         actionbar!!.title = "Profile"
 
-        //the first visible fragment will display profile posts
-        replaceFragment(ProfilePostFragment())
-
         //creating the dagger application component
         DaggerAppComponent.create().inject(this)
         //initializing viewmodel factory
