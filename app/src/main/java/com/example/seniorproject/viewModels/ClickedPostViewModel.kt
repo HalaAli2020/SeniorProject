@@ -1,11 +1,13 @@
 package com.example.seniorproject.viewModels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.CommentLive
+import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.repositories.PostRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.toList
@@ -35,6 +37,10 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
 
     init {
 
+    }
+
+    fun noCommentsCheckForCommPosts(callback: PostRepository.FirebaseCallbackNoComments){
+      repository.noCommentsCheckForCommPosts(crn!!, classkey!!, callback)
     }
 
     fun getComments(callback: CommentListFromFlow)

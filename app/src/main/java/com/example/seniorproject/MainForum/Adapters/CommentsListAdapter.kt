@@ -67,16 +67,22 @@ class CommentsListAdapter(
     }
 
     override fun getItemCount(): Int {
+        var size = 0
         if (!Comments.isNullOrEmpty()) {
             return Comments.size
-        } else
-            return 0
+        }
+
+        return size
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         Log.d("CommentsAdapter:", "" + position)
 
+        //need to get the No comments yet to show up
+        //  if(Comments[position] == null || getItemCount() == 0){
+        //holder.itemView.comment_text.text = "No Comments yet"
+        //try commenting out no comments yet.
         if (holder is CustomViewHoldersHeader) {
             holder.itemView.click_post_title.text = title
             holder.itemView.click_post_text.text = text
@@ -98,11 +104,11 @@ class CommentsListAdapter(
                 mContext.startActivity(intent)
             }
 
-        } else {
+        }
+        //   }
+        else {
             if (Comments[position] == null || getItemCount() == 0) {
-                holder.itemView.comment_text.text = "No Comments yet"
-                //need to get the No comments yet to show up
-
+                //holder.itemView.comment_text.text = "No Comments yet"
             } else {
                 val comment: Comment = Comments[position]
                 val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
@@ -134,9 +140,7 @@ class CommentsListAdapter(
                     mContext.startActivity(intent)
                 }
 
-
             }
-
         }
     }
 

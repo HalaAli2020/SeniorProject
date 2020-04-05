@@ -738,6 +738,19 @@ Checks if a user has made any comments, a callback is implemented in the Profile
         return noCommentsCheck
     }
 
+    fun noCommentsCheckerForCommPosts(subject: String, Key: String, callback: PostRepository.FirebaseCallbackNoComments){
+        val com = FirebaseDatabase.getInstance().getReference("Subjects/$subject/Posts/$Key")
+        com.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) { TODO("not implemented") }
+            override fun onDataChange(p0: DataSnapshot) {
+                if (!p0.child("Comments").exists()) {
+                    noCommentsCheck = true
+                    callback.onEmpty(noCommentsCheck)
+                    Log.d("soupfire", "this means no comments in that post!")
+                }
+            }
+        })
+    }
     //checks if the profile being opened belongs to the current user and gets the appropriate posts
     fun getUserProfilePosts(userID: String,  call : PostRepository.FirebaseCallbackPost): PostLiveData {
         Log.d(TAG, "getUserProfilePosts called")
