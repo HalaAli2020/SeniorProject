@@ -7,10 +7,8 @@ data class User(
     constructor() : this("", "", "", "")
 
     var posts = mutableListOf<Post>()
-    private var Admin: Boolean = true
-    private var Subscriptions: HashMap<String, String> = hashMapOf()
-
-    init { }
+    private var admin: Boolean = true
+    private var subscriptions: HashMap<String, String> = hashMapOf()
 
     //mapping of user data to the firebase database
     fun toMap(): Map<String?, Any?> {
@@ -19,8 +17,8 @@ data class User(
             "email" to email,
             "uid" to uid,
             "profileImageUrl" to profileImageUrl,
-            "Admin" to Admin,
-            "Subscriptions" to Subscriptions,
+            "Admin" to admin,
+            "Subscriptions" to subscriptions,
             "Posts" to posts
 
         )

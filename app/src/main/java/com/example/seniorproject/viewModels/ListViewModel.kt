@@ -9,7 +9,7 @@ import javax.inject.Inject
 class ListViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
 
     private var listClasses: MutableList<CRN> = mutableListOf()
-    private var UsersSubs : MutableList<String>? = mutableListOf()
+    private var usersSubs : MutableList<String>? = mutableListOf()
     init {
         getUserSub()
         getClasses()
@@ -29,7 +29,7 @@ class ListViewModel @Inject constructor(private val repository: PostRepository) 
 
     private fun combineSubs()
     {
-        if(UsersSubs == null)
+        if(usersSubs == null)
         {
             Log.d("UserSUBs", "null")
         }
@@ -37,7 +37,7 @@ class ListViewModel @Inject constructor(private val repository: PostRepository) 
 
         for(data in listClasses)
         {
-           if(UsersSubs!!.contains(data.name))
+           if(usersSubs!!.contains(data.name))
            {
                data.subscribed = true
                Log.d("combine", data.name)
@@ -62,7 +62,7 @@ class ListViewModel @Inject constructor(private val repository: PostRepository) 
     fun removeSub(crn : String)
     {
         repository.remUsersub(crn)
-        UsersSubs = mutableListOf()
+        usersSubs = mutableListOf()
         listClasses = mutableListOf()
         getClasses()
         getUserSub()

@@ -1,49 +1,40 @@
 package com.example.seniorproject.MainForum.Adapters
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.seniorproject.MainForum.Posts.ClickedPost
 import com.example.seniorproject.MainForum.Posts.CommunityPosts
 import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
-import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.Post
-import com.example.seniorproject.data.models.PostLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.rv_post.view.*
 import kotlinx.android.synthetic.main.rv_post.view.post_timestamp
 import kotlinx.android.synthetic.main.rv_post.view.post_title
 import kotlinx.android.synthetic.main.rv_post.view.username
-import kotlinx.android.synthetic.main.rv_post.view.imageView4
-import kotlinx.android.synthetic.main.rv_post_comment.view.*
-import kotlinx.android.synthetic.main.rv_post_header.view.*
 import kotlinx.android.synthetic.main.rv_post_image.view.*
 
 class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val mContext: Context = context
 
-    private val TYPE_TEXT: Int = 0
-    private val TYPE_IMAGE: Int = 1
+    private val typeText: Int = 0
+    private val typeImage: Int = 1
 
     override fun getItemViewType(position: Int): Int {
         if (savedPostList[position].uri == null || savedPostList[position].uri == "null") {
-            return TYPE_TEXT
+            return typeText
         }
-        return TYPE_IMAGE
+        return typeImage
     }
 
 
@@ -77,32 +68,32 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
         val post: Post = savedPostList[position]
         if (holder is PostImageViewHolders) {
             val post: Post = savedPostList[position]
-            val userID = FirebaseAuth.getInstance().uid
-
-            val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
-            ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
-                ValueEventListener {
-                override fun onDataChange(p0: DataSnapshot) {
-                    if (p0.exists()) {
-                        for (block in p0.children) {
-                            if (block.getValue() == post.userID) {
-                                holder.itemView.post_title.text = "[blocked]"
-                            }
-                        }
-                    }
-                }
-
-                override fun onCancelled(p0: DatabaseError) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-            })
-            holder.itemView.post_title.text = post.title
             holder.itemView.username.text = post.author
             holder.itemView.post_timestamp.text = post.Ptime
+
 
             if (post.uri != null) {
                 Glide.with(mContext).load(post.uri).placeholder(R.color.white)
                     .into(holder.itemView.post_image)
+                holder.itemView.post_title.text = post.title
+                val userID = FirebaseAuth.getInstance().uid
+                val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
+                ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
+                    ValueEventListener {
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if (p0.exists()) {
+                            for (block in p0.children) {
+                                if (block.value == post.userID) {
+                                    holder.itemView.post_title.text = "[blocked]"
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(p0: DatabaseError) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+                })
             } else {
                 Glide.with(mContext).clear(holder.itemView.post_image)
                 holder.itemView.post_image.setImageDrawable(null)
@@ -126,7 +117,25 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
 
             }
         } else {
+            val userID = FirebaseAuth.getInstance().uid
             holder.itemView.post_title.text = post.title
+            val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
+            ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
+                ValueEventListener {
+                override fun onDataChange(p0: DataSnapshot) {
+                    if (p0.exists()) {
+                        for (block in p0.children) {
+                            if (block.value == post.userID) {
+                                holder.itemView.post_title.text = "[blocked]"
+                            }
+                        }
+                    }
+                }
+
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+            })
             holder.itemView.username.text = post.author
             holder.itemView.post_timestamp.text = post.Ptime
 
@@ -149,6 +158,8 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
             }
         }
         holder.itemView.setOnClickListener {
+            //make it so you cant view that users profile?
+            //user mcontext
             if (post.title == "no Posts" || post.title == "No Posts") {
                 Log.d("Tag", "no post")
                 //toast needed
@@ -171,11 +182,6 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
                 mContext.startActivity(intent)
             }
         }
-    }
-
-    fun hideBlockedPosts(holder: CustomViewHolders){
-        holder.itemView.visibility=View.GONE
-
     }
 
     fun removeItem(holder: RecyclerView.ViewHolder): String {
@@ -215,12 +221,6 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
         return posttext!!
     }
 
-    fun getNewCount(): Int {
-        if (savedPostList != null)
-            return savedPostList.size - 1
-        else
-            return 0
-    }
 }
 
 class CustomListViewHolders(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener {

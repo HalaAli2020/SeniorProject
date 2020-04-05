@@ -162,15 +162,13 @@ class FirebaseData @Inject constructor() {
         FirebaseDatabase.getInstance().getReference("/users/$userID")
             .child("/Username").setValue(username)
 
-        listenForUserProfilePosts(userID, object : PostRepository.FirebaseCallbackPost{
-            override fun onFailure() {}
-            override fun onStart() {}
-            override fun onSuccess(data: DataSnapshot) {} })
+
+       FirebaseDatabase.getInstance().getReference("/users/$userID/Posts")
+           .child("/Username").setValue(username)
 
         var x = 0
-
-    //change username in profile posts
-        while (x < profilePosts.value!!.size) {
+        //change username in firebase path /users/userID/posts
+        while (x < profilePosts.value!!.size){
             val post: Post = profilePosts.value!![x]
             val pkey: String = post.key.toString()
             if (pkey != "null") {
@@ -294,7 +292,7 @@ class FirebaseData @Inject constructor() {
 
 
     /*
-      NEEDS COMMENT
+      change profile name in any list
      */
     private fun changePname(l : MutableList<Post>, name: String)
     {
@@ -466,10 +464,9 @@ save new username function so they can be iterated through */
 
                 val currentUser = p0.child("Username").getValue(String::class.java)
                 Log.d(TAG, "Current user fetched $currentUser")
-                val usernameForum = currentUser
                 val user = currentUser()
                 val profileUpdates =
-                    UserProfileChangeRequest.Builder().setDisplayName(usernameForum).build()
+                    UserProfileChangeRequest.Builder().setDisplayName(currentUser).build()
                 user?.updateProfile(profileUpdates)
                     ?.addOnCompleteListener { task ->
                         if (task.isSuccessful) {
@@ -760,8 +757,7 @@ Checks if a user has made any comments, a callback is implemented in the Profile
             listenForUserProfilePosts(uid, call )
         } else {
             //the profile being opened belongs to the current user
-            val uid = userID
-            listenForUserProfilePosts(uid, call)
+            listenForUserProfilePosts(userID, call)
         }
         return profilePosts
     }
@@ -773,8 +769,7 @@ Checks if a user has made any comments, a callback is implemented in the Profile
             val uid = FirebaseAuth.getInstance().uid ?: "error"
             listenForUserProfileComments(uid, call)
         } else {
-            val uid = userID
-            listenForUserProfileComments(uid, call)
+            listenForUserProfileComments(userID, call)
         }
         return comments
     }
@@ -1167,7 +1162,7 @@ NEEDS COMMENT
                     }
                     if(p0.exists()){
                         for(block in p0.children){
-                            if(block.getValue() != UserID){
+                            if(block.value != UserID){
                                 ref.child("BlockedUsers").push().setValue(UserID)
                             }
                         }
@@ -1235,15 +1230,15 @@ NEEDS COMMENT
 
 
             override fun onDataChange(p0: DataSnapshot) {
-                var title= p0.child("title").getValue(String::class.java) ?: "This post has been deleted"
-                var text= p0.child("text").getValue(String::class.java) ?: " "
-                var key = p0.child("key").getValue(String::class.java) ?: " "
-                var ptime= p0.child("Ptime").getValue(String::class.java) ?: " "
-                var classkey= p0.child("Classkey").getValue(String::class.java) ?: " "
-                var user= p0.child("UserID").getValue(String::class.java) ?: " "
-                var author = p0.child("author").getValue(String::class.java) ?: " "
-                var uri = p0.child("uri").getValue(String::class.java) ?: "null"
-                var list: ArrayList<String> = arrayListOf()
+                val title= p0.child("title").getValue(String::class.java) ?: "This post has been deleted"
+                val text= p0.child("text").getValue(String::class.java) ?: " "
+                val key = p0.child("key").getValue(String::class.java) ?: " "
+                val ptime= p0.child("Ptime").getValue(String::class.java) ?: " "
+                val classkey= p0.child("Classkey").getValue(String::class.java) ?: " "
+                val user= p0.child("UserID").getValue(String::class.java) ?: " "
+                val author = p0.child("author").getValue(String::class.java) ?: " "
+                val uri = p0.child("uri").getValue(String::class.java) ?: "null"
+                val list: ArrayList<String> = arrayListOf()
                 list.add(0, title)
                 list.add(1, text)
                 list.add(2, key)

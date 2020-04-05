@@ -1,28 +1,24 @@
 package com.example.seniorproject.viewModels
 
-import android.util.Log
-import androidx.lifecycle.*
-import com.example.seniorproject.Utils.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.seniorproject.Utils.FlowCallback
+import com.example.seniorproject.Utils.MutableListCallback
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.PostLiveData
 import com.example.seniorproject.data.repositories.PostRepository
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
-import java.lang.Exception
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 class CommunityPostViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
 
-    private var listClassesco: Flow<Post> = flow { }
-    private var listpostclass: MutableList<Post> = mutableListOf()
-    private var babylistnum: List<Post> = mutableListOf()
     private var listofposts: List<Post> = mutableListOf()
-    private var postliveData: MutableLiveData<MutableList<Post>>? = null
-    private var livepostclass: LiveData<Post>? = null
-    private var listClasses: PostLiveData? = null
-    private lateinit var className: String
     //private lateinit var className: String
 
     @InternalCoroutinesApi

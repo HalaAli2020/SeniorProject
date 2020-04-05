@@ -19,7 +19,7 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
 
     var posts: PostLiveData = PostLiveData()
     var comments: CommentLive = CommentLive()
-    private var PostKey : String? = null
+    private var postKey : String? = null
     val commentListener : PostListener? = null
     var otherEmail : String = "no email available"
     var otherBio : String = "no bio available"
@@ -52,7 +52,7 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     {
         if(PKey.isEmpty())
         {
-            PostKey = PKey
+            postKey = PKey
             commentListener?.onFailure("Post key not found")
 
         }
@@ -64,7 +64,7 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     {
         if(PKey.isEmpty())
         {
-            PostKey = PKey
+            postKey = PKey
             commentListener?.onFailure("Post key not found")
 
         }

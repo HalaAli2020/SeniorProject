@@ -106,22 +106,22 @@ class ClickedPost : AppCompatActivity() {
 
 
 
-                    object : SwipeHelper(applicationContext, comment_RecyclerView, 200) {
-                        override fun initButton(
-                            viewHolders: RecyclerView.ViewHolder,
-                            buffer: MutableList<ProfileButton>
-                        ) {
-                            val userk: String? = adapter.getUserKey(viewHolders)
-                            if (FirebaseAuth.getInstance().currentUser?.uid == userk){
-                                //val swipe = null
-                            }
-                            else {
-                                buffer.add(
-                                    ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
-                                        ("#FF0000"), object : ButtonClickListener {
-                                        override fun onClick(pos: Int) {
-                                            //val postkey: String? =
-                                            //   adapter.removeItem(viewHolders)
+        object : SwipeHelper(applicationContext, comment_RecyclerView, 200) {
+            override fun initButton(
+                viewHolders: RecyclerView.ViewHolder,
+                buffer: MutableList<ProfileButton>
+            ) {
+                val userk: String? = adapter.getUserKey(viewHolders)
+                if (FirebaseAuth.getInstance().currentUser?.uid == userk){
+                    //val swipe = null
+                }
+                else {
+                    buffer.add(
+                        ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
+                            ("#FF0000"), object : ButtonClickListener {
+                            override fun onClick(pos: Int) {
+                                //val postkey: String? =
+                                 //   adapter.removeItem(viewHolders)
 
                                             val userkey: String? =
                                                 adapter.getUserKey(viewHolders)

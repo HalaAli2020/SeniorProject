@@ -99,7 +99,7 @@ class UserProfileActivity : AppCompatActivity() {
                     in_profile_bio.text = string
                 }
             })
-            in_profile_username.text = myViewModel.user?.displayName
+            in_profile_username.text = FirebaseAuth.getInstance().currentUser?.displayName
             in_profile_email.text = myViewModel.user?.email
         }
 
@@ -147,7 +147,7 @@ class UserProfileActivity : AppCompatActivity() {
         }
         else{
             //getting the profile image for the another user
-            Log.d("Soup", "$test")
+            Log.d("Soup", test)
             myViewModel.readPhotoValue(test, object: EmailCallback{
                 override fun getEmail(string: String) {
                     Log.d("Soup", "file name is $string")

@@ -3,7 +3,6 @@ package com.example.seniorproject.MainForum.Adapters
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.seniorproject.MainForum.Posts.ClickedPost
 import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.Comment
@@ -21,14 +19,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.rv_post.view.*
 import kotlinx.android.synthetic.main.rv_post_comment.view.*
 import kotlinx.android.synthetic.main.rv_post_header.view.*
-import kotlinx.android.synthetic.main.rv_post_header.view.author_name_TV
-import kotlinx.android.synthetic.main.rv_post_header.view.click_post_text
-import kotlinx.android.synthetic.main.rv_post_header.view.click_post_title
-import kotlinx.android.synthetic.main.rv_post_header.view.community_name_TV
-import kotlinx.android.synthetic.main.rv_post_header.view.posts_timestamp
 
 class CommentsListAdapter(
     var mContext: Context,
@@ -44,14 +36,14 @@ class CommentsListAdapter(
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val TYPE_HEADER: Int = 0
-    private val TYPE_LIST: Int = 1
+    private val typeHeader: Int = 0
+    private val typeList: Int = 1
     val userID = FirebaseAuth.getInstance().uid
     override fun getItemViewType(position: Int): Int {
         if (position == 0) {
-            return TYPE_HEADER
+            return typeHeader
         }
-        return TYPE_LIST
+        return typeList
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
