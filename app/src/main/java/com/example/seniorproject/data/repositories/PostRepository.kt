@@ -25,7 +25,6 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     var sessionUser: User? = null
     var listClassesco: Flow<Post> = flow{ }
     var listClassescopast: Flow<MutableList<Post>> = flow{ }
-    //var SessionUser: User? = null
     var listClasses: PostLiveData = PostLiveData()
     var classList: MutableLiveData<MutableList<CRN>> = MutableLiveData()
     var userSUB: MutableLiveData<MutableList<String>> = MutableLiveData()
