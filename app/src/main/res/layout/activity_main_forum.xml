@@ -33,10 +33,11 @@
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
+                    app:contentInsetStart="0dp"
                     android:elevation="10dp"
                     android:background="@drawable/titlebar_shadow"
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize" />
+                    android:layout_height="?attr/actionBarSize"/>
             </FrameLayout>
 
 

@@ -135,14 +135,12 @@ class UserProfileActivity : AppCompatActivity() {
 
         val image : ImageView = findViewById(com.example.seniorproject.R.id.in_profile_image)
         if(author == "null"){
-            //getting the profile image for the current user
             Glide.with(image.context) //1
                 .load(FirebaseAuth.getInstance().currentUser?.photoUrl)
                 .placeholder(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
                 .error(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
-                .skipMemoryCache(true) //2
-                .diskCacheStrategy(DiskCacheStrategy.NONE) //3
-                .apply(RequestOptions().circleCrop()).fitCenter()//4
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .circleCrop().fitCenter()
                 .into(image)
         }
         else{
@@ -155,9 +153,8 @@ class UserProfileActivity : AppCompatActivity() {
                         .load(Uri.parse(string))
                         .placeholder(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
                         .error(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
-                        .skipMemoryCache(true) //2
-                        .diskCacheStrategy(DiskCacheStrategy.NONE) //3
-                        .apply(RequestOptions().circleCrop()).fitCenter()//4
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .circleCrop().fitCenter()
                         .into(image)
 
                 }

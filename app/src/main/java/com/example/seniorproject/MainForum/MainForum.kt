@@ -6,7 +6,9 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.NetworkInfo
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -15,7 +17,6 @@ import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
@@ -42,6 +43,7 @@ import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_main_forum.*
 import kotlinx.android.synthetic.main.side_nav_header.*
 import javax.inject.Inject
@@ -53,7 +55,7 @@ class MainForum : AppCompatActivity(),
     FirebaseAuth.AuthStateListener {
 
 
-    private var obse : Observer<User>? = null
+    private var obse: Observer<User>? = null
     override fun onAuthStateChanged(p0: FirebaseAuth) {
         val currentUser = myViewModel.user
         if (currentUser != null) {
@@ -105,7 +107,7 @@ class MainForum : AppCompatActivity(),
                     FAB.backgroundTintList =
                         ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
-                        //replaceFragment(FragmentLatestMessages())
+                    //replaceFragment(FragmentLatestMessages())
                     replaceFragment(FragmentLatestMessages())
                     return@OnNavigationItemSelectedListener true
                 }
@@ -118,6 +120,8 @@ class MainForum : AppCompatActivity(),
         loginVerification()
         super.onCreate(savedInstanceState)
 
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
         val binding: ActivityMainForumBinding =
@@ -125,41 +129,18 @@ class MainForum : AppCompatActivity(),
         bottom_navigation.onNavigationItemSelectedListener = mOnNavigationItemSelectedListener
 
 
-        val cm = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
-        val isConnected: Boolean = activeNetwork?.isConnectedOrConnecting == true
+        val isConnected = checkNetworkState(applicationContext)
 
-        if(isConnected){ Log.d(TAGG, "Connected to internet")}
-        else{
-            Log.d(TAGG, "Not connected")
+        if (!isConnected)
+            noInternetAlertDialog()
 
-
-            val dialogBuilder = AlertDialog.Builder(this)
-
-            // set message of alert dialog
-            dialogBuilder.setMessage("There is no internet!")
-                // if the dialog is cancelable
-                .setCancelable(false)
-                // negative button text and action
-                .setNegativeButton("Cancel", DialogInterface.OnClickListener {
-                        dialog, id -> dialog.cancel()
-                })
-
-            // create dialog box
-            val alert = dialogBuilder.create()
-            // set title for alert dialog box
-            alert.setTitle("AlertDialogExample")
-            // show alert dialog
-            alert.show()
-
-        }
 
         FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
         setSupportActionBar(findViewById(R.id.toolbar))
         val actionbar: ActionBar? = supportActionBar
         actionbar?.apply {
             setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp)
+            setHomeAsUpIndicator(R.drawable.unitlogopropernav)
         }
 
         Log.d(TAGG, myViewModel.user?.displayName ?: "the displayname in main activity")
@@ -189,7 +170,6 @@ class MainForum : AppCompatActivity(),
             when (menuItem.itemId) {
 
                 R.id.nav_profile -> {
-                    Toast.makeText(this, "Redirecting to Profile", Toast.LENGTH_LONG).show()
                     val intent = Intent(this, UserProfileActivity::class.java)
                     startActivity(intent)
                 }
@@ -217,9 +197,8 @@ class MainForum : AppCompatActivity(),
             .load(FirebaseAuth.getInstance().currentUser?.photoUrl)
             .placeholder(R.drawable.ic_account_circle_blue_24dp)
             .error(R.drawable.ic_account_circle_blue_24dp)
-            .skipMemoryCache(true) //2
-            .diskCacheStrategy(DiskCacheStrategy.NONE) //3
-            .apply(RequestOptions().circleCrop())//4
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .circleCrop().fitCenter()
             .into(imageView)
 
         replaceFragment(FragmentHome())
@@ -258,6 +237,45 @@ class MainForum : AppCompatActivity(),
 
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun checkNetworkState(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val nw = connectivityManager.activeNetwork ?: return false
+            val actNw = connectivityManager.getNetworkCapabilities(nw) ?: return false
+            return when {
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                else -> false
+            }
+        } else {
+            val nwInfo = connectivityManager.activeNetworkInfo ?: return false
+            return nwInfo.isConnected
+        }
+    }
+
+    private fun noInternetAlertDialog() {
+        Log.d(TAGG, "Not connected")
+
+        val dialogBuilder = AlertDialog.Builder(this)
+
+        // set message of alert dialog
+        dialogBuilder.setMessage("There is no internet!")
+            // if the dialog is cancelable
+            .setCancelable(false)
+            // negative button text and action
+            .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, id ->
+                dialog.cancel()
+            })
+
+        // create dialog box
+        val alert = dialogBuilder.create()
+        // set title for alert dialog box
+        alert.setTitle("AlertDialogExample")
+        // show alert dialog
+        alert.show()
     }
 
 
