@@ -22,6 +22,12 @@ import kotlin.collections.ArrayList
 import com.example.seniorproject.viewModels.SearchViewModel
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 
@@ -732,6 +738,19 @@ Checks if a user has made any comments, a callback is implemented in the Profile
         return noCommentsCheck
     }
 
+    fun noCommentsCheckerForCommPosts(subject: String, Key: String, callback: PostRepository.FirebaseCallbackNoComments){
+        val com = FirebaseDatabase.getInstance().getReference("Subjects/$subject/Posts/$Key")
+        com.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) { TODO("not implemented") }
+            override fun onDataChange(p0: DataSnapshot) {
+                if (!p0.child("Comments").exists()) {
+                    noCommentsCheck = true
+                    callback.onEmpty(noCommentsCheck)
+                    Log.d("soupfire", "this means no comments in that post!")
+                }
+            }
+        })
+    }
     //checks if the profile being opened belongs to the current user and gets the appropriate posts
     fun getUserProfilePosts(userID: String,  call : PostRepository.FirebaseCallbackPost): PostLiveData {
         Log.d(TAG, "getUserProfilePosts called")
@@ -762,7 +781,7 @@ Checks if a user has made any comments, a callback is implemented in the Profile
 
 
     //Database query for getting all the comments for a post
-    private fun listenComments(Key: String, subject: String, callbackComment: FirebaseCallbackComment)
+    fun listenComments(Key: String, subject: String, callbackComment: FirebaseCallbackCommentFlow)
     {
 
         val reference =
@@ -791,8 +810,14 @@ Checks if a user has made any comments, a callback is implemented in the Profile
                     //repository.saveNewPost(newPost)
                     //adapter.add(PostFrag(newPost.title, newPost.text))
                 }
-                comments.value = savedCommentList
-
+                var commentFlow = savedCommentList.asFlow()
+                callbackComment.onCallback(commentFlow)
+                var uiScope = CoroutineScope(Dispatchers.IO)
+                uiScope.launch {
+                    commentFlow.collect{
+                        Log.d("soupcollect", "comm is $it")
+                    }
+                }
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {
@@ -800,8 +825,6 @@ Checks if a user has made any comments, a callback is implemented in the Profile
 
 
         })
-        callbackComment.onCallback(comments)
-
     }
 
 /*
@@ -849,19 +872,6 @@ NEEDS COMMENT
        //callbackComment.onCallback(Comments)
         return comments
 
-    }
-
-    /*
-    NEEDS COMMENT
-     */
-    fun getComments(Key: String, subject: String): CommentLive {
-        val com = CommentLive()
-       listenComments(Key, subject, object : FirebaseCallbackComment{
-           override fun onCallback(CommentL: CommentLive) {
-               com.value = CommentL.value
-           }
-       })
-        return com
     }
 
     /*
@@ -2073,6 +2083,11 @@ NEEDS COMMENT
     interface  FirebaseCallbackComment{
         fun onCallback(CommentL : CommentLive)
     }
+
+    interface  FirebaseCallbackCommentFlow{
+        fun onCallback(flow : Flow<Comment>)
+    }
+
     interface FirebaseCallbackCRN{
         fun onCallback(CRNL : MutableLiveData<MutableList<CRN>>)
     }

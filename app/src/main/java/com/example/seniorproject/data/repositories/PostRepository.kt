@@ -51,9 +51,12 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun getSubscribedPosts() = Firebase.getSubscribedPosts()
 
-    fun getComments(ClassKey: String, subject: String): CommentLive {
-        return Firebase.getComments(ClassKey, subject)
+    fun getComments(ClassKey: String, subject: String, callback: FirebaseData.FirebaseCallbackCommentFlow){
+        Firebase.listenComments(ClassKey, subject, callback)
     }
+
+    fun noCommentsCheckForCommPosts(subject: String, Key: String, callback: PostRepository.FirebaseCallbackNoComments)
+            = Firebase.noCommentsCheckerForCommPosts(subject, Key,callback)
 
     fun saveNewImgPosttoUser(title : String, text:String, CRN: String, uri: Uri, imagePost : Boolean)
     = Firebase.saveNewImgPosttoUser(title,text,CRN,uri,imagePost)
@@ -352,6 +355,10 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         fun onStart()
         fun onFailure()
         fun onSuccess(data: DataSnapshot) : Boolean
+    }
+
+    interface FirebaseCallbackNoComments {
+        fun onEmpty(nocomlist: Boolean)
     }
 
     interface FirebaseCallbackComment {

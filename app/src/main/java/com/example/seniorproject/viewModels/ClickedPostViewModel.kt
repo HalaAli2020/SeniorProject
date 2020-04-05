@@ -1,10 +1,17 @@
 package com.example.seniorproject.viewModels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.seniorproject.Utils.PostListener
+import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.CommentLive
+import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.repositories.PostRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ClickedPostViewModel @Inject constructor(private val repository : PostRepository) : ViewModel(){
@@ -32,16 +39,26 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
 
     }
 
-    fun getComments() : CommentLive
+    fun noCommentsCheckForCommPosts(callback: PostRepository.FirebaseCallbackNoComments){
+      repository.noCommentsCheckForCommPosts(crn!!, classkey!!, callback)
+    }
+
+    fun getComments(callback: CommentListFromFlow)
     {
        if(pKey.isNullOrEmpty())
        {
            PostKey = pKey
            CommentListener?.onFailure("Post key not found")
        }
-        commentsLiveList = repository.getComments(classkey!!, crn!!)
+        repository.getComments(classkey!!, crn!!, object : FirebaseData.FirebaseCallbackCommentFlow {
+            override fun onCallback(flow: Flow<Comment>) {
+                viewModelScope.launch {
+                    var commflow = flow.toList()
+                    callback.onList(commflow)
+                }
+            }
+        })
 
-        return commentsLiveList
     }
 
 
@@ -73,8 +90,9 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
         repository.blockUser(UserID)
     }
 
-
-
+    interface CommentListFromFlow {
+        fun onList(list: List<Comment>)
+    }
 
 
 

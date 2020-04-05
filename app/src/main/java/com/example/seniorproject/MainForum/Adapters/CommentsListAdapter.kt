@@ -1,5 +1,6 @@
 package com.example.seniorproject.MainForum.Adapters
 
+
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -29,9 +30,9 @@ import kotlinx.android.synthetic.main.rv_post_header.view.click_post_title
 import kotlinx.android.synthetic.main.rv_post_header.view.community_name_TV
 import kotlinx.android.synthetic.main.rv_post_header.view.posts_timestamp
 
-class CommentsAdapter(
+class CommentsListAdapter(
     var mContext: Context,
-    var Comments: CommentLive?,
+    var Comments: List<Comment>,
     var title: String,
     var text: String,
     var author: String,
@@ -66,9 +67,10 @@ class CommentsAdapter(
     }
 
     override fun getItemCount(): Int {
-        var size = 1
-        if (Comments?.value != null)
-            size = Comments?.value!!.size
+        var size = 0
+        if (!Comments.isNullOrEmpty()) {
+            return Comments.size
+        }
 
         return size
     }
@@ -77,13 +79,17 @@ class CommentsAdapter(
 
         Log.d("CommentsAdapter:", "" + position)
 
+        //need to get the No comments yet to show up
+        //  if(Comments[position] == null || getItemCount() == 0){
+        //holder.itemView.comment_text.text = "No Comments yet"
+        //try commenting out no comments yet.
         if (holder is CustomViewHoldersHeader) {
             holder.itemView.click_post_title.text = title
             holder.itemView.click_post_text.text = text
             holder.itemView.community_name_TV.text = crn
             holder.itemView.author_name_TV.text = author
 
-            if(uri!="null") {
+            if (uri != "null") {
                 Glide.with(mContext)
                     .load(uri)
                     .placeholder(R.color.white)
@@ -98,21 +104,21 @@ class CommentsAdapter(
                 mContext.startActivity(intent)
             }
 
-        }else {
-            if (Comments?.value == null || getItemCount() == 0) {
-                holder.itemView.comment_text.text = "No Comments yet"
-                //need to get the No comments yet to show up
-
+        }
+        //   }
+        else {
+            if (Comments[position] == null || getItemCount() == 0) {
+                //holder.itemView.comment_text.text = "No Comments yet"
             } else {
-                val comment: Comment = Comments?.value!![position]
+                val comment: Comment = Comments[position]
                 val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
-                ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
+                ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent(object :
                     ValueEventListener {
                     override fun onDataChange(p0: DataSnapshot) {
                         if (p0.exists()) {
                             for (block in p0.children) {
                                 if (block.getValue() == comment.PosterID) {
-                                    holder.itemView.comment_text.text ="[blocked]"
+                                    holder.itemView.comment_text.text = "[blocked]"
                                 }
                             }
                         }
@@ -134,43 +140,41 @@ class CommentsAdapter(
                     mContext.startActivity(intent)
                 }
 
-
             }
-
         }
     }
 
 
     fun removeItem(holder: RecyclerView.ViewHolder): String {
-        val comment: Comment = Comments?.value!![holder.adapterPosition]
+        val comment: Comment = Comments[holder.adapterPosition]
         val commentkey: String? = comment.classkey
 
         return commentkey!!
     }
 
     fun getCrn(holder: RecyclerView.ViewHolder): String {
-        val comment: Comment = Comments?.value!![holder.adapterPosition]
+        val comment: Comment = Comments[holder.adapterPosition]
         val commentkey: String? = comment.crn
 
         return commentkey!!
     }
 
     fun getUserKey(holder: RecyclerView.ViewHolder): String {
-        val comment: Comment = Comments?.value!![holder.adapterPosition]
+        val comment: Comment = Comments[holder.adapterPosition]
         val commentkey: String? = comment.PosterID
 
         return commentkey!!
     }
 
     fun getText(holder: RecyclerView.ViewHolder): String {
-        val comment: Comment = Comments?.value!![holder.adapterPosition]
+        val comment: Comment = Comments[holder.adapterPosition]
         val commentkey: String? = comment.text
 
         return commentkey!!
     }
 
     fun getPostKey(holder: RecyclerView.ViewHolder): String {
-        val comment: Comment = Comments?.value!![holder.adapterPosition]
+        val comment: Comment = Comments[holder.adapterPosition]
         val commentkey: String? = comment.Postkey
 
         return commentkey!!
