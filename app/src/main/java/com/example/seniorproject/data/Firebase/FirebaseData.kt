@@ -1580,6 +1580,23 @@ NEEDS COMMENT
         })
 
     }
+    // new query to change organization of data in database
+    private fun listenClassesO(call: PostRepository.FirebaseCallbackCRN)
+    {
+        val reference = FirebaseDatabase.getInstance().getReference("Subjects")
+        call.onStart()
+        reference.addListenerForSingleValueEvent(object : ValueEventListener {
+            var classes: MutableList<String> = mutableListOf()
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                call.onSuccess(dataSnapshot)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                call.onFailure()
+            }
+        })
+
+    }
 
     /*
        NEEDS COMMENT

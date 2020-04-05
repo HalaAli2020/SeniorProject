@@ -6,7 +6,6 @@ import com.example.seniorproject.data.repositories.PostRepository
 import javax.inject.Inject
 
 
-
 class HomeFragmentViewModel @Inject constructor(private val repository: PostRepository) :
     ViewModel() {
 
@@ -29,6 +28,16 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
     fun fetchCurrentUserName() = repository.fetchCurrentUserName()
 
     var user = repository.currentUser()
+
+
+    /*suspend fun getSubscribedPostCO(): PostLiveData = withContext(Dispatchers.IO) {
+        posts = repository.getSubscribedPostsCO()
+        return@withContext posts
+    }*/
+    fun returnSubscribedpost() : PostLiveData
+    {
+        return  posts
+    }
 
 
 }

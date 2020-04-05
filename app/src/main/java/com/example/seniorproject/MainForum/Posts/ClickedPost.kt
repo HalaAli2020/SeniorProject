@@ -2,12 +2,12 @@ package com.example.seniorproject.MainForum.Posts
 
 import android.content.DialogInterface
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -28,7 +28,6 @@ import com.example.seniorproject.databinding.ActivityClickedPostBinding
 import com.example.seniorproject.viewModels.ClickedPostViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_clicked_post.*
-import kotlinx.android.synthetic.main.activity_clicked_post.refreshView
 import javax.inject.Inject
 
 class ClickedPost : AppCompatActivity() {
