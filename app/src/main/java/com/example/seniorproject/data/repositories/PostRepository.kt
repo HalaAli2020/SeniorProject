@@ -51,8 +51,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun getSubscribedPosts() = Firebase.getSubscribedPosts()
 
-    fun getComments(ClassKey: String, subject: String): CommentLive {
-        return Firebase.getComments(ClassKey, subject)
+    fun getComments(ClassKey: String, subject: String, callback: FirebaseData.FirebaseCallbackCommentFlow){
+        Firebase.listenComments(ClassKey, subject, callback)
     }
 
     fun noCommentsCheckForCommPosts(subject: String, Key: String, callback: PostRepository.FirebaseCallbackNoComments)
