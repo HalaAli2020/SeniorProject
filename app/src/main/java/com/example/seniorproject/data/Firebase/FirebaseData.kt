@@ -158,8 +158,8 @@ class FirebaseData @Inject constructor() {
             .child("/Username").setValue(username)
 
 //changed users username in all user posts in referenced path
-       val href = FirebaseDatabase.getInstance().getReference("/users/$userID/Posts")
-       href.addChildEventListener(object : ChildEventListener {
+       val pRef = FirebaseDatabase.getInstance().getReference("/users/$userID/Posts")
+       pRef.addChildEventListener(object : ChildEventListener {
            override fun onCancelled(p0: DatabaseError) {
                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
            }
@@ -183,6 +183,32 @@ class FirebaseData @Inject constructor() {
            }
 
        })
+
+    val cRef = FirebaseDatabase.getInstance().getReference("/users/$userID/Comments")
+    cRef.addChildEventListener(object : ChildEventListener {
+        override fun onCancelled(p0: DatabaseError) {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
+        override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
+        override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+            val key = p0.key.toString()
+            FirebaseDatabase.getInstance().getReference("/users/$userID/Comments/$key").child("/Username").setValue(username)
+        }
+
+        override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+            val key = p0.key.toString()
+            FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$key").child("/Username").setValue(username)
+        }
+
+        override fun onChildRemoved(p0: DataSnapshot) {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
+    })
 
 
     //changes username in firebase user profile
