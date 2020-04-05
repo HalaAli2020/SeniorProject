@@ -38,9 +38,7 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
         val classResult = CRN()
         if (data.hasChild(query)) {
             val snap = data.child(query)
-            classResult.let { result ->
-                result.name = snap.key.toString()
-            }
+            classResult.name = snap.key.toString()
             return classResult
         } else {
             // RE  = CRN()

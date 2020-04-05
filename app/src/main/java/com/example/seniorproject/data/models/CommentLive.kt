@@ -10,7 +10,7 @@ class CommentLive : MutableLiveData<MutableList<Comment>>()
     private val  ob = Observer<MutableList<Comment>> {
 
     }
-    private val Listener = {
+    private val listener = {
 
     }
 

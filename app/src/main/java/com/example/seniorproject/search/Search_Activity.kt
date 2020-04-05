@@ -30,10 +30,7 @@ class SearchActivity: AppCompatActivity()
     lateinit var ada : SearchAdapter
     //lateinit var mnu : MenuItem
     lateinit var binding : ActivitySearchBinding
-    init {
 
-
-    }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.search_top_nav_menu, menu)
 

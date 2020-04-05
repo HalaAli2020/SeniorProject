@@ -29,14 +29,14 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val mContext: Context = context
 
-    private val TYPE_TEXT: Int = 0
-    private val TYPE_IMAGE: Int = 1
+    private val typeText: Int = 0
+    private val typeImage: Int = 1
 
     override fun getItemViewType(position: Int): Int {
         if (savedPosts.value!![position].uri == null || savedPosts.value!![position].uri == "null") {
-            return TYPE_TEXT
+            return typeText
         }
-        return TYPE_IMAGE
+        return typeImage
     }
 
 
@@ -60,31 +60,12 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
             return 0
     }
 
-
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val post: Post = savedPosts.value!![position]
         if (holder is PostImageViewHolders) {
             val post: Post = savedPosts.value!![position]
             val userID = FirebaseAuth.getInstance().uid
 
-            val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
-            ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
-                ValueEventListener {
-                override fun onDataChange(p0: DataSnapshot) {
-                    if (p0.exists()) {
-                        for (block in p0.children) {
-                            if (block.value == post.userID) {
-                                holder.itemView.post_title.text = "[blocked]"
-                            }
-                        }
-                    }
-                }
-
-                override fun onCancelled(p0: DatabaseError) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-            })
             holder.itemView.post_title.text = post.title
             holder.itemView.username.text = post.author
             holder.itemView.post_timestamp.text = post.Ptime
@@ -92,10 +73,29 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
             if (post.uri != null) {
                 Glide.with(mContext).load(post.uri).placeholder(R.color.white)
                     .into(holder.itemView.post_image)
+                holder.itemView.post_title.text = post.title
+                val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
+                ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
+                    ValueEventListener {
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if (p0.exists()) {
+                            for (block in p0.children) {
+                                if (block.value == post.userID) {
+                                    holder.itemView.post_title.text = "[blocked]"
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(p0: DatabaseError) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+                })
             } else {
                 Glide.with(mContext).clear(holder.itemView.post_image)
                 holder.itemView.post_image.setImageDrawable(null)
             }
+
 
             if (type == 0) {
                 if (post.title == "No Posts")
@@ -124,13 +124,30 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
 
             }
         } else {
+            val userID = FirebaseAuth.getInstance().uid
             holder.itemView.post_title.text = post.title
+            val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
+            ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
+                ValueEventListener {
+                override fun onDataChange(p0: DataSnapshot) {
+                    if (p0.exists()) {
+                        for (block in p0.children) {
+                            if (block.value == post.userID) {
+                                holder.itemView.post_title.text = "[blocked]"
+                            }
+                        }
+                    }
+                }
+
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+            })
             holder.itemView.username.text = post.author
             holder.itemView.post_timestamp.text = post.Ptime
 
             if (type == 0) {
                 holder.itemView.username.text = post.subject
-
                 holder.itemView.username.setOnClickListener {
                     val intent = Intent(mContext, CommunityPosts::class.java)
                     intent.putExtra("ClassName", post.subject)

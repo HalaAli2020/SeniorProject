@@ -11,7 +11,7 @@ class PostLiveData : MutableLiveData<MutableList<Post>>()
     private val  ob = Observer<List<Post>> {
 
     }
-    private val Listener = {
+    private val listener = {
 
     }
 
