@@ -168,6 +168,8 @@ class UserProfileActivity : AppCompatActivity() {
             })
         }
 
+        replaceFragment(ProfileCommentFragment())
+
     }
 
     //boilerplate code to replace a fragment

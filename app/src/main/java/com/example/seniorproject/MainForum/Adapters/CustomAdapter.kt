@@ -7,16 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isInvisible
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.seniorproject.MainForum.Posts.ClickedPost
 import com.example.seniorproject.MainForum.Posts.CommunityPosts
 import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
-import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.PostLiveData
 import com.google.firebase.auth.FirebaseAuth
@@ -24,27 +20,23 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.rv_post.view.*
 import kotlinx.android.synthetic.main.rv_post.view.post_timestamp
 import kotlinx.android.synthetic.main.rv_post.view.post_title
 import kotlinx.android.synthetic.main.rv_post.view.username
-import kotlinx.android.synthetic.main.rv_post.view.imageView4
-import kotlinx.android.synthetic.main.rv_post_comment.view.*
-import kotlinx.android.synthetic.main.rv_post_header.view.*
 import kotlinx.android.synthetic.main.rv_post_image.view.*
 
 class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: Int) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val mContext: Context = context
 
-    private val TYPE_TEXT: Int = 0
-    private val TYPE_IMAGE: Int = 1
+    private val typeText: Int = 0
+    private val typeImage: Int = 1
 
     override fun getItemViewType(position: Int): Int {
         if (savedPosts.value!![position].uri == null || savedPosts.value!![position].uri == "null") {
-            return TYPE_TEXT
+            return typeText
         }
-        return TYPE_IMAGE
+        return typeImage
     }
 
 
@@ -79,8 +71,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
             holder.itemView.post_timestamp.text = post.Ptime
 
             if (post.uri != null) {
-                Glide.with(mContext).load(post.uri).placeholder(R.color.white)
-                    .into(holder.itemView.post_image)
+                Glide.with(mContext).load(post.uri).placeholder(R.color.white).into(holder.itemView.post_image)
                 holder.itemView.post_title.text = post.title
                 val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
                 ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
@@ -99,16 +90,11 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
                         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
                 })
-            holder.itemView.post_title.text = post.title
-            holder.itemView.username.text = post.author
-            holder.itemView.post_timestamp.text = post.Ptime
-
-            if (post.uri != null) {
-                Glide.with(mContext).load(post.uri).placeholder(R.color.white).transform(RoundedCorners(25)).into(holder.itemView.post_image)
             } else {
                 Glide.with(mContext).clear(holder.itemView.post_image)
                 holder.itemView.post_image.setImageDrawable(null)
             }
+
 
             if (type == 0) {
                 if (post.title == "No Posts")

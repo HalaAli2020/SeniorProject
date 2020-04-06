@@ -72,7 +72,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                             intent.putExtra("Ptime", value[3])
                             intent.putExtra("uri", value[7])
                             mContext.startActivity(intent)
-                            }
+                        }
                     })
 
                 }
