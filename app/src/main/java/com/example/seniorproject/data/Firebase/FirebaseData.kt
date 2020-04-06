@@ -590,7 +590,7 @@ user creation, the interface that handles toast messages and redirect can be fou
     }
 
     /*
-      NEEDS COMMENT
+      gets profile image url in real time
      */
     fun readPhotoValue(useridm: String, callback: EmailCallback) {
         val userref = FirebaseDatabase.getInstance().getReference("users/$useridm")
@@ -921,7 +921,7 @@ NEEDS COMMENT
     }
 
     /*
-    NEEDS COMMENT
+    Saves user comment to the referenced paths
      */
     fun saveNewCommentC(
         text: String, postID: String, crn: String
@@ -1012,7 +1012,6 @@ NEEDS COMMENT
     {
         val refkeyuser = FirebaseDatabase.getInstance().getReference("/users/$userID")
 
-        // val refkeycominpost = FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$userPostKey")
 
         val query: Query = refkeyuser.child("Comments").orderByChild("ProfileComKey").equalTo(comKey)
 
@@ -1303,7 +1302,9 @@ NEEDS COMMENT
         })
     }
 
-    //
+    /*
+    saves image post to user
+     */
     fun saveNewImgPosttoUser(title: String, text: String, CRN: String, uri: Uri, imagePost: Boolean) {
 
         val filename = UUID.randomUUID().toString()
@@ -1311,6 +1312,7 @@ NEEDS COMMENT
         ref.putFile(uri).addOnSuccessListener {
             saveImageurl = "test to see HELLO"
             ref.downloadUrl.addOnSuccessListener {
+                //success listener checks if photo was successfully added to the firebase storage databse
                 val urii = it
                 saveImageurl = urii.toString()
                 val post = Post(title, text, CRN,"")
@@ -1319,6 +1321,7 @@ NEEDS COMMENT
                 post.userID = userID
                 post.author = author
                 post.imagePost = imagePost
+                //saving image to realtime database in their referenced paths
                 val userKey =
                     FirebaseDatabase.getInstance().getReference("/users/$userID").child("Posts")
                         .push().key
@@ -1340,7 +1343,7 @@ NEEDS COMMENT
 
 
     /*
-    NEEDS COMMENT
+    Saves text post to user in the referenced paths
      */
     fun saveNewPosttoUser(text: String, title:String, CRN: String) {
         val userID = firebaseAuth.uid
@@ -1420,7 +1423,7 @@ NEEDS COMMENT
     }
 
     /*
-    NEEDS COMMENT
+    gets a list of user subscriptions
      */
     private fun sendUserSUB(call :PostRepository.FirebaseCallbackString) {
         listenUserSub(call)
@@ -1469,8 +1472,8 @@ NEEDS COMMENT
         })
     }
 
-    /*NEEDS COMMENT
-
+    /*
+    removes a class subscription from a user, data changes are made in the referenced path
      */
     fun removeClassSub(crn: String) {
         val uid = FirebaseAuth.getInstance().uid
