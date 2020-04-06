@@ -25,7 +25,6 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true">
 
-
             <FrameLayout
                 android:id="@+id/cont_frame"
                 android:layout_width="match_parent"
@@ -33,11 +32,12 @@
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
-                    app:contentInsetStart="0dp"
-                    android:elevation="10dp"
-                    android:background="@drawable/titlebar_shadow"
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"/>
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="@drawable/titlebar_shadow"
+                    android:elevation="10dp"
+                    app:contentInsetStart="0dp"
+                    app:titleTextColor="@color/TextColor" />
             </FrameLayout>
 
 
@@ -55,6 +55,8 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
                 android:background="@color/BackgroundColor"
+                app:itemTextColor="@color/TextColor"
+                app:itemIconTint="@color/TextColor"
                 app:menu="@menu/activity_main_drawer" />
 
         </androidx.drawerlayout.widget.DrawerLayout>
@@ -76,15 +78,17 @@
             android:id="@+id/FAB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/BackgroundColor"
+            android:backgroundTint="@color/FAB"
             android:scaleType="centerInside"
             android:src="@drawable/ic_create_black_24dp"
+            app:backgroundTint="@color/TextColor"
             app:borderWidth="3dp"
-            app:elevation="9dp"
+            app:elevation="100dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:rippleColor="@color/blue_theme" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

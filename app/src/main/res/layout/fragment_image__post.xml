@@ -6,13 +6,12 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/BackgroundColor"
         android:fillViewport="true">
-        <!-- Here you put the rest of your current view-->
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/ConstraintLayout"
             android:layout_width="match_parent"
-            android:background="@color/white"
             android:layout_height="wrap_content"
             tools:context=".MainForum.NewPost.FragmentNewPost">
 
@@ -61,12 +60,12 @@
                     android:layout_height="30dp"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="12dp"
+                    android:contentDescription="@string/profile_image"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="1.0"
-                    app:srcCompat="@drawable/ic_account_circle_blue_24dp"
-                    android:contentDescription="@string/profile_image" />
+                    app:srcCompat="@drawable/ic_account_circle_blue_24dp" />
 
                 <Button
                     android:id="@+id/new_image_post"
@@ -91,6 +90,7 @@
                 android:background="@drawable/comment_bottom_border"
                 android:gravity="top"
                 android:hint="@string/enter_a_title"
+                android:importantForAutofill="no"
                 android:inputType="textMultiLine|textCapSentences"
                 android:maxLength="150"
                 android:paddingStart="12dp"
@@ -98,48 +98,49 @@
                 android:paddingEnd="15dp"
                 android:paddingBottom="18dp"
                 android:singleLine="true"
+                android:textColor="@color/TextColor"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cl"
-                android:importantForAutofill="no" />
+                app:layout_constraintTop_toBottomOf="@+id/cl" />
 
             <EditText
                 android:id="@+id/img_post_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:background="@color/BackgroundColor"
                 android:gravity="top"
                 android:hint="@string/enter_some_text"
+                android:importantForAutofill="no"
                 android:inputType="textMultiLine|textCapSentences"
                 android:maxLength="1500"
                 android:paddingStart="12dp"
                 android:paddingTop="10dp"
                 android:paddingEnd="12dp"
                 android:paddingBottom="20dp"
+                android:textColor="@color/TextColor"
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.432"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/img_post_title"
-                android:importantForAutofill="no" />
+                app:layout_constraintTop_toBottomOf="@+id/img_post_title" />
 
             <ImageView
                 android:id="@+id/image_preview"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
                 android:adjustViewBounds="true"
+                android:contentDescription="@string/post_image"
                 android:maxHeight="400dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/img_post_text"
                 app:layout_constraintVertical_bias="0.0"
-                tools:layout_editor_absoluteX="0dp"
-                android:contentDescription="@string/post_image" />
+                tools:layout_editor_absoluteX="0dp" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

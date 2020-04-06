@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Drop Shadow Stack -->
+    <!-- Drop Shadow Stack
     <item>
         <shape>
             <padding android:bottom="2dp" />
@@ -15,11 +15,11 @@
 
         </shape>
     </item>
-
+ -->
     <!-- Background -->
     <item>
         <shape>
-            <solid android:color="#ffffff" />
+            <solid android:color="@color/colorPrimary" />
         </shape>
     </item>
 </layer-list>

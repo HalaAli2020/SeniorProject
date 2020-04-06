@@ -74,38 +74,33 @@ class MainForum : AppCompatActivity(),
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.home -> {
-                    FAB.backgroundTintList =
-                        ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
+                    FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.TextColor))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
                     replaceFragment(FragmentHome())
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.subscriptions -> {
-                    FAB.backgroundTintList =
-                        ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
+                    FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.TextColor))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
                     replaceFragment(FragmentSubscriptions())
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.newPost -> {
-                    FAB.backgroundTintList =
-                        ColorStateList.valueOf(ContextCompat.getColor(this, R.color.blue_theme))
+                    FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.blue_theme))
                     FAB.setImageResource(R.drawable.ic_create_blue_24dp)
                     val intent = Intent(this, NewPost::class.java)
                     startActivity(intent)
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.list -> {
-                    FAB.backgroundTintList =
-                        ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
+                    FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.TextColor))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
                     val intent = Intent(this, SearchActivity::class.java)
                     startActivity(intent)
 
                 }
                 R.id.messages -> {
-                    FAB.backgroundTintList =
-                        ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
+                    FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.TextColor))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
                     //replaceFragment(FragmentLatestMessages())
                     replaceFragment(FragmentLatestMessages())
@@ -135,7 +130,7 @@ class MainForum : AppCompatActivity(),
             noInternetAlertDialog()
 
 
-        FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
+        //FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
         setSupportActionBar(findViewById(R.id.toolbar))
         val actionbar: ActionBar? = supportActionBar
         actionbar?.apply {
@@ -175,6 +170,8 @@ class MainForum : AppCompatActivity(),
                 }
                 R.id.nav_allClasses -> {
                     Toast.makeText(this, "Settings", Toast.LENGTH_LONG).show()
+                    val intent = Intent(this, Settings::class.java)
+                    startActivity(intent)
                 }
                 R.id.nav_logout -> {
                     Toast.makeText(this, "User is Logged out.", Toast.LENGTH_LONG).show()

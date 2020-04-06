@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorAccent">#FFFFFF</color>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorAccent">#2b99fd</color>
+    <color name="BackgroundColor">#FFFFFF</color>
+    <color name="TextColor">#000000</color>
+    <color name="GreyText">#828385</color>
+    <color name="ChatBackground">#efefef</color>
+
+    <color name="FAB">#FFFFFF</color>
+    <color name="CommentGrey">#E6E4E4</color>
     <color name="white">#FFFFFF</color>
     <color name="blue_theme">#2b99fd</color>
     <color name="grey">#E6E4E4</color>
     <color name="darkergrey">#A3A3A3</color>
-    <color name="TextColor">#000000</color>
     <color name="black">#000000</color>
-    <color name="BackgroundColor">#FFFFFF</color>
+    <color name="red">#FF0000</color>
 </resources>

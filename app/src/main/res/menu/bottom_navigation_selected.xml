@@ -3,6 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:color="@color/blue_theme" android:state_checked="true"
         tools:ignore="MenuTitle" />
-    <item android:color="@color/black" android:state_checked="false"
+    <item android:color="@color/TextColor" android:state_checked="false"
         tools:ignore="MenuTitle" />
 </selector>

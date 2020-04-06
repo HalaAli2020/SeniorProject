@@ -13,11 +13,11 @@
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="12dp"
         android:background="#FFFFFF"
+        android:contentDescription="@string/add_image"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/post_timestamp"
-        android:contentDescription="@string/add_image" />
+        app:layout_constraintTop_toBottomOf="@+id/post_timestamp" />
 
     <TextView
         android:id="@+id/username"
@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
         android:gravity="center_vertical"
+        android:textColor="@color/GreyText"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView4"
         app:layout_constraintStart_toEndOf="@+id/imageView4"
@@ -36,10 +37,10 @@
         android:layout_height="15dp"
         android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
+        android:contentDescription="@string/add_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_account_circle_blue_24dp"
-        android:contentDescription="@string/add_image" />
+        app:srcCompat="@drawable/ic_account_circle_blue_24dp" />
 
     <TextView
         android:id="@+id/post_timestamp"
@@ -47,6 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
         android:gravity="center_vertical"
+        android:textColor="@color/GreyText"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/username"
         app:layout_constraintEnd_toEndOf="parent"
