@@ -71,7 +71,7 @@ class FirebaseData @Inject constructor() {
     var cList: MutableList<String> = mutableListOf()
     var classPostList: PostLiveData = PostLiveData()
     var mainPosts: MutableList<Post> = mutableListOf()
-    var userSUB : MutableLiveData<MutableList<String>> = MutableLiveData()
+    var userSUB: MutableLiveData<MutableList<String>> = MutableLiveData()
     fun currentUser() = FirebaseAuth.getInstance().currentUser
 
 

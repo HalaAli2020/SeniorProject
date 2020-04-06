@@ -71,8 +71,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
             holder.itemView.post_timestamp.text = post.Ptime
 
             if (post.uri != null) {
-                Glide.with(mContext).load(post.uri).placeholder(R.color.white)
-                    .into(holder.itemView.post_image)
+                Glide.with(mContext).load(post.uri).placeholder(R.color.white).into(holder.itemView.post_image)
                 holder.itemView.post_title.text = post.title
                 val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
                 ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :

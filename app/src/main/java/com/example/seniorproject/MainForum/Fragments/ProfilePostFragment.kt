@@ -95,7 +95,7 @@ class ProfilePostFragment : Fragment() {
         binding.profViewModel = myViewModel
         binding.lifecycleOwner = this
 
-       //ordering the posts from newest to latest
+        //ordering the posts from newest to latest
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true
@@ -172,7 +172,7 @@ class ProfilePostFragment : Fragment() {
 
                                 })
                             )
-                              //adding an edit butto on onswipe
+                            //adding an edit butto on onswipe
                             buffer.add(
                                 ProfileButton(context!!, "Edit", 30, 0, Color.parseColor
                                     ("#D3D3D3"), object : ButtonClickListener {
@@ -182,11 +182,11 @@ class ProfilePostFragment : Fragment() {
                                         //if statement to cover image post case
                                         if (adapter.getItemViewType(pos) == 1)
                                         {
-                                             postkey = adapter.removeItem(viewHolders as PostImageViewHolders)
+                                            postkey = adapter.removeItem(viewHolders as PostImageViewHolders)
                                         }
                                         else if (adapter.getItemViewType(pos) == 0){
 
-                                             postkey = adapter.removeItem(viewHolders as CustomViewHolders)
+                                            postkey = adapter.removeItem(viewHolders as CustomViewHolders)
                                         }
 
                                         val userkey: String? =

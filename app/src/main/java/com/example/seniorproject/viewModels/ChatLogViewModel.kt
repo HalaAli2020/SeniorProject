@@ -12,12 +12,13 @@ class ChatLogViewModel @Inject constructor(private val repository: MessagesRepo)
 
     var chatMessage: String? = null
     var toID: String? = null
+    var profileURI: String? = "null"
     var messages: MutableLiveData<List<ChatMessage>>? = null
     lateinit var username: String
 
     fun sendMessage() {
         if (!chatMessage.isNullOrEmpty()) {
-            repository.sendMessage(chatMessage!!, toID!!, username)
+            repository.sendMessage(chatMessage, toID, username)
         }
     }
 

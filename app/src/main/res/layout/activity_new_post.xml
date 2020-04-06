@@ -20,7 +20,7 @@
         android:id="@+id/post_bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/BackgroundColor"
+        android:background="@color/colorPrimary"
         app:itemIconTint="@menu/bottom_navigation_selected"
         app:itemTextColor="@menu/bottom_navigation_selected"
         app:layout_constraintBottom_toBottomOf="parent"

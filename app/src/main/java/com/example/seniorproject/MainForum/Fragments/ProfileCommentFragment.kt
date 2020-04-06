@@ -85,9 +85,9 @@ class ProfileCommentFragment : Fragment() {
 
 
         //setting recycleview adapter
-       view.profile_comment_recyclerView.adapter = ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(iD))
+        view.profile_comment_recyclerView.adapter = ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(iD))
 
-       adaptercomments = ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(iD))
+        adaptercomments = ProfileCommentsAdapter(view.context, myViewModel.getUserProfileComments(iD))
 
 
         //settting refreshview UI
@@ -114,7 +114,7 @@ class ProfileCommentFragment : Fragment() {
         binding.profileViewModelCom = myViewModel
         binding.lifecycleOwner = this
 
-       //setting layout so newest comments load first
+        //setting layout so newest comments load first
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true
@@ -125,138 +125,138 @@ class ProfileCommentFragment : Fragment() {
         binding.executePendingBindings()
 
         //checking if a user has no posts, the no comments message is not swipeable but all other comments are
-         myViewModel.noCommentsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null", object : CheckCallback {
-             override fun check(chk: Boolean) {
-                 if (iD != FirebaseAuth.getInstance().currentUser?.uid || chk){
-                     Log.d("wrong","one")
-                 }
-                 else if (!chk) {
-                     //setting up swipe UI with a delete and edit button
-                     //if a user has no comments the message should not be swipeable
-                     object : SwipeHelper(context!!, view.profile_comment_recyclerView, 200) {
-                         override fun initButton(
-                             viewHolders: RecyclerView.ViewHolder,
-                             buffer: MutableList<ProfileButton>
-                         ) {
-                             buffer.add(
-                                 ProfileButton(context!!, "Delete", 30, 0, Color.parseColor
-                                     ("#FF0000"), object : ButtonClickListener {
-                                     override fun onClick(pos: Int) {
-                                         val postkeyUP: String? =
-                                             adaptercomments.pkeyUserProfile(
-                                                 viewHolders as CustomViewHolders
-                                             )
-                                         val userkey: String? =
-                                             adaptercomments.getUserKey(
-                                                 viewHolders
-                                             )
+        myViewModel.noCommentsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null", object : CheckCallback {
+            override fun check(chk: Boolean) {
+                if (iD != FirebaseAuth.getInstance().currentUser?.uid || chk){
+                    Log.d("wrong","one")
+                }
+                else if (!chk) {
+                    //setting up swipe UI with a delete and edit button
+                    //if a user has no comments the message should not be swipeable
+                    object : SwipeHelper(context!!, view.profile_comment_recyclerView, 200) {
+                        override fun initButton(
+                            viewHolders: RecyclerView.ViewHolder,
+                            buffer: MutableList<ProfileButton>
+                        ) {
+                            buffer.add(
+                                ProfileButton(context!!, "Delete", 30, 0, Color.parseColor
+                                    ("#FF0000"), object : ButtonClickListener {
+                                    override fun onClick(pos: Int) {
+                                        val postkeyUP: String? =
+                                            adaptercomments.pkeyUserProfile(
+                                                viewHolders as CustomViewHolders
+                                            )
+                                        val userkey: String? =
+                                            adaptercomments.getUserKey(
+                                                viewHolders
+                                            )
 
-                                         val crnkey: String? =
-                                             adaptercomments.getCrn(
-                                                 viewHolders
-                                             )
+                                        val crnkey: String? =
+                                            adaptercomments.getCrn(
+                                                viewHolders
+                                            )
 
-                                         val commentkey: String? =
-                                             adaptercomments.getCommentKey(
-                                                 viewHolders
-                                             )
+                                        val commentkey: String? =
+                                            adaptercomments.getCommentKey(
+                                                viewHolders
+                                            )
 
-                                         val classkey: String? =
-                                             adaptercomments.getClassKey(
-                                                 viewHolders
-                                             )
+                                        val classkey: String? =
+                                            adaptercomments.getClassKey(
+                                                viewHolders
+                                            )
 
-                                         val classprofilekey: String? =
-                                             adaptercomments.getClassProfileKey(
-                                                 viewHolders
-                                             )
+                                        val classprofilekey: String? =
+                                            adaptercomments.getClassProfileKey(
+                                                viewHolders
+                                            )
 
-                                         val builder = AlertDialog.Builder(
-                                             view.context,
-                                             R.style.AppTheme_AlertDialog
-                                         )
+                                        val builder = AlertDialog.Builder(
+                                            view.context,
+                                            R.style.AppTheme_AlertDialog
+                                        )
 
-                                         //creating dialog box and message to stop user from deleting post on accident
-                                         builder.setTitle("Are you sure?")
-                                         builder.setMessage("You cannot restore comments that have been deleted.")
-                                         builder.setPositiveButton("DELETE",
-                                             { dialogInterface: DialogInterface?, i: Int ->
-                                                 myViewModel.deleteCommentFromCommPosts(
-                                                     postkeyUP!!,
-                                                     crnkey!!,
-                                                     classkey!!
-                                                 )
-                                                 myViewModel.deleteCommentFromUserProfile(
-                                                     commentkey!!,
-                                                     crnkey,
-                                                     classprofilekey!!,
-                                                     userkey!!
-                                                 )
-                                             })
-                                         builder.setNegativeButton("CANCEL",
-                                             { dialogInterface: DialogInterface?, i: Int ->
-                                                 builder.setCancelable(true)
-                                             })
+                                        //creating dialog box and message to stop user from deleting post on accident
+                                        builder.setTitle("Are you sure?")
+                                        builder.setMessage("You cannot restore comments that have been deleted.")
+                                        builder.setPositiveButton("DELETE",
+                                            { dialogInterface: DialogInterface?, i: Int ->
+                                                myViewModel.deleteCommentFromCommPosts(
+                                                    postkeyUP!!,
+                                                    crnkey!!,
+                                                    classkey!!
+                                                )
+                                                myViewModel.deleteCommentFromUserProfile(
+                                                    commentkey!!,
+                                                    crnkey,
+                                                    classprofilekey!!,
+                                                    userkey!!
+                                                )
+                                            })
+                                        builder.setNegativeButton("CANCEL",
+                                            { dialogInterface: DialogInterface?, i: Int ->
+                                                builder.setCancelable(true)
+                                            })
 
-                                         val msgdialog: AlertDialog = builder.create()
-                                         msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
-                                         msgdialog.show()
+                                        val msgdialog: AlertDialog = builder.create()
+                                        msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
+                                        msgdialog.show()
 
-                                     }
+                                    }
 
-                                 })
-                             )
+                                })
+                            )
 
-                             buffer.add(
-                                 ProfileButton(context!!, "Edit", 30, 0, Color.parseColor
-                                     ("#D3D3D3"), object : ButtonClickListener {
-                                     override fun onClick(pos: Int) {
-                                         val userkey: String? =
-                                             adaptercomments.getUserKey(
-                                                 viewHolders as CustomViewHolders
-                                             )
+                            buffer.add(
+                                ProfileButton(context!!, "Edit", 30, 0, Color.parseColor
+                                    ("#D3D3D3"), object : ButtonClickListener {
+                                    override fun onClick(pos: Int) {
+                                        val userkey: String? =
+                                            adaptercomments.getUserKey(
+                                                viewHolders as CustomViewHolders
+                                            )
 
-                                         val classprofilekey: String? =
-                                             adaptercomments.getClassProfileKey(
-                                                 viewHolders
-                                             )
+                                        val classprofilekey: String? =
+                                            adaptercomments.getClassProfileKey(
+                                                viewHolders
+                                            )
 
-                                         val textkey: String? = adaptercomments.getText(
-                                             viewHolders
-                                         )
+                                        val textkey: String? = adaptercomments.getText(
+                                            viewHolders
+                                        )
 
-                                         val crnkey: String? =
-                                             adaptercomments.getCrn(
-                                                 viewHolders
-                                             )
+                                        val crnkey: String? =
+                                            adaptercomments.getCrn(
+                                                viewHolders
+                                            )
 
-                                         val postkeyUP: String? =
-                                             adaptercomments.pkeyUserProfile(
-                                                 viewHolders
-                                             )
+                                        val postkeyUP: String? =
+                                            adaptercomments.pkeyUserProfile(
+                                                viewHolders
+                                            )
 
-                                         //sending information and starting edit post activity
-                                         val intent = Intent(context, UpdateComment::class.java)
-                                         intent.putExtra("PosterID", userkey)
-                                         intent.putExtra("ProfileComKey", classprofilekey)
-                                         intent.putExtra("text", textkey)
-                                         intent.putExtra("crn", crnkey)
-                                         intent.putExtra("Postkey", postkeyUP)
+                                        //sending information and starting edit post activity
+                                        val intent = Intent(context, UpdateComment::class.java)
+                                        intent.putExtra("PosterID", userkey)
+                                        intent.putExtra("ProfileComKey", classprofilekey)
+                                        intent.putExtra("text", textkey)
+                                        intent.putExtra("crn", crnkey)
+                                        intent.putExtra("Postkey", postkeyUP)
 
-                                         context!!.startActivity(intent)
-                                     }
+                                        context!!.startActivity(intent)
+                                    }
 
-                                 })
-                             )
+                                })
+                            )
 
-                         }
+                        }
 
-                     }
+                    }
 
-                 }
-             }
+                }
+            }
 
-         })
+        })
 
 
 

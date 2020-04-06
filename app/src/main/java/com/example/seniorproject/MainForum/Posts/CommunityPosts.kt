@@ -24,11 +24,7 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_community_posts.*
 import kotlinx.android.synthetic.main.rv_post.view.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
-import java.time.Duration
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 class CommunityPosts : AppCompatActivity() {
 
