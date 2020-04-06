@@ -136,15 +136,21 @@ class UserProfileActivity : AppCompatActivity() {
 
         val image : ImageView = findViewById(com.example.seniorproject.R.id.in_profile_image)
         if(author == "null"){
-            //getting the profile image for the current user
-            Glide.with(image.context) //1
-                .load(FirebaseAuth.getInstance().currentUser?.photoUrl)
-                .placeholder(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
-                .error(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
-                .skipMemoryCache(true) //2
-                .diskCacheStrategy(DiskCacheStrategy.NONE) //3
-                .apply(RequestOptions().circleCrop()).fitCenter()//4
-                .into(image)
+            val id = FirebaseAuth.getInstance().currentUser?.uid ?: test
+            myViewModel.readPhotoValue(id, object: EmailCallback{
+                override fun getEmail(string: String) {
+                    Log.d("Soup", "file name is $string")
+                    Glide.with(this@UserProfileActivity) //1
+                        .load(Uri.parse(string))
+                        .placeholder(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
+                        .error(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
+                        .skipMemoryCache(true) //2
+                        .diskCacheStrategy(DiskCacheStrategy.NONE) //3
+                        .apply(RequestOptions().circleCrop()).fitCenter()//4
+                        .into(image)
+
+                }
+            })
         }
         else{
             //getting the profile image for the another user

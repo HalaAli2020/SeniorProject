@@ -34,8 +34,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
 
     override fun onBindViewHolder(holder: CustomViewHolders, position: Int) {
         if (ProfileComments.value == null || itemCount == 0) {
-            holder.itemView.comment_text.text = "No Comments yet"
-            //this is not showing up
+            holder.itemView.comment_text.text = "No Comments"
         } else {
             val comment: Comment = ProfileComments.value!![position]
             holder.itemView.comment_text.text = comment.text
@@ -51,7 +50,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                 mContext.startActivity(intent)
             }
 
-            if (comment.author != null || comment.text != "no Comments") {
+            if (comment.author != null || comment.text != "No Comments") {
                 holder.itemView.setOnClickListener {
                     val intent = Intent(mContext, ClickedPost::class.java)
                     val crn = comment.crn
@@ -76,12 +75,9 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                             }
                     })
 
-
-
-
                 }
             } else {
-                holder.itemView.comment_text.text = "no Comments"
+                holder.itemView.comment_text.text = "No Comments"
             }
 
         }
