@@ -128,6 +128,16 @@ class FirebaseData @Inject constructor() {
         })
     }
 
+    fun fetchUsername(UserID: String, callbackbio: PostRepository.FirebaseCallbackItem){
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$UserID")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {}
+            override fun onDataChange(p0: DataSnapshot) {
+                callbackbio.onMessage(p0)
+            }
+        })
+    }
+
 //gets the current users bio, unsure if we need this function
     fun fetchCurrentBio(): String {
         val userID = firebaseAuth.uid ?: "null"
@@ -213,8 +223,9 @@ class FirebaseData @Inject constructor() {
                         .getReference("/Subjects/${classn}/Posts/${key}").child("/author")
                     if (userID == p0.child("UserID").value.toString()) {
                         newref.setValue(username)
-                        changeCommunityCommentUsername(username, classn, key)
                     }
+                    changeCommunityCommentUsername(username, classn, key)
+                    //sets new comments for appropriate username comments of every community post
 
                 }
 
@@ -411,7 +422,7 @@ class FirebaseData @Inject constructor() {
         for (x in l.iterator())
         {
             val ref = FirebaseDatabase.getInstance().getReference("users/$uid/${x.userComkey}")
-            ref.child("author").setValue(name)
+            ref.child("/author").setValue(name)
         }
     }
 

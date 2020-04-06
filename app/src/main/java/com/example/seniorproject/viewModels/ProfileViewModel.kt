@@ -22,6 +22,7 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     private var postKey : String? = null
     val commentListener : PostListener? = null
     var otherEmail : String = "no email available"
+    var currentUsername : String = "no username available"
     var otherBio : String = "no bio available"
     var noPostCheck : Boolean? = null
     var noCommentsCheck : Boolean? = null
@@ -101,6 +102,26 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
             }
         })
         return otherEmail
+    }
+//used in UserProfileActivity to get the current users username in real time
+    fun fetchUsername(UserID: String, callback : EmailCallback) : String {
+        repository.fetchUsername(UserID, object : PostRepository.FirebaseCallbackItem{
+            override fun onStart() {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onFailure() {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onMessage(data: DataSnapshot): String {
+                val email = data.child("Username").getValue(String::class.java)
+                currentUsername = email ?: "no email in success"
+                callback.getEmail(currentUsername)
+                return currentUsername
+            }
+        })
+        return currentUsername
     }
 
     fun fetchBio(UserID: String, callback: EmailCallback) : String {

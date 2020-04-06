@@ -96,7 +96,11 @@ class UserProfileActivity : AppCompatActivity() {
                     in_profile_bio.text = string
                 }
             })
-            in_profile_username.text = FirebaseAuth.getInstance().currentUser?.displayName
+            myViewModel.fetchUsername(FirebaseAuth.getInstance().currentUser?.uid ?: "no username",object : EmailCallback{
+                override fun getEmail(string: String) {
+                    in_profile_username.text = string
+                }
+            })
             in_profile_email.text = myViewModel.user?.email
         }
 
