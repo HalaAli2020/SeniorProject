@@ -19,9 +19,10 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
 
     var posts: PostLiveData = PostLiveData()
     var comments: CommentLive = CommentLive()
-    private var PostKey : String? = null
+    private var postKey : String? = null
     val commentListener : PostListener? = null
     var otherEmail : String = "no email available"
+    var currentUsername : String = "no username available"
     var otherBio : String = "no bio available"
     var noPostCheck : Boolean? = null
     var noCommentsCheck : Boolean? = null
@@ -52,7 +53,7 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     {
         if(PKey.isEmpty())
         {
-            PostKey = PKey
+            postKey = PKey
             commentListener?.onFailure("Post key not found")
 
         }
@@ -64,7 +65,7 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     {
         if(PKey.isEmpty())
         {
-            PostKey = PKey
+            postKey = PKey
             commentListener?.onFailure("Post key not found")
 
         }
@@ -102,6 +103,26 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
         })
         return otherEmail
     }
+//used in UserProfileActivity to get the current users username in real time
+    fun fetchUsername(UserID: String, callback : EmailCallback) : String {
+        repository.fetchUsername(UserID, object : PostRepository.FirebaseCallbackItem{
+            override fun onStart() {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onFailure() {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onMessage(data: DataSnapshot): String {
+                val email = data.child("Username").getValue(String::class.java)
+                currentUsername = email ?: "no email in success"
+                callback.getEmail(currentUsername)
+                return currentUsername
+            }
+        })
+        return currentUsername
+    }
 
     fun fetchBio(UserID: String, callback: EmailCallback) : String {
         repository.fetchBio(UserID, object : PostRepository.FirebaseCallbackItem{
@@ -138,7 +159,6 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
         repository.noPostsChecker(UserID, object : PostRepository.FirebaseCallbackBool {
             override fun onStart() { TODO("not implemented") }
             override fun onFailure() { TODO("not implemented") }
-
             override fun onSuccess(data: DataSnapshot) : Boolean {
                 if (!data.child("Posts").exists())
                 {
@@ -147,8 +167,8 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
                 }
                 else
                 {
-                    noPostCheck = false //here
                     callback.check(noPostCheck ?: false)
+                    noPostCheck = false //here
                 }
                 return  noPostCheck ?: false
             }

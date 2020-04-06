@@ -69,7 +69,7 @@
 
 
             <EditText
-                android:id="@+id/in_profile_bio"
+                android:id="@+id/in_edit_bio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
@@ -95,7 +95,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/in_profile_bio"
+                app:layout_constraintTop_toBottomOf="@+id/in_edit_bio"
                 app:layout_constraintVertical_bias="0.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

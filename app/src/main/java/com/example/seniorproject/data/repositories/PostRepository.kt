@@ -6,30 +6,25 @@ import androidx.lifecycle.MutableLiveData
 import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.Utils.FlowCallback
 import com.example.seniorproject.data.Firebase.FirebaseData
-
 import com.example.seniorproject.data.models.*
 import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.ProducerScope
-import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
-import java.util.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.collections.ArrayList
 
 
 @Singleton
 class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     val post: Post? = null
-    val CommentList: MutableList<Comment> = mutableListOf()
-    val CommentL = CommentLive()
-    var SessionUser: User? = null
+    val commentList: MutableList<Comment> = mutableListOf()
+    val commentL = CommentLive()
+    var sessionUser: User? = null
     var listClassesco: Flow<Post> = flow{ }
     var listClassescopast: Flow<MutableList<Post>> = flow{ }
-    //var SessionUser: User? = null
     var listClasses: PostLiveData = PostLiveData()
     var classList: MutableLiveData<MutableList<CRN>> = MutableLiveData()
     var userSUB: MutableLiveData<MutableList<String>> = MutableLiveData()
@@ -38,8 +33,6 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     var comments : CommentLive = CommentLive()
     var newProfileComments: Comment? = null
     var finallist: MutableList<Post> = mutableListOf()
-    var otherEmail : String? = null
-
 
 
     private var getCommentsJob: Job? = null
@@ -54,6 +47,9 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     fun getComments(ClassKey: String, subject: String, callback: FirebaseData.FirebaseCallbackCommentFlow){
         Firebase.listenComments(ClassKey, subject, callback)
     }
+
+    fun noCommentsCheckForCommPosts(subject: String, Key: String, callback: PostRepository.FirebaseCallbackNoComments)
+            = Firebase.noCommentsCheckerForCommPosts(subject, Key,callback)
 
     fun saveNewImgPosttoUser(title : String, text:String, CRN: String, uri: Uri, imagePost : Boolean)
     = Firebase.saveNewImgPosttoUser(title,text,CRN,uri,imagePost)
@@ -118,11 +114,11 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
             }
 
             override fun onSuccess(data: DataSnapshot) {
-                var postdetail: Iterable<DataSnapshot> = data.child("Posts").children
-                var savedPostsList: MutableList<Post> = mutableListOf()
+                val postdetail: Iterable<DataSnapshot> = data.child("Posts").children
+                val savedPostsList: MutableList<Post> = mutableListOf()
               // var listCor : Flow<Post> = flow {
                     for (n in postdetail) {
-                        var newPost = Post()
+                        val newPost = Post()
                         newPost.let {
 
                             //Log.d("ACCESSING", newPost?.text)
@@ -147,20 +143,31 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                         }
                     }
               //  }
-                var listCor : Flow<Post> = savedPostsList.asFlow()
+                val listCor : Flow<Post> = savedPostsList.asFlow()
                 callback.onFlow(listCor)
-              /*  var scope = CoroutineScope(Dispatchers.IO)
+                val scope = CoroutineScope(Dispatchers.IO)
             scope.launch {
                 listCor.collect {
                     Log.d("soupcollect", "post is $it")
                 }
-            var check = listCor.toList()
+            val check = listCor.toList()
             Log.d("souprepo", "start here")
             for(item in check){
                 Log.d("souprepo", "post is $item")
             }
             Log.d("souprepo", "end here")
-            }*/
+            }
+                //when i convert listCor to list from here it returns only last post
+                /*
+                    var check = listCor.toList()
+                    Log.d("soupfinal","start here")
+                    for(item in check){
+                        Log.d("souplist","post is $item")
+                    }
+                    Log.d("soupfinal","end here")
+                }*/
+                //i can collect in realtime fine here, but when i add each item to arraylist of posts on collect
+                //and then loop inside the arraylist it returns only last post.
             }
         })
     }
@@ -309,7 +316,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun fetchBio(UserID: String,callbackItem: FirebaseCallbackItem) = Firebase.fetchBio(UserID,callbackItem)
 
-    //fun fetchCurrentBio() = Firebase.fetchCurrentBio()
+    fun fetchUsername(UserID: String,callbackItem: FirebaseCallbackItem) = Firebase.fetchUsername(UserID,callbackItem)
 
     fun noPostsChecker(UserID: String, callbackBool: FirebaseCallbackBool) = Firebase.noPostsChecker(UserID, callbackBool)
 
@@ -341,6 +348,10 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         fun onStart()
         fun onFailure()
         fun onSuccess(data: DataSnapshot) : Boolean
+    }
+
+    interface FirebaseCallbackNoComments {
+        fun onEmpty(nocomlist: Boolean)
     }
 
     interface FirebaseCallbackComment {

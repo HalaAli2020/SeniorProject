@@ -42,8 +42,6 @@ import javax.inject.Inject
 class ProfileCommentFragment : Fragment() {
 
     private lateinit var adaptercomments: ProfileCommentsAdapter
-    private lateinit var adapterposts: CustomAdapter
-    private lateinit var linearLayoutManager: LinearLayoutManager
 
     var swipeBackground: ColorDrawable = ColorDrawable(Color.parseColor("#FF0000"))
     private lateinit var deleteIcon: Drawable
@@ -284,10 +282,6 @@ class ProfileCommentFragment : Fragment() {
             fragment.arguments = bundle
             return fragment
         }
-    }
-
-    fun clear(ProfileComments : CommentLive){
-        ProfileComments.value = null
     }
 
 }

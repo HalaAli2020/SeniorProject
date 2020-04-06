@@ -28,6 +28,7 @@ import javax.inject.Inject
 
 
 private const val TAG = "profileTAG"
+
 class UserProfileActivity : AppCompatActivity() {
     private lateinit var adapter: CustomAdapter
 
@@ -44,29 +45,25 @@ class UserProfileActivity : AppCompatActivity() {
         val actionbar = supportActionBar
         actionbar!!.title = "Profile"
 
-        //the first visible fragment will display profile posts
-        replaceFragment(ProfilePostFragment())
-
         //creating the dagger application component
         DaggerAppComponent.create().inject(this)
         //initializing viewmodel factory
         val factory = InjectorUtils.provideProfileViewModelFactory()
         //setting the profileViewmodel as the viewmodel for this activity
-        myViewModel = ViewModelProviders.of(this,factory).get(ProfileViewModel::class.java)
+        myViewModel = ViewModelProviders.of(this, factory).get(ProfileViewModel::class.java)
 
 
-         //getting the Userid and author from the post the user selected to get to this activity
-        val test : String = intent.getStringExtra("UserID") ?: "null"
-        val author : String =  intent.getStringExtra("Author") ?: "null"
+        //getting the Userid and author from the post the user selected to get to this activity
+        val test: String = intent.getStringExtra("UserID") ?: "null"
+        val author: String = intent.getStringExtra("Author") ?: "null"
         val iD = test
 
         //if test is null we can assume that the user's own profile is being opened
-        if (test == "null" || test == FirebaseAuth.getInstance().currentUser?.uid){
+        if (test == "null" || test == FirebaseAuth.getInstance().currentUser?.uid) {
             val nav: TextView = findViewById(com.example.seniorproject.R.id.NavToEdit)
-            Log.d(TAG,"user profile opened")
+            Log.d(TAG, "user profile opened")
             nav.visibility = View.VISIBLE
-        }
-        else {
+        } else {
             val nav: TextView = findViewById(com.example.seniorproject.R.id.NavToEdit)
             nav.visibility = View.INVISIBLE
         }
@@ -77,29 +74,34 @@ class UserProfileActivity : AppCompatActivity() {
         replaceFragment(profilepostfrag)
 
         // if the author is null then the email must be taken from the database
-        if (author != "null")  {
-            myViewModel.fetchEmail(test,object : EmailCallback{
+        if (author != "null") {
+            myViewModel.fetchEmail(test, object : EmailCallback {
                 override fun getEmail(string: String) {
                     in_profile_username.text = author
                     in_profile_email.text = string
                 }
             })
             //same for the bio
-            myViewModel.fetchBio(test,object : EmailCallback{
+            myViewModel.fetchBio(test, object : EmailCallback {
                 override fun getEmail(string: String) {
                     in_profile_bio.text = string
                 }
             })
 
-        }
-        else {
+        } else {
             //fetch the current users bio
-            myViewModel.fetchBio(FirebaseAuth.getInstance().currentUser?.uid ?: "no bio",object : EmailCallback{
-                override fun getEmail(string: String) {
-                    in_profile_bio.text = string
-                }
-            })
-            in_profile_username.text = myViewModel.user?.displayName
+            myViewModel.fetchBio(FirebaseAuth.getInstance().currentUser?.uid ?: "no bio",
+                object : EmailCallback {
+                    override fun getEmail(string: String) {
+                        in_profile_bio.text = string
+                    }
+                })
+            myViewModel.fetchUsername(FirebaseAuth.getInstance().currentUser?.uid ?: "no username",
+                object : EmailCallback {
+                    override fun getEmail(string: String) {
+                        in_profile_username.text = string
+                    }
+                })
             in_profile_email.text = myViewModel.user?.email
         }
 
@@ -126,27 +128,32 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
 
-
 //setting the edit button to navigated to the EditProfileActivity
         NavToEdit.setOnClickListener {
-               navToEdit()
-            }
-
-
-        val image : ImageView = findViewById(com.example.seniorproject.R.id.in_profile_image)
-        if(author == "null"){
-            Glide.with(image.context) //1
-                .load(FirebaseAuth.getInstance().currentUser?.photoUrl)
-                .placeholder(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
-                .error(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .circleCrop().fitCenter()
-                .into(image)
+            navToEdit()
         }
-        else{
+
+
+        val image: ImageView = findViewById(com.example.seniorproject.R.id.in_profile_image)
+        if (author == "null") {
+            val id = FirebaseAuth.getInstance().currentUser?.uid ?: test
+            myViewModel.readPhotoValue(id, object : EmailCallback {
+                override fun getEmail(string: String) {
+                    Log.d("Soup", "file name is $string")
+                    Glide.with(this@UserProfileActivity) //1
+                        .load(Uri.parse(string))
+                        .placeholder(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
+                        .error(com.example.seniorproject.R.drawable.ic_account_circle_blue_24dp)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .circleCrop().fitCenter()
+                        .into(image)
+
+                }
+            })
+        } else {
             //getting the profile image for the another user
-            Log.d("Soup", "$test")
-            myViewModel.readPhotoValue(test, object: EmailCallback{
+            Log.d("Soup", test)
+            myViewModel.readPhotoValue(test, object : EmailCallback {
                 override fun getEmail(string: String) {
                     Log.d("Soup", "file name is $string")
                     Glide.with(this@UserProfileActivity) //1
@@ -177,7 +184,7 @@ class UserProfileActivity : AppCompatActivity() {
         }
     }
 
-//setting up the back button to navigate to the previous screen
+    //setting up the back button to navigate to the previous screen
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         val intent = Intent(this, MainForum::class.java)

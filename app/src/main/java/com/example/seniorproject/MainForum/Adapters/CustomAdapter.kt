@@ -68,31 +68,37 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
             return 0
     }
 
-
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val post: Post = savedPosts.value!![position]
         if (holder is PostImageViewHolders) {
             val post: Post = savedPosts.value!![position]
             val userID = FirebaseAuth.getInstance().uid
 
-            val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
-            ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
-                ValueEventListener {
-                override fun onDataChange(p0: DataSnapshot) {
-                    if (p0.exists()) {
-                        for (block in p0.children) {
-                            if (block.value == post.userID) {
-                                holder.itemView.post_title.text = "[blocked]"
+            holder.itemView.post_title.text = post.title
+            holder.itemView.username.text = post.author
+            holder.itemView.post_timestamp.text = post.Ptime
+
+            if (post.uri != null) {
+                Glide.with(mContext).load(post.uri).placeholder(R.color.white)
+                    .into(holder.itemView.post_image)
+                holder.itemView.post_title.text = post.title
+                val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
+                ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
+                    ValueEventListener {
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if (p0.exists()) {
+                            for (block in p0.children) {
+                                if (block.value == post.userID) {
+                                    holder.itemView.post_title.text = "[blocked]"
+                                }
                             }
                         }
                     }
-                }
 
-                override fun onCancelled(p0: DatabaseError) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-            })
+                    override fun onCancelled(p0: DatabaseError) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+                })
             holder.itemView.post_title.text = post.title
             holder.itemView.username.text = post.author
             holder.itemView.post_timestamp.text = post.Ptime
@@ -131,13 +137,30 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
 
             }
         } else {
+            val userID = FirebaseAuth.getInstance().uid
             holder.itemView.post_title.text = post.title
+            val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
+            ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent( object :
+                ValueEventListener {
+                override fun onDataChange(p0: DataSnapshot) {
+                    if (p0.exists()) {
+                        for (block in p0.children) {
+                            if (block.value == post.userID) {
+                                holder.itemView.post_title.text = "[blocked]"
+                            }
+                        }
+                    }
+                }
+
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+            })
             holder.itemView.username.text = post.author
             holder.itemView.post_timestamp.text = post.Ptime
 
             if (type == 0) {
                 holder.itemView.username.text = post.subject
-
                 holder.itemView.username.setOnClickListener {
                     val intent = Intent(mContext, CommunityPosts::class.java)
                     intent.putExtra("ClassName", post.subject)
@@ -195,7 +218,6 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
 
         return postkey!!
     }
-
 
     fun getCrn(holder: RecyclerView.ViewHolder): String {
         val post: Post = savedPosts.value!![holder.adapterPosition]

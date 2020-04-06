@@ -19,8 +19,8 @@ class ChatLogAdapter(
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val mContext: Context = context
-    private val TO_CHAT: Int = 0
-    private val FROM_CHAT: Int = 1
+    private val toChat: Int = 0
+    private val fromChat: Int = 1
     private val uid = FirebaseAuth.getInstance().uid
 
     companion object {
@@ -30,13 +30,13 @@ class ChatLogAdapter(
 
     override fun getItemViewType(position: Int): Int {
         if (messageList[position].fromID == uid) {
-            return TO_CHAT
+            return toChat
         }
-        return FROM_CHAT
+        return fromChat
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        if (viewType == TO_CHAT) {
+        if (viewType == toChat) {
             val layoutInflater = LayoutInflater.from(parent.context)
             val cellForRow = layoutInflater.inflate(R.layout.m_rv_chat_to_row, parent, false)
             return ToChatLogHolder(cellForRow)

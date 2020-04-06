@@ -21,7 +21,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolders {
         val layoutInflater = LayoutInflater.from(parent.context)
         val cellForRow = layoutInflater.inflate(R.layout.rv_post_comment, parent, false)
-        getItemCount()
+        itemCount
         return CustomViewHolders(cellForRow)
     }
 
@@ -33,14 +33,13 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
     }
 
     override fun onBindViewHolder(holder: CustomViewHolders, position: Int) {
-        if (ProfileComments.value == null || getItemCount() == 0) {
-            holder.itemView.comment_text.text = "No Comments yet"
-            //this is not showing up
+        if (ProfileComments.value == null || itemCount == 0) {
+            holder.itemView.comment_text.text = "No Comments"
         } else {
             val comment: Comment = ProfileComments.value!![position]
             holder.itemView.comment_text.text = comment.text
             holder.itemView.authcom.text = comment.crn
-            var size: Float = 12F
+            val size: Float = 12F
             holder.itemView.authcom.textSize = size
             holder.itemView.comment_timestamp.text = comment.Ptime
             //holder.itemView.username.text = post.author
@@ -51,11 +50,11 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                 mContext.startActivity(intent)
             }
 
-            if (comment.author != null || comment.text != "no Comments") {
+            if (comment.author != null || comment.text != "No Comments") {
                 holder.itemView.setOnClickListener {
                     val intent = Intent(mContext, ClickedPost::class.java)
-                    var crn = comment.crn
-                    var postkey = comment.Postkey
+                    val crn = comment.crn
+                    val postkey = comment.Postkey
                     //var callback: Callback? = null
                     Log.d("Commetn", crn)
                     Log.d("postkey", postkey)
@@ -76,12 +75,9 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                             }
                     })
 
-
-
-
                 }
             } else {
-                holder.itemView.comment_text.text = "no Comments"
+                holder.itemView.comment_text.text = "No Comments"
             }
 
         }
