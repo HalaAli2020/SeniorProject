@@ -316,7 +316,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun fetchBio(UserID: String,callbackItem: FirebaseCallbackItem) = Firebase.fetchBio(UserID,callbackItem)
 
-    //fun fetchCurrentBio() = Firebase.fetchCurrentBio()
+    fun fetchUsername(UserID: String,callbackItem: FirebaseCallbackItem) = Firebase.fetchUsername(UserID,callbackItem)
 
     fun noPostsChecker(UserID: String, callbackBool: FirebaseCallbackBool) = Firebase.noPostsChecker(UserID, callbackBool)
 

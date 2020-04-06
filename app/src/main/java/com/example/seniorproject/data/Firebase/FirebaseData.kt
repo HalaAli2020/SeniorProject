@@ -22,12 +22,10 @@ import kotlin.collections.ArrayList
 import com.example.seniorproject.viewModels.SearchViewModel
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 
@@ -128,7 +126,17 @@ class FirebaseData @Inject constructor() {
         })
     }
 
-//gets the current users bio, unsure if we need this function
+    fun fetchUsername(UserID: String, callbackbio: PostRepository.FirebaseCallbackItem){
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$UserID")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {}
+            override fun onDataChange(p0: DataSnapshot) {
+                callbackbio.onMessage(p0)
+            }
+        })
+    }
+
+//gets the current users bio
     fun fetchCurrentBio(): String {
         val userID = firebaseAuth.uid ?: "null"
         val ref = FirebaseDatabase.getInstance().getReference("/users/$userID")
@@ -156,53 +164,42 @@ class FirebaseData @Inject constructor() {
 
 
 //saves new username for a user while changing the username for every post and comment that user made
-    fun saveNewUsername(username: String) {
+ fun saveNewUsername(username: String) {
         val userID = firebaseAuth.uid ?: "null"
 
-        FirebaseDatabase.getInstance().getReference("/users/$userID")
-            .child("/Username").setValue(username)
+    //sets username in referenced path, this updated the user object
+    FirebaseDatabase.getInstance().getReference("/users/$userID")
+        .child("/Username").setValue(username)
 
-
-       FirebaseDatabase.getInstance().getReference("/users/$userID/Posts")
-           .child("/Username").setValue(username)
-
-        var x = 0
-        //change username in firebase path /users/userID/posts
-        while (x < profilePosts.value!!.size){
-            val post: Post = profilePosts.value!![x]
-            val pkey: String = post.key.toString()
-            if (pkey != "null") {
-                Log.d("PTAG", "UNDER HERE")
-                Log.d("PTAG", "the size is :  ${profilePosts.value!!.size}")
-                Log.d("PTAG", "Pkey is:  $pkey")
-                FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$pkey")
-                    .child("/author").setValue(username)
+    //changes username in firebase auth user profile now it can be accessed by firebaseAuth.currentUser.Displayname
+    val user = currentUser()
+    val profileUpdates =
+        UserProfileChangeRequest.Builder().setDisplayName(username).build()
+    user?.updateProfile(profileUpdates)
+        ?.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d(
+                    TAG, "profile updated, emitter complete?:  ${currentUser()?.displayName} ."
+                )
+            } else {
+                Log.d(TAG, "in else in fetch current user")
             }
-            x++
         }
 
-    //changes username in firebase user profile
-        val user = currentUser()
-        val profileUpdates =
-            UserProfileChangeRequest.Builder().setDisplayName(username).build()
-        user?.updateProfile(profileUpdates)
-            ?.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d(
-                        TAG, "profile updated, emitter complete?:  ${currentUser()?.displayName} ."
-                    )
-                } else {
-                    Log.d(TAG, "in else in fetch current user")
-                }
-            }
+        changeCommunityPostsUsername(userID,username)
+        changeCommentUsernameInProfile(userID,username)
+        changePostUsernameInProfile(userID,username)
+    }
 
-
-        getclassnamesforusername()
-        sendClassnameForUsername()
-        x = 0
-    //change username in all class lists
-        while (x < sendClassnameForUsername().size) {
-            val classn = sendClassnameForUsername()[x]
+    /*
+    changes username for all posts in referenced path of the database
+     */
+   private fun changeCommunityPostsUsername(userID: String, username: String){
+        val classnameList = sendClassnameForUsername()
+        var x = 0
+        //change username in all class lists
+        while (x < classnameList.size) {
+            val classn = classnameList[x]
             val ref = FirebaseDatabase.getInstance().getReference("/Subjects/${classn}/Posts")
             ref.orderByKey().addChildEventListener(object : ChildEventListener {
                 override fun onCancelled(p0: DatabaseError) {
@@ -214,13 +211,7 @@ class FirebaseData @Inject constructor() {
                 }
 
                 override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-                    Log.d(PTAG, p0.key.toString())
-                    val key = p0.key.toString()
-                    val newref = FirebaseDatabase.getInstance()
-                        .getReference("/Subjects/${classn}/Posts/${key}").child("/author")
-                    if (userID == p0.child("UserID").value.toString()) {
-                        newref.setValue(username)
-                    }
+                    Log.d(TAG, "on child changed")
                 }
 
                 override fun onChildAdded(p0: DataSnapshot, p1: String?) {
@@ -230,8 +221,9 @@ class FirebaseData @Inject constructor() {
                         .getReference("/Subjects/${classn}/Posts/${key}").child("/author")
                     if (userID == p0.child("UserID").value.toString()) {
                         newref.setValue(username)
-                        changeCommunityCommentUsername(username, classn, key)
                     }
+                    changeCommunityCommentUsername(username, classn, key)
+                    //sets new comments for appropriate username comments of every community post
 
                 }
 
@@ -242,12 +234,74 @@ class FirebaseData @Inject constructor() {
             })
             x++
         }
-
-        changeuserpostname(username)
-        changeusercommetname(username)
     }
 
+    /*
+    takes current userID and username to change username in referenced path for the profile screen
+     */
+    private fun changePostUsernameInProfile(userID : String,username:String)
+    {
+        //changed users username in all user posts in referenced path
+        val pRef = FirebaseDatabase.getInstance().getReference("/users/$userID/Posts")
+        pRef.addChildEventListener(object : ChildEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
 
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+                Log.d(TAG, "in on child changed")
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                for (x in p0.children) {
+                    val key = p0.key.toString()
+                    FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$key").child("/Username").setValue(username)
+                    FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$key").child("/author").setValue(username)
+                }
+
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+                Log.d(TAG, "on child removed changed")
+            }
+
+        })
+    }
+    /*
+    takes userID and username as parameters to query comments referenced path
+    and change the user's username
+     */
+    private fun changeCommentUsernameInProfile(userID : String, username: String){
+        val cRef = FirebaseDatabase.getInstance().getReference("/users/$userID/Comments")
+        cRef.addChildEventListener(object : ChildEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+                Log.d(TAG, "on child changed")
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                for (x in p0.children){
+                    val ckey = p0.key.toString()
+                    FirebaseDatabase.getInstance().getReference("/users/$userID/Comments/$ckey").child("/author").setValue(username)
+                }
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+                Log.d(TAG, "on child removed changed")
+            }
+
+        })
+    }
     /*
       NEEDS COMMENT
      */
@@ -333,6 +387,7 @@ class FirebaseData @Inject constructor() {
         changeclassCPname(plist, name)
         changeCname(plist, name)
 
+
     }
 
 
@@ -358,7 +413,7 @@ class FirebaseData @Inject constructor() {
         for (x in l.iterator())
         {
             val ref = FirebaseDatabase.getInstance().getReference("users/$uid/${x.userComkey}")
-            ref.child("author").setValue(name)
+            ref.child("/author").setValue(name)
         }
     }
 
@@ -381,14 +436,14 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-                Log.d(PTAG, p0.key.toString()) // the comment key
+                /*Log.d(PTAG, p0.key.toString()) // the comment key
                 val key = p0.key.toString()
                 val newref = FirebaseDatabase.getInstance()
                     .getReference("/Subjects/${classname}/Posts/${pkey}/Comments/${key}")
                     .child("/author")
                 if (userID == p0.child("PosterID").value.toString()) {
                     newref.setValue(username)
-                }
+                }*/
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
@@ -426,17 +481,13 @@ save new username function so they can be iterated through */
             }
 
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-                Log.d(PTAG, p0.key.toString())
-                val classname = p0.key.toString()
-                cList.add(classname)
-                //val checker = cList.size
+                Log.d(TAG, "on child changed")
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 Log.d(PTAG, p0.key.toString())
                 val classname = p0.key.toString()
                 cList.add(classname)
-                //val checker = cList.size
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {
@@ -452,6 +503,7 @@ save new username function so they can be iterated through */
         return cList
     }
 
+    /* gets the current users username */
     fun fetchCurrentUserName() {
         val uid = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
@@ -538,7 +590,7 @@ user creation, the interface that handles toast messages and redirect can be fou
     }
 
     /*
-      NEEDS COMMENT
+      gets profile image url in real time
      */
     fun readPhotoValue(useridm: String, callback: EmailCallback) {
         val userref = FirebaseDatabase.getInstance().getReference("users/$useridm")
@@ -704,9 +756,8 @@ Checks if a user has made any posts, a callback is implemented in the ProfileVie
                     noPostsCheck = true
                 }
                 else {
-                    noPostsCheck = false
                     callbackbool.onSuccess(p0)
-
+                    noPostsCheck = false
                 }
             }
         })
@@ -870,7 +921,7 @@ NEEDS COMMENT
     }
 
     /*
-    NEEDS COMMENT
+    Saves user comment to the referenced paths
      */
     fun saveNewCommentC(
         text: String, postID: String, crn: String
@@ -961,7 +1012,6 @@ NEEDS COMMENT
     {
         val refkeyuser = FirebaseDatabase.getInstance().getReference("/users/$userID")
 
-        // val refkeycominpost = FirebaseDatabase.getInstance().getReference("/users/$userID/Posts/$userPostKey")
 
         val query: Query = refkeyuser.child("Comments").orderByChild("ProfileComKey").equalTo(comKey)
 
@@ -1252,7 +1302,9 @@ NEEDS COMMENT
         })
     }
 
-    //
+    /*
+    saves image post to user
+     */
     fun saveNewImgPosttoUser(title: String, text: String, CRN: String, uri: Uri, imagePost: Boolean) {
 
         val filename = UUID.randomUUID().toString()
@@ -1260,6 +1312,7 @@ NEEDS COMMENT
         ref.putFile(uri).addOnSuccessListener {
             saveImageurl = "test to see HELLO"
             ref.downloadUrl.addOnSuccessListener {
+                //success listener checks if photo was successfully added to the firebase storage databse
                 val urii = it
                 saveImageurl = urii.toString()
                 val post = Post(title, text, CRN,"")
@@ -1268,6 +1321,7 @@ NEEDS COMMENT
                 post.userID = userID
                 post.author = author
                 post.imagePost = imagePost
+                //saving image to realtime database in their referenced paths
                 val userKey =
                     FirebaseDatabase.getInstance().getReference("/users/$userID").child("Posts")
                         .push().key
@@ -1289,7 +1343,7 @@ NEEDS COMMENT
 
 
     /*
-    NEEDS COMMENT
+    Saves text post to user in the referenced paths
      */
     fun saveNewPosttoUser(text: String, title:String, CRN: String) {
         val userID = firebaseAuth.uid
@@ -1369,7 +1423,7 @@ NEEDS COMMENT
     }
 
     /*
-    NEEDS COMMENT
+    gets a list of user subscriptions
      */
     private fun sendUserSUB(call :PostRepository.FirebaseCallbackString) {
         listenUserSub(call)
@@ -1418,8 +1472,8 @@ NEEDS COMMENT
         })
     }
 
-    /*NEEDS COMMENT
-
+    /*
+    removes a class subscription from a user, data changes are made in the referenced path
      */
     fun removeClassSub(crn: String) {
         val uid = FirebaseAuth.getInstance().uid
@@ -1474,9 +1528,9 @@ NEEDS COMMENT
                     val user = currentUser()
 
                     //save image to database
-                    val uid = FirebaseAuth.getInstance().uid
-                    val reference = FirebaseDatabase.getInstance().getReference("users/$uid")
-                    reference.child("/profileImageUrl").setValue(saveImageurl)
+                        val uid = FirebaseAuth.getInstance().uid
+                        val reference = FirebaseDatabase.getInstance().getReference("users/$uid")
+                        reference.child("/profileImageUrl").setValue(saveImageurl)
 
                     //firebase profile updaye
                     val profileUpdates = UserProfileChangeRequest.Builder().setPhotoUri(it).build()

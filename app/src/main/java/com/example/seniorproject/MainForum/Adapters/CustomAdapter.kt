@@ -206,7 +206,6 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
         return postkey!!
     }
 
-
     fun getCrn(holder: RecyclerView.ViewHolder): String {
         val post: Post = savedPosts.value!![holder.adapterPosition]
         val postcrn: String?= post.subject
