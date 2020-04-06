@@ -1846,7 +1846,7 @@ Checks if a user has made any comments, a callback is implemented in the Profile
     }
 
 //sends message to another user
-    fun sendMessage(message: String?, toID: String?, username: String?, profileImageUrl: String?){
+    fun sendMessage(message: String?, toID: String?, username: String?){
 
         val fromID = FirebaseAuth.getInstance().uid
 
@@ -1875,7 +1875,6 @@ Checks if a user has made any comments, a callback is implemented in the Profile
             fromID,
             toID,
             username,
-            Uri.EMPTY,
             1-(System.currentTimeMillis() / 1000)
         )
 
@@ -1885,7 +1884,6 @@ Checks if a user has made any comments, a callback is implemented in the Profile
             fromID,
             toID,
             FirebaseAuth.getInstance().currentUser?.displayName,
-            Uri.EMPTY,
             1-(System.currentTimeMillis() / 1000)
         )
 

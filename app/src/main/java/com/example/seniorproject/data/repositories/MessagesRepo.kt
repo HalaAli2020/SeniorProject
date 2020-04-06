@@ -20,8 +20,8 @@ class MessagesRepo @Inject constructor(private val Firebase: FirebaseData) {
 
     fun getUsers() = Firebase.getUsers()
 
-    fun sendMessage(chatMessage: String?, toID: String?, username: String?, profileURI: String?){
-        Firebase.sendMessage(chatMessage, toID, username, profileURI)
+    fun sendMessage(chatMessage: String?, toID: String?, username: String?){
+        Firebase.sendMessage(chatMessage, toID, username)
     }
 
     fun getMessages(toID: String?) = Firebase.getMessages(toID)

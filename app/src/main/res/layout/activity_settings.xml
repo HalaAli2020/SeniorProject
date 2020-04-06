@@ -31,8 +31,7 @@
             android:id="@+id/themeDark"
             style="@style/PrimaryText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="onRadioButtonClicked"
+
             android:text="Dark Theme" />
 
         <RadioButton
@@ -40,7 +39,6 @@
             style="@style/PrimaryText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="onRadioButtonClicked"
             android:text="Light Theme" />
 
         <RadioButton
@@ -48,7 +46,6 @@
             style="@style/PrimaryText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="onRadioButtonClicked"
             android:text="System Theme" />
 
 

@@ -1,6 +1,9 @@
 package com.example.seniorproject.MainForum
 
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -9,49 +12,60 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.example.seniorproject.R
 import kotlinx.android.synthetic.main.activity_settings.*
 
+const val PREFS_NAME = "prefs_theme_file"
+const val KEY_THEME = "prefs.app.theme"
+const val THEME_LIGHT = 0
+const val THEME_DARK = 1
+const val THEME_SYSTEM = 2
+
+
 class Settings : AppCompatActivity() {
 
+    private val sharedPrefs by lazy { getSharedPreferences(PREFS_NAME, MODE_PRIVATE) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
-
-
-
-
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
+        OnRadioButtonClick()
+        setRadioButton()
 
-
-
-
-        nextActivity.setOnClickListener{
+        nextActivity.setOnClickListener {
             val intent = Intent(this, MainForum::class.java)
             startActivity(intent)
         }
     }
 
-    fun onRadioButtonClicked(view: View) {
-        if (view is RadioButton) {
-            // Is the button now checked?
-            val checked = view.isChecked
-
-            // Check which radio button was clicked
-            when (view.getId()) {
-                R.id.themeDark ->
-                    if (checked) {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                    }
-                R.id.themeLight ->
-                    if (checked) {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                    }
-                R.id.themeSystem ->
-                    if (checked) {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                    }
+    fun OnRadioButtonClick() {
+        themeGroup.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.themeLight -> setAppTheme(AppCompatDelegate.MODE_NIGHT_NO, THEME_LIGHT)
+                R.id.themeDark -> setAppTheme(AppCompatDelegate.MODE_NIGHT_YES, THEME_DARK)
+                R.id.themeSystem -> setAppTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM, THEME_SYSTEM
+                )
             }
         }
     }
+
+    private fun setRadioButton() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+            themeSystem.visibility = View.VISIBLE
+        else
+            themeSystem.visibility = View.GONE
+
+        when (getSavedAppTheme()) {
+            THEME_LIGHT -> themeLight.isChecked = true
+            THEME_DARK -> themeDark.isChecked = true
+            THEME_SYSTEM -> themeSystem.isChecked = true
+        }
+    }
+
+    private fun setAppTheme(themeMode: Int, prefsMode: Int) {
+        AppCompatDelegate.setDefaultNightMode(themeMode)
+        saveAppTheme(prefsMode)
+    }
+
+    private fun saveAppTheme(theme: Int) = sharedPrefs.edit().putInt(KEY_THEME, theme).apply()
+
+    private fun getSavedAppTheme() = sharedPrefs.getInt(KEY_THEME, THEME_LIGHT)
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.seniorproject" >
+    package="com.example.seniorproject">
 
     <uses-permission android:name="android.Manifest.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -17,9 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning" >
-        <activity android:name=".MainForum.Settings" >
-        </activity>
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".MainForum.Settings"></activity>
         <activity
             android:name=".MainForum.NewPost.NewPost"
             android:windowSoftInputMode="adjustPan" />
@@ -36,11 +35,10 @@
         <activity android:name=".MainForum.Posts.UpdatePost" />
         <activity android:name=".MainForum.Posts.UpdateComment" />
         <activity android:name=".search.SearchActivity" />
-        <activity android:name=".MainForum.SettingsActivity" />
         <activity
             android:name=".MainForum.MainForum"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="adjustPan" >
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

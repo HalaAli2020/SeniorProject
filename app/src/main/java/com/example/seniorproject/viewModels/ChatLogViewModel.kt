@@ -18,7 +18,7 @@ class ChatLogViewModel @Inject constructor(private val repository: MessagesRepo)
 
     fun sendMessage() {
         if (!chatMessage.isNullOrEmpty()) {
-            repository.sendMessage(chatMessage, toID, username, profileURI)
+            repository.sendMessage(chatMessage, toID, username)
         }
     }
 

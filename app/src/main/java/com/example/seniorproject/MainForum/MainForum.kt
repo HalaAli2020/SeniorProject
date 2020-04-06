@@ -1,10 +1,12 @@
 package com.example.seniorproject.MainForum
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.NetworkInfo
@@ -17,6 +19,7 @@ import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
@@ -65,10 +68,13 @@ class MainForum : AppCompatActivity(),
         }
     }
 
+    private val sharedPrefs by lazy {  getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
+
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: HomeFragmentViewModel
     private lateinit var mDrawerLayout: DrawerLayout
+
 
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -114,8 +120,9 @@ class MainForum : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         loginVerification()
         super.onCreate(savedInstanceState)
+        //FirebaseDatabase.getInstance().setPersistenceEnabled(true)
 
-//        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+        setTheme()
 
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
@@ -124,13 +131,9 @@ class MainForum : AppCompatActivity(),
         bottom_navigation.onNavigationItemSelectedListener = mOnNavigationItemSelectedListener
 
 
-        val isConnected = checkNetworkState(applicationContext)
-
-        if (!isConnected)
-            noInternetAlertDialog()
+        if (!checkNetworkState(applicationContext)) noInternetAlertDialog()
 
 
-        //FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
         setSupportActionBar(findViewById(R.id.toolbar))
         val actionbar: ActionBar? = supportActionBar
         actionbar?.apply {
@@ -138,18 +141,9 @@ class MainForum : AppCompatActivity(),
             setHomeAsUpIndicator(R.drawable.unitlogopropernav)
         }
 
-        Log.d(TAGG, myViewModel.user?.displayName ?: "the displayname in main activity")
-        Log.d(TAG, myViewModel.user?.displayName ?: "the displayname in main activity")
-
-
         mDrawerLayout = findViewById(R.id.drawer_layout)
         val navigationView: NavigationView = findViewById(R.id.nav_view)
-        val sideNavHeaderBinding: SideNavHeaderBinding = DataBindingUtil.inflate(
-            layoutInflater,
-            R.layout.side_nav_header,
-            binding.navView,
-            false
-        )
+        val sideNavHeaderBinding: SideNavHeaderBinding = DataBindingUtil.inflate(layoutInflater, R.layout.side_nav_header, binding.navView, false)
         binding.navView.addHeaderView(sideNavHeaderBinding.root)
         sideNavHeaderBinding.viewmodell = myViewModel
         obse = Observer {
@@ -215,7 +209,6 @@ class MainForum : AppCompatActivity(),
             val intent = Intent(this, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
-            //comment so commit will work
         }
     }
 
@@ -229,9 +222,7 @@ class MainForum : AppCompatActivity(),
         when (item.itemId) {
             android.R.id.home -> {
                 mDrawerLayout.openDrawer(GravityCompat.START)
-                //true
             }
-
         }
         return super.onOptionsItemSelected(item)
     }
@@ -254,25 +245,26 @@ class MainForum : AppCompatActivity(),
     }
 
     private fun noInternetAlertDialog() {
-        Log.d(TAGG, "Not connected")
-
         val dialogBuilder = AlertDialog.Builder(this)
 
-        // set message of alert dialog
         dialogBuilder.setMessage("There is no internet!")
-            // if the dialog is cancelable
             .setCancelable(false)
-            // negative button text and action
             .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, id ->
                 dialog.cancel()
             })
 
-        // create dialog box
         val alert = dialogBuilder.create()
-        // set title for alert dialog box
         alert.setTitle("AlertDialogExample")
-        // show alert dialog
         alert.show()
+    }
+
+
+    private fun setTheme(){
+        when (sharedPrefs.getInt(KEY_THEME, THEME_LIGHT)) {
+            THEME_SYSTEM -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            THEME_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
     }
 
 
