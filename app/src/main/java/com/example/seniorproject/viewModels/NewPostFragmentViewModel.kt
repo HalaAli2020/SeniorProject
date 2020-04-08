@@ -44,8 +44,9 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
     }
     fun savePostToDatabase() {
 
-        if (titlePost.isNullOrEmpty() || textPost.isNullOrEmpty() || classSpinner.isNullOrEmpty()) {
-            postListener?.onFailure("please enter a title and text!")
+        if (titlePost.isNullOrBlank() || textPost.isNullOrBlank() || classSpinner.isNullOrBlank()) {
+            postListener?.onFailure("please enter both a post title, a post body and select a class")
+            bool.value = false
             return
         }
         Log.d("SELECTED VALUE:", classSpinner ?: " ")

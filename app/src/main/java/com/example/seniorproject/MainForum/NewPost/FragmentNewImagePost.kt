@@ -90,9 +90,9 @@ class FragmentNewImagePost : Fragment() {
                 val spinner: Spinner = view!!.spinner3
                 val subject = spinner.selectedItem.toString()
 
-                if (title.isEmpty() || text.isEmpty() || subject.isEmpty())
+                if (title.isNullOrBlank() || text.isNullOrBlank() || subject.isEmpty())
                 {
-                    Toast.makeText(activity?.applicationContext, "Please add a title, post text and select a subject.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity?.applicationContext, "please enter both a post title, a post body and select a class", Toast.LENGTH_SHORT).show()
                 }
                 else {
                     val userID= FirebaseAuth.getInstance().uid

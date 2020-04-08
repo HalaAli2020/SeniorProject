@@ -35,9 +35,16 @@ class FragmentNewPost : Fragment() {
         val view = inflater.inflate(R.layout.fragment_new_post, container, false)
 
         viewModel.bool.observe(this, Observer<Boolean> {
-            Toast.makeText(context, "Your post has been successfully posted!", Toast.LENGTH_LONG).show()
-            val intent = Intent(context, MainForum::class.java)
-            startActivity(intent)
+            if (it == true)
+            {
+                Toast.makeText(context, "Your post has been successfully posted!", Toast.LENGTH_LONG).show()
+                val intent = Intent(context, MainForum::class.java)
+                startActivity(intent)
+            }
+            else
+            {
+                Toast.makeText(context, "please enter both a post title and post body!", Toast.LENGTH_LONG).show()
+            }
         })
 
 

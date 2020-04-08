@@ -1348,37 +1348,44 @@ NEEDS COMMENT
     fun saveNewPosttoUser(text: String, title:String, CRN: String) {
         val userID = firebaseAuth.uid
         val author= firebaseAuth.currentUser?.displayName
-        val post = Post(title, text, CRN,"")
-        post.userID = userID
-        post.author = author
-        val subpath = FirebaseDatabase.getInstance().getReference("/users/$userID")
-         subpath.child("Subscriptions").orderByValue().addListenerForSingleValueEvent( object : ValueEventListener {
-            override fun onDataChange(p0: DataSnapshot) {
-                if(p0.exists()){
-                    for(sub in p0.children){
-                        if(sub.value == CRN){
-                            val userKey = FirebaseDatabase.getInstance().getReference("/users/$userID").child("Posts").push().key
-                            val classKey = FirebaseDatabase.getInstance().getReference("/Subjects/$CRN").child("Posts").push().key
-                            post.key = userKey
-                            post.classkey = classKey
-                            val dataupdates = HashMap<String, Any>()
-                            val postvalues = post.toMap()
-                            dataupdates["/Subjects/$CRN/Posts/$classKey"] = postvalues
-                            dataupdates["/users/$userID/Posts/$userKey"] = postvalues
-                            FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
+            val post = Post(title, text, CRN, "")
+            post.userID = userID
+            post.author = author
+            val subpath = FirebaseDatabase.getInstance().getReference("/users/$userID")
+            subpath.child("Subscriptions").orderByValue()
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if (p0.exists()) {
+                            for (sub in p0.children) {
+                                if (sub.value == CRN) {
+                                    val userKey = FirebaseDatabase.getInstance()
+                                        .getReference("/users/$userID").child("Posts").push().key
+                                    val classKey = FirebaseDatabase.getInstance()
+                                        .getReference("/Subjects/$CRN").child("Posts").push().key
+                                    post.key = userKey
+                                    post.classkey = classKey
+                                    val dataupdates = HashMap<String, Any>()
+                                    val postvalues = post.toMap()
+                                    dataupdates["/Subjects/$CRN/Posts/$classKey"] = postvalues
+                                    dataupdates["/users/$userID/Posts/$userKey"] = postvalues
+                                    FirebaseDatabase.getInstance().reference.updateChildren(
+                                        dataupdates
+                                    )
+                                } else {
+                                    Log.d(
+                                        "Not subscribed",
+                                        "you cannot post to a forum you are not subscribed in."
+                                    )
+                                }
+                            }
                         }
-                        else{
-                            Log.d("Not subscribed","you cannot post to a forum you are not subscribed in.")
-                        }
+
                     }
-                }
 
-            }
-
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-        })
+                    override fun onCancelled(p0: DatabaseError) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+                })
     }
 
     //database query to get the classes that a user is subscribed to
