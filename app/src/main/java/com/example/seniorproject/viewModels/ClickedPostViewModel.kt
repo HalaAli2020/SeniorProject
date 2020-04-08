@@ -1,6 +1,7 @@
 package com.example.seniorproject.viewModels
 
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.seniorproject.Utils.PostListener
@@ -32,9 +33,9 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
     var ctext: String? = null
     var usercrn: String? = null
     var postukey: String? = null
+    var boolcom = MutableLiveData<Boolean>()
 
 
-    //fun getComments() : CommentLive
     init {
 
     }
@@ -69,9 +70,16 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
 
     fun newComment()
     {
-
-        repository.newComment(pKey!!,comment!!, classkey!!, userID!!, crn!!)
+        if (!comment.isNullOrBlank()){
+            repository.newComment(pKey!!,comment!!, classkey!!, userID!!, crn!!)
+            boolcom.value = true
+        }
+        else
+        {
+            boolcom.value = false
+        }
     }
+
     fun checkcomments() : Boolean
     {
         if(commentsList.size != -1)

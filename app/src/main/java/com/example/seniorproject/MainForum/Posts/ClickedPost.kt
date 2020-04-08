@@ -1,15 +1,21 @@
 package com.example.seniorproject.MainForum.Posts
 
+import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -65,6 +71,26 @@ class ClickedPost : AppCompatActivity() {
         myViewModel.title = title
         myViewModel.text = text
         myViewModel.crn = crn
+
+        myViewModel.boolcom.observe(this, Observer<Boolean> {
+            if (it == true)
+            {
+                //create comment toast message
+                Toast.makeText(this, "you have made a comment", Toast.LENGTH_LONG).show()
+                //close keyboard on comment creation
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(findViewById<View>(android.R.id.content).getWindowToken(), 0)
+                //clear comment edit text
+                val ed = findViewById<EditText>(R.id.Comment_textbox)
+                ed.text.clear()
+
+            }
+            else if (it == false )
+            {
+                //create comment failure toast message
+                Toast.makeText(this, "you cannot post a blank comment", Toast.LENGTH_LONG).show()
+            }
+        })
 
 
         //checking for comments and adding a no comments message when there are no comments
@@ -234,4 +260,5 @@ class ClickedPost : AppCompatActivity() {
         binding.clickedViewModel = myViewModel
         binding.lifecycleOwner = this@ClickedPost
     }
+
 }
