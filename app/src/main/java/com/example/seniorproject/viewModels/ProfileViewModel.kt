@@ -3,16 +3,20 @@ package com.example.seniorproject.viewModels
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.seniorproject.Utils.CheckCallback
 import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.Utils.PostListener
-import com.example.seniorproject.Utils.CheckCallback
+import com.example.seniorproject.data.Firebase.FirebaseData
+import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.CommentLive
-
 import com.example.seniorproject.data.models.PostLiveData
 import com.example.seniorproject.data.repositories.PostRepository
 import com.google.firebase.database.DataSnapshot
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 
 
 class ProfileViewModel @Inject constructor(private val repository: PostRepository) : ViewModel(){
@@ -22,6 +26,7 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     private var postKey : String? = null
     val commentListener : PostListener? = null
     var otherEmail : String = "no email available"
+    var currentUsername : String = "no username available"
     var otherBio : String = "no bio available"
     var noPostCheck : Boolean? = null
     var noCommentsCheck : Boolean? = null
@@ -37,10 +42,17 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
         return posts
     }
 
-    fun getUserProfileComments(UserID : String) : CommentLive {
-        comments = repository.getUserProfileComments(UserID)
-        return comments
+    fun getUserProfileComments(UserID : String, callback: ClickedPostViewModel.CommentListFromFlow){
+        repository.getTheUserProfileComments(UserID, object: FirebaseData.FirebaseCallbackCommentFlow{
+            override fun onCallback(flow: Flow<Comment>) {
+                viewModelScope.launch {
+                    var commflow = flow.toList()
+                    callback.onList(commflow)
+                }
+            }
+        })
     }
+
 
     fun deletePost(Classkey: String, crn: String, userID: String)
     {
@@ -102,6 +114,26 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
         })
         return otherEmail
     }
+//used in UserProfileActivity to get the current users username in real time
+    fun fetchUsername(UserID: String, callback : EmailCallback) : String {
+        repository.fetchUsername(UserID, object : PostRepository.FirebaseCallbackItem{
+            override fun onStart() {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onFailure() {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onMessage(data: DataSnapshot): String {
+                val email = data.child("Username").getValue(String::class.java)
+                currentUsername = email ?: "no email in success"
+                callback.getEmail(currentUsername)
+                return currentUsername
+            }
+        })
+        return currentUsername
+    }
 
     fun fetchBio(UserID: String, callback: EmailCallback) : String {
         repository.fetchBio(UserID, object : PostRepository.FirebaseCallbackItem{
@@ -138,7 +170,6 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
         repository.noPostsChecker(UserID, object : PostRepository.FirebaseCallbackBool {
             override fun onStart() { TODO("not implemented") }
             override fun onFailure() { TODO("not implemented") }
-
             override fun onSuccess(data: DataSnapshot) : Boolean {
                 if (!data.child("Posts").exists())
                 {
@@ -147,8 +178,8 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
                 }
                 else
                 {
-                    noPostCheck = false //here
                     callback.check(noPostCheck ?: false)
+                    noPostCheck = false //here
                 }
                 return  noPostCheck ?: false
             }

@@ -17,22 +17,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Adapters.PostAdapter
 import com.example.seniorproject.R
-import com.example.seniorproject.Utils.*
+import com.example.seniorproject.Utils.ButtonClickListener
+import com.example.seniorproject.Utils.MutableListCallback
+import com.example.seniorproject.Utils.ProfileButton
+import com.example.seniorproject.Utils.SwipeHelper
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.viewModels.CommunityPostViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_community_posts.*
 import kotlinx.android.synthetic.main.rv_post.view.*
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
-import java.time.Duration
+import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 class CommunityPosts : AppCompatActivity() {
 
-    //private lateinit var adapter: CustomAdapter
     private lateinit var adapter: PostAdapter
     var mutablepostlist: ArrayList<Post> = arrayListOf()
 
@@ -111,23 +109,6 @@ class CommunityPosts : AppCompatActivity() {
                                         ) { _: DialogInterface?, _: Int ->
                                             myViewModel.blockUser(userkey!!)
                                             classes_post_RV.findViewHolderForAdapterPosition(pos)!!.itemView.post_title.text="[blocked]"
-                                            /*var count: Int = 0
-                                            for( i in 0..classes_post_RV.childCount) {
-                                                if(classes_post_RV.findViewHolderForAdapterPosition(count)!!.itemView.post_title.text =="[blocked]"){
-                                                    classes_post_RV.findViewHolderForAdapterPosition(count)!!.itemView.setOnClickListener {
-                                                        Toast.makeText(this@CommunityPosts, "You have blocked $authkey and cannot see their posts",
-                                                            Toast.LENGTH_SHORT).show()
-
-                                                    }
-                                                }
-                                                //classes_post_RV.findViewHolderForAdapterPosition(count)!!.itemView.post_title.text="[blocked]"
-                                                count++
-                                                if(count== classes_post_RV.childCount){
-                                                    break;
-                                                }
-                                                //classes_post_RV.findViewHolderForAdapterPosition(i)!!.itemView.post_title.text="[blocked]"
-                                                //classes_post_RV.getChildViewHolder(classes_post_RV.getChildAt(i)).itemView.post_title.text="[blocked]"
-                                            }*/
                                             var toast = Toast.makeText(
                                                 this@CommunityPosts,
                                                 "This user has been blocked",

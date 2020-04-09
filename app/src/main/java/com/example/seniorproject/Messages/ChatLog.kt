@@ -31,6 +31,7 @@ class ChatLog : AppCompatActivity() {
 
         val username = intent.getStringExtra("USERNAME")
         val toID = intent.getStringExtra("USER_KEY")
+        //val profileURI = intent.getStringExtra("USER_PROF")
 
         title = username
 
@@ -42,6 +43,7 @@ class ChatLog : AppCompatActivity() {
 
         myViewModel.toID = toID
         myViewModel.username = username ?: "no username"
+        //myViewModel.profileURI = profileURI
 
         recycler_view_chatLog.layoutManager = LinearLayoutManager(context)
 

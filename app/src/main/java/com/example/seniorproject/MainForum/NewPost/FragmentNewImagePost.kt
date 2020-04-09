@@ -19,8 +19,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.Fragments.FragmentList
-import com.example.seniorproject.MainForum.MainForum
 import com.example.seniorproject.R
+import com.example.seniorproject.search.SearchActivity
 import com.example.seniorproject.viewModels.NewPostFragmentViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -99,9 +99,9 @@ class FragmentNewImagePost : Fragment() {
                     subpath.child("Subscriptions").orderByValue()
                         .addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(p0: DataSnapshot) {
+                                var checksub = false
                                 if (p0.exists()) {
                                     for (sub in p0.children) {
-                                        // val refc= comment.getValue(Comment::class.java)
                                         if (sub.value == subject) {
                                             viewModel.saveNewImgPosttoUser(
                                                 title,
@@ -110,20 +110,22 @@ class FragmentNewImagePost : Fragment() {
                                                 selectedPhotoUri!!,
                                                 true
                                             )
-                                            Toast.makeText(activity?.applicationContext, "Image post created", Toast.LENGTH_SHORT).show()
-                                            val intent = Intent(context, MainForum::class.java)
-                                            startActivity(intent)
+                                            checksub = true
                                         }
-                                        else{
-                                            Toast.makeText(activity?.applicationContext, "Subscribe to $subject in order to create a post", Toast.LENGTH_SHORT).show()
-                                            fragmentManager!!.beginTransaction()
-                                                .replace((view!!.parent as ViewGroup).id,
-                                                    FragmentList()
-                                                )
-                                                .addToBackStack(null)
-                                                .commit()
-                                        }
-
+                                    }
+                                    if (checksub == true){
+                                        Toast.makeText(activity?.applicationContext, "Image post created", Toast.LENGTH_SHORT).show()
+                                        val intent = Intent(context, SearchActivity::class.java)
+                                        startActivity(intent)
+                                    }
+                                    else{
+                                        Toast.makeText(activity?.applicationContext, "Subscribe to $subject in order to create a post", Toast.LENGTH_SHORT).show()
+                                        fragmentManager!!.beginTransaction()
+                                            .replace((view!!.parent as ViewGroup).id,
+                                                FragmentList()
+                                            )
+                                            .addToBackStack(null)
+                                            .commit()
                                     }
                                 }
                             }

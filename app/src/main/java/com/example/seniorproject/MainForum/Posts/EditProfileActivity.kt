@@ -17,6 +17,7 @@ import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
+import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.databinding.ActivityEditProfileBinding
 import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -40,7 +41,6 @@ class EditProfileActivity : AppCompatActivity() {
         val actionbar = supportActionBar
         actionbar!!.title = "Edit Profile"
 
-
         //initalization of the viewmodel and dagger app component
         DaggerAppComponent.create().inject(this)
         val factory = InjectorUtils.provideProfileViewModelFactory()
@@ -48,6 +48,15 @@ class EditProfileActivity : AppCompatActivity() {
 
         //initialization of binding variable, binded variables are located in the corresponding XML file
         val binding: ActivityEditProfileBinding = DataBindingUtil.setContentView(this,R.layout.activity_edit_profile)
+
+        //set bio
+        myViewModel.fetchBio(FirebaseAuth.getInstance().currentUser?.uid ?: "no bio",object :
+            EmailCallback {
+            override fun getEmail(string: String) {
+                in_edit_bio.setText(string)
+            }
+        })
+
         binding.profileEditViewModel = myViewModel
         binding.lifecycleOwner = this
 
@@ -76,9 +85,13 @@ class EditProfileActivity : AppCompatActivity() {
         doneButton.setOnClickListener {
 
             val newUsername : EditText = findViewById(R.id.in_profile_username)
-            val newBio : EditText = findViewById(R.id.in_profile_bio)
-            myViewModel.saveNewUsername(newUsername.text.toString())
+            val newBio : EditText = findViewById(R.id.in_edit_bio)
+            if (newUsername.text.toString() != myViewModel.currentUser()?.displayName)
+            {
+                myViewModel.saveNewUsername(newUsername.text.toString())
+            }
             myViewModel.saveUserbio(newBio.text.toString())
+
 
             val intent = Intent(this, UserProfileActivity::class.java)
             val iD = FirebaseAuth.getInstance().currentUser?.uid

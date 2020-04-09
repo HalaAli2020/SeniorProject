@@ -12,10 +12,9 @@ import com.example.seniorproject.R
 import com.example.seniorproject.Utils.Callback
 import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.data.models.Comment
-import com.example.seniorproject.data.models.CommentLive
 import kotlinx.android.synthetic.main.rv_post_comment.view.*
 
-class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive) :
+class ProfileCommAdapter(context: Context, var Comments: List<Comment>) :
     RecyclerView.Adapter<CustomViewHolders>() {
     val mContext: Context = context
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolders {
@@ -26,18 +25,19 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
     }
 
     override fun getItemCount(): Int {
-        if (ProfileComments.value != null)
-            return ProfileComments.value!!.size
-        else
-            return 0
+        var size = 0
+        if (!Comments.isNullOrEmpty()) {
+            return Comments.size
+        }
+
+        return size
     }
 
     override fun onBindViewHolder(holder: CustomViewHolders, position: Int) {
-        if (ProfileComments.value == null || itemCount == 0) {
-            holder.itemView.comment_text.text = "No Comments yet"
-            //this is not showing up
+        if (Comments[position] == null || itemCount == 0) {
+            holder.itemView.comment_text.text = "No Comments"
         } else {
-            val comment: Comment = ProfileComments.value!![position]
+            val comment: Comment = Comments[position]
             holder.itemView.comment_text.text = comment.text
             holder.itemView.authcom.text = comment.crn
             val size: Float = 12F
@@ -51,7 +51,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                 mContext.startActivity(intent)
             }
 
-            if (comment.author != null || comment.text != "no Comments") {
+            if (comment.author != null || comment.text != "No Comments") {
                 holder.itemView.setOnClickListener {
                     val intent = Intent(mContext, ClickedPost::class.java)
                     val crn = comment.crn
@@ -73,15 +73,12 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
                             intent.putExtra("Ptime", value[3])
                             intent.putExtra("uri", value[7])
                             mContext.startActivity(intent)
-                            }
+                        }
                     })
-
-
-
 
                 }
             } else {
-                holder.itemView.comment_text.text = "no Comments"
+                holder.itemView.comment_text.text = "No Comments"
             }
 
         }
@@ -89,7 +86,7 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
 
 
     fun getCommentKey(customViewHolders: CustomViewHolders): String {
-        val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
+        val comment: Comment = Comments[customViewHolders.adapterPosition]
         val commentkey: String? = comment.userComkey
 
 
@@ -97,37 +94,37 @@ class ProfileCommentsAdapter(context: Context, var ProfileComments: CommentLive)
     }
 
     fun getUserKey(customViewHolders: CustomViewHolders): String {
-        val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
+        val comment: Comment = Comments[customViewHolders.adapterPosition]
         val commentkey: String? = comment.PosterID
         return commentkey!!
     }
 
     fun getClassKey(customViewHolders: CustomViewHolders): String {
-        val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
-        val commentkey: String? = comment.classkey
+        val comment: Comment = Comments[customViewHolders.adapterPosition]
+        val commentkey: String? = comment.Classkey
         return commentkey!!
     }
 
     fun getClassProfileKey(customViewHolders: CustomViewHolders): String {
-        val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
+        val comment: Comment = Comments[customViewHolders.adapterPosition]
         val commentkey: String? = comment.profileComKey
         return commentkey!!
     }
 
     fun pkeyUserProfile(customViewHolders: CustomViewHolders): String {
-        val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
+        val comment: Comment = Comments[customViewHolders.adapterPosition]
         val commentkey: String? = comment.Postkey
         return commentkey!!
     }
 
     fun getCrn(customViewHolders: CustomViewHolders): String {
-        val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
+        val comment: Comment = Comments[customViewHolders.adapterPosition]
         val commentkey: String? = comment.crn
         return commentkey!!
     }
 
     fun getText(customViewHolders: CustomViewHolders): String {
-        val comment: Comment = ProfileComments.value!![customViewHolders.adapterPosition]
+        val comment: Comment = Comments[customViewHolders.adapterPosition]
         val commentkey: String? = comment.text
         return commentkey!!
     }
