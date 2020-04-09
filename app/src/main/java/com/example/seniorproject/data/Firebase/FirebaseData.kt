@@ -1,36 +1,29 @@
 package com.example.seniorproject.data.Firebase
 import android.net.Uri
 import android.util.Log
-import com.google.firebase.database.FirebaseDatabase
-import javax.inject.Inject
-import javax.inject.Singleton
 import androidx.lifecycle.MutableLiveData
 import com.example.seniorproject.Utils.Callback
 import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.data.models.*
-import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.database.*
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.storage.FirebaseStorage
-import java.util.*
-import kotlin.collections.HashMap
-import com.example.seniorproject.data.models.User
 import com.example.seniorproject.data.repositories.PostRepository
-import kotlin.collections.ArrayList
 import com.example.seniorproject.viewModels.SearchViewModel
 import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.*
-import kotlinx.coroutines.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-
-
-
-
+import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
+import kotlin.collections.HashMap
 
 
 private const val TAG = "MyLogTag"
@@ -712,37 +705,6 @@ user creation, the interface that handles toast messages and redirect can be fou
         return profilePosts
     }
 
-    /*
-    Database query for getting all the comments a user has made, a callback located in the post repository
-    is used to get the comments in real time.
-     */
-    fun listenForUserProfileComments(uid: String, callbackComment: PostRepository.FirebaseCallbackComment): CommentLive {
-        Log.d(TAG, "getUserProfile comments listener called")
-        //callbackComment.onStart()
-        //is commenting this out why it noComments stopped showinf up?
-        val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Comments")
-        reference.addChildEventListener(object : ChildEventListener {
-            var profileCommentList: MutableList<Comment> = mutableListOf()
-            override fun onCancelled(p0: DatabaseError) {}
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {}
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {}
-            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                callbackComment.onSuccess(p0)
-            }
-            override fun onChildRemoved(p0: DataSnapshot) {}
-        })
-        Log.d("Post function return", "Post function return")
-        val comref = FirebaseDatabase.getInstance().getReference("users/$uid")
-        comref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) { TODO("not implemented") }
-            override fun onDataChange(p0: DataSnapshot) {
-                if (!p0.child("Comments").exists()) {
-                    callbackComment.onSuccess(p0)
-                }
-              } })
-        return comments
-    }
-
 /*
 Checks if a user has made any posts, a callback is implemented in the ProfileViewModel
  */
@@ -787,14 +749,19 @@ Checks if a user has made any comments, a callback is implemented in the Profile
     }
 
     fun noCommentsCheckerForCommPosts(subject: String, Key: String, callback: PostRepository.FirebaseCallbackNoComments){
-        val com = FirebaseDatabase.getInstance().getReference("Subjects/$subject/Posts/$Key")
+        val com = FirebaseDatabase.getInstance().getReference("Subjects/$subject/Posts/$Key/Comments")
         com.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) { TODO("not implemented") }
             override fun onDataChange(p0: DataSnapshot) {
-                if (!p0.child("Comments").exists()) {
+                if (!p0.exists()) {
                     noCommentsCheck = true
                     callback.onEmpty(noCommentsCheck)
                     Log.d("soupfire", "this means no comments in that post!")
+                }
+                else{
+                    noCommentsCheck = false
+                    callback.onFull(noCommentsCheck)
+                    Log.d("soupfire", "this means comments exist in that post!")
                 }
             }
         })
@@ -811,113 +778,6 @@ Checks if a user has made any comments, a callback is implemented in the Profile
             listenForUserProfilePosts(userID, call)
         }
         return profilePosts
-    }
-
-    //checks if the profile being opened belongs to the current user and gets the appropriate comments
-    fun getUserProfileComments(userID: String, call : PostRepository.FirebaseCallbackComment): CommentLive {
-        Log.d(TAG, "getUserProfile comments called")
-        if (userID == "null") {
-            val uid = FirebaseAuth.getInstance().uid ?: "error"
-            listenForUserProfileComments(uid, call)
-        } else {
-            listenForUserProfileComments(userID, call)
-        }
-        return comments
-    }
-
-
-    //Database query for getting all the comments for a post
-    fun listenComments(Key: String, subject: String, callbackComment: FirebaseCallbackCommentFlow)
-    {
-
-        val reference =
-            FirebaseDatabase.getInstance().getReference("Subjects/$subject/Posts/$Key/Comments")
-
-        reference.addChildEventListener(object : ChildEventListener {
-            var savedCommentList: MutableList<Comment> = mutableListOf()
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val newComment = p0.getValue(Comment::class.java)
-                if (newComment != null) {
-                    Log.d("ACCESSING", newComment.text)
-                    if (savedCommentList.isNullOrEmpty()) {
-                        savedCommentList.add(newComment)
-                    }
-                    savedCommentList.add(newComment)
-                    //repository.saveNewPost(newPost)
-                    //adapter.add(PostFrag(newPost.title, newPost.text))
-                }
-                var commentFlow = savedCommentList.asFlow()
-                callbackComment.onCallback(commentFlow)
-                var uiScope = CoroutineScope(Dispatchers.IO)
-                uiScope.launch {
-                    commentFlow.collect{
-                        Log.d("soupcollect", "comm is $it")
-                    }
-                }
-            }
-
-            override fun onChildRemoved(p0: DataSnapshot) {
-            }
-
-
-        })
-    }
-
-/*
-NEEDS COMMENT
- */
-    fun getCommentsCO(Key: String): CommentLive {
-
-        //val uid = FirebaseAuth.getInstance().uid
-        val reference =
-            FirebaseDatabase.getInstance().getReference("Subjects/Posts/$Key/Comments")
-
-        reference.addChildEventListener(object : ChildEventListener {
-            var savedCommentList: MutableList<Comment> = mutableListOf()
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val newComment = p0.getValue(Comment::class.java)
-
-                if (newComment != null) {
-                    Log.d("ACCESSING", newComment.text)
-                    if (savedCommentList.isNullOrEmpty()) {
-                        savedCommentList.add(newComment)
-                    }
-                    savedCommentList.add(newComment)
-                    //repository.saveNewPost(newPost)
-                    //adapter.add(PostFrag(newPost.title, newPost.text))
-                }
-                comments.value = savedCommentList
-
-            }
-
-            override fun onChildRemoved(p0: DataSnapshot) {
-            }
-
-
-        })
-       //callbackComment.onCallback(Comments)
-        return comments
-
     }
 
     /*
@@ -986,7 +846,6 @@ NEEDS COMMENT
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
         })
-
 
         queryuserref.addListenerForSingleValueEvent( object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
@@ -1085,7 +944,7 @@ NEEDS COMMENT
 
 
 
-                            comment.classkey = classKey
+                            comment.Classkey = classKey
                             comment.userComkey = userKey
                             comment.profileComKey = profileKey
                             comment.Postkey = postKey
@@ -1552,6 +1411,49 @@ NEEDS COMMENT
 
     }
 
+    //Database query for getting all the comments for a post
+    private fun listenUserProfileComments(uid: String, call: PostRepository.FirebaseCallbackComment)
+    {
+        val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Comments")
+        call.onStart()
+        reference.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                call.onFailure()
+            }
+            override fun onDataChange(p0: DataSnapshot) {
+                call.onSuccess(p0)
+            }
+
+        })
+    }
+
+    fun getTheUserProfileComments(uid: String, call: PostRepository.FirebaseCallbackComment) {
+        listenUserProfileComments(uid, call)
+    }
+
+    //Database query for getting all the comments for a post
+    private fun listenForClassComments(Key: String, subject: String, call: PostRepository.FirebaseCallbackComment)
+    {
+
+        val reference =
+            FirebaseDatabase.getInstance().getReference("Subjects/$subject/Posts/$Key/Comments")
+
+        call.onStart()
+        reference.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                call.onFailure()
+            }
+            override fun onDataChange(p0: DataSnapshot) {
+                call.onSuccess(p0)
+            }
+
+        })
+    }
+
+    fun getClassComments(Key: String, subject: String, call: PostRepository.FirebaseCallbackComment) {
+        listenForClassComments(Key, subject, call)
+    }
+
     /*
     Query for getting class posts
      */
@@ -1574,8 +1476,6 @@ NEEDS COMMENT
 
 
         })
-
-
     }
 
     //gets class posts for the frontend

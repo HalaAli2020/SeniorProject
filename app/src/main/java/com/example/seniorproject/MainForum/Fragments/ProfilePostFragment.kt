@@ -27,9 +27,9 @@ import com.example.seniorproject.MainForum.Adapters.PostImageViewHolders
 import com.example.seniorproject.MainForum.Posts.UpdatePost
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
+import com.example.seniorproject.Utils.CheckCallback
 import com.example.seniorproject.Utils.ProfileButton
 import com.example.seniorproject.Utils.SwipeHelper
-import com.example.seniorproject.Utils.CheckCallback
 import com.example.seniorproject.databinding.FragmentProfilePostBinding
 import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
