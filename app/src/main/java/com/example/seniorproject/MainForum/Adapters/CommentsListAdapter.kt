@@ -1,7 +1,6 @@
 package com.example.seniorproject.MainForum.Adapters
 
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -13,7 +12,6 @@ import com.bumptech.glide.Glide
 import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.Comment
-import com.example.seniorproject.data.models.CommentLive
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -70,7 +68,6 @@ class CommentsListAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         Log.d("CommentsAdapter:", "" + position)
-
         //need to get the No comments yet to show up
         //  if(Comments[position] == null || getItemCount() == 0){
         //holder.itemView.comment_text.text = "No Comments yet"
@@ -94,6 +91,7 @@ class CommentsListAdapter(
                 intent.putExtra("UserID", asUserID)
                 intent.putExtra("Author", author)
                 mContext.startActivity(intent)
+
             }
 
         }
@@ -136,10 +134,9 @@ class CommentsListAdapter(
         }
     }
 
-
     fun removeItem(holder: RecyclerView.ViewHolder): String {
         val comment: Comment = Comments[holder.adapterPosition]
-        val commentkey: String? = comment.classkey
+        val commentkey: String? = comment.Classkey
 
         return commentkey!!
     }

@@ -6,15 +6,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
 import com.example.seniorproject.Messages.ChatLog
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.User
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.m_rv_new_message.view.*
 
 

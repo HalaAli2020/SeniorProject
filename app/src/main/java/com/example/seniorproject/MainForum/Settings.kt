@@ -1,13 +1,10 @@
 package com.example.seniorproject.MainForum
 
-import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.RadioButton
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.seniorproject.R
 import kotlinx.android.synthetic.main.activity_settings.*
