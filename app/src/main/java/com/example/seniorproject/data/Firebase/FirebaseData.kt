@@ -660,38 +660,7 @@ class FirebaseData @Inject constructor() {
     Database query for getting all the posts a user has made, a callback located in the post repository
     is used to get the posts in real time.
      */
-    fun listenForUserProfilePosts(uid: String, callbackPost: PostRepository.FirebaseCallbackPost): PostLiveData {
-        Log.d(TAG, "getUserProfilePosts listener called")
-        val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Posts")
-         reference.addChildEventListener(object : ChildEventListener {
-            var profilePostsList: MutableList<Post> = mutableListOf()
-            override fun onCancelled(p0: DatabaseError) {}
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {}
-             override fun onChildChanged(p0: DataSnapshot, p1: String?) {}
-             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-               callbackPost.onSuccess(p0)
-            }
-             override fun onChildRemoved(p0: DataSnapshot) {}
-        })
-        Log.d("Post function return", "Post function return")
 
-        val comref = FirebaseDatabase.getInstance().getReference("users/$uid")
-         comref.addListenerForSingleValueEvent(object : ValueEventListener {
-             override fun onCancelled(p0: DatabaseError) {
-                 comref.removeEventListener(this)
-             }
-
-             override fun onDataChange(p0: DataSnapshot) {
-                 if (!p0.child("Posts").exists()) {
-                     callbackPost.onSuccess(p0)
-                     //noPostsCheck = true
-                 }
-                 comref.removeEventListener(this)
-             }
-         })
-
-        return profilePosts
-    }
 
     /*
     Database query for getting all the comments a user has made, a callback located in the post repository
