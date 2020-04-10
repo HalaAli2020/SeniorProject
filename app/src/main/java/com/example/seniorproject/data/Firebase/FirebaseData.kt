@@ -1079,46 +1079,75 @@ Checks if a user has made any comments, a callback is implemented in the Profile
             })
     }
 
+    /*
+    firebase does not allow database paths with the characters listed below
+    this function is called in reportUserPost and repostUserComment to remove unnecessary characters
+     */
+    fun RemoveInvalidCharacters(text : String) : String{
+        var newText = ""
+        for (x in text){
+            if (x != '.' && x != '#' && x != '$' && x != '[' && x != ']')
+            {
+                newText += x.toString()
+            }
+        }
+        return newText
+    }
 
-    //saves reported user id, the accuser id and the report text to a list in the database labelled reports
+    /*saves reported user id, the accuser id and the report text to a list in the database labelled reports
+    an email is also triggered using a firebase function to the address unit.school.team.help@gmail.com with the post text
+     */
     fun reportUserPost(accusedID: String, complaintext: String, crn: String, classkey: String){
 
         val accuserID = firebaseAuth.currentUser?.email
 
-        val report = Reports(accuserID!!, accusedID, complaintext, crn, classkey)
+        val parsedComplainText = RemoveInvalidCharacters(complaintext)
+
+        val report = Reports(accuserID!!, accusedID, parsedComplainText, crn, classkey)
 
         val post = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$classkey").key
         val user = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$accusedID").key
-        val text = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$complaintext").key
+        val text = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$parsedComplainText").key
 
+        //creating a report key to stop reports with same class key from overwritting themselves
+        val repKey = FirebaseDatabase.getInstance().getReference("/Reports/").push().key
         report.classkey= post!!
         report.complaintext= text!!
         report.accusedID = user!!
 
         val dataupdates = HashMap<String, Any>()
         val reportvalues = report.toMap()
-        dataupdates["Reports/$classkey"] = reportvalues
+        dataupdates["Reports/$repKey"] = reportvalues
         FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
     }
 
-    //saves reported user id, the accuser id and the report text to a list in the database labelled reports
+    /*saves reported user id, the accuser id and the report text to a list in the database labelled reports
+    an email is also triggered using a firebase function to the address unit.school.team.help@gmail.com with the comment text
+     */
     fun reportUserComment(accusedID: String, complaintext: String, crn: String, classkey: String, comkey: String){
+
+        val parsedComplainText = RemoveInvalidCharacters(complaintext)
 
         val accuserID = firebaseAuth.currentUser?.email
 
-        val report = Reports(accuserID!!, accusedID, complaintext, crn, classkey)
+        val report = Reports(accuserID!!, accusedID, parsedComplainText, crn, classkey)
+
+        //if that post was already commented, or your commenting two comments on the same post it overwrites it on the databse
 
         val post = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$classkey/Comments/$comkey").key
         val user = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$classkey/Comments/$accusedID").key
-        val text = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$classkey/Comments/$complaintext").key
+        val text = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$classkey/Comments/$parsedComplainText").key
 
+        //creating a report key to stop reports with same class key from overwritting themselves
+        val repKey = FirebaseDatabase.getInstance().getReference("/Reports/").push().key
         report.classkey= post!!
         report.complaintext= text!!
         report.accusedID = user!!
 
         val dataupdates = HashMap<String, Any>()
         val reportvalues = report.toMap()
-        dataupdates["Reports/$classkey"] = reportvalues
+        //reports/classkey is the problem we need to push a new key
+        dataupdates["Reports/$repKey"] = reportvalues
         FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
     }
 
@@ -1158,7 +1187,7 @@ Checks if a user has made any comments, a callback is implemented in the Profile
     }
 
     /*
-    saves image post to user
+    saves image post to user in referenced paths
      */
     fun saveNewImgPosttoUser(title: String, text: String, CRN: String, uri: Uri, imagePost: Boolean) {
 
@@ -1241,6 +1270,10 @@ Checks if a user has made any comments, a callback is implemented in the Profile
                 })
     }
 
+    /*
+    used by the save new post and new image post functionalities to check if the user is subscribed and display
+    the appropriate toast messages.
+     */
    fun checkSubscription(subject : String, callbacksubbool: PostRepository.FirebaseCallbacksubBool) {
        val userID = FirebaseAuth.getInstance().uid
        val subpath = FirebaseDatabase.getInstance().getReference("/users/$userID")
