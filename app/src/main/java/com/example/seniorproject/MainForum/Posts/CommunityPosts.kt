@@ -2,12 +2,12 @@ package com.example.seniorproject.MainForum.Posts
 
 import android.content.DialogInterface
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -17,13 +17,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Adapters.PostAdapter
 import com.example.seniorproject.R
-import com.example.seniorproject.Utils.*
+import com.example.seniorproject.Utils.ButtonClickListener
+import com.example.seniorproject.Utils.MutableListCallback
+import com.example.seniorproject.Utils.ProfileButton
+import com.example.seniorproject.Utils.SwipeHelper
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.viewModels.CommunityPostViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_community_posts.*
 import kotlinx.android.synthetic.main.rv_post.view.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
 
 class CommunityPosts : AppCompatActivity() {

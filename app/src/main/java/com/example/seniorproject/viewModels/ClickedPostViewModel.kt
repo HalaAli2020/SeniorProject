@@ -45,14 +45,14 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
       repository.noCommentsCheckForCommPosts(crn!!, classkey!!, callback)
     }
 
-    fun getComments(callback: CommentListFromFlow)
+    fun getClassComments(callback: CommentListFromFlow)
     {
-       if(pKey.isNullOrEmpty())
-       {
-           postKey = pKey
-           commentListener?.onFailure("Post key not found")
-       }
-        repository.getComments(classkey!!, crn!!, object : FirebaseData.FirebaseCallbackCommentFlow {
+        if(pKey.isNullOrEmpty())
+        {
+            postKey = pKey
+            commentListener?.onFailure("Post key not found")
+        }
+        repository.getClassComments(classkey!!, crn!!, object : FirebaseData.FirebaseCallbackCommentFlow {
             override fun onCallback(flow: Flow<Comment>) {
                 viewModelScope.launch {
                     var commflow = flow.toList()
@@ -62,7 +62,6 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
         })
 
     }
-
 
     fun editComment(){
         repository.editNewComment(comuserid!!, usercomkey!!, comment!!, usercrn!!, postukey!!)

@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.MainForum
+import com.example.seniorproject.MainForum.Fragments.FragmentList
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.CheckCallback
 import com.example.seniorproject.viewModels.NewPostFragmentViewModel

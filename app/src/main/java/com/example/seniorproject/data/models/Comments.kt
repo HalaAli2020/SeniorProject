@@ -11,7 +11,7 @@ class Comment(var text: String, var Ptime : String?, var PosterID : String?, var
 {
     constructor() : this("", null,"", "", "")
 
-    var classkey : String? = null
+    var Classkey : String? = null
     var userComkey : String? = null
     var author : String? = null
     var profileComKey : String? = null
@@ -43,7 +43,7 @@ class Comment(var text: String, var Ptime : String?, var PosterID : String?, var
             "crn" to crn,
             "Postkey" to Postkey,
             "UserPostkey" to userPostKey,
-            "Classkey" to classkey,
+            "Classkey" to Classkey,
             "UserComkey" to userComkey,
             "ProfileComKey" to profileComKey
 

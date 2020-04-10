@@ -22,7 +22,6 @@ import com.example.seniorproject.databinding.ActivityEditProfileBinding
 import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_edit_profile.*
-import kotlinx.android.synthetic.main.activity_user_profile.*
 import javax.inject.Inject
 
 class EditProfileActivity : AppCompatActivity() {
