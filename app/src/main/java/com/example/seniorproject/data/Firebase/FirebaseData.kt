@@ -1350,13 +1350,14 @@ Checks if a user has made any comments, a callback is implemented in the Profile
                 call.onSuccess(p0)
 
 
-                /*val size = p0.hasChildren()
+                val size = p0.hasChildren()
                 Log.d("Size", size.toString())
                 val sublist = p0.children
                 for (x in sublist) {
                     Log.d("usersub", x.getValue(String::class.java)!!)
                     SubList.add(x.getValue(String::class.java)!!)
                 }
+            }
         }
 
        var job = CoroutineScope(Dispatchers.IO).launch {

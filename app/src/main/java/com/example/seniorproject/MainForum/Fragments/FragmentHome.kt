@@ -60,13 +60,14 @@ class FragmentHome : Fragment() {
                 Log.d("Oncreate", " in Coroutine")
 
             }*/
-            view?.post_recyclerView?.visibility = View.INVISIBLE
+            //view?.post_recyclerView?.visibility = View.INVISIBLE
             myViewModel.getSubsP(object : listActivitycallback {
                 override fun onCallback(list: List<Post>) {
 
                     //view?.post_recyclerView?.adapter = view?.context?.let { HomeAdapter(it, list, 0) }
-                    //view?.invalidate()
-                    view?.post_recyclerView?.swapAdapter(HomeAdapter(view!!.context, myViewModel.sendPosts(), 0), true)
+                    Log.d("in callback", "invalidate")
+                    view!!.invalidate()
+                    //view?.post_recyclerView?.swapAdapter(HomeAdapter(view!!.context, myViewModel.sendPosts(), 0), true)
 
                 }
             })

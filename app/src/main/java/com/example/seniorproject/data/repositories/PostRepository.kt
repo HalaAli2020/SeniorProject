@@ -92,7 +92,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                 })
 
             }
-            kotlinx.coroutines.delay(100)
+            kotlinx.coroutines.delay(1000)
 
         }
 

@@ -53,14 +53,14 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
                     subs.add(value)
                 }
             })
-             getPosts(subs)
+             getPosts(subs, call)
         }
 
 
         //call.onCallback(p)
     }
     @InternalCoroutinesApi
-    suspend fun getPosts(subs : List<String>)
+    suspend fun getPosts(subs : List<String>, call : listActivitycallback)
     {
         viewModelScope.launch(Dispatchers.IO) {
 
@@ -74,12 +74,12 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
 
             })
             Log.d("post flow", "flow post")
-
+            call.onCallback(p)
 
 
         }
 
-        //call.onCallback(p)
+
     }
     fun sendPosts() :MutableList<Post>{
         return p
@@ -93,14 +93,6 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
     var user = repository.currentUser()
 
 
-    /*suspend fun getSubscribedPostCO(): PostLiveData = withContext(Dispatchers.IO) {
-        posts = repository.getSubscribedPostsCO()
-        return@withContext posts
-    }*/
-    fun returnSubscribedpost() : PostLiveData
-    {
-        return  posts
-    }
 
 
 }
