@@ -1109,13 +1109,15 @@ Checks if a user has made any comments, a callback is implemented in the Profile
         val user = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$accusedID").key
         val text = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$parsedComplainText").key
 
+        //creating a report key to stop reports with same class key from overwritting themselves
+        val repKey = FirebaseDatabase.getInstance().getReference("/Reports/").push().key
         report.classkey= post!!
         report.complaintext= text!!
         report.accusedID = user!!
 
         val dataupdates = HashMap<String, Any>()
         val reportvalues = report.toMap()
-        dataupdates["Reports/$classkey"] = reportvalues
+        dataupdates["Reports/$repKey"] = reportvalues
         FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
     }
 
@@ -1130,17 +1132,22 @@ Checks if a user has made any comments, a callback is implemented in the Profile
 
         val report = Reports(accuserID!!, accusedID, parsedComplainText, crn, classkey)
 
+        //if that post was already commented, or your commenting two comments on the same post it overwrites it on the databse
+
         val post = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$classkey/Comments/$comkey").key
         val user = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$classkey/Comments/$accusedID").key
         val text = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$classkey/Comments/$parsedComplainText").key
 
+        //creating a report key to stop reports with same class key from overwritting themselves
+        val repKey = FirebaseDatabase.getInstance().getReference("/Reports/").push().key
         report.classkey= post!!
         report.complaintext= text!!
         report.accusedID = user!!
 
         val dataupdates = HashMap<String, Any>()
         val reportvalues = report.toMap()
-        dataupdates["Reports/$classkey"] = reportvalues
+        //reports/classkey is the problem we need to push a new key
+        dataupdates["Reports/$repKey"] = reportvalues
         FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
     }
 
