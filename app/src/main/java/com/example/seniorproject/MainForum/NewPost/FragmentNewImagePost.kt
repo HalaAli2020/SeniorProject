@@ -8,9 +8,7 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.ImageView
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -18,22 +16,16 @@ import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.seniorproject.Dagger.DaggerAppComponent
-import com.example.seniorproject.MainForum.Fragments.FragmentList
 import com.example.seniorproject.MainForum.MainForum
 import com.example.seniorproject.R
-import com.example.seniorproject.search.SearchActivity
+import com.example.seniorproject.Utils.CheckCallback
 import com.example.seniorproject.viewModels.NewPostFragmentViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.fragment_image__post.view.*
 import javax.inject.Inject
 
 
 class FragmentNewImagePost : Fragment() {
-
+    //inject and initialize viewmodel and factoru variables
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var viewModel: NewPostFragmentViewModel
@@ -60,6 +52,7 @@ class FragmentNewImagePost : Fragment() {
             startActivityForResult(intent, 0)
         }
 
+        //toast message for the case of no image, there is no need for logic because the post button is overridden in the activity result
          view!!.new_image_post.setOnClickListener{
             Toast.makeText(activity?.applicationContext, "please add an image", Toast.LENGTH_SHORT).show()
         }
@@ -82,66 +75,27 @@ class FragmentNewImagePost : Fragment() {
                 .into(img)
 
            view!!.new_image_post.setOnClickListener{
-                val titlebox : EditText = view!!.img_post_title
-                val textbox : EditText = view!!.img_post_text
+                   var classname = view!!.spinner3.selectedItem.toString()
+                   viewModel.checkSubscriptions(classname, object : CheckCallback {
+                       override fun check(chk: Boolean) {
+                           if (view!!.img_post_title.text.isNotBlank() && view!!.img_post_text.text.isNotBlank() && chk == true) {
+                               viewModel.saveNewImgPosttoUser(view!!.img_post_title.text.toString(), view!!.img_post_text.text.toString(), classname, selectedPhotoUri!!, true)
+                               Toast.makeText(context, "Your post has been successfully posted!", Toast.LENGTH_LONG).show()
+                               val intent = Intent(context, MainForum::class.java)
+                               startActivity(intent)
+                               return
+                           }
+                           else if ((view!!.img_post_title.text.isNullOrBlank() || view!!.img_post_text.text.isNullOrBlank())) {
+                               Toast.makeText(context, "please enter a title and post body", Toast.LENGTH_LONG).show()
+                           }
+                           else if (view!!.img_post_title.text.isNotBlank() && view!!.img_post_text.text.isNotBlank() && chk == false) {
+                               Toast.makeText(context, "Subscribe to $classname in order to create a post", Toast.LENGTH_SHORT).show()
+                           }
+                       }
+                   })
+               }
 
-                val title: String = titlebox.text.toString()
-                val text: String = textbox.text.toString()
-                val spinner: Spinner = view!!.spinner3
-                val subject = spinner.selectedItem.toString()
-
-                if (title.isNullOrBlank() || text.isNullOrBlank() || subject.isEmpty())
-                {
-                    Toast.makeText(activity?.applicationContext, "please enter both a post title, a post body and select a class", Toast.LENGTH_SHORT).show()
-                }
-                else {
-                    val userID= FirebaseAuth.getInstance().uid
-                    val subpath = FirebaseDatabase.getInstance().getReference("/users/$userID")
-                    subpath.child("Subscriptions").orderByValue()
-                        .addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(p0: DataSnapshot) {
-                                var checksub = false
-                                if (p0.exists()) {
-                                    for (sub in p0.children) {
-                                        if (sub.value == subject) {
-                                            viewModel.saveNewImgPosttoUser(
-                                                title,
-                                                text,
-                                                subject,
-                                                selectedPhotoUri!!,
-                                                true
-                                            )
-                                            checksub = true
-                                        }
-                                    }
-                                    if (checksub == true){
-                                        Toast.makeText(activity?.applicationContext, "Image post created", Toast.LENGTH_SHORT).show()
-                                        val intent = Intent(context, SearchActivity::class.java)
-                                        startActivity(intent)
-                                    }
-                                    else{
-                                        Toast.makeText(activity?.applicationContext, "Subscribe to $subject in order to create a post", Toast.LENGTH_SHORT).show()
-                                        fragmentManager!!.beginTransaction()
-                                            .replace((view!!.parent as ViewGroup).id,
-                                                FragmentList()
-                                            )
-                                            .addToBackStack(null)
-                                            .commit()
-                                    }
-                                }
-                            }
-
-                            override fun onCancelled(p0: DatabaseError) {
-                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                            }
-                        })
-
-
-                }
             }
         }
-
-
-    }
 
 }

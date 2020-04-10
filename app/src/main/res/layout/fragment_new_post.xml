@@ -55,7 +55,6 @@
                     android:layout_height="0dp"
                     android:layout_marginEnd="12dp"
                     android:background="@drawable/rounded_btn"
-                    android:onClick="@{() -> NewPostViewModel.savePostToDatabase()}"
                     android:text="@string/post"
                     android:textColor="@color/white"
                     android:textSize="12sp"

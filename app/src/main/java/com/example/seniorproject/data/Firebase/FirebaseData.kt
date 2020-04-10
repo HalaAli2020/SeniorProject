@@ -1,10 +1,12 @@
 package com.example.seniorproject.data.Firebase
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import com.google.firebase.database.FirebaseDatabase
 import javax.inject.Inject
 import javax.inject.Singleton
 import androidx.lifecycle.MutableLiveData
+import com.example.seniorproject.MainForum.NewPost.FragmentNewPost
 import com.example.seniorproject.Utils.Callback
 import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.data.models.*
@@ -27,10 +29,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.tasks.await
-
-
-
-
+import java.security.AccessController.getContext
 
 
 private const val TAG = "MyLogTag"
@@ -1358,6 +1357,7 @@ NEEDS COMMENT
                         if (p0.exists()) {
                             for (sub in p0.children) {
                                 if (sub.value == CRN) {
+                                    //send subcheck
                                     val userKey = FirebaseDatabase.getInstance()
                                         .getReference("/users/$userID").child("Posts").push().key
                                     val classKey = FirebaseDatabase.getInstance()
@@ -1372,10 +1372,7 @@ NEEDS COMMENT
                                         dataupdates
                                     )
                                 } else {
-                                    Log.d(
-                                        "Not subscribed",
-                                        "you cannot post to a forum you are not subscribed in."
-                                    )
+                                    Log.d("Not subscribed", "you cannot post to a forum you are not subscribed in.")
                                 }
                             }
                         }
@@ -1387,6 +1384,22 @@ NEEDS COMMENT
                     }
                 })
     }
+
+   fun checkSubscription(subject : String, callbacksubbool: PostRepository.FirebaseCallbacksubBool) {
+       val userID = FirebaseAuth.getInstance().uid
+       val subpath = FirebaseDatabase.getInstance().getReference("/users/$userID")
+       subpath.child("Subscriptions").orderByValue()
+           .addListenerForSingleValueEvent(object : ValueEventListener {
+               override fun onCancelled(p0: DatabaseError) {
+                   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+               }
+               override fun onDataChange(p0: DataSnapshot) {
+                   callbacksubbool.onSuccess(p0)
+
+               }
+           })
+   }
+
 
     //database query to get the classes that a user is subscribed to
     fun listenUserSub(callbackString: PostRepository.FirebaseCallbackString){
@@ -1418,13 +1431,11 @@ NEEDS COMMENT
             override fun onDataChange(p0: DataSnapshot) {
                 val size = p0.hasChildren()
                 Log.d("Size", size.toString())
-                //var has :HashMap<String,String>? = hashMapOf()
                 val sublist = p0.children
                 for (x in sublist) {
                     Log.d("usersub", x.getValue(String::class.java)!!)
                     SubList.add(x.getValue(String::class.java)!!)
                 }
-                //UserSUB.value = SubList
             }
         })
     }

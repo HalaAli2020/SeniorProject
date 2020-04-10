@@ -37,8 +37,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     private var getCommentsJob: Job? = null
 
-    fun saveNewPost(text: String, title: String, CRN: String) =
-        Firebase.saveNewPosttoUser(text, title, CRN)
+    fun saveNewPost(text: String, title: String, CRN: String) = Firebase.saveNewPosttoUser(text, title, CRN)
 
     fun uploadUserProfileImage(selectedPhotoUri: Uri) =
         Firebase.uploadImageToFirebaseStorage(selectedPhotoUri)
@@ -360,6 +359,9 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     fun noCommentsChecker(UserID: String, callbackBool: FirebaseCallbackBool) =
         Firebase.noCommentsChecker(UserID, callbackBool)
 
+    fun checkSubscription(className: String, callbacksubBool: FirebaseCallbacksubBool) =
+        Firebase.checkSubscription(className,callbacksubBool)
+
 
     companion object {
         @Volatile
@@ -374,6 +376,12 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     interface FirebaseCallbackPost {
 
+        fun onStart()
+        fun onFailure()
+        fun onSuccess(data: DataSnapshot)
+    }
+
+    interface FirebaseCallbacksubBool {
         fun onStart()
         fun onFailure()
         fun onSuccess(data: DataSnapshot)
