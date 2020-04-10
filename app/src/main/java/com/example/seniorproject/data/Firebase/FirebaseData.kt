@@ -1,12 +1,10 @@
 package com.example.seniorproject.data.Firebase
 import android.net.Uri
 import android.util.Log
-import android.widget.Toast
 import com.google.firebase.database.FirebaseDatabase
 import javax.inject.Inject
 import javax.inject.Singleton
 import androidx.lifecycle.MutableLiveData
-import com.example.seniorproject.MainForum.NewPost.FragmentNewPost
 import com.example.seniorproject.Utils.Callback
 import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.data.models.*
@@ -18,18 +16,10 @@ import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.*
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.collections.HashMap
-import java.security.AccessController.getContext
 
 
 private const val TAG = "MyLogTag"

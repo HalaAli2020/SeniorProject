@@ -1,13 +1,9 @@
 package com.example.seniorproject.viewModels
 
 import android.net.Uri
-import android.util.Log
-import android.view.View
-import android.widget.AdapterView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.seniorproject.Utils.CheckCallback
-import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.repositories.PostRepository
 import com.google.firebase.database.DataSnapshot
 import javax.inject.Inject
