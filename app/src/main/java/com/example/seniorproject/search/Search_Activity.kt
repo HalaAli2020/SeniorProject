@@ -17,6 +17,7 @@ import com.example.seniorproject.R
 import com.example.seniorproject.data.models.CRN
 import com.example.seniorproject.databinding.ActivitySearchBinding
 import com.example.seniorproject.viewModels.SearchViewModel
+import kotlinx.android.synthetic.main.activity_search.*
 import javax.inject.Inject
 
 class SearchActivity: AppCompatActivity()
@@ -31,15 +32,7 @@ class SearchActivity: AppCompatActivity()
     //lateinit var mnu : MenuItem
     lateinit var binding : ActivitySearchBinding
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.search_top_nav_menu, menu)
 
-        // Associate searchable configuration with the SearchView
-        //val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        searchview = (menu.findItem(R.id.seach_men).actionView as SearchView)
-        setupsearchview()
-        return true
-    }
 
 
 
@@ -56,7 +49,8 @@ class SearchActivity: AppCompatActivity()
         val obse = Observer<MutableList<CRN>> {
             swap(lt)
         }
-
+        searchview = search_in
+        setupsearchview()
         val lin : LinearLayoutManager = LinearLayoutManager(this)
         lt.layoutManager = lin
         lt.adapter = ada
@@ -65,6 +59,7 @@ class SearchActivity: AppCompatActivity()
         //setupsearchview()
         //searchview =findViewById<SearchView>(R.id.Search_R)
         myViewModel.fullist.observe(this, obse)
+
 
 
 
