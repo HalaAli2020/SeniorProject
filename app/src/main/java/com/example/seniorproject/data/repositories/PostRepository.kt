@@ -56,6 +56,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
             override fun onSuccess(data: DataSnapshot) {
                 val commdetail: Iterable<DataSnapshot> = data.children
                 val profileCommentList : MutableList<Comment> = mutableListOf()
+                var comment = Comment("no comment", "", "", "", "")
+                profileCommentList.add(comment)
                 for(n in commdetail){
                     val newComment = Comment()
                     //  try {
@@ -405,9 +407,6 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     fun noPostsChecker(UserID: String, callbackBool: FirebaseCallbackBool) =
         Firebase.noPostsChecker(UserID, callbackBool)
 
-    fun noCommentsChecker(UserID: String, callbackBool: FirebaseCallbackBool) =
-        Firebase.noCommentsChecker(UserID, callbackBool)
-
 
     companion object {
         @Volatile
@@ -436,7 +435,6 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     interface FirebaseCallbackNoComments {
         fun onEmpty(nocomlist: Boolean)
-        fun onFull(comlistpresent: Boolean)
     }
 
     interface FirebaseCallbackComment {

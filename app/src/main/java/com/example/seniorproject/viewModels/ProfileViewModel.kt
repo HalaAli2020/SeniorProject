@@ -187,26 +187,4 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
         return  noPostCheck ?: false
     }
 
-    fun noCommentsChecker(UserID: String, callback: CheckCallback) : Boolean {
-        repository.noCommentsChecker(UserID, object : PostRepository.FirebaseCallbackBool {
-            override fun onStart() { TODO("not implemented") }
-            override fun onFailure() { TODO("not implemented") }
-
-            override fun onSuccess(data: DataSnapshot) : Boolean {
-                if (!data.child("Comments").exists())
-                {
-                    noCommentsCheck = true
-                    callback.check(noCommentsCheck ?: false)
-                }
-                else
-                {
-                    noCommentsCheck = false //here
-                    callback.check(noCommentsCheck ?: false)
-                }
-                return  noCommentsCheck ?: false
-            }
-        })
-        return  noCommentsCheck ?: false
-    }
-
 }

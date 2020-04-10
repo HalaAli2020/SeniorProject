@@ -727,27 +727,8 @@ Checks if a user has made any posts, a callback is implemented in the ProfileVie
     }
 
     /*
-Checks if a user has made any comments, a callback is implemented in the ProfileViewModel
+Checks if a user has made any comments, a callback boolean is sent upstream into view layer of clicked post
  */
-    fun noCommentsChecker(userID: String, callbackbool: PostRepository.FirebaseCallbackBool): Boolean {
-        val com = FirebaseDatabase.getInstance().getReference("users/$userID")
-        com.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) { TODO("not implemented") }
-            override fun onDataChange(p0: DataSnapshot) {
-                if (!p0.child("Comments").exists()) {
-                    callbackbool.onSuccess(p0)
-                    noCommentsCheck = true
-
-                }
-                else if (p0.child("Comments").exists()){
-                    callbackbool.onSuccess(p0)
-                    noCommentsCheck = false
-                }
-            }
-        })
-        return noCommentsCheck
-    }
-
     fun noCommentsCheckerForCommPosts(subject: String, Key: String, callback: PostRepository.FirebaseCallbackNoComments){
         val com = FirebaseDatabase.getInstance().getReference("Subjects/$subject/Posts/$Key/Comments")
         com.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -760,7 +741,8 @@ Checks if a user has made any comments, a callback is implemented in the Profile
                 }
                 else{
                     noCommentsCheck = false
-                    callback.onFull(noCommentsCheck)
+                    callback.onEmpty(noCommentsCheck)
+                    //callback.onFull(noCommentsCheck)
                     Log.d("soupfire", "this means comments exist in that post!")
                 }
             }
