@@ -103,6 +103,10 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
         fun onList(list: List<Comment>)
     }
 
+    interface PostListFromFlow {
+        fun onList(list: List<Post>)
+    }
+
     //takes classname and searches for a match in the users subscriptions
     fun checkSubscriptions(classname : String, checkCallback: CheckCallback)
     {

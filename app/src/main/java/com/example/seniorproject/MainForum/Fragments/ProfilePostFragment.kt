@@ -72,10 +72,6 @@ class ProfilePostFragment : Fragment() {
             iD = currentuser
 
 
-
-
-
-
         myViewModel.getUserProfilePosts(iD, object : ClickedPostViewModel.PostListFromFlow {
             override fun onList(list: List<Post>) {
 
