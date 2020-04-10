@@ -55,8 +55,8 @@ class SearchRepo @Inject constructor(private val Firebase: FirebaseData) {
                         it.Ptime =  n.child("Timestamp").getValue(String::class.java)
                         it.key = n.child("key").getValue(String::class.java)
                         it.Ptime = n.child("Ptime").getValue(String::class.java)
-                        it.classkey = n.child("Classkey").getValue(String::class.java)
-                        it.userID = n.child("UserID").getValue(String::class.java)
+                        it.Classkey = n.child("Classkey").getValue(String::class.java)
+                        it.UserID = n.child("UserID").getValue(String::class.java)
                         it.author = n.child("author").getValue(String::class.java)
                         it.uri = n.child("uri").getValue(String::class.java)
 

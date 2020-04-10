@@ -87,7 +87,7 @@ class ProfileCommAdapter(context: Context, var Comments: List<Comment>) :
 
     fun getCommentKey(customViewHolders: CustomViewHolders): String {
         val comment: Comment = Comments[customViewHolders.adapterPosition]
-        val commentkey: String? = comment.userComkey
+        val commentkey: String? = comment.UserComkey
 
 
         return commentkey!!
@@ -107,7 +107,7 @@ class ProfileCommAdapter(context: Context, var Comments: List<Comment>) :
 
     fun getClassProfileKey(customViewHolders: CustomViewHolders): String {
         val comment: Comment = Comments[customViewHolders.adapterPosition]
-        val commentkey: String? = comment.profileComKey
+        val commentkey: String? = comment.ProfileComKey
         return commentkey!!
     }
 

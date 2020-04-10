@@ -19,7 +19,7 @@ class CommunityPostViewModel @Inject constructor(private val repository: PostRep
 
     @InternalCoroutinesApi
     fun getClassesco(className: String, callback: MutableListCallback){
-        repository.getClassPostsco(className, object: FlowCallback{
+        repository.getCommunityPosts(className, object: FlowCallback{
             override fun onFlow(flowCallback: Flow<Post>) {
                 viewModelScope.launch {
                     //converting Flow with .toList and .toSet results in storing only the last value of the flow
@@ -78,7 +78,7 @@ class CommunityPostViewModel @Inject constructor(private val repository: PostRep
                 }
             }
         })
-        //listClassesco = repository.getClassPostsco(className)
+        //listClassesco = repository.getCommunityPosts(className)
         /* listClassesco.buffer().collect{
              values -> Log.d("soupvmb", "value is $values")
          }
