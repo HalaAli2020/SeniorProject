@@ -12,7 +12,6 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
 
     var titlePost: String? = null
     var textPost: String? = null
-    var classSpinner: String? = null
     var crn: String? = null
     var postKey: String? = null
     var ctext: String? = null
@@ -21,11 +20,12 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
     var bool = MutableLiveData<Boolean>()
     var boolsub : Boolean? = null
 
-
+    //calls corresponding function from post repository takes binded variable information from edit xml file
     fun editPost(){
         repository.editPost(crn!!, postKey!!, ctext!!, ctitle!!, textPost!!, titlePost!!, userID!!)
     }
 
+    //takes classname and searches for a match in the users subscriptions
     fun checkSubscriptions(classname : String, checkCallback: CheckCallback)
     {
         repository.checkSubscription(classname,object : PostRepository.FirebaseCallbacksubBool {
@@ -37,10 +37,12 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
                     for (sub in data.children) {
                         if (sub.value == classname) {
                               boolsub = true
+                            //callback lets frontend know to make successful post toast message
                               checkCallback.check(boolsub ?: false)
                               return
                         }
                     }
+                    //callback lets frontend know to make unsuccessful post toast message
                     boolsub = false
                     checkCallback.check(boolsub ?: false)
                 }
@@ -49,9 +51,9 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
         })
     }
 
+    //calls corresponding function from post repository
     fun savePostToDatabase(title : String, text:String, CRN: String)  = repository.saveNewPost(title,text,CRN)
-
-
+    //calls corresponding function from post repository
    fun saveNewImgPosttoUser(title : String, text:String, CRN: String, uri: Uri, imagePost : Boolean) = repository.saveNewImgPosttoUser(title,text,CRN,uri,imagePost)
 
 }

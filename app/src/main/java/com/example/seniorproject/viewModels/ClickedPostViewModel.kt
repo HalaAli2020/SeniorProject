@@ -39,7 +39,7 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
     init {
 
     }
-
+    //calls corresponding function from post repository gets binded variable contents from clicked post xml file
     fun noCommentsCheckForCommPosts(callback: PostRepository.FirebaseCallbackNoComments){
       repository.noCommentsCheckForCommPosts(crn!!, classkey!!, callback)
     }
@@ -61,7 +61,7 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
         })
 
     }
-
+    //calls corresponding function from post repository
     fun editComment(){
         repository.editNewComment(comuserid!!, usercomkey!!, comment!!, usercrn!!, postukey!!)
     }
@@ -87,12 +87,12 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
         }
         return false
     }
-
+    //calls corresponding function from post repository
     fun reportUserComment(accusedID: String, complaintext: String, crn: String, classkey: String, comKey: String){
         repository.reportUserComment(accusedID, complaintext, crn, classkey, comKey)
 
     }
-
+    //calls corresponding function from post repository
     fun blockUser(UserID: String){
         repository.blockUser(UserID)
     }
@@ -101,6 +101,7 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
         fun onList(list: List<Comment>)
     }
 
+    //takes classname and searches for a match in the users subscriptions
     fun checkSubscriptions(classname : String, checkCallback: CheckCallback)
     {
         repository.checkSubscription(classname,object : PostRepository.FirebaseCallbacksubBool {
@@ -111,11 +112,13 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
                 if (data.exists()) {
                     for (sub in data.children) {
                         if (sub.value == classname) {
+                            //callback lets frontend know to make successful comment toast message
                             boolsub = true
                             checkCallback.check(boolsub ?: false)
                             return
                         }
                     }
+                    //callback lets frontend know to make unsuccessful comment toast message
                     boolsub = false
                     checkCallback.check(boolsub ?: false)
                 }

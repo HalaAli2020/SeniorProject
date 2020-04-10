@@ -70,6 +70,7 @@ class ClickedPost : AppCompatActivity() {
         myViewModel.text = text
         myViewModel.crn = crn
 
+        //observers weather or not the user has inputted text
         myViewModel.boolcom.observe(this, Observer<Boolean> {
             if (it == true)
             {
