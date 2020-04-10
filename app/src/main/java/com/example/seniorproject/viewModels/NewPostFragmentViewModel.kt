@@ -26,19 +26,6 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
     var boolsub : Boolean? = null
 
 
-
-    private var postListener: PostListener? = null
-
-    val clicksListener = object : AdapterView.OnItemSelectedListener {
-        override fun onNothingSelected(parent: AdapterView<*>?) {
-
-        }
-
-        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            classSpinner = parent?.getItemAtPosition(position) as String
-        }
-    }
-
     fun editPost(){
         repository.editPost(crn!!, postKey!!, ctext!!, ctitle!!, textPost!!, titlePost!!, userID!!)
     }

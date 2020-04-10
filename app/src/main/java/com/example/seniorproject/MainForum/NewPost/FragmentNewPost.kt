@@ -37,7 +37,7 @@ class FragmentNewPost : Fragment() {
                 viewModel.checkSubscriptions(classname, object : CheckCallback {
                     override fun check(chk: Boolean) {
                         if (view.new_post_text.text.isNotBlank() && view.new_post_title.text.isNotBlank() && chk == true) {
-                            viewModel.savePostToDatabase(view.new_post_title.text.toString(),view.new_post_text.text.toString(),classname)
+                            viewModel.savePostToDatabase(view.new_post_text.text.toString(),view.new_post_title.text.toString(),classname)
                             Toast.makeText(context, "Your post has been successfully posted!", Toast.LENGTH_LONG).show()
                             val intent = Intent(context, MainForum::class.java)
                             startActivity(intent)
@@ -52,7 +52,7 @@ class FragmentNewPost : Fragment() {
                 })
         }
 
-            val binding: FragmentNewPostBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_post, container, false)
+
             val adapter = ArrayAdapter.createFromResource(
                 view.context,
                 R.array.class_list,
@@ -61,10 +61,6 @@ class FragmentNewPost : Fragment() {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             view.spinner2.adapter = adapter
 
-            binding.newPostViewModel = viewModel
-            binding.lifecycleOwner = this
-
-        binding.executePendingBindings()
         return view
     }
 
