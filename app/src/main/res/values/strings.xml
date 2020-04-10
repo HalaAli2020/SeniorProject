@@ -40,7 +40,7 @@
     <string name="login">LOGIN</string>
     <string name="login_lowercase">Login</string>
     <string name="register_for_an_account">Register for an account</string>
-    <string name="forgot_password">Forgot Password?</string>
+    <string name="forgot_password">Forgot password?</string>
     <string name="reset_password">RESET PASSWORD</string>
     <string name="email">Email</string>
     <string name="reset_password_">Reset Password</string>

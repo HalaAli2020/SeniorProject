@@ -59,7 +59,7 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
 
     fun getUserKey(holder: RecyclerView.ViewHolder): String {
         val post: Post = savedPostList[holder.adapterPosition]
-        val postkey: String?= post.userID
+        val postkey: String?= post.UserID
 
         return postkey!!
     }
@@ -83,7 +83,7 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
                     override fun onDataChange(p0: DataSnapshot) {
                         if (p0.exists()) {
                             for (block in p0.children) {
-                                if (block.value == post.userID) {
+                                if (block.value == post.UserID) {
                                     holder.itemView.post_title.text = "[blocked]"
                                 }
                             }
@@ -110,7 +110,7 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
             } else if (type == 1) {
                 holder.itemView.username.setOnClickListener {
                     val intent = Intent(mContext, UserProfileActivity::class.java)
-                    intent.putExtra("UserID", post.userID)
+                    intent.putExtra("UserID", post.UserID)
                     intent.putExtra("Author", post.author)
                     mContext.startActivity(intent)
                 }
@@ -125,7 +125,7 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
                 override fun onDataChange(p0: DataSnapshot) {
                     if (p0.exists()) {
                         for (block in p0.children) {
-                            if (block.value == post.userID) {
+                            if (block.value == post.UserID) {
                                 holder.itemView.post_title.text = "[blocked]"
                             }
                         }
@@ -150,7 +150,7 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
             } else if (type == 1) {
                 holder.itemView.username.setOnClickListener {
                     val intent = Intent(mContext, UserProfileActivity::class.java)
-                    intent.putExtra("UserID", post.userID)
+                    intent.putExtra("UserID", post.UserID)
                     intent.putExtra("Author", post.author)
                     mContext.startActivity(intent)
                 }
@@ -172,8 +172,8 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
                 intent.putExtra("Title", post.title)
                 intent.putExtra("Text", post.text)
                 intent.putExtra("Pkey", post.key)
-                intent.putExtra("Classkey", post.classkey)
-                intent.putExtra("UserID", post.userID)
+                intent.putExtra("Classkey", post.Classkey)
+                intent.putExtra("UserID", post.UserID)
                 intent.putExtra("Author", post.author)
                 intent.putExtra("crn", post.crn)
                 intent.putExtra("uri", post.uri)
@@ -187,7 +187,7 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
     fun removeItem(holder: RecyclerView.ViewHolder): String {
 
         val post: Post = savedPostList[holder.adapterPosition]
-        val postkey: String? = post.classkey
+        val postkey: String? = post.Classkey
 
         return postkey!!
     }

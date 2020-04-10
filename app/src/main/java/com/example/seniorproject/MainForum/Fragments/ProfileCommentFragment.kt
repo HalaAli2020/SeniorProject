@@ -48,30 +48,24 @@ class ProfileCommentFragment : Fragment() {
     lateinit var myViewModel: ProfileViewModel
     lateinit var viewModel: ProfileViewModel
 
+    //initalization of the viewmodel and dagger app component
+    //initialization of binding variable, binded variables are located in the corresponding XML file
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        //initalization of the viewmodel and dagger app component
         DaggerAppComponent.create().inject(this)
         factory = InjectorUtils.provideProfileViewModelFactory()
-        //initialization of binding variable, binded variables are located in the corresponding XML file
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-
-        val binding: FragmentProfileCommentBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_profile_comment, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val binding: FragmentProfileCommentBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile_comment, container, false)
         myViewModel = ViewModelProviders.of(this, factory).get(ProfileViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_profile_comment, container, false)
 
         val currentuser = FirebaseAuth.getInstance().currentUser?.uid ?: "null"
         var iD = this.arguments?.getString("ID") ?: "null"
-        if (iD == "null") {
+        if (iD == "null")
             iD = currentuser
-        }
+
 
         //making sure id never equals null to avoid errors
 

@@ -1,26 +1,30 @@
 package com.example.seniorproject.data.models
 
-
 import java.text.SimpleDateFormat
 import java.util.*
 
 //data class for user posts
-data class Post(var title: String?, var text: String?, var subject: String?, var Ptime : String?)
-{
+data class Post(
+    var title: String?,
+    var text: String?,
+    var subject: String?,
+    var Ptime: String?,
+    var author: String?,
+    var crn: String?,
+    var Classkey: String?,
+    var UserID: String?,
+    var key: String?,
+    var uri: String?,
+    var imagePost: Boolean?
+) {
 
-    constructor(): this("","", "", null)
-    private  var comments : List<Comment> = emptyList()
-    var author : String? = null
-    var crn : String? = null
-    var classkey : String? = null
-    var userID : String? = null
-    var key : String? = null
-    var uri : String? = null
-    var imagePost : Boolean? = null
+    constructor() : this("", "", "", null, null, null, null, null, null, null, null)
+
+    private var comments: List<Comment> = emptyList()
 
     init {
         val calendar: Calendar = Calendar.getInstance()
-            val simple: SimpleDateFormat = SimpleDateFormat("M-d-yy 'at' h:mm a")
+        val simple: SimpleDateFormat = SimpleDateFormat("M-d-yy 'at' h:mm a")
         Ptime = simple.format(calendar.time)
     }
 
@@ -34,8 +38,8 @@ data class Post(var title: String?, var text: String?, var subject: String?, var
             "subject" to subject,
             "crn" to crn,
             "comments" to comments,
-            "UserID" to userID,
-            "Classkey" to classkey,
+            "UserID" to UserID,
+            "Classkey" to Classkey,
             "key" to key,
             "uri" to uri,
             "imagePost" to imagePost

@@ -45,8 +45,26 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun getSubscribedPosts() = Firebase.getSubscribedPosts()
 
-    fun getClassComments(Key: String, subject: String, callbackComment: FirebaseData.FirebaseCallbackCommentFlow){
-        Firebase.getClassComments(Key, subject, object: PostRepository.FirebaseCallbackComment{
+    fun getCommunityPosts(className: String, callback: FlowCallback) {
+        Firebase.getClassPosts(className, object : FirebaseCallbackPost {
+            override fun onStart() {}
+            override fun onFailure() {}
+            override fun onSuccess(data: DataSnapshot) {
+                val postData: Iterable<DataSnapshot> = data.child("Posts").children
+                val postList: MutableList<Post> = mutableListOf()
+                for (post in postData) {
+                    val newPost = post.getValue(Post::class.java)
+                    newPost?.let { postList.add(it) }
+                }
+                val listCor: Flow<Post> = postList.asFlow()
+                callback.onFlow(listCor)
+                val scope = CoroutineScope(Dispatchers.IO)
+            }
+        })
+    }
+
+    fun getPostComments(Key: String, subject: String, callbackComment: FirebaseData.FirebaseCallbackCommentFlow) {
+        Firebase.getClassComments(Key, subject, object : PostRepository.FirebaseCallbackComment {
             override fun onStart() {
             }
 
@@ -54,40 +72,57 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
             }
 
             override fun onSuccess(data: DataSnapshot) {
-                val commdetail: Iterable<DataSnapshot> = data.children
-                val profileCommentList : MutableList<Comment> = mutableListOf()
-                for(n in commdetail){
-                    val newComment = Comment()
-                    //  try {
-                    newComment.let {
-                        it.text = n.child("text").value.toString()
-                        it.Classkey = n.child("Classkey").value.toString()
-                        it.PosterID = n.child("PosterID").value.toString()
-                        it.Postkey = n.child("Postkey").value.toString()
-                        it.profileComKey = n.child("ProfileComKey").value.toString()
-                        it.Ptime = n.child("Ptime").value.toString()
-                        it.userComkey = n.child("UserComkey").value.toString()
-                        it.author = n.child("author").value.toString()
-                        it.crn = n.child("crn").value.toString()
-
-                        profileCommentList.add(newComment)
-                    }
-                    //  } catch (e: Exception) {
-                    Log.d("Data Error", "error converting to post")
-                    //   }
+                val commentsData: Iterable<DataSnapshot> = data.children
+                val postComments: MutableList<Comment> = mutableListOf()
+                for (comment in commentsData) {
+                    val newComment = comment.getValue(Comment::class.java)
+                    newComment?.let { postComments.add(it) }
                 }
 
-                val listCor : Flow<Comment> = profileCommentList.asFlow()
+                val postCommentsCO: Flow<Comment> = postComments.asFlow()
+                callbackComment.onCallback(postCommentsCO)
+                val scope = CoroutineScope(Dispatchers.IO)
+                scope.launch {
+                    postCommentsCO.collect { it ->
+                        it.text
+                        Log.d("soupcollect", "comm is $it")
+                    }
+                    val check = postCommentsCO.toList()
+                    Log.d("souprepo", "start here")
+                    for (item in check) {
+                        var getext = item.text
+                        Log.d("souprepo", "comm is $getext")
+                    }
+                    Log.d("souprepo", "end here")
+                }
+            }
+        })
+    }
+
+    fun getUserProfileComments(userID: String, callbackComment: FirebaseData.FirebaseCallbackCommentFlow) {
+        Firebase.getUserProfileComments(userID, object : FirebaseCallbackComment {
+            override fun onFailure() {}
+            override fun onStart() {}
+
+            override fun onSuccess(data: DataSnapshot) {
+                val commdetail: Iterable<DataSnapshot> = data.children
+                val profileCommentList: MutableList<Comment> = mutableListOf()
+                for (n in commdetail) {
+                    val newComment = n.getValue(Comment::class.java)
+                    newComment?.let { profileCommentList.add(it) }
+                }
+
+                val listCor: Flow<Comment> = profileCommentList.asFlow()
                 callbackComment.onCallback(listCor)
                 val scope = CoroutineScope(Dispatchers.IO)
                 scope.launch {
-                    listCor.collect {
-                        it -> it.text
+                    listCor.collect { it ->
+                        it.text
                         Log.d("soupcollect", "comm is $it")
                     }
                     val check = listCor.toList()
                     Log.d("souprepo", "start here")
-                    for(item in check){
+                    for (item in check) {
                         var getext = item.text
                         Log.d("souprepo", "comm is $getext")
                     }
@@ -98,19 +133,45 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         })
     }
 
-    fun noCommentsCheckForCommPosts(
-        subject: String,
-        Key: String,
-        callback: FirebaseCallbackNoComments
-    ) = Firebase.noCommentsCheckerForCommPosts(subject, Key, callback)
+    fun getUserProfilePosts(userID: String, callbackPost: FirebaseData.FirebaseCallbackPostFlow)  {
+        Firebase.listenForUserProfilePosts(userID, object : FirebaseCallbackPost {
+            override fun onFailure() {}
+            override fun onStart() {}
 
-    fun saveNewImgPosttoUser(
-        title: String,
-        text: String,
-        CRN: String,
-        uri: Uri,
-        imagePost: Boolean
-    ) = Firebase.saveNewImgPosttoUser(title, text, CRN, uri, imagePost)
+            override fun onSuccess(data: DataSnapshot) {
+                val dataProfilePosts: Iterable<DataSnapshot> = data.children
+                val listProfilePosts: MutableList<Post> = mutableListOf()
+                for(post in dataProfilePosts){
+                    val userPost = post.getValue(Post::class.java)
+                    userPost?.let { listProfilePosts.add(it) }
+                }
+
+                val listCor: Flow<Post> = listProfilePosts.asFlow()
+                callbackPost.onCallback(listCor)
+                val scope = CoroutineScope(Dispatchers.IO)
+                scope.launch {
+                    listCor.collect { it ->
+                        it.text
+                        Log.d("soupcollect", "comm is $it")
+                    }
+                    val check = listCor.toList()
+                    Log.d("souprepo", "start here")
+                    for (item in check) {
+                        var getext = item.text
+                        Log.d("souprepo", "comm is $getext")
+                    }
+                    Log.d("souprepo", "end here")
+                }
+
+            }
+        })
+    }
+
+    fun noCommentsCheckForCommPosts(subject: String, Key: String, callback: FirebaseCallbackNoComments) =
+        Firebase.noCommentsCheckerForCommPosts(subject, Key, callback)
+
+    fun saveNewImgPosttoUser(title: String, text: String, CRN: String, uri: Uri, imagePost: Boolean) =
+        Firebase.saveNewImgPosttoUser(title, text, CRN, uri, imagePost)
 
 
     fun newComment(PKey: String, Comment: String, Classkey: String, UserID: String, crn: String) {
@@ -121,12 +182,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         Firebase.deleteNewPost(postKey, crn, userID)
     }
 
-    fun deleteNewCommentFromUserProfile(
-        ClassKey: String,
-        crn: String,
-        comKey: String,
-        userID: String
-    ) {
+    fun deleteNewCommentFromUserProfile(ClassKey: String, crn: String, comKey: String, userID: String) {
         Firebase.deleteNewCommentFromUserProfile(ClassKey, crn, comKey, userID)
     }
 
@@ -134,21 +190,12 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         Firebase.deleteNewCommentFromCommPosts(postKey, crn, classkey)
     }
 
-    fun editNewComment(
-        userID: String,
-        usercomkey: String,
-        ntext: String,
-        crn: String,
-        postKey: String
-    ) {
+    fun editNewComment(userID: String, usercomkey: String, ntext: String, crn: String, postKey: String) {
         Firebase.editComment(userID, usercomkey, ntext, crn, postKey)
     }
 
 
-    fun editPost(
-        crn: String, postKey: String, ctext: String, ctitle: String, ntext: String, ntitle: String,
-        userID: String
-    ) {
+    fun editPost(crn: String, postKey: String, ctext: String, ctitle: String, ntext: String, ntitle: String, userID: String) {
         Firebase.editPost(crn, postKey, ctext, ctitle, ntext, ntitle, userID)
     }
 
@@ -156,69 +203,12 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         Firebase.blockUser(UserID)
     }
 
-    fun getTheUserProfileComments(userID: String, callbackComment: FirebaseData.FirebaseCallbackCommentFlow){
-        Firebase.getTheUserProfileComments(userID, object: FirebaseCallbackComment{
-            override fun onFailure() {}
-
-            override fun onStart() {}
-
-            override fun onSuccess(data: DataSnapshot) {
-                val commdetail: Iterable<DataSnapshot> = data.children
-                val profileCommentList : MutableList<Comment> = mutableListOf()
-                for(n in commdetail){
-                    val newComment = Comment()
-                    //  try {
-                    newComment.let {
-                        it.text = n.child("text").value.toString()
-                        it.Classkey = n.child("Classkey").value.toString()
-                        it.PosterID = n.child("PosterID").value.toString()
-                        it.Postkey = n.child("Postkey").value.toString()
-                        it.profileComKey = n.child("ProfileComKey").value.toString()
-                        it.Ptime = n.child("Ptime").value.toString()
-                        it.userComkey = n.child("UserComkey").value.toString()
-                        it.author = n.child("author").value.toString()
-                        it.crn = n.child("crn").value.toString()
-
-                        profileCommentList.add(newComment)
-                    }
-                    //  } catch (e: Exception) {
-                    Log.d("Data Error", "error converting to post")
-                    //   }
-                }
-
-                val listCor : Flow<Comment> = profileCommentList.asFlow()
-                callbackComment.onCallback(listCor)
-                val scope = CoroutineScope(Dispatchers.IO)
-                scope.launch {
-                    listCor.collect {
-                            it -> it.text
-                        Log.d("soupcollect", "comm is $it")
-                    }
-                    val check = listCor.toList()
-                    Log.d("souprepo", "start here")
-                    for(item in check){
-                        var getext = item.text
-                        Log.d("souprepo", "comm is $getext")
-                    }
-                    Log.d("souprepo", "end here")
-                }
-                // comments.value = profileCommentLis
-            }
-        })
-    }
-
     fun reportUserPost(accusedID: String, complaintext: String, crn: String, classkey: String) {
         Firebase.reportUserPost(accusedID, complaintext, crn, classkey)
 
     }
 
-    fun reportUserComment(
-        accusedID: String,
-        complaintext: String,
-        crn: String,
-        classkey: String,
-        comKey: String
-    ) {
+    fun reportUserComment(accusedID: String, complaintext: String, crn: String, classkey: String, comKey: String) {
         Firebase.reportUserComment(accusedID, complaintext, crn, classkey, comKey)
 
     }
@@ -227,62 +217,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun currentUser() = Firebase.currentUser()
 
-    fun getClassPostsco(className: String, callback: FlowCallback) {
-        Firebase.getClassPosts(className, object : FirebaseCallbackPost {
-            override fun onStart() {
-            }
 
-            override fun onFailure() {
-            }
-
-            override fun onSuccess(data: DataSnapshot) {
-                val postdetail: Iterable<DataSnapshot> = data.child("Posts").children
-                val savedPostsList: MutableList<Post> = mutableListOf()
-                // var listCor : Flow<Post> = flow {
-                for (n in postdetail) {
-                    val newPost = Post()
-                    newPost.let {
-
-                        //Log.d("ACCESSING", newPost?.text)
-                        it.title = n.child("title").getValue(String::class.java)
-                        //Log.d("Community post", data.child("title").getValue(String::class.java))
-                        it.text = n.child("text").getValue(String::class.java)
-                        //newPost.author = pos.child("author").getValue(String::class.java)
-                        //it.subject = className
-                        Log.d("CRN", data.key!!)
-                        it.subject = n.child("subject").getValue(String::class.java)
-                        it.Ptime = n.child("Timestamp").getValue(String::class.java)
-                        it.key = n.child("key").getValue(String::class.java)
-                        it.Ptime = n.child("Ptime").getValue(String::class.java)
-                        it.classkey = n.child("Classkey").getValue(String::class.java)
-                        it.userID = n.child("UserID").getValue(String::class.java)
-                        it.author = n.child("author").getValue(String::class.java)
-                        it.uri = n.child("uri").getValue(String::class.java)
-
-                        savedPostsList.add(newPost)
-
-                        // emit(newPost)
-                    }
-                }
-                //  }
-                val listCor: Flow<Post> = savedPostsList.asFlow()
-                callback.onFlow(listCor)
-                val scope = CoroutineScope(Dispatchers.IO)
-                /*scope.launch {
-                    listCor.collect {
-                        Log.d("soupcollect", "post is $it")
-                    }
-                    val check = listCor.toList()
-                    Log.d("souprepo", "start here")
-                    for (item in check) {
-                        Log.d("souprepo", "post is $item")
-                    }
-                    Log.d("souprepo", "end here")
-                }*/
-
-            }
-        })
-    }
 
     fun addUsersub(crn: String) {
         Firebase.addUserSUB(crn)
@@ -320,70 +255,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     fun sendClassnameForUsername() = Firebase.sendClassnameForUsername()
 
-    fun getUserProfilePosts(userID: String): PostLiveData {
-        val profilePostsList: MutableList<Post> = mutableListOf()
-        Firebase.listenForUserProfilePosts(userID, object : FirebaseCallbackPost {
-            override fun onFailure() {}
-            override fun onStart() {}
 
-            override fun onSuccess(data: DataSnapshot) {
-                if (!data.child("text").exists()) {
-                    Log.d("post", "doesn't exist")
-                    val emptyPost = Post("No Posts", "", "", "")
-                    val profilePostL: MutableList<Post> = mutableListOf()
-                    profilePostL.add(emptyPost)
-                    profilePosts.value = profilePostL
-                } else if (data.child("text").exists()) {
-                    //noPostsCheck = false
-                    val newProfilePost = Post()
-                    try {
-                        newProfilePost.let {
-                            it.text = data.child("text").value.toString()
-                            it.title = data.child("title").value.toString()
-                            it.key = data.child("key").value.toString()
-                            // class key is key for this post
-                            it.classkey = data.child("Classkey").value.toString()
-                            // user who posted id
-                            it.userID = data.child("UserID").value.toString()
-                            // need to change this later subject should be subject crn should be different
-                            it.subject = data.child("subject").value.toString()
-                            it.Ptime = data.child("Ptime").value.toString()
-                            it.author = data.child("author").value.toString()
-                            it.uri = data.child("uri").value.toString()
-                            // not setting author
-                        }
-                    } catch (e: Exception) {
-                        Log.d("Data Error", "error converting to post")
-                    }
-
-                    if (newProfilePost.key != null) {
-                        Log.d(
-                            "profileposts",
-                            newProfilePost.title ?: " Accessing profile post title"
-                        )
-                        Log.d("profileposts", newProfilePost.text ?: " Accessing profile post text")
-                        Log.d("profileposts", newProfilePost.key ?: " Accessing profile post title")
-                        Log.d(
-                            "profileposts",
-                            newProfilePost.classkey ?: " Accessing profile post title"
-                        )
-                        Log.d(
-                            "profileposts",
-                            newProfilePost.userID ?: " Accessing profile post title"
-                        )
-                        Log.d("profileposts", newProfilePost.crn ?: " Accessing profile post title")
-
-                        profilePostsList.add(newProfilePost)
-                        Log.d("profileposts", newProfilePost.key ?: " Accessing profile post title")
-                        newProfilePosts = newProfilePost
-
-                    }
-                    profilePosts.value = profilePostsList
-                }
-            }
-        })
-        return profilePosts
-    }
 
     fun readPhotoValue(useridm: String, callback: EmailCallback) {
         Firebase.readPhotoValue(useridm, callback)
