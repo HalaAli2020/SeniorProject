@@ -24,6 +24,7 @@ import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.Adapters.CommentsListAdapter
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
+import com.example.seniorproject.Utils.CheckCallback
 import com.example.seniorproject.Utils.ProfileButton
 import com.example.seniorproject.Utils.SwipeHelper
 import com.example.seniorproject.data.Firebase.FirebaseData
@@ -75,15 +76,23 @@ class ClickedPost : AppCompatActivity() {
         myViewModel.boolcom.observe(this, Observer<Boolean> {
             if (it == true)
             {
-                //create comment toast message
-                Toast.makeText(this, "you have made a comment", Toast.LENGTH_LONG).show()
-                //close keyboard on comment creation
-                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(findViewById<View>(android.R.id.content).getWindowToken(), 0)
-                //clear comment edit text
-                val ed = findViewById<EditText>(R.id.Comment_textbox)
-                ed.text.clear()
-
+                myViewModel.checkSubscriptions(crn, object : CheckCallback {
+                    override fun check(chk: Boolean) {
+                        if (chk == true){
+                            //create comment toast message
+                            Toast.makeText(this@ClickedPost, "you have made a comment", Toast.LENGTH_LONG).show()
+                            //close keyboard on comment creation
+                            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                            imm.hideSoftInputFromWindow(findViewById<View>(android.R.id.content).getWindowToken(), 0)
+                            //clear comment edit text
+                            val ed = findViewById<EditText>(R.id.Comment_textbox)
+                            ed.text.clear()
+                        }
+                        else if (chk == false){
+                            Toast.makeText(this@ClickedPost, "please subscribe to $crn", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                })
             }
             else if (it == false )
             {

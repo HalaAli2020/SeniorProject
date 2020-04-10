@@ -4,11 +4,13 @@ package com.example.seniorproject.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.seniorproject.Utils.CheckCallback
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.CommentLive
 import com.example.seniorproject.data.repositories.PostRepository
+import com.google.firebase.database.DataSnapshot
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
@@ -17,7 +19,6 @@ import javax.inject.Inject
 class ClickedPostViewModel @Inject constructor(private val repository : PostRepository) : ViewModel(){
 
     private val commentListener : PostListener? = null
-    var commentsLiveList : CommentLive = CommentLive()
     var comment : String? = null
     private var commentsList = mutableListOf<Comment>()
     var pKey: String? = null
@@ -26,7 +27,6 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
     var crn : String? = null
     var title: String? = null
     var text: String? = null
-    //private var getCommentsJob: Job? = null
     private var postKey : String? = null
     var comuserid: String? = null
     var usercomkey: String?= null
@@ -34,6 +34,7 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
     var usercrn: String? = null
     var postukey: String? = null
     var boolcom = MutableLiveData<Boolean>()
+    var boolsub : Boolean? = null
 
 
     init {
@@ -102,6 +103,27 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
         fun onList(list: List<Comment>)
     }
 
+    fun checkSubscriptions(classname : String, checkCallback: CheckCallback)
+    {
+        repository.checkSubscription(classname,object : PostRepository.FirebaseCallbacksubBool {
+            override fun onStart() { TODO("not implemented") }
+            override fun onFailure() { TODO("not implemented") }
 
+            override fun onSuccess(data: DataSnapshot) {
+                if (data.exists()) {
+                    for (sub in data.children) {
+                        if (sub.value == classname) {
+                            boolsub = true
+                            checkCallback.check(boolsub ?: false)
+                            return
+                        }
+                    }
+                    boolsub = false
+                    checkCallback.check(boolsub ?: false)
+                }
+
+            }
+        })
+    }
 
 }
