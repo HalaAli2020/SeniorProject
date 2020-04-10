@@ -119,6 +119,7 @@ class FragmentHome : Fragment() {
         binding.lifecycleOwner = this
 
         binding.executePendingBindings()
+        // delete later
 
 
 
