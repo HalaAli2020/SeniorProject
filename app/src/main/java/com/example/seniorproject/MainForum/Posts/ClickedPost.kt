@@ -1,15 +1,20 @@
 package com.example.seniorproject.MainForum.Posts
 
+import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +23,7 @@ import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.Adapters.CommentsListAdapter
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
+import com.example.seniorproject.Utils.CheckCallback
 import com.example.seniorproject.Utils.ProfileButton
 import com.example.seniorproject.Utils.SwipeHelper
 import com.example.seniorproject.data.models.Comment
@@ -63,6 +69,35 @@ class ClickedPost : AppCompatActivity() {
         myViewModel.title = title
         myViewModel.text = text
         myViewModel.crn = crn
+
+        //observers weather or not the user has inputted text
+        myViewModel.boolcom.observe(this, Observer<Boolean> {
+            if (it == true)
+            {
+                myViewModel.checkSubscriptions(crn, object : CheckCallback {
+                    override fun check(chk: Boolean) {
+                        if (chk == true){
+                            //create comment toast message
+                            Toast.makeText(this@ClickedPost, "you have made a comment", Toast.LENGTH_LONG).show()
+                            //close keyboard on comment creation
+                            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                            imm.hideSoftInputFromWindow(findViewById<View>(android.R.id.content).getWindowToken(), 0)
+                            //clear comment edit text
+                            val ed = findViewById<EditText>(R.id.Comment_textbox)
+                            ed.text.clear()
+                        }
+                        else if (chk == false){
+                            Toast.makeText(this@ClickedPost, "please subscribe to $crn", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                })
+            }
+            else if (it == false )
+            {
+                //create comment failure toast message
+                Toast.makeText(this, "you cannot post a blank comment", Toast.LENGTH_LONG).show()
+            }
+        })
 
 
         //checking for comments and adding a no comments message when there are no comments
@@ -242,4 +277,5 @@ class ClickedPost : AppCompatActivity() {
         binding.clickedViewModel = myViewModel
         binding.lifecycleOwner = this@ClickedPost
     }
+
 }
