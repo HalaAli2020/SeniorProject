@@ -9,25 +9,32 @@
             type="com.example.seniorproject.search.SearchActivity" />
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:background="@color/BackgroundColor"
         android:layout_height="match_parent"
         tools:context="com.example.seniorproject.search.SearchActivity">
 
 
+        <SearchView
+            android:id="@+id/search_in"
+            android:layout_width="407dp"
+            android:layout_height="82dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </SearchView>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/Search_L"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="2dp"
+            android:layout_width="406dp"
+            android:layout_height="490dp"
+            android:layout_marginTop="22dp"
             android:windowSoftInputMode="adjustResize"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/Search_R" />
+            app:layout_constraintTop_toBottomOf="@+id/search_in" />
 
 
-
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
