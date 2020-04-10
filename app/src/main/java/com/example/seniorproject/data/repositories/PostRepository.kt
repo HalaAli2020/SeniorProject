@@ -6,13 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.Utils.FlowCallback
 import com.example.seniorproject.data.Firebase.FirebaseData
+import com.example.seniorproject.data.interfaces.FirebaseValuecallback
 import com.example.seniorproject.data.models.*
 import com.google.firebase.database.DataSnapshot
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,7 +41,132 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     fun uploadUserProfileImage(selectedPhotoUri: Uri) =
         Firebase.uploadImageToFirebaseStorage(selectedPhotoUri)
 
-    fun getSubscribedPosts() = Firebase.getSubscribedPosts()
+    suspend fun getSubscribedPosts(value : List<String>) : Flow<Post> = flow {
+        var postL : MutableList<Post> = mutableListOf()
+        var limit = getPostperclass(value.size)
+        var onSuccessJob : Job? = null
+
+        var job = CoroutineScope(Dispatchers.IO).launch {
+            for (n in value)
+            {
+                Firebase.getOneClass(n, object : FirebaseValuecallback
+                {
+                    override fun onFailure() {
+
+                    }
+
+                    override fun onStart() {
+
+                    }
+
+                    override fun onSuccess(data: DataSnapshot)  {
+                      launch(Dispatchers.Default) {
+                            for (n in data.children)
+                            {
+                                var p = Post()
+                                var count = 0
+                                p.let {
+                                    it.title = n.child("title").getValue(String::class.java)
+                                    //Log.d("Community post", data.child("title").getValue(String::class.java))
+                                    it.text = n.child("text").getValue(String::class.java)
+                                    //newPost.author = pos.child("author").getValue(String::class.java)
+                                    //it.subject = className
+                                    Log.d("CRN", data.key!!)
+                                    it.subject = n.child("subject").getValue(String::class.java)
+                                    it.Ptime =  n.child("Timestamp").getValue(String::class.java)
+                                    it.key = n.child("key").getValue(String::class.java)
+                                    it.Ptime = n.child("Ptime").getValue(String::class.java)
+                                    it.classkey = n.child("Classkey").getValue(String::class.java)
+                                    it.userID = n.child("UserID").getValue(String::class.java)
+                                    it.author = n.child("author").getValue(String::class.java)
+                                    it.uri = n.child("uri").getValue(String::class.java)
+                                }
+                                postL.add(p)
+                                count++
+                                if(count <= limit)
+                                {
+                                    break
+                                }
+                            }
+                        }
+                    }
+                })
+
+            }
+            kotlinx.coroutines.delay(100)
+
+        }
+
+        job.join()
+        onSuccessJob?.join()
+        for (n in postL)
+        {
+            emit(n)
+        }
+
+    }
+
+
+   suspend fun getUsersSubs() : Flow<String> = flow {
+        var SubList : MutableList<String> = mutableListOf()
+       var ob : Job? = null
+      var send = object : FirebaseValuecallback {
+           override fun onFailure() {
+
+           }
+
+           override fun onStart() {
+
+           }
+
+
+
+           override fun onSuccess(data: DataSnapshot)  {
+               val size = data.hasChildren()
+               Log.d("Size", size.toString())
+               //var has :HashMap<String,String>? = hashMapOf()
+               val sublist = data.children
+               for (x in sublist) {
+                   Log.d("usersub", x.getValue(String::class.java)!!)
+                   SubList.add(x.getValue(String::class.java)!!)
+               }
+
+           }
+       }
+      var job = CoroutineScope(Dispatchers.IO). launch {
+         var ob = Firebase.getUserSub(send)
+
+          kotlinx.coroutines.delay(1000)
+        }
+       job.join()
+            Log.d("Before For", SubList.size.toString())
+            for (n in SubList) {
+                Log.d("emitting", n)
+                emit(n)
+            }
+
+
+
+
+    }
+/*This function is used to find out how many posts per class the application should grab based on the number of communities the user is a part of  */
+    fun getPostperclass(f : Int) : Int
+    {
+        if(f <= 2)
+        {
+            return 5
+        }
+        else if (f in 3..5)
+        {
+            return 3
+        }
+        else if (f > 5)
+        {
+            return 2
+        }
+        return 1
+
+    }
 
     fun getClassComments(Key: String, subject: String, callbackComment: FirebaseData.FirebaseCallbackCommentFlow){
         Firebase.getClassComments(Key, subject, object: PostRepository.FirebaseCallbackComment{
@@ -443,6 +566,11 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         fun onStart()
         fun onFailure()
         fun onSuccess(data: DataSnapshot)
+    }
+    interface FirebaseCallbackSubs {
+        fun onFailure()
+        fun onStart()
+        fun onSuccess(data: List<String>)
     }
 
     interface FirebaseCallbackCRN {

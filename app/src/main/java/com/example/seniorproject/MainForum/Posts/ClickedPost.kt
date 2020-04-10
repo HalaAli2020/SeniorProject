@@ -75,7 +75,7 @@ class ClickedPost : AppCompatActivity() {
                     var comment = Comment("no comment", "", "", "", "")
                     val Comments = MutableList(1) { index -> comment}
                     nocommadapter = CommentsListAdapter(this@ClickedPost, Comments, title, text, author, crn,
-                        intent.getStringExtra("UserID").toString(), ptime, uri)
+                       uid, ptime, uri)
                     comment_RecyclerView.adapter = nocommadapter
                     comment_RecyclerView.layoutManager = LinearLayoutManager(this@ClickedPost)
                 }
@@ -90,7 +90,8 @@ class ClickedPost : AppCompatActivity() {
                                 Log.d("soupview", "comm text is $getext")
                             }
 
-                            adapter = CommentsListAdapter(this@ClickedPost, list, title, text, author, crn,intent.getStringExtra("UserID").toString(), ptime, uri)
+                            adapter = CommentsListAdapter(this@ClickedPost, list, title, text, author, crn,
+                                intent.getStringExtra("UserID").toString(), ptime, uri)
                             comment_RecyclerView.adapter = adapter
                             comment_RecyclerView.layoutManager = LinearLayoutManager(this@ClickedPost)
 
