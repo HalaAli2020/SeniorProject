@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Drop Shadow Stack
+    <!-- Drop Shadow Stack -->
     <item>
         <shape>
             <padding android:bottom="2dp" />
-            <solid android:color="#30ECECEC" />
+            <solid android:color="@color/titlebar1" />
         </shape>
     </item>
 
     <item>
         <shape>
             <padding android:bottom="1dp" />
-            <solid android:color="#30AFAFAF" />
+            <solid android:color="@color/titlebar2" />
 
         </shape>
     </item>
- -->
+
     <!-- Background -->
     <item>
         <shape>

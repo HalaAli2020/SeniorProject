@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
-                android:background="@color/BackgroundColor"
+                android:background="@color/colorPrimary"
                 app:itemTextColor="@color/TextColor"
                 app:itemIconTint="@color/TextColor"
                 app:menu="@menu/activity_main_drawer" />
