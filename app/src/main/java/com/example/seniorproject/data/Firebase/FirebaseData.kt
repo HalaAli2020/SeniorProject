@@ -1,6 +1,9 @@
 package com.example.seniorproject.data.Firebase
 import android.net.Uri
 import android.util.Log
+import com.google.firebase.database.FirebaseDatabase
+import javax.inject.Inject
+import javax.inject.Singleton
 import androidx.lifecycle.MutableLiveData
 import com.example.seniorproject.Utils.Callback
 import com.example.seniorproject.Utils.EmailCallback
@@ -24,8 +27,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.*
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.collections.HashMap
 
 
@@ -1249,38 +1250,59 @@ Checks if a user has made any comments, a callback is implemented in the Profile
     fun saveNewPosttoUser(text: String, title:String, CRN: String) {
         val userID = firebaseAuth.uid
         val author= firebaseAuth.currentUser?.displayName
-        val post = Post(title, text, CRN,"")
-        post.userID = userID
-        post.author = author
-        val subpath = FirebaseDatabase.getInstance().getReference("/users/$userID")
-         subpath.child("Subscriptions").orderByValue().addListenerForSingleValueEvent( object : ValueEventListener {
-            override fun onDataChange(p0: DataSnapshot) {
-                if(p0.exists()){
-                    for(sub in p0.children){
-                        if(sub.value == CRN){
-                            val userKey = FirebaseDatabase.getInstance().getReference("/users/$userID").child("Posts").push().key
-                            val classKey = FirebaseDatabase.getInstance().getReference("/Subjects/$CRN").child("Posts").push().key
-                            post.key = userKey
-                            post.classkey = classKey
-                            val dataupdates = HashMap<String, Any>()
-                            val postvalues = post.toMap()
-                            dataupdates["/Subjects/$CRN/Posts/$classKey"] = postvalues
-                            dataupdates["/users/$userID/Posts/$userKey"] = postvalues
-                            FirebaseDatabase.getInstance().reference.updateChildren(dataupdates)
+            val post = Post(title, text, CRN, "")
+            post.userID = userID
+            post.author = author
+            val subpath = FirebaseDatabase.getInstance().getReference("/users/$userID")
+            subpath.child("Subscriptions").orderByValue()
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if (p0.exists()) {
+                            for (sub in p0.children) {
+                                if (sub.value == CRN) {
+                                    //send subcheck
+                                    val userKey = FirebaseDatabase.getInstance()
+                                        .getReference("/users/$userID").child("Posts").push().key
+                                    val classKey = FirebaseDatabase.getInstance()
+                                        .getReference("/Subjects/$CRN").child("Posts").push().key
+                                    post.key = userKey
+                                    post.classkey = classKey
+                                    val dataupdates = HashMap<String, Any>()
+                                    val postvalues = post.toMap()
+                                    dataupdates["/Subjects/$CRN/Posts/$classKey"] = postvalues
+                                    dataupdates["/users/$userID/Posts/$userKey"] = postvalues
+                                    FirebaseDatabase.getInstance().reference.updateChildren(
+                                        dataupdates
+                                    )
+                                } else {
+                                    Log.d("Not subscribed", "you cannot post to a forum you are not subscribed in.")
+                                }
+                            }
                         }
-                        else{
-                            Log.d("Not subscribed","you cannot post to a forum you are not subscribed in.")
-                        }
+                subpath.removeEventListener(this)
                     }
-                }
-                subpath.removeEventListener(this)
-            }
 
-            override fun onCancelled(p0: DatabaseError) {
+                    override fun onCancelled(p0: DatabaseError) {
                 subpath.removeEventListener(this)
-            }
-        })
+                    }
+                })
     }
+
+   fun checkSubscription(subject : String, callbacksubbool: PostRepository.FirebaseCallbacksubBool) {
+       val userID = FirebaseAuth.getInstance().uid
+       val subpath = FirebaseDatabase.getInstance().getReference("/users/$userID")
+       subpath.child("Subscriptions").orderByValue()
+           .addListenerForSingleValueEvent(object : ValueEventListener {
+               override fun onCancelled(p0: DatabaseError) {
+                   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+               }
+               override fun onDataChange(p0: DataSnapshot) {
+                   callbacksubbool.onSuccess(p0)
+
+               }
+           })
+   }
+
 
     //database query to get the classes that a user is subscribed to
     fun listenUserSub(callbackString: PostRepository.FirebaseCallbackString){
@@ -1330,15 +1352,11 @@ Checks if a user has made any comments, a callback is implemented in the Profile
 
                 /*val size = p0.hasChildren()
                 Log.d("Size", size.toString())
-                //var has :HashMap<String,String>? = hashMapOf()
                 val sublist = p0.children
                 for (x in sublist) {
                     Log.d("usersub", x.getValue(String::class.java)!!)
                     SubList.add(x.getValue(String::class.java)!!)
                 }
-                //UserSUB.value = SubList*/
-                //reference.removeEventListener(this)
-            }
         }
 
        var job = CoroutineScope(Dispatchers.IO).launch {
@@ -2160,10 +2178,6 @@ Checks if a user has made any comments, a callback is implemented in the Profile
 
            }
        })
-    }
-    fun destroylisten(lit : ValueEventListener)
-    {
-
     }
 
 
