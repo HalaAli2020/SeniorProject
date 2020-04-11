@@ -30,7 +30,7 @@ class FragmentLatestMessages : Fragment() {
         activity?.title = "Messages"
         val view = inflater.inflate(R.layout.m_fragment_latest_messages, container, false)
         val factory = InjectorUtils.provideMessagesFragmentViewModelFactory()
-        myViewModel = ViewModelProviders.of(this, factory).get(MessagesFragmentViewModel::class.java)
+        myViewModel = ViewModelProvider(this, factory).get(MessagesFragmentViewModel::class.java)
 
         view.recyclerView_latest_messages.layoutManager = LinearLayoutManager(context)
 

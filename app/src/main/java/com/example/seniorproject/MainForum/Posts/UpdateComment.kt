@@ -27,9 +27,10 @@ class UpdateComment  : AppCompatActivity() {
 
 
         DaggerAppComponent.create().inject(this)
-        myViewModel = ViewModelProviders.of(this, factory).get(ClickedPostViewModel::class.java)
+        myViewModel = ViewModelProvider(this, factory).get(ClickedPostViewModel::class.java)
         val binding: UpdateCommentBinding = DataBindingUtil.setContentView(this,R.layout.update_comment)
 
+        //gets comment information
         val text: String = intent.getStringExtra("text") ?: "no text"
         val usercomkey: String = intent.getStringExtra("ProfileComKey") ?: "no comkey"
         val userid: String = intent.getStringExtra("PosterID") ?: "no id"

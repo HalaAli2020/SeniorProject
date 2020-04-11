@@ -58,7 +58,7 @@ class ProfileCommentFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentProfileCommentBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile_comment, container, false)
-        myViewModel = ViewModelProviders.of(this, factory).get(ProfileViewModel::class.java)
+        myViewModel = ViewModelProvider(this, factory).get(ProfileViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_profile_comment, container, false)
 
         val currentuser = FirebaseAuth.getInstance().currentUser?.uid ?: "null"

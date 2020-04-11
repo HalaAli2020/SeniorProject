@@ -32,6 +32,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
     private val typeText: Int = 0
     private val typeImage: Int = 1
 
+    //this adapter handles the cases of imageposts and textposts
     override fun getItemViewType(position: Int): Int {
         if (savedPosts.value!![position].uri == null || savedPosts.value!![position].uri == "null"|| savedPosts.value!![position].uri == "") {
             return typeText
@@ -61,6 +62,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        var params = holder.itemView.layoutParams as RecyclerView.LayoutParams
         val post: Post = savedPosts.value!![position]
         if (holder is PostImageViewHolders) {
             val post: Post = savedPosts.value!![position]
@@ -80,7 +82,9 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
                         if (p0.exists()) {
                             for (block in p0.children) {
                                 if (block.value == post.UserID) {
-                                    holder.itemView.post_title.text = "[blocked]"
+                                    params.height = 0
+                                    params.width = 0
+                                    holder.itemView.layoutParams = params
                                 }
                             }
                         }
@@ -132,7 +136,9 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
                     if (p0.exists()) {
                         for (block in p0.children) {
                             if (block.value == post.UserID) {
-                                holder.itemView.post_title.text = "[blocked]"
+                                params.height = 0
+                                params.width = 0
+                                holder.itemView.layoutParams = params
                             }
                         }
                     }
@@ -169,7 +175,7 @@ class CustomAdapter(context: Context, var savedPosts: PostLiveData, var type: In
                 //toast needed
             }
             else if(holder.itemView.post_title.text == "[blocked]"){
-                //var pauth = post.author
+                //var path = post.author
                 Log.d("Tag","blocked post will not open to clicked post screen")
             }
             else {

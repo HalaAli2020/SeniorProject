@@ -46,7 +46,7 @@ class LoginActivity : AppCompatActivity(), AuthenticationListener {
 
         //initalization of the viewmodel
         DaggerAppComponent.create().inject(this)
-        myViewModel = ViewModelProviders.of(this,factory).get(AuthenticationViewModel::class.java)
+        myViewModel = ViewModelProvider(this,factory).get(AuthenticationViewModel::class.java)
         //initialization of binding variable, binded variables are located in the corresponding XML file
         val binding: ActivityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         binding.authViewModel = myViewModel

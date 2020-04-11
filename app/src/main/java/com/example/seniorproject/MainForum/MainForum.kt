@@ -47,12 +47,11 @@ import kotlinx.android.synthetic.main.side_nav_header.*
 import javax.inject.Inject
 
 private const val TAG = "MyLogTag"
-private const val TAGG = "username"
 
 class MainForum : AppCompatActivity(),
     FirebaseAuth.AuthStateListener {
 
-
+//observes users authentication state
     private var obse: Observer<User>? = null
     override fun onAuthStateChanged(p0: FirebaseAuth) {
         val currentUser = myViewModel.user
@@ -70,7 +69,7 @@ class MainForum : AppCompatActivity(),
     lateinit var myViewModel: HomeFragmentViewModel
     private lateinit var mDrawerLayout: DrawerLayout
 
-
+//botton navigation view initialization
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -79,12 +78,14 @@ class MainForum : AppCompatActivity(),
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
                     replaceFragment(FragmentHome())
                     return@OnNavigationItemSelectedListener true
+                    //navigates user to homefragment
                 }
                 R.id.subscriptions -> {
                     FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.TextColor))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
                     replaceFragment(FragmentSubscriptions())
                     return@OnNavigationItemSelectedListener true
+                    //navigates user to subscription fragment
                 }
                 R.id.newPost -> {
                     FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.blue_theme))
@@ -92,13 +93,14 @@ class MainForum : AppCompatActivity(),
                     val intent = Intent(this, NewPost::class.java)
                     startActivity(intent)
                     return@OnNavigationItemSelectedListener true
+                    //navigates user to new post activity
                 }
                 R.id.list -> {
                     FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.TextColor))
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
                     val intent = Intent(this, SearchActivity::class.java)
                     startActivity(intent)
-
+                   //navigates user to search activity
 
                 }
                 R.id.messages -> {
@@ -107,6 +109,7 @@ class MainForum : AppCompatActivity(),
                     //replaceFragment(FragmentLatestMessages())
                     replaceFragment(FragmentLatestMessages())
                     return@OnNavigationItemSelectedListener true
+                    //navigates user to messages activity
                 }
             }
             false
@@ -119,24 +122,25 @@ class MainForum : AppCompatActivity(),
         //FirebaseDatabase.getInstance().setPersistenceEnabled(true)
 
         setTheme()
-
+//initialized dagger app component and viewmodel
         DaggerAppComponent.create().inject(this)
-        myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
+        myViewModel = ViewModelProvider(this, factory).get(HomeFragmentViewModel::class.java)
+    //initializes binding variable all binded variables can be found in the correlating xml file
         val binding: ActivityMainForumBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_main_forum)
         bottom_navigation.onNavigationItemSelectedListener = mOnNavigationItemSelectedListener
 
-
+//checks for internet connection
         if (!checkNetworkState(applicationContext)) noInternetAlertDialog()
 
-
+//initializes toolbar
         setSupportActionBar(findViewById(R.id.toolbar))
         val actionbar: ActionBar? = supportActionBar
         actionbar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.unitlogopropernav)
         }
-
+//initialized  hamburger menu
         mDrawerLayout = findViewById(R.id.drawer_layout)
         val navigationView: NavigationView = findViewById(R.id.nav_view)
         val sideNavHeaderBinding: SideNavHeaderBinding = DataBindingUtil.inflate(layoutInflater, R.layout.side_nav_header, binding.navView, false)
@@ -145,10 +149,11 @@ class MainForum : AppCompatActivity(),
         obse = Observer {
             this.email_display.text = it.email
             this.username_display.text = it.username
+            //databinded the navigation header so it can display the current users email and username
         }
 
 
-
+//hamburger meny navigation listener
         navigationView.setNavigationItemSelectedListener { menuItem ->
             menuItem.isChecked = true
             mDrawerLayout.closeDrawers()
@@ -157,11 +162,13 @@ class MainForum : AppCompatActivity(),
                 R.id.nav_profile -> {
                     val intent = Intent(this, UserProfileActivity::class.java)
                     startActivity(intent)
+                    //open user profile activity
                 }
                 R.id.nav_allClasses -> {
                     Toast.makeText(this, "Settings", Toast.LENGTH_LONG).show()
                     val intent = Intent(this, Settings::class.java)
                     startActivity(intent)
+                    //open settings
                 }
                 R.id.nav_logout -> {
                     Toast.makeText(this, "User is Logged out.", Toast.LENGTH_LONG).show()
@@ -169,6 +176,7 @@ class MainForum : AppCompatActivity(),
                     val intent = Intent(this, LoginActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
+                    //log out user
 
                 }
 
@@ -180,7 +188,7 @@ class MainForum : AppCompatActivity(),
         val imageView: ImageView = headerview.findViewById(R.id.profile_image)
 
 
-
+//load profile image
         Glide.with(this) //1
             .load(FirebaseAuth.getInstance().currentUser?.photoUrl)
             .placeholder(R.drawable.ic_account_circle_blue_24dp)
@@ -193,13 +201,13 @@ class MainForum : AppCompatActivity(),
 
     }
 
-
+//replace fragment boilderplate code
     private fun replaceFragment(fragment: Fragment) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragmentContainer, fragment)
         fragmentTransaction.commit()
     }
-
+//verifies login
     private fun loginVerification() {
         val uid = FirebaseAuth.getInstance().uid
         if (uid == null) {
@@ -209,12 +217,12 @@ class MainForum : AppCompatActivity(),
         }
     }
 
-
+//inflates menu
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.top_nav_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
-
+//opens hamburger menu
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
@@ -223,7 +231,7 @@ class MainForum : AppCompatActivity(),
         }
         return super.onOptionsItemSelected(item)
     }
-
+//checks weather the device has an internet connection
     private fun checkNetworkState(context: Context): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -240,7 +248,7 @@ class MainForum : AppCompatActivity(),
             return nwInfo.isConnected
         }
     }
-
+//opens no internet alert dialog
     private fun noInternetAlertDialog() {
         val dialogBuilder = AlertDialog.Builder(this)
 

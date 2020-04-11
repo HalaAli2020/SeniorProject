@@ -1,6 +1,7 @@
 package com.example.seniorproject.MainForum.Posts
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -8,7 +9,6 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -27,6 +27,7 @@ import com.example.seniorproject.viewModels.ClickedPostViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_clicked_post.*
 import javax.inject.Inject
+import kotlin.reflect.typeOf
 
 class ClickedPost : AppCompatActivity() {
 
@@ -45,7 +46,7 @@ class ClickedPost : AppCompatActivity() {
 
         //initializing dagger app component and binding variable
         DaggerAppComponent.create().inject(this)
-        myViewModel = ViewModelProviders.of(this, factory).get(ClickedPostViewModel::class.java)
+        myViewModel = ViewModelProvider(this, factory).get(ClickedPostViewModel::class.java)
         //binded varibles and function can be found in the activity_clicked_post xml file
         val binding: ActivityClickedPostBinding = DataBindingUtil.setContentView(this, R.layout.activity_clicked_post)
 
@@ -130,6 +131,7 @@ class ClickedPost : AppCompatActivity() {
                                                                 Toast.LENGTH_SHORT
                                                             )
                                                             toast.show()
+                                                            onBackPressed(crn)
                                                         }
                                                         builder.setNegativeButton("CANCEL"
                                                         ) { _: DialogInterface?, _: Int ->
@@ -244,7 +246,7 @@ class ClickedPost : AppCompatActivity() {
                                     myViewModel.newComment()
                                 }
 
-//on swipe a user can block or report another user
+                              //on swipe a user can block or report another user
                                 object : SwipeHelper(applicationContext, comment_RecyclerView, 200) {
                                     override fun initButton(
                                         viewHolders: RecyclerView.ViewHolder,
@@ -259,7 +261,6 @@ class ClickedPost : AppCompatActivity() {
                                                 ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
                                                     ("#FF0000"), object : ButtonClickListener {
                                                     override fun onClick(pos: Int) {
-                                                        Log.d("soupv", "pos is $pos")
                                                         //userkey is collected from the recyclerview for the block user functionality
                                                         val userkey: String? =
                                                             adapter.getUserKey(viewHolders)
@@ -279,7 +280,9 @@ class ClickedPost : AppCompatActivity() {
                                                                 "This user has been blocked",
                                                                 Toast.LENGTH_SHORT
                                                             )
+                                                            //takes user to an updated community posts page and displays successful bloakc toast message
                                                             toast.show()
+                                                            onBackPressed(crn)
                                                         }
                                                         builder.setNegativeButton("CANCEL"
                                                         ) { _: DialogInterface?, _: Int ->
@@ -351,13 +354,15 @@ class ClickedPost : AppCompatActivity() {
                                                                 crnkey!!,
                                                                 postkey!!, comkey!!
                                                             )
-
+                                                         //report comment and show toast message
                                                         }
                                                         builder.setNegativeButton("CANCEL"
                                                         ) { _: DialogInterface?, _: Int ->
                                                             builder.setCancelable(true)
+                                                            //close dialog if user chooses cancel
                                                         }
 
+                                                        //create and show dialog box
                                                         val msgdialog: AlertDialog = builder.create()
                                                         msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
 
@@ -380,5 +385,12 @@ class ClickedPost : AppCompatActivity() {
 
         binding.clickedViewModel = myViewModel
         binding.lifecycleOwner = this@ClickedPost
+    }
+
+     fun onBackPressed(string: String) {
+        val intent = Intent(this@ClickedPost, CommunityPosts::class.java)
+        intent.putExtra("ClassName", string)
+         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+         startActivity(intent)
     }
 }

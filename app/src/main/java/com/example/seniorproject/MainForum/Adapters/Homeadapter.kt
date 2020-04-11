@@ -32,11 +32,14 @@ class HomeAdapter(context: Context, var savedPosts: List<Post>, var type: Int) :
     private val typeText: Int = 0
     private val typeImage: Int = 1
 
+    //this adapters covers the cases of image and text posts
     override fun getItemViewType(position: Int): Int {
         if (savedPosts[position].uri == null || savedPosts[position].uri == "null") {
             return typeText
+            //if the uri is not present or null then return type that correlates to textpost
         }
         return typeImage
+        //if uri is present then return type that correlates to imagepost
     }
 
 
@@ -46,9 +49,11 @@ class HomeAdapter(context: Context, var savedPosts: List<Post>, var type: Int) :
         if (viewType == 1) {
             val cellForRow = layoutInflater.inflate(R.layout.rv_post_image, parent, false)
             return PostImageViewHolders(cellForRow)
+            //inflate and show image cardview
         }else {
             val cellForRow = layoutInflater.inflate(R.layout.rv_post, parent, false)
             return CustomViewHolders(cellForRow)
+            //inflate and show text cardview
         }
 
     }
@@ -58,14 +63,17 @@ class HomeAdapter(context: Context, var savedPosts: List<Post>, var type: Int) :
             return savedPosts.size
         } else
             return 0
+        //return the amount of posts sent to the recyclerview
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        var params = holder.itemView.layoutParams as RecyclerView.LayoutParams
+        //declare parameter variable later user for blocked users
         val post: Post = savedPosts[position]
         if (holder is PostImageViewHolders) {
             val post: Post = savedPosts[position]
             val userID = FirebaseAuth.getInstance().uid
-
+             //set text and image views of the image post cardview
             holder.itemView.post_title.text = post.title
             holder.itemView.username.text = post.author
             holder.itemView.post_timestamp.text = post.Ptime
@@ -81,7 +89,13 @@ class HomeAdapter(context: Context, var savedPosts: List<Post>, var type: Int) :
                         if (p0.exists()) {
                             for (block in p0.children) {
                                 if (block.value == post.UserID) {
-                                    holder.itemView.post_title.text = "[blocked]"
+                                    params.height = 0
+                                    params.width = 0
+                                    holder.itemView.layoutParams = params
+                                    /*
+                                    checking for blocked image posts if a user is blocked
+                                    then the cardview is set to height and width 0 so it disappears for the user
+                                     */
                                 }
                             }
                         }
@@ -100,12 +114,14 @@ class HomeAdapter(context: Context, var savedPosts: List<Post>, var type: Int) :
             if (type == 0) {
                 if (post.title == "No Posts")
                 {
+                    //case of no posts
                     holder.itemView.username.text = " "
                     holder.itemView.post_timestamp.text = " "
                     holder.itemView.imageView4.isInvisible
                 }
                 else
                 {
+                    //if the user click on a classname they are redirected to community posts
                     holder.itemView.username.text = post.subject
                     holder.itemView.username.setOnClickListener {
                         val intent = Intent(mContext, CommunityPosts::class.java)
@@ -115,6 +131,7 @@ class HomeAdapter(context: Context, var savedPosts: List<Post>, var type: Int) :
 
                 }
             } else if (type == 1) {
+                //if the user selects a username they are sent to that users user profile
                 holder.itemView.username.setOnClickListener {
                     val intent = Intent(mContext, UserProfileActivity::class.java)
                     intent.putExtra("UserID", post.UserID)
@@ -133,7 +150,9 @@ class HomeAdapter(context: Context, var savedPosts: List<Post>, var type: Int) :
                     if (p0.exists()) {
                         for (block in p0.children) {
                             if (block.value == post.UserID) {
-                                holder.itemView.post_title.text = "[blocked]"
+                                params.height = 0
+                                params.width = 0
+                                holder.itemView.layoutParams = params
                             }
                         }
                     }
@@ -147,6 +166,7 @@ class HomeAdapter(context: Context, var savedPosts: List<Post>, var type: Int) :
             holder.itemView.post_timestamp.text = post.Ptime
 
             if (type == 0) {
+                //if the user clicks on a subject they are sent to community posts
                 holder.itemView.username.text = post.subject
                 holder.itemView.username.setOnClickListener {
                     val intent = Intent(mContext, CommunityPosts::class.java)
@@ -155,6 +175,7 @@ class HomeAdapter(context: Context, var savedPosts: List<Post>, var type: Int) :
 
                 }
             } else if (type == 1) {
+                //if a user clicks on a username they are directed to that user profile
                 holder.itemView.username.setOnClickListener {
                     val intent = Intent(mContext, UserProfileActivity::class.java)
                     intent.putExtra("UserID", post.UserID)
@@ -166,14 +187,14 @@ class HomeAdapter(context: Context, var savedPosts: List<Post>, var type: Int) :
         }
         holder.itemView.setOnClickListener {
             if (post.title == "no Posts" || post.title == "No Posts") {
-                Log.d("Tag", "no post")
-                //toast needed
+                //there are no posts
             }
             else if(holder.itemView.post_title.text == "[blocked]"){
-                //var pauth = post.author
+                //case of post text reading blocked, this is kept so bugs are more visible
                 Log.d("Tag","blocked post will not open to clicked post screen")
             }
             else {
+                //opens clickpost sending information to the activity about the post clicked
                 val intent = Intent(mContext, ClickedPost::class.java)
                 intent.putExtra("Title", post.title)
                 intent.putExtra("Text", post.text)
@@ -191,6 +212,9 @@ class HomeAdapter(context: Context, var savedPosts: List<Post>, var type: Int) :
 
     }
 
+    /*
+    functions used to get information form items in the recyclerview
+     */
 
     fun removeItem(holder: RecyclerView.ViewHolder): String {
         val post: Post = savedPosts[holder.adapterPosition]

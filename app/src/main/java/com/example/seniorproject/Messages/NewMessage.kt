@@ -35,7 +35,7 @@ class NewMessage : AppCompatActivity() {
 
         val factory = InjectorUtils.provideNewMessageViewModelFactory()
 
-        myViewModel = ViewModelProviders.of(this, factory).get(NewMessageViewModel::class.java)
+        myViewModel = ViewModelProvider(this, factory).get(NewMessageViewModel::class.java)
         searchview = user_search
         setUpSearchView()
 

@@ -7,7 +7,7 @@ import com.example.seniorproject.data.repositories.SearchRepo
 import com.example.seniorproject.viewModels.Factories.*
 
 
-//declarations of viewmodelfactory provider functions for activities that use recyclerviews
+// viewmodelfactory provider functions for activities that use recyclerviews
 object InjectorUtils {
 
     fun providePostViewModelFactory(): HomeFragmentViewModelFactory {

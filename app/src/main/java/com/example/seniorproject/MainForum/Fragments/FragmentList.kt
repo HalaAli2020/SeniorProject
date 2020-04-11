@@ -25,7 +25,7 @@ class FragmentList : Fragment() {
         activity?.title = "All Classes"
         val view = inflater.inflate(R.layout.fragment_list, container, false)
         val factory = InjectorUtils.provideListViewModelFactory()
-        myViewModel = ViewModelProviders.of(this, factory).get(ListViewModel::class.java)
+        myViewModel = ViewModelProvider(this, factory).get(ListViewModel::class.java)
 
         view.list_recyclerView.layoutManager = LinearLayoutManager(context)
         view.list_recyclerView.adapter = ListAdapter(view.context, myViewModel.returnClasses(), myViewModel)

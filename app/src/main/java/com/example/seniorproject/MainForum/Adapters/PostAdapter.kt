@@ -65,6 +65,7 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        var params = holder.itemView.layoutParams as RecyclerView.LayoutParams
         val post: Post = savedPostList[position]
         if (holder is PostImageViewHolders) {
             val post: Post = savedPostList[position]
@@ -84,7 +85,9 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
                         if (p0.exists()) {
                             for (block in p0.children) {
                                 if (block.value == post.UserID) {
-                                    holder.itemView.post_title.text = "[blocked]"
+                                    params.height = 0
+                                    params.width = 0
+                                    holder.itemView.layoutParams = params
                                 }
                             }
                         }
@@ -126,7 +129,9 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
                     if (p0.exists()) {
                         for (block in p0.children) {
                             if (block.value == post.UserID) {
-                                holder.itemView.post_title.text = "[blocked]"
+                                params.height = 0
+                                params.width = 0
+                                holder.itemView.layoutParams = params
                             }
                         }
                     }

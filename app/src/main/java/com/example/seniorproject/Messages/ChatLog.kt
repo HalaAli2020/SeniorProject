@@ -38,7 +38,7 @@ class ChatLog : AppCompatActivity() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
         val factory = InjectorUtils.provideChatLogViewModelFactory()
-        myViewModel = ViewModelProviders.of(this, factory).get(ChatLogViewModel::class.java)
+        myViewModel = ViewModelProvider(this, factory).get(ChatLogViewModel::class.java)
         val binding: MActivityChatLogBinding = DataBindingUtil.setContentView(this,R.layout.m_activity_chat_log)
 
         myViewModel.toID = toID
