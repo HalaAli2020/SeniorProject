@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.Dagger.InjectorUtils
-import com.example.seniorproject.MainForum.Adapters.CustomAdapter
 import com.example.seniorproject.MainForum.Fragments.ProfileCommentFragment
 import com.example.seniorproject.MainForum.Fragments.ProfilePostFragment
 import com.example.seniorproject.MainForum.Posts.EditProfileActivity
@@ -29,7 +28,6 @@ import javax.inject.Inject
 private const val TAG = "profileTAG"
 
 class UserProfileActivity : AppCompatActivity() {
-    private lateinit var adapter: CustomAdapter
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory

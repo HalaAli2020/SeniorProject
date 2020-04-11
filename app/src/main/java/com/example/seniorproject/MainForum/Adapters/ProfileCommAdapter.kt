@@ -15,13 +15,13 @@ import com.example.seniorproject.data.models.Comment
 import kotlinx.android.synthetic.main.rv_post_comment.view.*
 
 class ProfileCommAdapter(context: Context, var Comments: List<Comment>) :
-    RecyclerView.Adapter<CustomViewHolders>() {
+    RecyclerView.Adapter<CustomListViewHolders>() {
     val mContext: Context = context
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolders {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomListViewHolders {
         val layoutInflater = LayoutInflater.from(parent.context)
         val cellForRow = layoutInflater.inflate(R.layout.rv_post_comment, parent, false)
         itemCount
-        return CustomViewHolders(cellForRow)
+        return CustomListViewHolders(cellForRow)
     }
 
     override fun getItemCount(): Int {
@@ -33,7 +33,7 @@ class ProfileCommAdapter(context: Context, var Comments: List<Comment>) :
         return size
     }
 
-    override fun onBindViewHolder(holder: CustomViewHolders, position: Int) {
+    override fun onBindViewHolder(holder: CustomListViewHolders, position: Int) {
         if (Comments[position] == null || itemCount == 0) {
             holder.itemView.comment_text.text = "No Comments"
         } else {
@@ -85,7 +85,7 @@ class ProfileCommAdapter(context: Context, var Comments: List<Comment>) :
     }
 
 
-    fun getCommentKey(customViewHolders: CustomViewHolders): String {
+    fun getCommentKey(customViewHolders: CustomListViewHolders): String {
         val comment: Comment = Comments[customViewHolders.adapterPosition]
         val commentkey: String? = comment.UserComkey
 
@@ -93,37 +93,37 @@ class ProfileCommAdapter(context: Context, var Comments: List<Comment>) :
         return commentkey!!
     }
 
-    fun getUserKey(customViewHolders: CustomViewHolders): String {
+    fun getUserKey(customViewHolders: CustomListViewHolders): String {
         val comment: Comment = Comments[customViewHolders.adapterPosition]
         val commentkey: String? = comment.PosterID
         return commentkey!!
     }
 
-    fun getClassKey(customViewHolders: CustomViewHolders): String {
+    fun getClassKey(customViewHolders: CustomListViewHolders): String {
         val comment: Comment = Comments[customViewHolders.adapterPosition]
         val commentkey: String? = comment.Classkey
         return commentkey!!
     }
 
-    fun getClassProfileKey(customViewHolders: CustomViewHolders): String {
+    fun getClassProfileKey(customViewHolders: CustomListViewHolders): String {
         val comment: Comment = Comments[customViewHolders.adapterPosition]
         val commentkey: String? = comment.ProfileComKey
         return commentkey!!
     }
 
-    fun pkeyUserProfile(customViewHolders: CustomViewHolders): String {
+    fun pkeyUserProfile(customViewHolders: CustomListViewHolders): String {
         val comment: Comment = Comments[customViewHolders.adapterPosition]
         val commentkey: String? = comment.Postkey
         return commentkey!!
     }
 
-    fun getCrn(customViewHolders: CustomViewHolders): String {
+    fun getCrn(customViewHolders: CustomListViewHolders): String {
         val comment: Comment = Comments[customViewHolders.adapterPosition]
         val commentkey: String? = comment.crn
         return commentkey!!
     }
 
-    fun getText(customViewHolders: CustomViewHolders): String {
+    fun getText(customViewHolders: CustomListViewHolders): String {
         val comment: Comment = Comments[customViewHolders.adapterPosition]
         val commentkey: String? = comment.text
         return commentkey!!

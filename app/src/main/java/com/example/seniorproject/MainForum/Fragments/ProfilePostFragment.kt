@@ -21,10 +21,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.Dagger.InjectorUtils
-import com.example.seniorproject.MainForum.Adapters.CustomAdapter
-import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
+import com.example.seniorproject.MainForum.Adapters.CustomListViewHolders
 import com.example.seniorproject.MainForum.Adapters.PostAdapter
-import com.example.seniorproject.MainForum.Adapters.PostImageViewHolders
+import com.example.seniorproject.MainForum.Adapters.PostListImageViewHolders
 import com.example.seniorproject.MainForum.Posts.UpdatePost
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
@@ -116,10 +115,10 @@ class ProfilePostFragment : Fragment() {
                                     var postkey = " "
                                     //if statement to cover image post case
                                     if (adapter.getItemViewType(pos) == 1) {
-                                        postkey = adapter.removeItem(viewHolders as PostImageViewHolders)
+                                        postkey = adapter.removeItem(viewHolders as PostListImageViewHolders)
                                     } else if (adapter.getItemViewType(pos) == 0) {
 
-                                        postkey = adapter.removeItem(viewHolders as CustomViewHolders)
+                                        postkey = adapter.removeItem(viewHolders as CustomListViewHolders)
                                     }
 
                                     val userkey: String? =
@@ -164,10 +163,10 @@ class ProfilePostFragment : Fragment() {
                                     var postkey = " "
                                     //if statement to cover image post case
                                     if (adapter.getItemViewType(pos) == 1) {
-                                        postkey = adapter.removeItem(viewHolders as PostImageViewHolders)
+                                        postkey = adapter.removeItem(viewHolders as PostListImageViewHolders)
                                     } else if (adapter.getItemViewType(pos) == 0) {
 
-                                        postkey = adapter.removeItem(viewHolders as CustomViewHolders)
+                                        postkey = adapter.removeItem(viewHolders as CustomListViewHolders)
                                     }
 
                                     val userkey: String? =
@@ -219,10 +218,10 @@ class ProfilePostFragment : Fragment() {
                                             var postkey = " "
                                             //if statement to cover image post case
                                             if (adapter.getItemViewType(pos) == 1) {
-                                                postkey = adapter.removeItem(viewHolders as PostImageViewHolders)
+                                                postkey = adapter.removeItem(viewHolders as PostListImageViewHolders)
                                             } else if (adapter.getItemViewType(pos) == 0) {
 
-                                                postkey = adapter.removeItem(viewHolders as CustomViewHolders)
+                                                postkey = adapter.removeItem(viewHolders as CustomListViewHolders)
                                             }
 
                                             val userkey: String? =
@@ -267,10 +266,10 @@ class ProfilePostFragment : Fragment() {
                                             var postkey = " "
                                             //if statement to cover image post case
                                             if (adapter.getItemViewType(pos) == 1) {
-                                                postkey = adapter.removeItem(viewHolders as PostImageViewHolders)
+                                                postkey = adapter.removeItem(viewHolders as PostListImageViewHolders)
                                             } else if (adapter.getItemViewType(pos) == 0) {
 
-                                                postkey = adapter.removeItem(viewHolders as CustomViewHolders)
+                                                postkey = adapter.removeItem(viewHolders as CustomListViewHolders)
                                             }
 
                                             val userkey: String? =

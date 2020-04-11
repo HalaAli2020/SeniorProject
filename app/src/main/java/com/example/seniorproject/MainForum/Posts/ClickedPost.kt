@@ -112,8 +112,8 @@ class ClickedPost : AppCompatActivity() {
                                                     override fun onClick(pos: Int) {
                                                         Log.d("soupv", "pos is $pos")
                                                         //userkey is collected from the recyclerview for the block user functionality
-                                                        val userkey: String? =
-                                                            adapter.getUserKey(viewHolders)
+                                                        val authorkey: String? =
+                                                            adapter.getAuthorKey(viewHolders)
 
                                                         val builder = AlertDialog.Builder(
                                                             this@ClickedPost,
@@ -124,7 +124,7 @@ class ClickedPost : AppCompatActivity() {
                                                         builder.setMessage("You won't see posts or comments from this user.")
                                                         builder.setPositiveButton("BLOCK"
                                                         ) { _: DialogInterface?, _: Int ->
-                                                            myViewModel.blockUser(userkey!!)
+                                                            myViewModel.blockUser(authorkey!!)
                                                             val toast = Toast.makeText(
                                                                 this@ClickedPost,
                                                                 "This user has been blocked",

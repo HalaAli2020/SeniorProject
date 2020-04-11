@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.Dagger.InjectorUtils
-import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
+import com.example.seniorproject.MainForum.Adapters.CustomListViewHolders
 import com.example.seniorproject.MainForum.Adapters.ProfileCommAdapter
 import com.example.seniorproject.MainForum.Posts.UpdateComment
 import com.example.seniorproject.R
@@ -117,7 +117,7 @@ class ProfileCommentFragment : Fragment() {
                             ProfileButton(context!!, "Delete", 30, 0, Color.parseColor
                                 ("#FF0000"), object : ButtonClickListener {
                                 override fun onClick(pos: Int) {
-                                    val postkeyUP: String? = adaptercomments.pkeyUserProfile(viewHolders as CustomViewHolders)
+                                    val postkeyUP: String? = adaptercomments.pkeyUserProfile(viewHolders as CustomListViewHolders)
 
                                     val userkey: String? = adaptercomments.getUserKey(viewHolders)
 
@@ -170,7 +170,7 @@ class ProfileCommentFragment : Fragment() {
                                 ("#D3D3D3"), object : ButtonClickListener {
                                 override fun onClick(pos: Int) {
                                     Log.d("soupprof", "can you see me")
-                                    val userkey: String? = adaptercomments.getUserKey(viewHolders as CustomViewHolders)
+                                    val userkey: String? = adaptercomments.getUserKey(viewHolders as CustomListViewHolders)
 
                                     val classprofilekey: String? = adaptercomments.getClassProfileKey(viewHolders)
 

@@ -112,7 +112,7 @@ class CommentsListAdapter(
                     if (p0.exists()) {
                         var check = true
                         for (block in p0.children) {
-                            if (block.getValue() == comment.PosterID) {
+                            if (block.getValue() == comment.author) {
                                 params.height = 0
                                 params.width = 0
                                 holder.itemView.layoutParams = params
@@ -171,6 +171,13 @@ class CommentsListAdapter(
     fun getUserKey(holder: RecyclerView.ViewHolder): String {
         val comment: Comment = Comments[holder.adapterPosition]
         val commentkey: String? = comment.PosterID
+        //returns the comment poster ID at the selected position
+        return commentkey!!
+    }
+
+    fun getAuthorKey(holder: RecyclerView.ViewHolder): String {
+        val comment: Comment = Comments[holder.adapterPosition]
+        val commentkey: String? = comment.author
         //returns the comment poster ID at the selected position
         return commentkey!!
     }

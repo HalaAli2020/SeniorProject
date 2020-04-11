@@ -25,6 +25,11 @@ object InjectorUtils {
         return CommunityPostViewModelFactory(postrepo)
     }
 
+    fun provideSettingsViewModelFactory(): SettingsViewModelFactory {
+        val postrepo: PostRepository = PostRepository.getInstance(FirebaseData())
+        return SettingsViewModelFactory(postrepo)
+    }
+
     fun provideSubscriptionsPostViewModelFactory(): SubscriptionsViewModelFactory {
         val postrepo: PostRepository = PostRepository.getInstance(FirebaseData())
         return SubscriptionsViewModelFactory(postrepo)

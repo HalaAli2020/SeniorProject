@@ -94,8 +94,8 @@ class CommunityPosts : AppCompatActivity() {
                                         //val crnkey: String? =
                                         //   adapter.getCrn(viewHolders)
 
-                                        val userkey: String? =
-                                            adapter.getUserKey(viewHolders)
+                                      //  val userkey: String? =
+                                      //      adapter.getUserKey(viewHolders)
 
                                         val authkey: String? =
                                             adapter.getAuthor(viewHolders)
@@ -110,7 +110,7 @@ class CommunityPosts : AppCompatActivity() {
                                         builder.setMessage("You won't see posts or comments from this user.")
                                         builder.setPositiveButton("BLOCK"
                                         ) { _: DialogInterface?, _: Int ->
-                                            myViewModel.blockUser(userkey!!)
+                                            myViewModel.blockUser(authkey!!)
                                             classes_post_RV.findViewHolderForAdapterPosition(pos)!!.itemView.post_title.text="[blocked]"
                                             var toast = Toast.makeText(
                                                 this@CommunityPosts,

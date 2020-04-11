@@ -34,6 +34,7 @@
         <activity android:name=".MainForum.Posts.ClickedPost" />
         <activity android:name=".MainForum.Posts.UpdatePost" />
         <activity android:name=".MainForum.Posts.UpdateComment" />
+        <activity android:name=".MainForum.UnblockUserActivity" />
         <activity android:name=".search.SearchActivity" />
         <activity
             android:name=".MainForum.MainForum"
