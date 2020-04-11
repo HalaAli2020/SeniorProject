@@ -662,40 +662,9 @@ class FirebaseData @Inject constructor() {
      */
 
 
-    /*
-    Database query for getting all the comments a user has made, a callback located in the post repository
-    is used to get the comments in real time.
-     */
-    fun listenForUserProfileComments(uid: String, callbackComment: PostRepository.FirebaseCallbackComment): CommentLive {
-        Log.d(TAG, "getUserProfile comments listener called")
-        //callbackComment.onStart()
-        //is commenting this out why it noComments stopped showinf up?
-        val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Comments")
-        reference.addChildEventListener(object : ChildEventListener {
-            var profileCommentList: MutableList<Comment> = mutableListOf()
-            override fun onCancelled(p0: DatabaseError) {}
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {}
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {}
-            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                callbackComment.onSuccess(p0)
-            }
-            override fun onChildRemoved(p0: DataSnapshot) {}
-        })
-        Log.d("Post function return", "Post function return")
-        val comref = FirebaseDatabase.getInstance().getReference("users/$uid")
-        comref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) { TODO("not implemented") }
-            override fun onDataChange(p0: DataSnapshot) {
-                if (!p0.child("Comments").exists()) {
-                    callbackComment.onSuccess(p0)
-                }
-              } })
-        return comments
-    }
-
-    /*
-    Checks if a user has made any posts, a callback is implemented in the ProfileViewModel
-     */
+/*
+Checks if a user has made any posts, a callback is implemented in the ProfileViewModel
+ */
     fun noPostsChecker(userID: String, callbackbool: PostRepository.FirebaseCallbackBool): Boolean {
         val comref = FirebaseDatabase.getInstance().getReference("users/$userID")
         comref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -715,28 +684,9 @@ class FirebaseData @Inject constructor() {
     }
 
     /*
-Checks if a user has made any comments, a callback is implemented in the ProfileViewModel
+Checks if a user has made any comments, a callback boolean is sent upstream into view layer of clicked post
  */
-    fun noCommentsChecker(userID: String, callbackbool: PostRepository.FirebaseCallbackBool): Boolean {
-        val com = FirebaseDatabase.getInstance().getReference("users/$userID")
-        com.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) { com.removeEventListener(this) }
-            override fun onDataChange(p0: DataSnapshot) {
-                if (!p0.child("Comments").exists()) {
-                    callbackbool.onSuccess(p0)
-                    noCommentsCheck = true
-
-                } else if (p0.child("Comments").exists()) {
-                    callbackbool.onSuccess(p0)
-                    noCommentsCheck = false
-                }
-                com.removeEventListener(this)
-            }
-        })
-        return noCommentsCheck
-    }
-
-    fun noCommentsCheckerForCommPosts(subject: String, Key: String, callback: PostRepository.FirebaseCallbackNoComments) {
+    fun noCommentsCheckerForCommPosts(subject: String, Key: String, callback: PostRepository.FirebaseCallbackNoComments){
         val com = FirebaseDatabase.getInstance().getReference("Subjects/$subject/Posts/$Key/Comments")
         com.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) { com.removeEventListener(this) }
@@ -747,7 +697,8 @@ Checks if a user has made any comments, a callback is implemented in the Profile
                     Log.d("soupfire", "this means no comments in that post!")
                 } else {
                     noCommentsCheck = false
-                    callback.onFull(noCommentsCheck)
+                    callback.onEmpty(noCommentsCheck)
+                    //callback.onFull(noCommentsCheck)
                     Log.d("soupfire", "this means comments exist in that post!")
                 }
                 com.removeEventListener(this)
