@@ -72,16 +72,18 @@ class CommentsListAdapter(
         return size
     }
 
-    //
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        var params = holder.itemView.layoutParams as RecyclerView.LayoutParams
         Log.d("CommentsAdapter:", "" + position)
         if (holder is CustomViewHoldersHeader) {
+            //adds post information to the custom viewholder
             holder.itemView.click_post_title.text = title
             holder.itemView.click_post_text.text = text
             holder.itemView.community_name_TV.text = crn
             holder.itemView.author_name_TV.text = author
 
+            //adds image for imageposts
             if (uri != "null") {
                 Glide.with(mContext)
                     .load(uri)
@@ -90,6 +92,7 @@ class CommentsListAdapter(
             }
 
             holder.itemView.posts_timestamp.text = ptime
+            //clicking on the authorname will redirect the user to that users profile
             holder.itemView.author_name_TV.setOnClickListener {
                 val intent = Intent(mContext, UserProfileActivity::class.java)
                 intent.putExtra("UserID", asUserID)
@@ -98,46 +101,57 @@ class CommentsListAdapter(
 
             }
 
-        }
-        //   }
-        else {
-            if (Comments[position] == null || getItemCount() == 0) {
-                holder.itemView.comment_text.text = "No Comments yet"
-            } else {
-                val comment: Comment = Comments[position]
-                val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
-                ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent(object :
-                    ValueEventListener {
-                    override fun onDataChange(p0: DataSnapshot) {
-                        if (p0.exists()) {
-                            for (block in p0.children) {
-                                if (block.getValue() == comment.PosterID) {
-                                    holder.itemView.comment_text.text = "[blocked]"
-                                }
+        } else {
+            //holder.itemView.post_title.text = comment.title
+            val comment: Comment = Comments[position]
+            //if the users is blocked the comment text will show up as blocked
+            val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
+            ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent(object :
+                ValueEventListener {
+                override fun onDataChange(p0: DataSnapshot) {
+                    if (p0.exists()) {
+                        var check = true
+                        for (block in p0.children) {
+                            if (block.getValue() == comment.PosterID) {
+                                params.height = 0
+                                params.width = 0
+                                holder.itemView.layoutParams = params
+                                check = false
+                                ///holder.itemView.comment_text.text = "[blocked]"
+                                //set invisibility as well
+                                //on block recreate the fragment
                             }
                         }
-                    }
+                        if (check == true) {
+                            holder.itemView.comment_text.text = comment.text
+                            holder.itemView.authcom.text = comment.author
+                            holder.itemView.comment_timestamp.text = comment.Ptime
+                        }
 
-                    override fun onCancelled(p0: DatabaseError) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
-                })
-                //holder.itemView.post_title.text = comment.title
-                holder.itemView.comment_text.text = comment.text
-                holder.itemView.authcom.text = comment.author
-                holder.itemView.comment_timestamp.text = comment.Ptime
-
-                holder.itemView.authcom.setOnClickListener {
-                    val intent = Intent(mContext, UserProfileActivity::class.java)
-                    intent.putExtra("UserID", comment.PosterID)
-                    intent.putExtra("Author", comment.author)
-                    mContext.startActivity(intent)
+                    else {
+                        holder.itemView.comment_text.text = comment.text
+                        holder.itemView.authcom.text = comment.author
+                        holder.itemView.comment_timestamp.text = comment.Ptime
+                    }
                 }
 
-            }
-        }
-    }
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+            })
 
+            //clicking on the author of a comment with also open up their profile page
+            holder.itemView.authcom.setOnClickListener {
+                val intent = Intent(mContext, UserProfileActivity::class.java)
+                intent.putExtra("UserID", comment.PosterID)
+                intent.putExtra("Author", comment.author)
+                mContext.startActivity(intent)
+            }
+
+        }
+
+    }
 
     //the functions below are used to get information about comments in the recyclerview
     fun removeItem(holder: RecyclerView.ViewHolder): String {
@@ -171,7 +185,7 @@ class CommentsListAdapter(
     fun getPostKey(holder: RecyclerView.ViewHolder): String {
         val comment: Comment = Comments[holder.adapterPosition]
         val commentkey: String? = comment.Postkey
-        //retirns the post key at the selected position
+        //returns the post key at the selected position
         return commentkey!!
     }
 

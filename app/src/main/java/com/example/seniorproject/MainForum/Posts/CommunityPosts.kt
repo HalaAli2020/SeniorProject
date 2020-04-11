@@ -84,6 +84,7 @@ class CommunityPosts : AppCompatActivity() {
 
                         if (FirebaseAuth.getInstance().currentUser?.uid == userk){
                             val swipe = null
+                            //users cannot report or block themselves
                         }
                         else{
                             buffer.add(
@@ -99,7 +100,7 @@ class CommunityPosts : AppCompatActivity() {
                                         val authkey: String? =
                                             adapter.getAuthor(viewHolders)
 
-
+                                        //initialize builder
                                         var builder = AlertDialog.Builder(
                                             this@CommunityPosts,
                                             R.style.AppTheme_AlertDialog
@@ -116,6 +117,8 @@ class CommunityPosts : AppCompatActivity() {
                                                 "This user has been blocked",
                                                 Toast.LENGTH_SHORT
                                             )
+                                            finish()
+                                            startActivity(getIntent())
                                             toast.show()
                                         }
                                         builder.setNegativeButton("CANCEL"

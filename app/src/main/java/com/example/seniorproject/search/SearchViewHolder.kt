@@ -67,17 +67,3 @@ class SearchViewHolder(parent: View) : RecyclerView.ViewHolder(parent) {
         }
     }
 }
-/* itemView.post_title.text = post.title
- itemView.username.text = post.crn
- itemView.setOnClickListener {
-     val intent = Intent(mContext, ClickedPost::class.java)
-     intent.putExtra("Title", post.title)
-     intent.putExtra("Text", post.text)
-     intent.putExtra("Pkey", post.key)
-     intent.putExtra("Classkey", post.Classkey)
-     intent.putExtra("UserID", post.UserID)
-     intent.putExtra("Author", post.author)
-     intent.putExtra("crn", post.crn)
-     //val bundle = bundleOf()
-     mContext.startActivity(intent)
- }*/
