@@ -45,7 +45,7 @@ class FragmentNewImagePost : Fragment() {
         // Inflate the layout for this fragment
         //inject dagger app component and initialize viewmodel
         DaggerAppComponent.create().inject(this)
-        viewModel = ViewModelProviders.of(this, factory).get(NewPostFragmentViewModel::class.java)
+        viewModel = ViewModelProvider(this, factory).get(NewPostFragmentViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_image__post, container, false)
         //image onclick listener opens phone gallery
         view.add_image.setOnClickListener {

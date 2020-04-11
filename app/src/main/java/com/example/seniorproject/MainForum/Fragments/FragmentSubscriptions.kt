@@ -34,7 +34,7 @@ class FragmentSubscriptions : Fragment() {
         super.onCreate(savedInstanceState)
         activity?.title = "Subscriptions"
          factory = InjectorUtils.provideSubscriptionsPostViewModelFactory()
-        myViewModel = ViewModelProviders.of(this, factory).get(SubscriptionsViewModel::class.java)
+        myViewModel = ViewModelProvider(this, factory).get(SubscriptionsViewModel::class.java)
 
     }
 

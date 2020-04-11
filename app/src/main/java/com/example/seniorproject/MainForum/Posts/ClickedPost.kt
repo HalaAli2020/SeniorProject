@@ -46,7 +46,7 @@ class ClickedPost : AppCompatActivity() {
 
         //initializing dagger app component and binding variable
         DaggerAppComponent.create().inject(this)
-        myViewModel = ViewModelProviders.of(this, factory).get(ClickedPostViewModel::class.java)
+        myViewModel = ViewModelProvider(this, factory).get(ClickedPostViewModel::class.java)
         //binded varibles and function can be found in the activity_clicked_post xml file
         val binding: ActivityClickedPostBinding = DataBindingUtil.setContentView(this, R.layout.activity_clicked_post)
 

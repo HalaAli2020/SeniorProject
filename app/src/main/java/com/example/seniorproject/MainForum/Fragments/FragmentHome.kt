@@ -54,7 +54,7 @@ class FragmentHome : Fragment() {
 
         val factory = InjectorUtils.providePostViewModelFactory()
 
-        myViewModel = ViewModelProviders.of(this, factory).get(HomeFragmentViewModel::class.java)
+        myViewModel = ViewModelProvider(this, factory).get(HomeFragmentViewModel::class.java)
         lifecycleScope.launch(Dispatchers.IO) {
             /*var job = CoroutineScope(Dispatchers.IO).launch {
                 Log.d("Oncreate", " in Coroutine")

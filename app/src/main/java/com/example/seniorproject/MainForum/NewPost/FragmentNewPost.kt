@@ -29,7 +29,7 @@ class FragmentNewPost : Fragment() {
         activity?.title = "New Text Post"
         //inject dagger app component and initialize viewmodel
         DaggerAppComponent.create().inject(this)
-        viewModel = ViewModelProviders.of(this, factory).get(NewPostFragmentViewModel::class.java)
+        viewModel = ViewModelProvider(this, factory).get(NewPostFragmentViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_new_post, container, false)
 
         //text post is created on button clock text and title fields have text are filled and the user is subscribed to the forum

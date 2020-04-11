@@ -44,7 +44,7 @@ class EditProfileActivity : AppCompatActivity() {
         //initalization of the viewmodel and dagger app component
         DaggerAppComponent.create().inject(this)
         val factory = InjectorUtils.provideProfileViewModelFactory()
-         myViewModel = ViewModelProviders.of(this,factory).get(ProfileViewModel::class.java)
+         myViewModel = ViewModelProvider(this,factory).get(ProfileViewModel::class.java)
 
         //initialization of binding variable, binded variables are located in the corresponding XML file
         val binding: ActivityEditProfileBinding = DataBindingUtil.setContentView(this,R.layout.activity_edit_profile)

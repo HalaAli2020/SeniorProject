@@ -49,7 +49,7 @@ class UserProfileActivity : AppCompatActivity() {
         //initializing viewmodel factory
         val factory = InjectorUtils.provideProfileViewModelFactory()
         //setting the profileViewmodel as the viewmodel for this activity
-        myViewModel = ViewModelProviders.of(this, factory).get(ProfileViewModel::class.java)
+        myViewModel = ViewModelProvider(this, factory).get(ProfileViewModel::class.java)
 
 
         //getting the Userid and author from the post the user selected to get to this activity

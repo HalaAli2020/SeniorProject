@@ -50,7 +50,7 @@ class CommunityPosts : AppCompatActivity() {
         post_list_community_name_TV.text = className
 
         val factory = InjectorUtils.provideCommunityPostViewModelFacotry()
-        myViewModel = ViewModelProviders.of(this, factory).get(CommunityPostViewModel::class.java)
+        myViewModel = ViewModelProvider(this, factory).get(CommunityPostViewModel::class.java)
 
         val linearLayoutManager = LinearLayoutManager(this)
         linearLayoutManager.reverseLayout = true

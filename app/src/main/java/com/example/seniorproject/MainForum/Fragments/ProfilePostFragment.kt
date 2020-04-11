@@ -62,7 +62,7 @@ class ProfilePostFragment : Fragment() {
     //Binded variables are located in the corresponding XML file
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        myViewModel = ViewModelProviders.of(this, factory).get(ProfileViewModel::class.java)
+        myViewModel = ViewModelProvider(this, factory).get(ProfileViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_profile__post, container, false)
         val binding: FragmentProfilePostBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile__post, container, false)
         val currentuser = FirebaseAuth.getInstance().currentUser?.uid ?: "null"
