@@ -28,6 +28,7 @@ import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
 import com.example.seniorproject.Utils.ProfileButton
 import com.example.seniorproject.Utils.SwipeHelper
+import com.example.seniorproject.data.interfaces.CommentListFromFlow
 import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.databinding.FragmentProfileCommentBinding
 import com.example.seniorproject.viewModels.ClickedPostViewModel
@@ -75,7 +76,7 @@ class ProfileCommentFragment : Fragment() {
            } )*/
         //setting recycleview adapter
 
-        myViewModel.getUserProfileComments(iD, object: ClickedPostViewModel.CommentListFromFlow{
+        myViewModel.getUserProfileComments(iD, object: CommentListFromFlow {
             override fun onList(list: List<Comment>) {
 
                 //setting layout so newest comments load first

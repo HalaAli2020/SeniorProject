@@ -23,6 +23,8 @@ import com.example.seniorproject.Utils.ButtonClickListener
 import com.example.seniorproject.Utils.CheckCallback
 import com.example.seniorproject.Utils.ProfileButton
 import com.example.seniorproject.Utils.SwipeHelper
+import com.example.seniorproject.data.interfaces.CommentListFromFlow
+import com.example.seniorproject.data.interfaces.FirebaseCallbackNoComments
 import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.repositories.PostRepository
 import com.example.seniorproject.databinding.ActivityClickedPostBinding
@@ -72,7 +74,7 @@ class ClickedPost : AppCompatActivity() {
 
         //checking for comments and adding a no comments message when there are no comments
         var checkForComments = myViewModel.noCommentsCheckForCommPosts(object:
-            PostRepository.FirebaseCallbackNoComments{
+            FirebaseCallbackNoComments {
             override fun onEmpty(nocomlist: Boolean) {
                 Log.d("soupview", "welcome to inside noCommentChecker")
                 if(nocomlist == true){
@@ -97,7 +99,7 @@ class ClickedPost : AppCompatActivity() {
                                     val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                                     inputMethodManager.hideSoftInputFromWindow(it.windowToken, 0)
                                     myViewModel.getClassComments(object :
-                                        ClickedPostViewModel.CommentListFromFlow {
+                                        CommentListFromFlow {
                                         override fun onList(list: List<Comment>) {
                                             for (item in list) {
                                                 val getext = item.text
@@ -257,7 +259,7 @@ class ClickedPost : AppCompatActivity() {
                 }
                 else{
                         Log.d("soupview", "comments exist")
-                        myViewModel.getClassComments(object: ClickedPostViewModel.CommentListFromFlow{
+                        myViewModel.getClassComments(object: CommentListFromFlow{
                             override fun onList(list: List<Comment>) {
                                 for(item in list){
                                     val getext= item.text

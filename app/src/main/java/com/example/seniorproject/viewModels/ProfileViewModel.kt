@@ -8,6 +8,7 @@ import com.example.seniorproject.Utils.CheckCallback
 import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.Firebase.FirebaseData
+import com.example.seniorproject.data.interfaces.*
 import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.CommentLive
 import com.example.seniorproject.data.models.Post
@@ -33,9 +34,9 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     var noCommentsCheck : Boolean? = null
 
 
-    fun getUserProfilePosts(UserID : String, callback: ClickedPostViewModel.PostListFromFlow) {
+    fun getUserProfilePosts(UserID : String, callback: PostListFromFlow) {
 
-        repository.getUserProfilePosts(UserID, object: FirebaseData.FirebaseCallbackPostFlow{
+        repository.getUserProfilePosts(UserID, object: FirebaseCallbackPostFlow {
             override fun onCallback(flow: Flow<Post>) {
                 viewModelScope.launch {
                     var postFlow = flow.toList()
@@ -45,13 +46,10 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
         })
 
     }
-    fun returnProfilePost() : PostLiveData
-    {
-        return posts
-    }
+   
 
-    fun getUserProfileComments(UserID : String, callback: ClickedPostViewModel.CommentListFromFlow){
-        repository.getUserProfileComments(UserID, object: FirebaseData.FirebaseCallbackCommentFlow{
+    fun getUserProfileComments(UserID : String, callback: CommentListFromFlow){
+        repository.getUserProfileComments(UserID, object: FirebaseCallbackCommentFlow {
             override fun onCallback(flow: Flow<Comment>) {
                 viewModelScope.launch {
                     var commentflow = flow.toList()
@@ -104,7 +102,7 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     }
 
     fun fetchEmail(UserID: String, callback : EmailCallback) : String {
-        repository.fetchEmail(UserID, object : PostRepository.FirebaseCallbackItem{
+        repository.fetchEmail(UserID, object : FirebaseCallbackItem {
             override fun onStart() {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -124,7 +122,7 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     }
 //used in UserProfileActivity to get the current users username in real time
     fun fetchUsername(UserID: String, callback : EmailCallback) : String {
-        repository.fetchUsername(UserID, object : PostRepository.FirebaseCallbackItem{
+        repository.fetchUsername(UserID, object : FirebaseCallbackItem{
             override fun onStart() {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -144,7 +142,7 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     }
 
     fun fetchBio(UserID: String, callback: EmailCallback) : String {
-        repository.fetchBio(UserID, object : PostRepository.FirebaseCallbackItem{
+        repository.fetchBio(UserID, object : FirebaseCallbackItem{
             override fun onStart() {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -175,9 +173,9 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
 
     fun noPostsChecker(UserID: String, callback: CheckCallback) : Boolean
     {
-        repository.noPostsChecker(UserID, object : PostRepository.FirebaseCallbackBool {
-            override fun onStart() { TODO("not implemented") }
-            override fun onFailure() { TODO("not implemented") }
+        repository.noPostsChecker(UserID, object : FirebaseCallbackBool {
+            override fun onStart() {  }
+            override fun onFailure() {  }
             override fun onSuccess(data: DataSnapshot) : Boolean {
                 if (!data.child("Posts").exists())
                 {
