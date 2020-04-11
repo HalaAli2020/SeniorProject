@@ -31,6 +31,7 @@ import com.example.seniorproject.Utils.ButtonClickListener
 import com.example.seniorproject.Utils.CheckCallback
 import com.example.seniorproject.Utils.ProfileButton
 import com.example.seniorproject.Utils.SwipeHelper
+import com.example.seniorproject.data.interfaces.PostListFromFlow
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.databinding.FragmentProfilePostBinding
 import com.example.seniorproject.viewModels.ClickedPostViewModel
@@ -72,7 +73,7 @@ class ProfilePostFragment : Fragment() {
             iD = currentuser
 
 
-        myViewModel.getUserProfilePosts(iD, object : ClickedPostViewModel.PostListFromFlow {
+        myViewModel.getUserProfilePosts(iD, object : PostListFromFlow {
             override fun onList(list: List<Post>) {
 
                 //setting layout so newest comments load first

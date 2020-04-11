@@ -7,6 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.seniorproject.Utils.CheckCallback
 import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.Firebase.FirebaseData
+import com.example.seniorproject.data.interfaces.CommentListFromFlow
+import com.example.seniorproject.data.interfaces.FirebaseCallbackCommentFlow
+import com.example.seniorproject.data.interfaces.FirebaseCallbackNoComments
+import com.example.seniorproject.data.interfaces.FirebaseCallbacksubBool
 import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.CommentLive
 import com.example.seniorproject.data.models.Post
@@ -42,10 +46,11 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
 
     }
     //calls corresponding function from post repository gets binded variable contents from clicked post xml file
-    fun noCommentsCheckForCommPosts(callback: PostRepository.FirebaseCallbackNoComments){
+    fun noCommentsCheckForCommPosts(callback: FirebaseCallbackNoComments){
       repository.noCommentsCheckForCommPosts(crn!!, classkey!!, callback)
     }
-
+/* When the uses clicks on a post this function will get the comments from the backend and send back the data using a callback 
+* */
     fun getClassComments(callback: CommentListFromFlow)
     {
         if(pKey.isNullOrEmpty())
@@ -53,7 +58,7 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
             postKey = pKey
             commentListener?.onFailure("Post key not found")
         }
-        repository.getPostComments(classkey!!, crn!!, object : FirebaseData.FirebaseCallbackCommentFlow {
+        repository.getPostComments(classkey!!, crn!!, object : FirebaseCallbackCommentFlow {
             override fun onCallback(flow: Flow<Comment>) {
                 viewModelScope.launch {
                     var commflow = flow.toList()
@@ -68,6 +73,9 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
         repository.editNewComment(comuserid!!, usercomkey!!, comment!!, usercrn!!, postukey!!)
     }
 
+/* This function is called when a user has created a new comment it will check to make sure it has the correct data in the
+* entered and then send it to the repository so that it can be sent on to the database
+* */
 
     fun newComment(comment : String)
     {
@@ -92,20 +100,13 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
         repository.blockUser(UserID)
     }
 
-    interface CommentListFromFlow {
-        fun onList(list: List<Comment>)
-    }
-
-    interface PostListFromFlow {
-        fun onList(list: List<Post>)
-    }
 
     //takes classname and searches for a match in the users subscriptions
     fun checkSubscriptions(classname : String, checkCallback: CheckCallback)
     {
-        repository.checkSubscription(classname,object : PostRepository.FirebaseCallbacksubBool {
-            override fun onStart() { TODO("not implemented") }
-            override fun onFailure() { TODO("not implemented") }
+        repository.checkSubscription(classname,object : FirebaseCallbacksubBool {
+            override fun onStart() {  }
+            override fun onFailure() { }
 
             override fun onSuccess(data: DataSnapshot) {
                 if (data.exists()) {

@@ -8,7 +8,7 @@ import javax.inject.Singleton
 import androidx.lifecycle.MutableLiveData
 import com.example.seniorproject.Utils.Callback
 import com.example.seniorproject.Utils.EmailCallback
-import com.example.seniorproject.data.interfaces.FirebaseValuecallback
+import com.example.seniorproject.data.interfaces.*
 import com.example.seniorproject.data.models.*
 import com.example.seniorproject.data.repositories.PostRepository
 import com.example.seniorproject.viewModels.SearchViewModel
@@ -100,7 +100,7 @@ class FirebaseData @Inject constructor() {
 
     /*Query to fetch another users email, if the the email is located successfully in the database
         callbackEmail.onMessage is called to bring the email up to the frontend in real time*/
-    fun fetchEmail(UserID: String, callbackEmail: PostRepository.FirebaseCallbackItem) {
+    fun fetchEmail(UserID: String, callbackEmail: FirebaseCallbackItem) {
         val ref = FirebaseDatabase.getInstance().getReference("/users/$UserID")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -115,7 +115,7 @@ class FirebaseData @Inject constructor() {
 
     /*Query to fetch another user's user bio, if the bio is found in the database then
      callbackEmail.onMessage is called to bring the email up to the frontend in real time*/
-    fun fetchBio(UserID: String, callbackbio: PostRepository.FirebaseCallbackItem) {
+    fun fetchBio(UserID: String, callbackbio: FirebaseCallbackItem) {
         val ref = FirebaseDatabase.getInstance().getReference("/users/$UserID")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
@@ -125,7 +125,7 @@ class FirebaseData @Inject constructor() {
         })
     }
 
-    fun fetchUsername(UserID: String, callbackbio: PostRepository.FirebaseCallbackItem) {
+    fun fetchUsername(UserID: String, callbackbio: FirebaseCallbackItem) {
         val ref = FirebaseDatabase.getInstance().getReference("/users/$UserID")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
@@ -461,11 +461,11 @@ class FirebaseData @Inject constructor() {
         val reference = FirebaseDatabase.getInstance().reference.child("/Subjects")
         reference.orderByKey().addChildEventListener(object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
 
             override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
 
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
@@ -479,7 +479,7 @@ class FirebaseData @Inject constructor() {
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
         })
     }
@@ -582,7 +582,7 @@ class FirebaseData @Inject constructor() {
         val userref = FirebaseDatabase.getInstance().getReference("users/$useridm")
         userref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
 
             override fun onDataChange(p0: DataSnapshot) {
@@ -665,7 +665,7 @@ class FirebaseData @Inject constructor() {
 /*
 Checks if a user has made any posts, a callback is implemented in the ProfileViewModel
  */
-    fun noPostsChecker(userID: String, callbackbool: PostRepository.FirebaseCallbackBool): Boolean {
+    fun noPostsChecker(userID: String, callbackbool: FirebaseCallbackBool): Boolean {
         val comref = FirebaseDatabase.getInstance().getReference("users/$userID")
         comref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) { comref.removeEventListener(this) }
@@ -686,7 +686,7 @@ Checks if a user has made any posts, a callback is implemented in the ProfileVie
     /*
 Checks if a user has made any comments, a callback boolean is sent upstream into view layer of clicked post
  */
-    fun noCommentsCheckerForCommPosts(subject: String, Key: String, callback: PostRepository.FirebaseCallbackNoComments){
+    fun noCommentsCheckerForCommPosts(subject: String, Key: String, callback: FirebaseCallbackNoComments){
         val com = FirebaseDatabase.getInstance().getReference("Subjects/$subject/Posts/$Key/Comments")
         com.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) { com.removeEventListener(this) }
@@ -755,7 +755,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
             }
 
             override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
         })
 
@@ -786,7 +786,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
             }
 
             override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
         })
 
@@ -813,7 +813,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
             }
 
             override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
         })
 
@@ -1188,7 +1188,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
     used by the save new post and new image post functionalities to check if the user is subscribed and display
     the appropriate toast messages.
      */
-   fun checkSubscription(subject : String, callbacksubbool: PostRepository.FirebaseCallbacksubBool) {
+   fun checkSubscription(subject : String, callbacksubbool: FirebaseCallbacksubBool) {
        val userID = FirebaseAuth.getInstance().uid
        val subpath = FirebaseDatabase.getInstance().getReference("/users/$userID")
        subpath.child("Subscriptions").orderByValue()
@@ -1205,7 +1205,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
 
 
     //database query to get the classes that a user is subscribed to
-    fun listenUserSub(callbackString: PostRepository.FirebaseCallbackString) {
+    fun listenUserSub(callbackString: FirebaseCallbackString) {
         val uid = FirebaseAuth.getInstance().uid
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid/Subscriptions").orderByValue()
         callbackString.onStart()
@@ -1222,6 +1222,8 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
             }
         })
     }
+    /* this function is used to grab the posts from one class from the database to be used once the system has gotten the list of classes the user has
+    * subscribed to earlier in the this coroutine */
     fun getOneClass( sub : String, call : FirebaseValuecallback)
     {
         var ref = FirebaseDatabase.getInstance().getReference("Subjects/$sub/Posts").orderByChild("Ptime")
@@ -1234,6 +1236,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
                 call.onSuccess(p0)
             }
         })
+
     }
 
     //gets user subscriptions for the front end.
@@ -1272,7 +1275,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
     /*
     gets a list of user subscriptions
      */
-    private fun sendUserSUB(call: PostRepository.FirebaseCallbackString) {
+    private fun sendUserSUB(call: FirebaseCallbackString) {
         listenUserSub(call)
     }
 
@@ -1400,13 +1403,13 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
             }
 
     }
-
-    fun getUserProfileComments(uid: String, call: PostRepository.FirebaseCallbackComment) {
+  /* calls the listen for profile comments to get the comments created by the current users */
+    fun getUserProfileComments(uid: String, call: FirebaseCallbackComment) {
         listenUserProfileComments(uid, call)
     }
 
     //Database query for getting all the comments for a post
-    private fun listenUserProfileComments(uid: String, call: PostRepository.FirebaseCallbackComment) {
+    private fun listenUserProfileComments(uid: String, call: FirebaseCallbackComment) {
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Comments")
         call.onStart()
         reference.addValueEventListener(object : ValueEventListener {
@@ -1421,8 +1424,8 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
         })
     }
 
-
-    fun getUserProfilePosts(userID: String, call: PostRepository.FirebaseCallbackPost) {
+/* Checks to make sure the user is properly logged in with firebase auth if they are then passes the value to the listenforuserprofileposts to make the database query*/
+    fun getUserProfilePosts(userID: String, call: FirebaseCallbackPost) {
         when (userID) {
             "null" -> {
                 val uid = FirebaseAuth.getInstance().uid ?: "error"
@@ -1435,8 +1438,8 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
         }
     }
 
-
-    fun listenForUserProfilePosts(uid: String, callbackPost: PostRepository.FirebaseCallbackPost) {
+/*using the uid of the user this function makes a database query to get the posts the user has posted that are stored in users section of the database*/
+    fun listenForUserProfilePosts(uid: String, callbackPost: FirebaseCallbackPost) {
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Posts")
         callbackPost.onStart()
         reference.addValueEventListener(object : ValueEventListener {
@@ -1452,7 +1455,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
     }
 
     //Database query for getting all the comments for a post
-    private fun listenForClassComments(Key: String, subject: String, call: PostRepository.FirebaseCallbackComment) {
+    private fun listenForClassComments(Key: String, subject: String, call: FirebaseCallbackComment) {
 
         val reference =
             FirebaseDatabase.getInstance().getReference("Subjects/$subject/Posts/$Key/Comments")
@@ -1469,15 +1472,15 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
 
         })
     }
-
-    fun getClassComments(Key: String, subject: String, call: PostRepository.FirebaseCallbackComment) {
+    /*this function is passed the key for the class the user is looking up and passes it to the listenforclasscomments function to make the database query*/
+    fun getClassComments(Key: String, subject: String, call: FirebaseCallbackComment) {
         listenForClassComments(Key, subject, call)
     }
 
     /*
     Query for getting class posts
      */
-    private fun listenforClassPosts(className: String, call: PostRepository.FirebaseCallbackPost) {
+    private fun listenforClassPosts(className: String, call: FirebaseCallbackPost) {
 
         val reference = FirebaseDatabase.getInstance().getReference("Subjects/$className")
         call.onStart()
@@ -1499,19 +1502,19 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
     }
 
     //gets class posts for the frontend
-    fun getClassPosts(className: String, call: PostRepository.FirebaseCallbackPost) {
+    fun getClassPosts(className: String, call: FirebaseCallbackPost) {
         listenforClassPosts(className, call)
     }
 
     //gets classes for the frontend
-    fun getClasses(call: PostRepository.FirebaseCallbackCRN) {
+    fun getClasses(call: FirebaseCallbackCRN) {
         listenClasses(call)
     }
 
     /*
     NEEDS COMMENT
      */
-    fun combineSubs(listClasses: MutableLiveData<MutableList<CRN>>, UsersSubs: MutableList<String>): Int {
+    /*fun combineSubs(listClasses: MutableLiveData<MutableList<CRN>>, UsersSubs: MutableList<String>): Int {
         if (listClasses.value.isNullOrEmpty() || UsersSubs.isNullOrEmpty()) {
 
             Log.d("Null", "one was null")
@@ -1529,10 +1532,10 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
 
         }
 
-    }
+    }*/
 
     //Query to get available classes
-    private fun listenClasses(call: PostRepository.FirebaseCallbackCRN) {
+    private fun listenClasses(call: FirebaseCallbackCRN) {
         val reference = FirebaseDatabase.getInstance().getReference("Subjects")
         call.onStart()
         reference.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -1550,7 +1553,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
 
     }
     // new query to change organization of data in database
-    private fun listenClassesO(call: PostRepository.FirebaseCallbackCRN)
+    private fun listenClassesO(call: FirebaseCallbackCRN)
     {
         val reference = FirebaseDatabase.getInstance().getReference("Subjects")
         call.onStart()
@@ -1568,224 +1571,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
         })
 
     }
-
-    /*
-       NEEDS COMMENT
-        */
-    fun separateList(p0: DataSnapshot): List<String>? {
-        val subList: MutableList<String> = mutableListOf()
-        for (datas in p0.children) {
-            if (datas != null)
-                subList.add(datas.getValue(String::class.java)!!)
-        }
-        return subList
-    }
-
-    /*
-       NEEDS COMMENT
-        */
-    private fun listenForSubscribedPosts2(callbackPost: FirebaseCallbackPost) {
-        savedPosts = PostLiveData()
-        val reference = FirebaseDatabase.getInstance().getReference("Subjects")
-        val sub: MutableList<String> = mutableListOf()
-        sendUserSUB(object : PostRepository.FirebaseCallbackString {
-            override fun onFailure() {
-
-            }
-
-            override fun onStart() {
-
-            }
-
-            override fun onSuccess(data: DataSnapshot) {
-                val size = data.hasChildren()
-                Log.d("Size", size.toString())
-                //var has :HashMap<String,String>? = hashMapOf()
-                val sublist = data.children
-                for (x in sublist) {
-                    Log.d("usersub", x.getValue(String::class.java)!!)
-                    sub.add(x.getValue(String::class.java)!!)
-                }
-
-            }
-        })
-        reference.addChildEventListener(object : ChildEventListener {
-            var savedPostsList: MutableList<Post> = mutableListOf()
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-            }
-
-            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                if (sub.isNullOrEmpty()) {
-                    savedPosts.value = savedPostsList
-                } else {
-                    Log.d("FIRST1-:", p0.key ?: "no key")
-                    if (sub.contains(p0.key)) {
-                        for (p2 in p0.children) {
-                            Log.d("FIRST2---:", p2.key ?: "no key")
-                            if (p2.key == "Posts") {
-                                var counter = 0
-                                for (p3 in p2.children.reversed()) {
-                                    Log.d("FIRST3-------:", p3.key ?: "no key")
-                                    val newPost = Post()
-                                    try {
-                                        newPost.let {
-                                            it.text = p3.child("text").value.toString()
-                                            it.title = p3.child("title").value.toString()
-                                            it.key = p3.child("key").value.toString()
-                                            // class key is key for this post
-                                            it.Classkey = p3.child("Classkey").value.toString()
-                                            // user who posted id
-                                            it.UserID = p3.child("UserID").value.toString()
-                                            // need to change this later subject should be subject crn should be different
-                                            it.subject = p3.child("subject").value.toString()
-                                            it.Ptime = p3.child("Ptime").value.toString()
-                                            it.author = p3.child("author").value.toString()
-                                            it.uri = p3.child("uri").value.toString()
-                                        }
-                                    } catch (e: Exception) {
-                                        Log.d("Data Error", "error converting to post")
-                                    }
-
-                                    if (newPost.key != null) {
-                                        //Log.d("ACCESSING", newPost?.text)
-                                        savedPostsList.add(newPost)
-                                    }
-
-                                    savedPosts.value = savedPostsList
-                                    counter++
-                                    if (counter == 2) {
-                                        callbackPost.onCallback(savedPosts)
-                                        break
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            override fun onChildRemoved(p0: DataSnapshot) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-        })
-    }
-
-
-    //gets posts for the users homepage, this includes the posts of all classes they are subscribed to
-    fun getSubscribedPosts(): PostLiveData {
-
-        val sub: MutableList<String> = mutableListOf()
-        sendUserSUB(object : PostRepository.FirebaseCallbackString {
-            override fun onFailure() {
-
-            }
-
-            override fun onStart() {
-
-            }
-
-            override fun onSuccess(data: DataSnapshot) {
-                val size = data.hasChildren()
-                Log.d("Size", size.toString())
-                //var has :HashMap<String,String>? = hashMapOf()
-                val sublist = data.children
-                for (x in sublist) {
-                    Log.d("usersub", x.getValue(String::class.java)!!)
-                    sub.add(x.getValue(String::class.java)!!)
-                }
-
-            }
-        })
-        listenForSubscribedPosts2(object : FirebaseCallbackPost {
-            override fun onCallback(PostL: PostLiveData) {
-                savedPosts.value = PostL.value
-            }
-        })
-
-
-
-        return savedPosts
-
-
-    }
-    fun getSubPosts(call: PostRepository.FirebaseCallbackPost, back : PostRepository.FirebaseCallbackSubs): PostLiveData {
-
-        val sub: MutableList<String> = mutableListOf()
-        sendUserSUB(object : PostRepository.FirebaseCallbackString
-        {
-            override fun onFailure() {
-
-            }
-
-            override fun onStart() {
-
-            }
-            override fun onSuccess(data: DataSnapshot) {
-                val size = data.hasChildren()
-                Log.d("Size", size.toString())
-                //var has :HashMap<String,String>? = hashMapOf()
-                val sublist = data.children
-                for (x in sublist) {
-                    Log.d("usersub", x.getValue(String::class.java)!!)
-                    sub.add(x.getValue(String::class.java)!!)
-                }
-                back.onSuccess(sub)
-
-            }
-        })
-        listenForSubscribedPosts3(call)
-
-
-
-
-        return savedPosts
-
-
-
-
-    }
-    fun listenForSubscribedPosts3(call: PostRepository.FirebaseCallbackPost)
-    {
-        var ref = FirebaseDatabase.getInstance().getReference("Subjects")
-        call.onStart()
-        var lis = ref.addListenerForSingleValueEvent(object : ValueEventListener{
-            override fun onDataChange(p0: DataSnapshot) {
-                call.onSuccess(p0)
-                ref.removeEventListener(this)
-            }
-
-            override fun onCancelled(p0: DatabaseError) {
-                call.onFailure()
-
-            }
-        })
-    }
-
-    /*
-   NEEDS COMMENT
-    */
-    fun getUserPost(): PostLiveData {
-        val post = PostLiveData()
-        listenforUserPosts(object : FirebaseCallbackPost {
-            override fun onCallback(PostL: PostLiveData) {
-                post.value = PostL.value
-            }
-        })
-        return post
-    }
-
-    /*
-       NEEDS COMMENT
-        */
-    private fun listenforUserPosts(callbackPost: FirebaseCallbackPost) {
+    private fun listenforUserPosts(callbackPost: FirebaseCallbackPostC) {
         val reference =
             FirebaseDatabase.getInstance().getReference("users/1XN3H62rMJhe6CiCbN4os2TNp5H2")
                 .child("Post")
@@ -1837,6 +1623,25 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
         })
 
     }
+
+
+
+    /*
+   NEEDS COMMENT
+    */
+    fun getUserPost(): PostLiveData {
+        val post = PostLiveData()
+        listenforUserPosts(object : FirebaseCallbackPostC {
+            override fun onCallback(PostL: PostLiveData) {
+                post.value = PostL.value
+            }
+        })
+        return post
+    }
+
+    /*
+       NEEDS COMMENT
+        */
 
 
     //database query that returns all users
@@ -2043,26 +1848,11 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
         })
     }
 
-    //query used to search for a certain user
-    fun usersSearch(query: String, result: SearchViewModel.FirebaseResult) {
-        result.onStart()
-        val ref = FirebaseDatabase.getInstance().getReference("Subjects/$query")
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                result.onFailure("Query Failed")
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                result.onSuccess(p0, FirebaseAuth.getInstance().uid.toString())
-               ref.removeEventListener(this)
-            }
-        })
-    }
 
     /*
    NEEDS COMMENT
     */
-    fun getallclasses(listen: SearchViewModel.FirebaseResult) {
+    fun getallclasses(listen: FirebaseResult) {
         listen.onStart()
         val ref = FirebaseDatabase.getInstance().getReference("Subjects")
          var lit = ref.addValueEventListener(object : ValueEventListener{
@@ -2098,50 +1888,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
     }
 
 
-    //interfaces used to get database query results in realtime
-    interface FirebaseCallback {
-        fun onCallback(list: MutableList<User>?)
-    }
 
-    interface FirebaseMessagseCallback {
-        fun onCallback(list: MutableList<ChatMessage>?)
-    }
-
-    interface FirebaseRecentMessagseCallback {
-        fun onCallback(list: List<LatestMessage>)
-    }
-
-    interface FirebaseCallbackPost {
-        fun onCallback(PostL: PostLiveData)
-    }
-
-    interface FirebaseCallbackComment {
-        fun onCallback(CommentL: CommentLive)
-    }
-
-    interface FirebaseCallbackCommentFlow {
-        fun onCallback(flow: Flow<Comment>)
-    }
-
-    interface FirebaseCallbackPostFlow {
-        fun onCallback(flow: Flow<Post>)
-    }
-
-    interface FirebaseCallbackCRN {
-        fun onCallback(CRNL: MutableLiveData<MutableList<CRN>>)
-    }
-
-    interface FirebaseCallbackString {
-        fun onCallback(subs: MutableList<String>)
-    }
-
-    interface FirebaseCallbackItem {
-        fun onCallback(Item: String)
-    }
-
-    interface FirebaseCallbackBool {
-        fun onCallback(Item: Boolean)
-    }
 
 
     companion object {
