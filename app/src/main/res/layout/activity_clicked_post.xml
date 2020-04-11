@@ -57,7 +57,6 @@
                 android:inputType="textMultiLine|textCapSentences"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:text="@={ClickedViewModel.comment}"
                 android:textColor="@color/TextColor"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"

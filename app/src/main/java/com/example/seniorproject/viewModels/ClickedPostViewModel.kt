@@ -69,16 +69,9 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
     }
 
 
-    fun newComment()
+    fun newComment(comment : String)
     {
-        if (!comment.isNullOrBlank()){
-            repository.newComment(pKey!!,comment!!, classkey!!, userID!!, crn!!)
-            boolcom.value = true
-        }
-        else
-        {
-            boolcom.value = false
-        }
+        repository.newComment(pKey!!,comment, classkey!!, userID!!, crn!!)
     }
 
     fun checkcomments() : Boolean

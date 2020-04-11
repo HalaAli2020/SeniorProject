@@ -1,11 +1,13 @@
 package com.example.seniorproject.MainForum.Posts
 
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +20,7 @@ import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.Adapters.CommentsListAdapter
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
+import com.example.seniorproject.Utils.CheckCallback
 import com.example.seniorproject.Utils.ProfileButton
 import com.example.seniorproject.Utils.SwipeHelper
 import com.example.seniorproject.data.models.Comment
@@ -46,9 +49,10 @@ class ClickedPost : AppCompatActivity() {
 
         //initializing dagger app component and binding variable
         DaggerAppComponent.create().inject(this)
+        val binding: ActivityClickedPostBinding = DataBindingUtil.setContentView(this, R.layout.activity_clicked_post)
         myViewModel = ViewModelProvider(this, factory).get(ClickedPostViewModel::class.java)
         //binded varibles and function can be found in the activity_clicked_post xml file
-        val binding: ActivityClickedPostBinding = DataBindingUtil.setContentView(this, R.layout.activity_clicked_post)
+        //currently there are no binded variables in use by this activity however we may introduce them later so we have left the binding variable
 
         //getting information from the previous activity and viewmodel to fill in information
         val title: String = intent.getStringExtra("Title") ?: "no title"
@@ -81,152 +85,174 @@ class ClickedPost : AppCompatActivity() {
                     comment_RecyclerView.adapter = nocommadapter
                     comment_RecyclerView.layoutManager = LinearLayoutManager(this@ClickedPost)
                     Comment_button.setOnClickListener {
-                        myViewModel.newComment()
-                        myViewModel.getClassComments(object :
-                            ClickedPostViewModel.CommentListFromFlow {
-                            override fun onList(list: List<Comment>) {
-                                for (item in list) {
-                                    val getext = item.text
-                                    Log.d("soupview", "comm text is $getext")
+                        myViewModel.checkSubscriptions(crn, object : CheckCallback {
+                            override fun check(chk: Boolean) {
+                                /*check varible checks is user is subscribed, the logic for this can be found in the viewmodel
+                                and the database query can be found in the corresponding checksubscription firebase function
+                                 */
+                                if (Comment_textbox.text.isNotBlank() && chk == true) {
+                                    myViewModel.newComment(Comment_textbox.text.toString())
+                                    Toast.makeText(this@ClickedPost, "Your comment has been successfully posted!", Toast.LENGTH_LONG).show()
+                                    Comment_textbox.text.clear()
+                                    val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                                    inputMethodManager.hideSoftInputFromWindow(it.windowToken, 0)
+                                    myViewModel.getClassComments(object :
+                                        ClickedPostViewModel.CommentListFromFlow {
+                                        override fun onList(list: List<Comment>) {
+                                            for (item in list) {
+                                                val getext = item.text
+                                                Log.d("soupview", "comm text is $getext")
+                                            }
+                                            adapter = CommentsListAdapter(
+                                                this@ClickedPost, list, title, text, author, crn,
+                                                intent.getStringExtra("UserID").toString(), ptime, uri
+                                            )
+                                            comment_RecyclerView.adapter = adapter
+                                            comment_RecyclerView.layoutManager = LinearLayoutManager(this@ClickedPost)
+
+                                            object : SwipeHelper(applicationContext, comment_RecyclerView, 200) {
+                                                override fun initButton(
+                                                    viewHolders: RecyclerView.ViewHolder,
+                                                    buffer: MutableList<ProfileButton>
+                                                ) {
+                                                    val userk: String? = adapter.getUserKey(viewHolders)
+                                                    if (FirebaseAuth.getInstance().currentUser?.uid == userk){
+                                                        //a user cannot block or report themselves
+                                                    }
+                                                    else {
+                                                        buffer.add(
+                                                            ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
+                                                                ("#FF0000"), object : ButtonClickListener {
+                                                                override fun onClick(pos: Int) {
+                                                                    Log.d("soupv", "pos is $pos")
+                                                                    //userkey is collected from the recyclerview for the block user functionality
+                                                                    val userkey: String? =
+                                                                        adapter.getUserKey(viewHolders)
+
+                                                                    val builder = AlertDialog.Builder(
+                                                                        this@ClickedPost,
+                                                                        R.style.AppTheme_AlertDialog
+                                                                    )
+                                                                    //building the dialog box to stop users from blocking people by mistake
+                                                                    builder.setTitle("Are you sure?")
+                                                                    builder.setMessage("You won't see posts or comments from this user.")
+                                                                    builder.setPositiveButton("BLOCK"
+                                                                    ) { _: DialogInterface?, _: Int ->
+                                                                        myViewModel.blockUser(userkey!!)
+                                                                        val toast = Toast.makeText(
+                                                                            this@ClickedPost,
+                                                                            "This user has been blocked",
+                                                                            Toast.LENGTH_SHORT
+                                                                        )
+                                                                        toast.show()
+                                                                        onBackPressed(crn)
+                                                                    }
+                                                                    builder.setNegativeButton("CANCEL"
+                                                                    ) { _: DialogInterface?, _: Int ->
+                                                                        builder.setCancelable(true)
+                                                                    }
+
+                                                                    val msgdialog: AlertDialog = builder.create()
+
+                                                                    msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
+
+                                                                    msgdialog.show()
+                                                                }
+
+                                                            })
+                                                        )
+
+                                                        buffer.add(
+                                                            ProfileButton(applicationContext, "Report Post", 30, 0, Color.parseColor
+                                                                ("#D3D3D3"), object : ButtonClickListener {
+                                                                override fun onClick(pos: Int) {
+                                                                    /*the following information is collected from the recyclerview for the report post
+                                                                    functionality
+                                                                     */
+                                                                    val comkey: String? =
+                                                                        adapter.removeItem(viewHolders)
+
+                                                                    val postkey: String? =
+                                                                        adapter.getPostKey(viewHolders)
+
+                                                                    val userkey: String? =
+                                                                        adapter.getUserKey(viewHolders)
+
+                                                                    val crnkey: String? =
+                                                                        adapter.getCrn(viewHolders)
+
+                                                                    val textkey: String? = adapter.getText(viewHolders)
+
+                                                                    val builder = AlertDialog.Builder(
+                                                                        this@ClickedPost,
+                                                                        R.style.AppTheme_AlertDialog
+                                                                    )
+
+                                                                    val listreason = arrayOf(
+                                                                        "This is spam",
+                                                                        "This is abusive or harassing",
+                                                                        "Other issues"
+                                                                    )
+                                                                    //user can chose to report a user for these reasons
+                                                                    //creating report user dialog box
+                                                                    builder.setTitle("Report Post")
+                                                                    builder.setSingleChoiceItems(
+                                                                        listreason,
+                                                                        0
+                                                                    ) { dialogInterface, i ->
+                                                                        var complaint = listreason[i]
+                                                                    }
+                                                                    builder.setPositiveButton("SUBMIT"
+                                                                    ) { _: DialogInterface?, _: Int ->
+                                                                        //letting user know that the report was successfully sent
+                                                                        val toast = Toast.makeText(
+                                                                            this@ClickedPost,
+                                                                            "We've received your report.",
+                                                                            Toast.LENGTH_SHORT
+                                                                        )
+                                                                        toast.show()
+                                                                        myViewModel.reportUserComment(
+                                                                            userkey!!,
+                                                                            textkey!!,
+                                                                            crnkey!!,
+                                                                            postkey!!, comkey!!
+                                                                        )
+
+                                                                    }
+                                                                    builder.setNegativeButton("CANCEL"
+                                                                    ) { _: DialogInterface?, _: Int ->
+                                                                        builder.setCancelable(true)
+                                                                    }
+
+                                                                    val msgdialog: AlertDialog = builder.create()
+                                                                    msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
+
+                                                                    msgdialog.show()
+                                                                }
+
+                                                            })
+                                                        )
+
+
+                                                    }
+
+                                                }
+                                            }
+                                        }
+
+                                    })
                                 }
-                                adapter = CommentsListAdapter(
-                                    this@ClickedPost, list, title, text, author, crn,
-                                    intent.getStringExtra("UserID").toString(), ptime, uri
-                                )
-                                comment_RecyclerView.adapter = adapter
-                                comment_RecyclerView.layoutManager = LinearLayoutManager(this@ClickedPost)
-
-                                object : SwipeHelper(applicationContext, comment_RecyclerView, 200) {
-                                    override fun initButton(
-                                        viewHolders: RecyclerView.ViewHolder,
-                                        buffer: MutableList<ProfileButton>
-                                    ) {
-                                        val userk: String? = adapter.getUserKey(viewHolders)
-                                        if (FirebaseAuth.getInstance().currentUser?.uid == userk){
-                                            //a user cannot block or report themselves
-                                        }
-                                        else {
-                                            buffer.add(
-                                                ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
-                                                    ("#FF0000"), object : ButtonClickListener {
-                                                    override fun onClick(pos: Int) {
-                                                        Log.d("soupv", "pos is $pos")
-                                                        //userkey is collected from the recyclerview for the block user functionality
-                                                        val userkey: String? =
-                                                            adapter.getUserKey(viewHolders)
-
-                                                        val builder = AlertDialog.Builder(
-                                                            this@ClickedPost,
-                                                            R.style.AppTheme_AlertDialog
-                                                        )
-                                                        //building the dialog box to stop users from blocking people by mistake
-                                                        builder.setTitle("Are you sure?")
-                                                        builder.setMessage("You won't see posts or comments from this user.")
-                                                        builder.setPositiveButton("BLOCK"
-                                                        ) { _: DialogInterface?, _: Int ->
-                                                            myViewModel.blockUser(userkey!!)
-                                                            val toast = Toast.makeText(
-                                                                this@ClickedPost,
-                                                                "This user has been blocked",
-                                                                Toast.LENGTH_SHORT
-                                                            )
-                                                            toast.show()
-                                                            onBackPressed(crn)
-                                                        }
-                                                        builder.setNegativeButton("CANCEL"
-                                                        ) { _: DialogInterface?, _: Int ->
-                                                            builder.setCancelable(true)
-                                                        }
-
-                                                        val msgdialog: AlertDialog = builder.create()
-
-                                                        msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
-
-                                                        msgdialog.show()
-                                                    }
-
-                                                })
-                                            )
-
-                                            buffer.add(
-                                                ProfileButton(applicationContext, "Report Post", 30, 0, Color.parseColor
-                                                    ("#D3D3D3"), object : ButtonClickListener {
-                                                    override fun onClick(pos: Int) {
-                                                        /*the following information is collected from the recyclerview for the report post
-                                                        functionality
-                                                         */
-                                                        val comkey: String? =
-                                                            adapter.removeItem(viewHolders)
-
-                                                        val postkey: String? =
-                                                            adapter.getPostKey(viewHolders)
-
-                                                        val userkey: String? =
-                                                            adapter.getUserKey(viewHolders)
-
-                                                        val crnkey: String? =
-                                                            adapter.getCrn(viewHolders)
-
-                                                        val textkey: String? = adapter.getText(viewHolders)
-
-                                                        val builder = AlertDialog.Builder(
-                                                            this@ClickedPost,
-                                                            R.style.AppTheme_AlertDialog
-                                                        )
-
-                                                        val listreason = arrayOf(
-                                                            "This is spam",
-                                                            "This is abusive or harassing",
-                                                            "Other issues"
-                                                        )
-                                                        //user can chose to report a user for these reasons
-                                                        //creating report user dialog box
-                                                        builder.setTitle("Report Post")
-                                                        builder.setSingleChoiceItems(
-                                                            listreason,
-                                                            0
-                                                        ) { dialogInterface, i ->
-                                                            var complaint = listreason[i]
-                                                        }
-                                                        builder.setPositiveButton("SUBMIT"
-                                                        ) { _: DialogInterface?, _: Int ->
-                                                            //letting user know that the report was successfully sent
-                                                            val toast = Toast.makeText(
-                                                                this@ClickedPost,
-                                                                "We've received your report.",
-                                                                Toast.LENGTH_SHORT
-                                                            )
-                                                            toast.show()
-                                                            myViewModel.reportUserComment(
-                                                                userkey!!,
-                                                                textkey!!,
-                                                                crnkey!!,
-                                                                postkey!!, comkey!!
-                                                            )
-
-                                                        }
-                                                        builder.setNegativeButton("CANCEL"
-                                                        ) { _: DialogInterface?, _: Int ->
-                                                            builder.setCancelable(true)
-                                                        }
-
-                                                        val msgdialog: AlertDialog = builder.create()
-                                                        msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
-
-                                                        msgdialog.show()
-                                                    }
-
-                                                })
-                                            )
-
-
-                                        }
-
-                                    }
+                                else if (Comment_textbox.text.isNullOrBlank()) {
+                                    Toast.makeText(this@ClickedPost, "you cannot post an empty comment", Toast.LENGTH_LONG).show()
+                                }
+                                else if (Comment_textbox.text.isNotBlank() && chk == false) {
+                                    Toast.makeText(this@ClickedPost, "Subscribe to $crn in order to create a post", Toast.LENGTH_SHORT).show()
                                 }
                             }
-
                         })
+
+
+
                     }
                 }
                 else{
@@ -243,7 +269,27 @@ class ClickedPost : AppCompatActivity() {
                                 comment_RecyclerView.layoutManager = LinearLayoutManager(this@ClickedPost)
 
                                 Comment_button.setOnClickListener {
-                                    myViewModel.newComment()
+                                    myViewModel.checkSubscriptions(crn, object : CheckCallback {
+                                        override fun check(chk: Boolean) {
+                                            /*check varible checks is user is subscribed, the logic for this can be found in the viewmodel
+                                            and the database query can be found in the corresponding checksubscription firebase function
+                                             */
+                                            if (Comment_textbox.text.isNotBlank() && chk == true) {
+                                                myViewModel.newComment(Comment_textbox.text.toString())
+                                                Toast.makeText(this@ClickedPost, "Your comment has been successfully posted!", Toast.LENGTH_LONG)
+                                                    .show()
+                                                Comment_textbox.text.clear()
+                                                val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                                                inputMethodManager.hideSoftInputFromWindow(it.windowToken, 0)
+                                                myViewModel.newComment(Comment_textbox.text.toString())
+                                            } else if (Comment_textbox.text.isNullOrBlank()) {
+                                                Toast.makeText(this@ClickedPost, "you cannot post an empty comment", Toast.LENGTH_LONG).show()
+                                            } else if (Comment_textbox.text.isNotBlank() && chk == false) {
+                                                Toast.makeText(this@ClickedPost, "Subscribe to $crn in order to create a post", Toast.LENGTH_SHORT)
+                                                    .show()
+                                            }
+                                        }
+                                    })
                                 }
 
                               //on swipe a user can block or report another user
@@ -382,6 +428,7 @@ class ClickedPost : AppCompatActivity() {
                 }
             }
         })
+
 
         binding.clickedViewModel = myViewModel
         binding.lifecycleOwner = this@ClickedPost
