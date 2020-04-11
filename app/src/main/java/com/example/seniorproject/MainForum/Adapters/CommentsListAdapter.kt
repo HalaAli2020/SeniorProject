@@ -37,16 +37,22 @@ class CommentsListAdapter(
     private val typeHeader: Int = 0
     private val typeList: Int = 1
     val userID = FirebaseAuth.getInstance().uid
+    /*
+    this adapter is used to display a post and its comments when clicked
+     */
     override fun getItemViewType(position: Int): Int {
         if (position == 0) {
             return typeHeader
+            //returns the post UI
         }
         return typeList
+        //returns the comments list UI
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
 
+        //inflate layout for both the post header and comment cardviews
         if (viewType == 0) {
             val cellForRow = layoutInflater.inflate(R.layout.rv_post_header, parent, false)
             return CustomViewHoldersHeader(cellForRow)
@@ -56,6 +62,7 @@ class CommentsListAdapter(
         return CustomViewHolders(cellForRow)
     }
 
+    //returns the item count
     override fun getItemCount(): Int {
         var size = 0
         if (!Comments.isNullOrEmpty()) {
@@ -65,13 +72,10 @@ class CommentsListAdapter(
         return size
     }
 
+    //
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         Log.d("CommentsAdapter:", "" + position)
-        //need to get the No comments yet to show up
-        //  if(Comments[position] == null || getItemCount() == 0){
-        //holder.itemView.comment_text.text = "No Comments yet"
-        //try commenting out no comments yet.
         if (holder is CustomViewHoldersHeader) {
             holder.itemView.click_post_title.text = title
             holder.itemView.click_post_text.text = text
@@ -98,7 +102,7 @@ class CommentsListAdapter(
         //   }
         else {
             if (Comments[position] == null || getItemCount() == 0) {
-                //holder.itemView.comment_text.text = "No Comments yet"
+                holder.itemView.comment_text.text = "No Comments yet"
             } else {
                 val comment: Comment = Comments[position]
                 val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
@@ -134,38 +138,40 @@ class CommentsListAdapter(
         }
     }
 
+
+    //the functions below are used to get information about comments in the recyclerview
     fun removeItem(holder: RecyclerView.ViewHolder): String {
         val comment: Comment = Comments[holder.adapterPosition]
         val commentkey: String? = comment.Classkey
-
+        //returns comment classkey at selected position
         return commentkey!!
     }
 
     fun getCrn(holder: RecyclerView.ViewHolder): String {
         val comment: Comment = Comments[holder.adapterPosition]
         val commentkey: String? = comment.crn
-
+        //returns comment crn at selected position
         return commentkey!!
     }
 
     fun getUserKey(holder: RecyclerView.ViewHolder): String {
         val comment: Comment = Comments[holder.adapterPosition]
         val commentkey: String? = comment.PosterID
-
+        //returns the comment poster ID at the selected position
         return commentkey!!
     }
 
     fun getText(holder: RecyclerView.ViewHolder): String {
         val comment: Comment = Comments[holder.adapterPosition]
         val commentkey: String? = comment.text
-
+        //returns the comment text at the select position
         return commentkey!!
     }
 
     fun getPostKey(holder: RecyclerView.ViewHolder): String {
         val comment: Comment = Comments[holder.adapterPosition]
         val commentkey: String? = comment.Postkey
-
+        //retirns the post key at the selected position
         return commentkey!!
     }
 
