@@ -206,9 +206,9 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                         it.Classkey = n.child("Classkey").value.toString()
                         it.PosterID = n.child("PosterID").value.toString()
                         it.Postkey = n.child("Postkey").value.toString()
-                        it.profileComKey = n.child("ProfileComKey").value.toString()
+                        it.ProfileComKey = n.child("ProfileComKey").value.toString()
                         it.Ptime = n.child("Ptime").value.toString()
-                        it.userComkey = n.child("UserComkey").value.toString()
+                        it.UserComkey = n.child("UserComkey").value.toString()
                         it.author = n.child("author").value.toString()
                         it.crn = n.child("crn").value.toString()
 
@@ -333,7 +333,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         Firebase.blockUser(UserID)
     }
 
-    fun getTheUserProfileComments(userID: String, callbackComment: FirebaseData.FirebaseCallbackCommentFlow){
+    fun getUserProfileComments(userID: String, callbackComment: FirebaseData.FirebaseCallbackCommentFlow){
         Firebase.getUserProfileComments(userID, object: FirebaseCallbackComment{
             override fun onFailure() {}
 
@@ -350,9 +350,9 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                         it.Classkey = n.child("Classkey").value.toString()
                         it.PosterID = n.child("PosterID").value.toString()
                         it.Postkey = n.child("Postkey").value.toString()
-                        it.profileComKey = n.child("ProfileComKey").value.toString()
+                        it.ProfileComKey = n.child("ProfileComKey").value.toString()
                         it.Ptime = n.child("Ptime").value.toString()
-                        it.userComkey = n.child("UserComkey").value.toString()
+                        it.UserComkey = n.child("UserComkey").value.toString()
                         it.author = n.child("author").value.toString()
                         it.crn = n.child("crn").value.toString()
 
@@ -431,8 +431,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                         it.Ptime = n.child("Timestamp").getValue(String::class.java)
                         it.key = n.child("key").getValue(String::class.java)
                         it.Ptime = n.child("Ptime").getValue(String::class.java)
-                        it.classkey = n.child("Classkey").getValue(String::class.java)
-                        it.userID = n.child("UserID").getValue(String::class.java)
+                        it.Classkey = n.child("Classkey").getValue(String::class.java)
+                        it.UserID = n.child("UserID").getValue(String::class.java)
                         it.author = n.child("author").getValue(String::class.java)
                         it.uri = n.child("uri").getValue(String::class.java)
 
