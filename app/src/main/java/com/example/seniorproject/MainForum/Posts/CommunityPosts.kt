@@ -52,8 +52,10 @@ class CommunityPosts : AppCompatActivity() {
         val factory = InjectorUtils.provideCommunityPostViewModelFacotry()
         myViewModel = ViewModelProviders.of(this, factory).get(CommunityPostViewModel::class.java)
 
-
-        classes_post_RV.layoutManager = LinearLayoutManager(this)
+        val linearLayoutManager = LinearLayoutManager(this)
+        linearLayoutManager.reverseLayout = true
+        linearLayoutManager.stackFromEnd = true
+        classes_post_RV.layoutManager = linearLayoutManager
 
 
         var livedatapostlist = myViewModel.getClassesco(className, object: MutableListCallback{
