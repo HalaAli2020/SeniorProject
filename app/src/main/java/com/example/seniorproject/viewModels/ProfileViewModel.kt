@@ -10,6 +10,7 @@ import com.example.seniorproject.Utils.PostListener
 import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.CommentLive
+import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.PostLiveData
 import com.example.seniorproject.data.repositories.PostRepository
 import com.google.firebase.database.DataSnapshot
@@ -32,10 +33,17 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     var noCommentsCheck : Boolean? = null
 
 
-    fun getUserProfilePosts(UserID : String): PostLiveData {
+    fun getUserProfilePosts(UserID : String, callback: ClickedPostViewModel.PostListFromFlow) {
 
-        posts = repository.getUserProfilePosts(UserID)
-        return posts
+        repository.getUserProfilePosts(UserID, object: FirebaseData.FirebaseCallbackPostFlow{
+            override fun onCallback(flow: Flow<Post>) {
+                viewModelScope.launch {
+                    var postFlow = flow.toList()
+                    callback.onList(postFlow)
+                }
+            }
+        })
+
     }
     fun returnProfilePost() : PostLiveData
     {
@@ -43,11 +51,11 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     }
 
     fun getUserProfileComments(UserID : String, callback: ClickedPostViewModel.CommentListFromFlow){
-        repository.getTheUserProfileComments(UserID, object: FirebaseData.FirebaseCallbackCommentFlow{
+        repository.getUserProfileComments(UserID, object: FirebaseData.FirebaseCallbackCommentFlow{
             override fun onCallback(flow: Flow<Comment>) {
                 viewModelScope.launch {
-                    var commflow = flow.toList()
-                    callback.onList(commflow)
+                    var commentflow = flow.toList()
+                    callback.onList(commentflow)
                 }
             }
         })
