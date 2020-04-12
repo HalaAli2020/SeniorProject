@@ -34,9 +34,6 @@ interface FirebaseRecentMessagseCallback {
     fun onCallback(list: List<LatestMessage>)
 }
 
-interface FirebaseCallbackPostC {
-    fun onCallback(PostL: PostLiveData)
-}
 
 interface FirebaseCallbackCommentFlow {
     fun onCallback(flow: Flow<Comment>)
@@ -84,7 +81,7 @@ interface FirebaseCallbackString {
 interface FirebaseCallbackItem {
     fun onStart()
     fun onFailure()
-    fun onMessage(data: DataSnapshot): String
+    fun onMessage(data: DataSnapshot)
 }
 interface FirebaseResult {
     fun onStart()

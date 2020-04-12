@@ -73,13 +73,12 @@ class ClickedPost : AppCompatActivity() {
         myViewModel.crn = crn
 
 
-        //checking for comments and adding a no comments message when there are no comments
+        //checks to see if there are no comments in a new post that was created. If no comments then enter code in onEmpty
         var checkForComments = myViewModel.noCommentsCheckForCommPosts(object :
             FirebaseCallbackNoComments {
             override fun onEmpty(nocomlist: Boolean) {
-                Log.d("soupview", "welcome to inside noCommentChecker")
-                if (nocomlist == true) {
-                    Log.d("soupview", "comments don't exist")
+                if(nocomlist){
+                    //load adapter with empty comment for recyclerview layout to load
                     var comment = Comment("no comment", "", "", "", "")
                     var Comments: ArrayList<Comment> = arrayListOf()
                     Comments.add(comment)
@@ -259,13 +258,13 @@ class ClickedPost : AppCompatActivity() {
 
 
                     }
-                } else {
-                    Log.d("soupview", "comments exist")
-                    myViewModel.getClassComments(object : CommentListFromFlow {
-                        override fun onList(list: List<Comment>) {
-                            for (item in list) {
-                                val getext = item.text
-                                Log.d("soupview", "comm text is $getext")
+                }
+                else{
+                    //this means that there are comments already present in the post. don't have to load with an empty adapter to recyclerview
+                        myViewModel.getClassComments(object: CommentListFromFlow{
+                            override fun onList(list: List<Comment>) {
+                                for(item in list){
+                                    val getext= item.text
                             }
 
                             adapter = CommentsListAdapter(
@@ -297,7 +296,7 @@ class ClickedPost : AppCompatActivity() {
                                             inputMethodManager.hideSoftInputFromWindow(it.windowToken, 0)
                                         } else if (Comment_textbox.text.isNullOrBlank()) {
                                             Toast.makeText(this@ClickedPost, "you cannot post an empty comment", Toast.LENGTH_LONG).show()
-                                        } else if (Comment_textbox.text.isNotBlank() && chk == false) {
+                                            } else if (Comment_textbox.text.isNotBlank() && !chk) {
                                             Toast.makeText(this@ClickedPost, "Subscribe to $crn in order to create a post", Toast.LENGTH_SHORT)
                                                 .show()
                                         }
@@ -445,7 +444,7 @@ class ClickedPost : AppCompatActivity() {
             }
         })
 
-
+        //sets data binding variable in xml to this view model
         binding.clickedViewModel = myViewModel
         binding.lifecycleOwner = this@ClickedPost
     }

@@ -70,7 +70,7 @@ class ProfilePostFragment : Fragment() {
             override fun onList(list: List<Post>) {
                 //this is where we grab the list of posts from the callback that converted the Flow of posts to list with .toList
                 //extenstion
-                //setting layout so newest comments load first
+                //setting layout so newest posts load first
                 val linearLayoutManager = LinearLayoutManager(context)
                 linearLayoutManager.reverseLayout = true
                 linearLayoutManager.stackFromEnd = true

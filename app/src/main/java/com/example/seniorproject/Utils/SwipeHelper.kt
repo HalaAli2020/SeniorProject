@@ -81,6 +81,7 @@ abstract class SwipeHelper(context: Context, private val recyclerView: RecyclerV
 
     }
 
+    //initializes the onTouchListeners and other variables needed to use Swipe Helper
     init {
         this.recyclerView.setOnTouchListener(onTouchListener)
         this.gestureDetector = GestureDetector(context, gestureListener)
@@ -88,9 +89,11 @@ abstract class SwipeHelper(context: Context, private val recyclerView: RecyclerV
         this.buttonList = ArrayList()
         this.buttonQueue = IntLinkedList()
 
+        //itemtouchhelper is attached to the following recyclerview and interacts with all its view holders.
         val itemTouchHelper = ItemTouchHelper(this)
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
+
 
     class IntLinkedList : LinkedList<Int>(){
         override fun contains(element: Int): Boolean {
@@ -116,6 +119,7 @@ abstract class SwipeHelper(context: Context, private val recyclerView: RecyclerV
         }
     }
 
+    //this is false because we are not moving the viewHolder or the swipe. we just want to swipe
     override fun onMove(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
@@ -179,6 +183,7 @@ abstract class SwipeHelper(context: Context, private val recyclerView: RecyclerV
         }
         if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE)
         {
+            //if statement dx<0 is when user swipes in left direction
             if(dX < 0)
             {
                 var buffer: MutableList<ProfileButton> = ArrayList()
@@ -209,6 +214,7 @@ abstract class SwipeHelper(context: Context, private val recyclerView: RecyclerV
         var right = itemView.right.toFloat()
         val dButtonWidth = -1*translationX/buffer.size
         for(button in buffer){
+            //this draws the button dimensions in each of the buttons in buffer
             val left= right - dButtonWidth
             button.onDraw(c, RectF(left, itemView.top.toFloat(), right, itemView.bottom.toFloat()), pos)
             right=left

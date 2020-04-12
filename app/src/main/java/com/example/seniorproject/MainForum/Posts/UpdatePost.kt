@@ -24,6 +24,8 @@ class UpdatePost : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         title = "Update Post"
 
+
+        //initialize inject of dagger app component and initializes view model with generic factory
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProvider(this, factory).get(NewPostFragmentViewModel::class.java)
         val binding: UpdatePostBinding = DataBindingUtil.setContentView(this,R.layout.update_post)
@@ -41,6 +43,7 @@ class UpdatePost : AppCompatActivity() {
         myViewModel.crn = crn
         myViewModel.postKey = postkey
 
+        //sets data binding variable in xml to this view model
         binding.newPostModel = myViewModel
         binding.lifecycleOwner = this
 

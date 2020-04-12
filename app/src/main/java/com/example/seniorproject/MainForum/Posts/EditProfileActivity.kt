@@ -56,6 +56,7 @@ class EditProfileActivity : AppCompatActivity() {
             }
         })
 
+        //sets data binding variable in xml to this view model
         binding.profileEditViewModel = myViewModel
         binding.lifecycleOwner = this
 
@@ -108,7 +109,7 @@ class EditProfileActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 0 && resultCode == Activity.RESULT_OK && data !=null)
         {
-            //choosing and saving new image
+            //choosing and saving new image using Glide library
             val img : ImageButton = findViewById(R.id.img_button)
 
             selectedPhotoUri= data.data
@@ -122,6 +123,7 @@ class EditProfileActivity : AppCompatActivity() {
                 .apply(RequestOptions().circleCrop())//4
                 .into(img)
 
+            //saves profile image to database
             myViewModel.uploadUserProfileImage(selectedPhotoUri ?: Uri.EMPTY)
 
         }

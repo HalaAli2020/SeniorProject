@@ -45,6 +45,7 @@ class FragmentHome : Fragment() {
         var currentUser: User? = null
     }
 
+    //lifecycleScope coroutines body was launched and list of posts was grabbed using a callback.
     @InternalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,9 +58,7 @@ class FragmentHome : Fragment() {
         lifecycleScope.launch(Dispatchers.IO) {
             myViewModel.getSubsP(object : listActivitycallback {
                 override fun onCallback(list: List<Post>) {
-                    Log.d("in callback", "invalidate")
-                    view?.invalidate()
-                    //view?.post_recyclerView?.swapAdapter(HomeAdapter(view!!.context, myViewModel.sendPosts(), 0), true)
+                    view!!.invalidate()
 
                 }
             })
@@ -80,11 +79,12 @@ class FragmentHome : Fragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
         val linearLayoutManager = LinearLayoutManager(context)
+        //now the two newest posts show up in home fragment of each subscribed forum
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true
         view.post_recyclerView.layoutManager = linearLayoutManager
 
-
+        //initalize recyclerview adapter with list
         view.post_recyclerView.adapter = HomeAdapter(view.context, myViewModel.sendPosts(), 0)
 
         if (FirebaseAuth.getInstance().uid != null)
@@ -110,6 +110,8 @@ class FragmentHome : Fragment() {
         return view
 
     }
+
+    //swap recyclerview with new items when retrieving list of posts
     private fun swap()
     {
         val ada = HomeAdapter(view!!.context, myViewModel.sendPosts(), 0)

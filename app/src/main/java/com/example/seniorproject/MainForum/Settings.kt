@@ -28,7 +28,7 @@ class Settings : AppCompatActivity() {
 
         OnRadioButtonClick()
         setRadioButton()
-
+        //this is triggered once you change the theme and pick an option
         nextActivity.setOnClickListener {
             val intent = Intent(this, MainForum::class.java)
             startActivity(intent)
@@ -36,6 +36,8 @@ class Settings : AppCompatActivity() {
 
     }
 
+    //user has option of light mode, night mode, or to follow the system of whatever mode is currently running on the settings of your
+    //mobile device
     fun OnRadioButtonClick() {
         themeGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
@@ -60,6 +62,7 @@ class Settings : AppCompatActivity() {
         }
     }
 
+    //sets to night mode
     private fun setAppTheme(themeMode: Int, prefsMode: Int) {
         AppCompatDelegate.setDefaultNightMode(themeMode)
         saveAppTheme(prefsMode)
