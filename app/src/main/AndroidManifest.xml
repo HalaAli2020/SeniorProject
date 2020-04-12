@@ -24,7 +24,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Messages.ChatLog"
-            android:windowSoftInputMode="adjustResize|stateVisible" />
+            android:windowSoftInputMode="adjustPan|stateVisible" />
         <activity
             android:name=".Messages.NewMessage"
             android:windowSoftInputMode="adjustPan" />

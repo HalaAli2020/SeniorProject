@@ -14,37 +14,32 @@ import com.example.seniorproject.data.models.LatestMessage
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.m_rv_latest_message.view.*
 
+//Display Latest Messages on FragmentLatestMessages
+class LatestMessageAdapter(context: Context, private val messageList: List<LatestMessage>) : RecyclerView.Adapter<RecentMessageHolder>() {
 
-class LatestMessageAdapter(
-    context: Context,
-    private val messageList: List<LatestMessage>
-) :
-    RecyclerView.Adapter<RecentMessageHolder>() {
-
+    //Initialized varibles
     val mContext: Context = context
-
     companion object {
         const val USER_KEY = "USER_KEY"
         const val USERNAME = "USERNAME"
     }
 
+    //Display using latest messages format for RecyclerView
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentMessageHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val cellForRow = layoutInflater.inflate(R.layout.m_rv_latest_message, parent, false)
         return RecentMessageHolder(cellForRow)
     }
 
+    //Get number of items in latest messages list
     override fun getItemCount(): Int {
-
-        if (!messageList.isNullOrEmpty()) {
+        if (!messageList.isNullOrEmpty())
             return messageList.size
-        }
-
         return 0
     }
 
+    //Bind data of latest messages to the layout and define an OnClickListener for each item
     override fun onBindViewHolder(holder: RecentMessageHolder, position: Int) {
-
         val message: LatestMessage = messageList[position]
 
         holder.itemView.textView_latest_user.text = message.username
@@ -59,11 +54,10 @@ class LatestMessageAdapter(
         holder.itemView.listOfUsers.setOnClickListener {
             val intent = Intent(mContext, ChatLog::class.java)
 
-            if (message.fromID == FirebaseAuth.getInstance().uid) {
+            if (message.fromID == FirebaseAuth.getInstance().uid)
                 intent.putExtra(USER_KEY, message.toId)
-            } else {
+            else
                 intent.putExtra(USER_KEY, message.fromID)
-            }
 
             intent.putExtra(USERNAME, message.username)
             holder.itemView.context.startActivity(intent)

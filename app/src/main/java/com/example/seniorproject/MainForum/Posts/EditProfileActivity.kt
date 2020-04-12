@@ -34,6 +34,7 @@ class EditProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         //setting actionbar title
         val actionbar = supportActionBar
@@ -124,5 +125,10 @@ class EditProfileActivity : AppCompatActivity() {
             myViewModel.uploadUserProfileImage(selectedPhotoUri ?: Uri.EMPTY)
 
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }

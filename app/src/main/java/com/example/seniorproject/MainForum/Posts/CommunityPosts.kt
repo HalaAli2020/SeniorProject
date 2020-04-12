@@ -39,7 +39,7 @@ class CommunityPosts : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_community_posts)
-
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         val className = intent.getStringExtra("ClassName")
 
         post_list_community_name_TV.text = className
@@ -213,6 +213,11 @@ class CommunityPosts : AppCompatActivity() {
             }
         })
 
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
 }

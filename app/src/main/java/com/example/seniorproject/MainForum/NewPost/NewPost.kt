@@ -46,8 +46,6 @@ class NewPost : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
-        val intent = Intent(this, MainForum::class.java)
-        startActivity(intent)
         return true
     }
 }

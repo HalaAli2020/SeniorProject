@@ -36,7 +36,7 @@
     <string name="comment">Comment</string>
     <string name="add_a_comment">Add a comment</string>
     <string name="add_new_bio">Add a short description</string>
-    <string name="done">DONE</string>
+    <string name="done">Save</string>
     <string name="login">LOGIN</string>
     <string name="login_lowercase">Login</string>
     <string name="register_for_an_account">Register for an account</string>
@@ -68,6 +68,9 @@
     <string name="dark_theme">Dark Theme</string>
     <string name="set_theme">Set Theme</string>
     <string name="themes">Themes</string>
+    <string name="enter_edited_comment">Enter edited comment...</string>
+    <string name="enter_edited_text">Enter edited text...</string>
+    <string name="enter_edited_title">Enter edited title...</string>
 
 
 </resources>

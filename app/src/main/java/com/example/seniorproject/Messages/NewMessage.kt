@@ -23,32 +23,34 @@ class NewMessage : AppCompatActivity() {
 
     private lateinit var searchview: SearchView
     lateinit var ada: NewMessageAdapter
-    //lateinit var binding : ActivityNewMessageBinding
     val context = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        //Set title and add back button
         this.title = "New Message"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.m_activity_new_message)
 
+        //inject dagger app component and initialize viewmodel
         DaggerAppComponent.create().inject(this)
-
         myViewModel = ViewModelProvider(this, factory).get(NewMessageViewModel::class.java)
+
+        //Declare and set up the search box
         searchview = user_search
         setUpSearchView()
 
+        //Set up RecyclerView with data from Firebase
         userList.layoutManager = LinearLayoutManager(this)
-
         myViewModel.fetchUsers()?.observe(this,
             Observer<List<User>> { articles ->
                 ada = NewMessageAdapter(context, articles)
                 userList.adapter = ada
             })
-        //userList.adapter = myViewModel.fetchUsers()?.let { NewMessageAdapter(this, it) }
     }
 
+    //Search view setup to allow searching of data
     private fun setUpSearchView() {
         searchview.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String?): Boolean {
@@ -57,12 +59,12 @@ class NewMessage : AppCompatActivity() {
             }
 
             override fun onQueryTextSubmit(query: String?): Boolean {
-                // ada.onfilter(query)
                 return true
             }
         })
     }
 
+    //Allows back button to be pressed to previous activity
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true

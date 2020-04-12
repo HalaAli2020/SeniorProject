@@ -21,13 +21,14 @@ class UpdatePost : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.update_post)
-
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        title = "Update Post"
 
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProvider(this, factory).get(NewPostFragmentViewModel::class.java)
         val binding: UpdatePostBinding = DataBindingUtil.setContentView(this,R.layout.update_post)
 
-//gets post information
+        //gets post information
         val text: String = intent.getStringExtra("text") ?: "no text"
         val title: String = intent.getStringExtra("title") ?: "no title"
         val postkey: String = intent.getStringExtra("Classkey") ?: "class key"
@@ -43,6 +44,11 @@ class UpdatePost : AppCompatActivity() {
         binding.newPostModel = myViewModel
         binding.lifecycleOwner = this
 
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
 }
