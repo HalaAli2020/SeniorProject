@@ -130,6 +130,7 @@ class AuthenticationViewModel @Inject constructor(private val repository : UserA
     //redirects user to Login Activity
      fun redirectToLogin(view: View){
         Intent(view.context, LoginActivity::class.java).also{
+            it.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             view.context.startActivity(it)
         }
     }

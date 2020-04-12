@@ -27,6 +27,7 @@ class ChatLog : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.m_activity_chat_log)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val username = intent.getStringExtra("USERNAME")
         val toID = intent.getStringExtra("USER_KEY")
@@ -70,5 +71,10 @@ class ChatLog : AppCompatActivity() {
         //userList.adapter = myViewModel.fetchUsers()?.let { NewMessageAdapter(this, it) }
 
 
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }

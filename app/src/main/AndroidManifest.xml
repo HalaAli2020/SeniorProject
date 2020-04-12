@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/AppThemeMain"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".MainForum.Settings"></activity>
         <activity
@@ -34,14 +34,14 @@
         <activity android:name=".MainForum.Posts.ClickedPost" />
         <activity android:name=".MainForum.Posts.UpdatePost" />
         <activity android:name=".MainForum.Posts.UpdateComment" />
-        <activity android:name=".search.SearchActivity" />
+        <activity android:name=".search.SearchActivity"
+            android:windowSoftInputMode="adjustPan|stateVisible"/>
         <activity
             android:name=".MainForum.MainForum"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:theme="@style/AppThemeFragment"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
