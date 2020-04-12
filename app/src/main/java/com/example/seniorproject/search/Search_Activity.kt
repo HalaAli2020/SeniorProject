@@ -26,10 +26,8 @@ class SearchActivity: AppCompatActivity()
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: SearchViewModel
     private lateinit var searchview : SearchView
-    // lateinit var lit : RecyclerView
     private lateinit var lt :RecyclerView
     lateinit var ada : SearchAdapter
-    //lateinit var mnu : MenuItem
     lateinit var binding : ActivitySearchBinding
 
 
@@ -44,7 +42,6 @@ class SearchActivity: AppCompatActivity()
         myViewModel.getallclasses()
         ada = SearchAdapter(this.baseContext, myViewModel, myViewModel.sendlistf())
         this.title = ""
-        //searchview = binding.SearchR
         lt = binding.SearchL
         val obse = Observer<MutableList<CRN>> {
             swap(lt)
@@ -55,9 +52,7 @@ class SearchActivity: AppCompatActivity()
         lt.layoutManager = lin
         lt.adapter = ada
 
-        // lt = findViewById<RecyclerView>(R.id.Search_L)
-        //setupsearchview()
-        //searchview =findViewById<SearchView>(R.id.Search_R)
+
         myViewModel.fullist.observe(this, obse)
 
 
@@ -83,7 +78,7 @@ class SearchActivity: AppCompatActivity()
             }
 
             override fun onQueryTextSubmit(query: String?): Boolean {
-                // ada.onfilter(query)
+
                 return true
             }
         })

@@ -6,6 +6,7 @@ import com.google.firebase.database.DataSnapshot
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.Flow
 
+/* This is a file for all the interfaces used in the application for callbacks */
 interface FirebaseValuecallback{
     fun onStart()
     fun onFailure()

@@ -39,7 +39,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     //calls corresponding function from firebase file
     fun uploadUserProfileImage(selectedPhotoUri: Uri) =
         Firebase.uploadImageToFirebaseStorage(selectedPhotoUri)
-/*This Function is called from getSubsP in HomeframentViewModel it uses the list of subs gotten for the current user to grab the recent posts from each class the user is subscribed to */
+/*This Function is called from getSubsP in HomeframentViewModel it uses the list of subs gotten for the current user to grab the recent posts from
+each class the user is subscribed to this uses coroutines */
     suspend fun getSubscribedPosts(value : List<String>) : Flow<Post> = flow {
         var postL : MutableList<Post> = mutableListOf()
         var limit = getPostperclass(value.size)

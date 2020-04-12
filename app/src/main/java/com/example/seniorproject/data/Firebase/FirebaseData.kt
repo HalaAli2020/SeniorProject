@@ -1514,25 +1514,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
     /*
     NEEDS COMMENT
      */
-    /*fun combineSubs(listClasses: MutableLiveData<MutableList<CRN>>, UsersSubs: MutableList<String>): Int {
-        if (listClasses.value.isNullOrEmpty() || UsersSubs.isNullOrEmpty()) {
 
-            Log.d("Null", "one was null")
-            return 0
-        } else {
-            for (data in listClasses.value!!.iterator()) {
-                if (UsersSubs.contains(data.name)) {
-                    data.subscribed = true
-                    Log.d("combine", data.name)
-                }
-
-            }
-            return 1
-
-
-        }
-
-    }*/
 
     //Query to get available classes
     private fun listenClasses(call: FirebaseCallbackCRN) {

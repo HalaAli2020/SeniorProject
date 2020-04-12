@@ -46,7 +46,7 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
         })
 
     }
-   
+
 
     fun getUserProfileComments(UserID : String, callback: CommentListFromFlow){
         repository.getUserProfileComments(UserID, object: FirebaseCallbackCommentFlow {
@@ -124,11 +124,11 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     fun fetchUsername(UserID: String, callback : EmailCallback) : String {
         repository.fetchUsername(UserID, object : FirebaseCallbackItem{
             override fun onStart() {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
 
             override fun onFailure() {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
 
             override fun onMessage(data: DataSnapshot): String {
@@ -144,11 +144,11 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
     fun fetchBio(UserID: String, callback: EmailCallback) : String {
         repository.fetchBio(UserID, object : FirebaseCallbackItem{
             override fun onStart() {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
 
             override fun onFailure() {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
 
             override fun onMessage(data: DataSnapshot): String {
