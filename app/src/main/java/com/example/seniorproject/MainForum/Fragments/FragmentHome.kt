@@ -58,7 +58,8 @@ class FragmentHome : Fragment() {
             myViewModel.getSubsP(object : listActivitycallback {
                 override fun onCallback(list: List<Post>) {
                     Log.d("in callback", "invalidate")
-                    view!!.invalidate()
+                    view?.invalidate()
+                    //view?.post_recyclerView?.swapAdapter(HomeAdapter(view!!.context, myViewModel.sendPosts(), 0), true)
 
                 }
             })

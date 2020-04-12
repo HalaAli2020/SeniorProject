@@ -22,6 +22,7 @@
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/user_search"
+        app:submitBackground="@color/blue_theme"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"

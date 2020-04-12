@@ -37,8 +37,7 @@ class UserProfileActivity : AppCompatActivity() {
 
 
         //setting the actionbar title
-        val actionbar = supportActionBar
-        actionbar!!.title = "Profile"
+        this.title = "Profile"
 
         //creating the dagger application component
         DaggerAppComponent.create().inject(this)
@@ -100,7 +99,7 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
         //UI settings for the actionbar and navigation
-        actionbar.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         pro_bottom_navigation.setIconVisibility(false)
         pro_bottom_navigation.enableAnimation(false)
         pro_bottom_navigation.setTextSize(20F)
@@ -181,8 +180,6 @@ class UserProfileActivity : AppCompatActivity() {
     //setting up the back button to navigate to the previous screen
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
-        val intent = Intent(this, MainForum::class.java)
-        startActivity(intent)
         return true
     }
 
