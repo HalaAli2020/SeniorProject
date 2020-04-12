@@ -6,7 +6,9 @@ import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
 
-//this factory provides view models for every activity that does not user a recyclerview
+//this generic dagger factory is used for all view models with the help of the multibinding module. the creators is the map of keys of
+//the view model
+//this is the only place we suppress a warning just because it was suggested as best practice during research into multibinding and dagger
 @Suppress("UNCHECKED_CAST")
 @Singleton
 class DaggerViewModelFactory @Inject constructor(private val creators: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>> )

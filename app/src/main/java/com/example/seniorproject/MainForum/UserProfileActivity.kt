@@ -128,6 +128,7 @@ class UserProfileActivity : AppCompatActivity() {
 
 
         val image: ImageView = findViewById(com.example.seniorproject.R.id.in_profile_image)
+        //if author is null, that means you're on your own profile, so set image to what you have stored in database
         if (author == "null") {
             val id = FirebaseAuth.getInstance().currentUser?.uid ?: test
             myViewModel.readPhotoValue(id, object : EmailCallback {

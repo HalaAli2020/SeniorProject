@@ -12,7 +12,6 @@ import com.example.seniorproject.data.interfaces.FirebaseCallbackCommentFlow
 import com.example.seniorproject.data.interfaces.FirebaseCallbackNoComments
 import com.example.seniorproject.data.interfaces.FirebaseCallbacksubBool
 import com.example.seniorproject.data.models.Comment
-import com.example.seniorproject.data.models.CommentLive
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.repositories.PostRepository
 import com.google.firebase.database.DataSnapshot

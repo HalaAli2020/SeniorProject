@@ -28,14 +28,14 @@ class RegisterActivity : AppCompatActivity(),
     }
 
     override fun onSuccess() {
-        //called in viewmodel
+        //originates from response of Firebase Data Register function navigates to log in page
         Toast.makeText(this, "A verification email has been sent, please verify before you log in", Toast.LENGTH_SHORT).show()
         val myIntent = Intent(this@RegisterActivity, LoginActivity::class.java)
         this@RegisterActivity.startActivity(myIntent)
     }
 
+    //shows the error toast message that is retrieved from error code message in built in Firebase Register function
     override fun onFailure(message: String) {
-        //called in viewmodel
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
@@ -43,13 +43,13 @@ class RegisterActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-
+        //users can only see where they're typing with this mode.
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
         //initalization of the viewmodel and dagger app component
-        Log.d("REG","entered register activity")
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProvider(this,factory).get(AuthenticationViewModel::class.java)
+
         //initialization of binding variable, binded variables are located in the corresponding XML file
         val bindings: ActivityRegisterBinding = DataBindingUtil.setContentView(this, R.layout.activity_register)
         bindings.authViewModel = myViewModel

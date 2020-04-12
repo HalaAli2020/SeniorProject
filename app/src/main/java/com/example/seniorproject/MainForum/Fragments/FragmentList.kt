@@ -23,6 +23,8 @@ class FragmentList : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         activity?.title = "All Classes"
         val view = inflater.inflate(R.layout.fragment_list, container, false)
+
+        //initalize dagger app component and initialize view model with generic dagger factory
         DaggerAppComponent.create().inject(this)
 
         myViewModel = ViewModelProvider(this, factory).get(ListViewModel::class.java)

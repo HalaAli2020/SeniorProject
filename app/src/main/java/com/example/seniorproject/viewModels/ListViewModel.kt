@@ -10,6 +10,7 @@ class ListViewModel @Inject constructor(private val repository: PostRepository) 
 
     private var listClasses: MutableList<CRN> = mutableListOf()
     private var usersSubs : MutableList<String>? = mutableListOf()
+
     init {
         getUserSub()
         getClasses()

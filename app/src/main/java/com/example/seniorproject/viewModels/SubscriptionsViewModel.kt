@@ -12,8 +12,6 @@ class SubscriptionsViewModel @Inject constructor(private val repository: PostRep
 
     var usersSubs: MutableLiveData<MutableList<String>>? = MutableLiveData()
 
-
-
     init {
         getUserSub()
     }
