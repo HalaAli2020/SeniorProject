@@ -7,10 +7,11 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.MainForum
+import androidx.recyclerview.widget.RecyclerView
+import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.R
 import com.example.seniorproject.viewModels.SearchViewModel
 import kotlinx.android.synthetic.main.activity_search.*
@@ -28,15 +29,14 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         this.title = "Search"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
-
-        factory = InjectorUtils.provideSearchViewModelFactory()
-        myViewModel = ViewModelProviders.of(this, factory).get(SearchViewModel::class.java)
+        DaggerAppComponent.create().inject(this)
+        myViewModel = ViewModelProvider(this, factory).get(SearchViewModel::class.java)
         myViewModel.getallclasses()
 
         searchview = search_in
@@ -57,7 +57,7 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextSubmit(query: String?): Boolean {
-                // ada.onfilter(query)
+
                 return true
             }
         })

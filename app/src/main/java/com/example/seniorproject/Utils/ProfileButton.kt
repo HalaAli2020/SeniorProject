@@ -8,15 +8,10 @@ import android.graphics.*
 class ProfileButton(private val context: Context, private val text: String, private val textSize: Int,
                     private val imageResId: Int, private val color: Int, private val listener: ButtonClickListener) {
 
-    private val resources: Resources
+    private val resources: Resources = context.resources
     private var clickRegion: RectF?=null
     private var pos: Int =0
 
-
-
-    init{
-        resources= context.resources
-    }
 
     fun onClick(x: Float, y: Float): Boolean{
 
@@ -28,6 +23,7 @@ class ProfileButton(private val context: Context, private val text: String, priv
         return false
     }
 
+    //draws the profile button, specifically how it'll look on the inside using text.
     fun onDraw(c: Canvas, rectF: RectF, pos: Int){
         val p= Paint()
         p.color = color
@@ -41,6 +37,7 @@ class ProfileButton(private val context: Context, private val text: String, priv
         val cWidth= rectF.width()
         p.textAlign= Paint.Align.LEFT
         p.getTextBounds(text, 0, text.length, r)
+
 
         if(imageResId ==0)
         {

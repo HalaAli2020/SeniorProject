@@ -11,10 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.seniorproject.Dagger.InjectorUtils
+import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.Adapters.PostAdapter
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
@@ -32,15 +31,11 @@ import javax.inject.Inject
 class CommunityPosts : AppCompatActivity() {
 
     private lateinit var adapter: PostAdapter
-    var mutablepostlist: ArrayList<Post> = arrayListOf()
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: CommunityPostViewModel
-    private lateinit var obse: Observer<in MutableList<Post>>
 
-
-    @InternalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_community_posts)
@@ -49,19 +44,23 @@ class CommunityPosts : AppCompatActivity() {
 
         post_list_community_name_TV.text = className
 
-        val factory = InjectorUtils.provideCommunityPostViewModelFacotry()
-        myViewModel = ViewModelProviders.of(this, factory).get(CommunityPostViewModel::class.java)
+        //app component function inject is being called here
+        DaggerAppComponent.create().inject(this)
+
+        //generic dagger view model factory indirectly initializes factory with multibinding module
+        myViewModel = ViewModelProvider(this, factory).get(CommunityPostViewModel::class.java)
 
         val linearLayoutManager = LinearLayoutManager(this)
+        //newest posts appear first
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true
         classes_post_RV.layoutManager = linearLayoutManager
 
-
+        //function that calls list created from Kotlin Flow using mutable list callback
         var livedatapostlist = myViewModel.getClassesco(className, object: MutableListCallback{
             override fun onList(list: List<Post>) {
-                Log.d("soupview", "start")
 
+                //initalize adapter with list
                 adapter = PostAdapter(this@CommunityPosts, list, 1)
                 classes_post_RV.adapter = adapter
 
@@ -73,8 +72,10 @@ class CommunityPosts : AppCompatActivity() {
                     classes_post_RV.adapter = PostAdapter(this@CommunityPosts, list, 1)
                 }
 
-
+                //swipe functionality for swiping every post in community posts with options to report and block
                 object : SwipeHelper(applicationContext, classes_post_RV, 200) {
+                    //initButton creates the buffer which holds ProfileButtons that we can add and those buttons will be drawn
+                    //accordingly. takes viewHolders, so that button will be set on swipe for each viewHolder in recyclerview
                     override fun initButton(
                         viewHolders: RecyclerView.ViewHolder,
                         buffer: MutableList<ProfileButton>
@@ -84,14 +85,16 @@ class CommunityPosts : AppCompatActivity() {
 
                         if (FirebaseAuth.getInstance().currentUser?.uid == userk){
                             val swipe = null
+                            //users cannot report or block themselves
                         }
                         else{
+                            //the profile button Block User is added into the buffer that holds the list of buttons.
                             buffer.add(
+                                //BlockUser text appears inside button with community posts context and with color Red.
                                 ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
                                     ("#FF0000"), object : ButtonClickListener {
+                                    //this onClick listener is triggered when user hits button
                                     override fun onClick(pos: Int) {
-                                        //val crnkey: String? =
-                                        //   adapter.getCrn(viewHolders)
 
                                         val userkey: String? =
                                             adapter.getUserKey(viewHolders)
@@ -99,23 +102,26 @@ class CommunityPosts : AppCompatActivity() {
                                         val authkey: String? =
                                             adapter.getAuthor(viewHolders)
 
-
+                                        //initialize builder
                                         var builder = AlertDialog.Builder(
                                             this@CommunityPosts,
                                             R.style.AppTheme_AlertDialog
                                         )
-
+                                        //sets up content of alert dialog
                                         builder.setTitle("Are you sure?")
                                         builder.setMessage("You won't see posts or comments from this user.")
                                         builder.setPositiveButton("BLOCK"
                                         ) { _: DialogInterface?, _: Int ->
                                             myViewModel.blockUser(userkey!!)
-                                            classes_post_RV.findViewHolderForAdapterPosition(pos)!!.itemView.post_title.text="[blocked]"
                                             var toast = Toast.makeText(
                                                 this@CommunityPosts,
                                                 "This user has been blocked",
                                                 Toast.LENGTH_SHORT
                                             )
+                                            finish()
+                                            //completes community posts activity
+                                            startActivity(getIntent())
+                                            //reloads community posts activity with blocked users content gone.
                                             toast.show()
                                         }
                                         builder.setNegativeButton("CANCEL"
@@ -133,10 +139,12 @@ class CommunityPosts : AppCompatActivity() {
                                 })
                             )
 
-
+                            //the profile button Report Post is added into the buffer that holds the list of buttons.
                             buffer.add(
+                                //ReportPost text appears inside button with community posts context and with color Gray.
                                 ProfileButton(applicationContext, "Report Post", 30, 0, Color.parseColor
                                     ("#D3D3D3"), object : ButtonClickListener {
+                                    //this onClick listener is triggered when user hits button
                                     override fun onClick(pos: Int) {
                                         val postkey: String? =
                                             adapter.removeItem(viewHolders)
@@ -153,7 +161,8 @@ class CommunityPosts : AppCompatActivity() {
                                             this@CommunityPosts,
                                             R.style.AppTheme_AlertDialog
                                         )
-
+                                        //sets up alert dialog with following reasons user could choose from to explain why they are
+                                        //reporting
                                         var listreason = arrayOf(
                                             "This is spam",
                                             "This is abusive or harassing",
@@ -163,8 +172,7 @@ class CommunityPosts : AppCompatActivity() {
                                         builder.setSingleChoiceItems(
                                             listreason,
                                             0
-                                        ) { _, i ->
-                                            //var complaint = listreason[i]
+                                        ) { _, _ ->
                                         }
                                         builder.setPositiveButton("SUBMIT"
                                         ) { _: DialogInterface?, _: Int ->
@@ -201,12 +209,6 @@ class CommunityPosts : AppCompatActivity() {
 
 
                     }
-                }
-
-
-                obse = Observer<MutableList<Post>> {
-                    Log.d("obser", " blah")
-
                 }
             }
         })

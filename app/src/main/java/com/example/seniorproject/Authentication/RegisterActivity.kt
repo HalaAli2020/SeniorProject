@@ -49,7 +49,7 @@ class RegisterActivity : AppCompatActivity(),
         //initalization of the viewmodel and dagger app component
         Log.d("REG","entered register activity")
         DaggerAppComponent.create().inject(this)
-        myViewModel = ViewModelProviders.of(this,factory).get(AuthenticationViewModel::class.java)
+        myViewModel = ViewModelProvider(this,factory).get(AuthenticationViewModel::class.java)
         //initialization of binding variable, binded variables are located in the corresponding XML file
         val bindings: ActivityRegisterBinding = DataBindingUtil.setContentView(this, R.layout.activity_register)
         bindings.authViewModel = myViewModel

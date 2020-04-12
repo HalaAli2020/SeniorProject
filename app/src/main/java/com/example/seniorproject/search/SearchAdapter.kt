@@ -11,19 +11,21 @@ import com.example.seniorproject.R
 import com.example.seniorproject.data.models.CRN
 import com.example.seniorproject.viewModels.SearchViewModel
 
+/* Adapter for to create a searchable recyclerview to let the user search through all of the classes available
+* this uses a custom filter to fliter through the classes in the list the replace the list with a new list of what the user is searching for  */
 class SearchAdapter(context: Context, ViewModel: SearchViewModel, Clist : MutableLiveData<MutableList<CRN>>) :
-    RecyclerView.Adapter<SearchViewHolder>(){
-    private var classlist : MutableLiveData<MutableList<CRN>>? = Clist
+    RecyclerView.Adapter<SearchViewHolder>() {
+    private var classlist: MutableLiveData<MutableList<CRN>>? = Clist
     val mContext = context
     private val mViewModel = ViewModel
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        // val binding : ViewDataBinding = DataBindingUtil.inflate(layoutInflater, viewType, parent, false)
         val cellForRow = layoutInflater.inflate(R.layout.rv_list, parent, false)
         return SearchViewHolder(cellForRow)
     }
+
     override fun getItemCount(): Int {
         if (!classlist!!.value.isNullOrEmpty())
             return classlist!!.value!!.size
@@ -31,52 +33,24 @@ class SearchAdapter(context: Context, ViewModel: SearchViewModel, Clist : Mutabl
             Log.d("NULL", "Itsa null")
         return 0
     }
+
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         holder.bind(classlist!!.value!![position], mContext, mViewModel)
-        Log.d("In list" , classlist!!.value!![position].name)
+        Log.d("In list", classlist!!.value!![position].name)
     }
 
-    /*fun getFilter(){
-        fun fitlerResults(query : CharSequence?)
-        {
-            var flist : MutableLiveData<MutableList<CRN>> = MutableLiveData()
-            if (classlist!!.value!!.isNullOrEmpty())
-            {
-                classlist = flist
-            }
-            if(query.isNullOrEmpty())
-            {
-                if(!classlist!!.value!!.isNullOrEmpty())
-                {
-                    for (x in classlist!!.value!!.iterator())
-                    {
-                        if(x.name.contains(query!!))
-                        {
-                            flist.value!!.add(x)
-                        }
-                    }
-                }
-            }
-        }
 
-    }*/
-    fun onfilter(query : String?)
-    {
-        if(query.isNullOrEmpty())
-        {
+    fun onfilter(query: String?) {
+        if (query.isNullOrEmpty()) {
             classlist = mViewModel.sendlistf()
             notifyDataSetChanged()
-        }
-        else
-        {
+        } else {
             //classlist!!.value!!.removeAt()
             classlist = mViewModel.sendlistf()
             val clist: MutableList<CRN> = mutableListOf()
-            for ((index, x) in classlist!!.value!!.withIndex())
-            {
+            for ((index, x) in classlist!!.value!!.withIndex()) {
                 // query.contains()
-                if(x.name.contains(query, true))
-                {
+                if (x.name.contains(query, true)) {
                     clist.add(x)
                 }
             }
@@ -85,114 +59,4 @@ class SearchAdapter(context: Context, ViewModel: SearchViewModel, Clist : Mutabl
         }
 
     }
-    /*fun removeat(position: Int)
-    {
-        //notifyItemRemoved(position)
-        //notifyItemRangeChanged(position, classlist!!.value!!.size)
-        classlist!!.value!!.removeAt(position)
-
-    }*/
 }
-
-/* override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
-     val layoutInflater = LayoutInflater.from(parent.context)
-     // val binding : ViewDataBinding = DataBindingUtil.inflate(layoutInflater, viewType, parent, false)
-     val cellForRow = layoutInflater.inflate(R.layout.rv_list, parent, false)
-     return SearchViewHolder(cellForRow)
- }
- override fun getItemCount(): Int {
-     if (classlist.isNotEmpty())
-         return classlist.size
-     else
-         Log.d("NULL", "Isa null")
-     return 0
- }
- override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
-     //holder.bind(savedPosts!!.value!![position], mContext)
-    // Log.d("In list" , savedPosts!!.value!![position].title)
- }
- override fun getFilter(): Filter {
-      fun fitlerResults(query : CharSequence?)
-     {
-         var Flist : MutableList<CRN> = mutableListOf()
-         if (classlist.isNullOrEmpty())
-         {
-             classlist = Flist
-         }
-         if(query.isNullOrEmpty())
-         {
-             if(!classlist.isNullOrEmpty())
-             {
-                 for (x in classlist!!.iterator())
-                 {
-                     if(x.name.contains(query!!))
-                     {
-                         Flist.add(x)
-                     }
-                 }
-             }
-         }
-     }
- }*/
-
-
-/* override fun getFilter(): Filter {
-     var filt  = object : Filter(){
-         override fun performFiltering(constraint: CharSequence?): FilterResults {
-             lateinit var results: FilterResults
-             var Flist: MutableList<CRN> = mutableListOf()
-             if (constraint.isNullOrEmpty()) {
-                 if(!classlist!!.isNullOrEmpty())
-                 {
-                     results.values = classlist
-                     results.count = classlist!!.size
-                 }
-                 else
-                 {
-                     results.values = null
-                     results.count = 0
-                 }
-             } else {
-                if(!classlist!!.isNullOrEmpty())
-                {
-                    for (x in classlist!!.iterator()) {
-                        if (x.name.contentEquals(constraint)) {
-                            Flist.add(x)
-                        }
-                    }
-                    results.values = Flist
-                    results.count = Flist.size
-                }
-             }
-             return results
-         }
-         override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-             var Flist: List<CRN> = results?.values as List<CRN>
-             notifyDataSetChanged()
-         }
-     }
-         return filt
- }
- override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-     lateinit var view : View
-     if(convertView == null)
-     {
-        view = View.inflate(mContext,R.layout.row, parent)
-         var holder = SearchViewHolder(view)
-         view.CRN_NAME.text = classlist!![position].name
-         view.setOnClickListener{
-             Toast.makeText(mContext,"CLicked", Toast.LENGTH_SHORT).show()
-         }
-     }
-     return view
- }
- override fun getItem(position: Int): Any {
-     return classlist!![position]
- }
- override fun getItemId(position: Int): Long {
-     return position.toLong()
- }
- override fun getCount(): Int {
-     return classlist!!.size
- }
-*/

@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.Utils.FlowCallback
 import com.example.seniorproject.data.Firebase.FirebaseData
-import com.example.seniorproject.data.interfaces.FirebaseValuecallback
+import com.example.seniorproject.data.interfaces.*
 import com.example.seniorproject.data.models.*
 import com.google.firebase.database.DataSnapshot
 import kotlinx.coroutines.*
@@ -18,28 +18,19 @@ import javax.inject.Singleton
 @Singleton
 class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     val post: Post? = null
-    val commentList: MutableList<Comment> = mutableListOf()
-    val commentL = CommentLive()
-    var sessionUser: User? = null
-    var listClassesco: Flow<Post> = flow { }
-    var listClassescopast: Flow<MutableList<Post>> = flow { }
-    var listClasses: PostLiveData = PostLiveData()
-    var classList: MutableLiveData<MutableList<CRN>> = MutableLiveData()
     var userSUB: MutableLiveData<MutableList<String>> = MutableLiveData()
-    var profilePosts: PostLiveData = PostLiveData()
-    var newProfilePosts: Post? = null
-    var comments: CommentLive = CommentLive()
-    var newProfileComments: Comment? = null
-    var finallist: MutableList<Post> = mutableListOf()
 
-
-    private var getCommentsJob: Job? = null
     //calls corresponding function from firebase file
     fun saveNewPost(text: String, title: String, CRN: String) = Firebase.saveNewPosttoUser(text, title, CRN)
     //calls corresponding function from firebase file
+
+    ////calls corresponding function from firebase file
     fun uploadUserProfileImage(selectedPhotoUri: Uri) =
         Firebase.uploadImageToFirebaseStorage(selectedPhotoUri)
 
+
+/*This Function is called from getSubsP in HomeframentViewModel it uses the list of subs gotten for the current user to grab the recent posts from
+each class the user is subscribed to this uses coroutines */
     suspend fun getSubscribedPosts(value : List<String>) : Flow<Post> = flow {
         var postL : MutableList<Post> = mutableListOf()
         var limit = getPostperclass(value.size)
@@ -60,17 +51,20 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
                     override fun onSuccess(data: DataSnapshot)  {
                       launch(Dispatchers.Default) {
-                            for (n in data.children)
+                          var count = 0
+
+                            for (n in data.children.reversed())
                             {
                                 var p = Post()
-                                var count = 0
+
                                 p.let {
                                     it.title = n.child("title").getValue(String::class.java)
                                     //Log.d("Community post", data.child("title").getValue(String::class.java))
                                     it.text = n.child("text").getValue(String::class.java)
                                     //newPost.author = pos.child("author").getValue(String::class.java)
                                     //it.subject = className
-                                    Log.d("CRN", data.key!!)
+                                    Log.d("What", n.child("title").getValue(String::class.java)!!)
+                                    Log.d("Count", count.toString())
                                     it.subject = n.child("subject").getValue(String::class.java)
                                     it.Ptime =  n.child("Timestamp").getValue(String::class.java)
                                     it.key = n.child("key").getValue(String::class.java)
@@ -82,7 +76,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                                 }
                                 postL.add(p)
                                 count++
-                                if(count <= limit)
+                                if(count >= limit)
                                 {
                                     break
                                 }
@@ -102,10 +96,10 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         {
             emit(n)
         }
-
     }
 
-
+/*This function gets the users list of subs from the firebase database by using the FirebaseData function getUserSub  and then once all the values are gotten it will emit the results using kotlin flow to create a
+* cold flow pipeline so that the calling function getSubsP in HomeFragmentViewModel can then use those values to get the post for those specific classes */
    suspend fun getUsersSubs() : Flow<String> = flow {
         var SubList : MutableList<String> = mutableListOf()
        var ob : Job? = null
@@ -113,13 +107,9 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
            override fun onFailure() {
 
            }
-
            override fun onStart() {
 
            }
-
-
-
            override fun onSuccess(data: DataSnapshot)  {
                val size = data.hasChildren()
                Log.d("Size", size.toString())
@@ -128,6 +118,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                for (x in sublist) {
                    Log.d("usersub", x.getValue(String::class.java)!!)
                    SubList.add(x.getValue(String::class.java)!!)
+
                }
 
            }
@@ -143,11 +134,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
                 Log.d("emitting", n)
                 emit(n)
             }
-
-
-
-
     }
+
 /*This function is used to find out how many posts per class the application should grab based on the number of communities the user is a part of  */
     fun getPostperclass(f : Int) : Int
     {
@@ -167,6 +155,8 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
     }
 
+    //calls corresponding function from firebase file. Creates Kotlin Flow of posts found in the community posts screen with .asFlow
+    //extension. Flow travels upstream through MVVM using the callback.
     fun getCommunityPosts(className: String, callback: FlowCallback) {
         Firebase.getClassPosts(className, object : FirebaseCallbackPost {
             override fun onStart() {}
@@ -185,8 +175,10 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         })
     }
 
-    fun getPostComments(Key: String, subject: String, callbackComment: FirebaseData.FirebaseCallbackCommentFlow) {
-        Firebase.getClassComments(Key, subject, object : PostRepository.FirebaseCallbackComment {
+    //calls corresponding function from firebase file. Creates Kotlin Flow of comments found in the clicked post screen with .asFlow
+    //extension. Flow travels upstream through MVVM using the callback
+    fun getPostComments(Key: String, subject: String, callbackComment: FirebaseCallbackCommentFlow) {
+        Firebase.getClassComments(Key, subject, object : FirebaseCallbackComment {
             override fun onStart() {
             }
 
@@ -194,68 +186,54 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
             }
 
             override fun onSuccess(data: DataSnapshot) {
-                val commentsData: Iterable<DataSnapshot> = data.children
-                val postComments: MutableList<Comment> = mutableListOf()
-                for (comment in commentsData) {
-                    val newComment = comment.getValue(Comment::class.java)
-                    newComment?.let { postComments.add(it) }
-                }
-
-                val postCommentsCO: Flow<Comment> = postComments.asFlow()
-                callbackComment.onCallback(postCommentsCO)
-                val scope = CoroutineScope(Dispatchers.IO)
-                scope.launch {
-                    postCommentsCO.collect { it ->
-                        it.text
-                        Log.d("soupcollect", "comm is $it")
-                    }
-                    val check = postCommentsCO.toList()
-                    Log.d("souprepo", "start here")
-                    for (item in check) {
-                        var getext = item.text
-                        Log.d("souprepo", "comm is $getext")
-                    }
-                    Log.d("souprepo", "end here")
-                }
-            }
-        })
-    }
-
-    fun getUserProfileComments(userID: String, callbackComment: FirebaseData.FirebaseCallbackCommentFlow) {
-        Firebase.getUserProfileComments(userID, object : FirebaseCallbackComment {
-            override fun onFailure() {}
-            override fun onStart() {}
-
-            override fun onSuccess(data: DataSnapshot) {
                 val commdetail: Iterable<DataSnapshot> = data.children
-                val profileCommentList: MutableList<Comment> = mutableListOf()
-                for (n in commdetail) {
-                    val newComment = n.getValue(Comment::class.java)
-                    newComment?.let { profileCommentList.add(it) }
+                val profileCommentList : MutableList<Comment> = mutableListOf()
+                var comment = Comment("no comment", "", "", "", "")
+                profileCommentList.add(comment)
+                for(n in commdetail){
+                    val newComment = Comment()
+
+                    newComment.let {
+                        it.text = n.child("text").value.toString()
+                        it.Classkey = n.child("Classkey").value.toString()
+                        it.PosterID = n.child("PosterID").value.toString()
+                        it.Postkey = n.child("Postkey").value.toString()
+                        it.ProfileComKey = n.child("ProfileComKey").value.toString()
+                        it.Ptime = n.child("Ptime").value.toString()
+                        it.UserComkey = n.child("UserComkey").value.toString()
+                        it.author = n.child("author").value.toString()
+                        it.crn = n.child("crn").value.toString()
+
+                        profileCommentList.add(newComment)
+                    }
+
+
                 }
 
-                val listCor: Flow<Comment> = profileCommentList.asFlow()
+                val listCor : Flow<Comment> = profileCommentList.asFlow()
                 callbackComment.onCallback(listCor)
                 val scope = CoroutineScope(Dispatchers.IO)
                 scope.launch {
-                    listCor.collect { it ->
-                        it.text
+                    listCor.collect {
+                        it -> it.text
                         Log.d("soupcollect", "comm is $it")
                     }
                     val check = listCor.toList()
                     Log.d("souprepo", "start here")
-                    for (item in check) {
+                    for(item in check){
                         var getext = item.text
-                        Log.d("souprepo", "comm is $getext")
+
                     }
-                    Log.d("souprepo", "end here")
+
                 }
-                // comments.value = profileCommentLis
+
             }
         })
     }
 
-    fun getUserProfilePosts(userID: String, callbackPost: FirebaseData.FirebaseCallbackPostFlow)  {
+    //calls corresponding function from firebase file. Creates Kotlin Flow of posts in user profile with .asFlow extension. Flow
+    //travels upstream through MVVM using the callback.
+    fun getUserProfilePosts(userID: String, callbackPost: FirebaseCallbackPostFlow)  {
         Firebase.getUserProfilePosts(userID, object : FirebaseCallbackPost {
             override fun onFailure() {}
             override fun onStart() {}
@@ -270,112 +248,12 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 
                 val listCor: Flow<Post> = listProfilePosts.asFlow()
                 callbackPost.onCallback(listCor)
-                val scope = CoroutineScope(Dispatchers.IO)
-                scope.launch {
-                    listCor.collect { it ->
-                        it.text
-                        Log.d("soupcollect", "comm is $it")
-                    }
-                    val check = listCor.toList()
-                    Log.d("souprepo", "start here")
-                    for (item in check) {
-                        var getext = item.text
-                        Log.d("souprepo", "comm is $getext")
-                    }
-                    Log.d("souprepo", "end here")
-                }
-
             }
         })
     }
 
-    //calls corresponding function from firebase file
-    fun noCommentsCheckForCommPosts(
-        subject: String,
-        Key: String,
-        callback: FirebaseCallbackNoComments
-    ) = Firebase.noCommentsCheckerForCommPosts(subject, Key, callback)
-    //calls corresponding function from firebase file
-    fun saveNewImgPosttoUser(
-        title: String,
-        text: String,
-        CRN: String,
-        uri: Uri,
-        imagePost: Boolean
-    ) = Firebase.saveNewImgPosttoUser(title, text, CRN, uri, imagePost)
-
-    //calls corresponding function from firebase file
-    fun newComment(PKey: String, Comment: String, Classkey: String, UserID: String, crn: String) {
-        Firebase.saveNewComment(Comment, PKey, Classkey, UserID, crn)
-    }
-    //calls corresponding function from firebase file
-    fun deleteNewPost(postKey: String, crn: String, userID: String) {
-        Firebase.deleteNewPost(postKey, crn, userID)
-    }
-    //calls corresponding function from firebase file
-    fun deleteNewCommentFromUserProfile(
-        ClassKey: String,
-        crn: String,
-        comKey: String,
-        userID: String
-    ) {
-        Firebase.deleteNewCommentFromUserProfile(ClassKey, crn, comKey, userID)
-    }
-    //calls corresponding function from firebase file
-    fun deleteNewCommentFromCommPosts(postKey: String, crn: String, classkey: String) {
-        Firebase.deleteNewCommentFromCommPosts(postKey, crn, classkey)
-    }
-    //calls corresponding function from firebase file
-    fun editNewComment(
-        userID: String,
-        usercomkey: String,
-        ntext: String,
-        crn: String,
-        postKey: String
-    ) {
-        Firebase.editComment(userID, usercomkey, ntext, crn, postKey)
-    }
-
-    //calls corresponding function from firebase file
-    fun editPost(
-        crn: String, postKey: String, ctext: String, ctitle: String, ntext: String, ntitle: String,
-        userID: String
-    ) {
-        Firebase.editPost(crn, postKey, ctext, ctitle, ntext, ntitle, userID)
-    }
-    //calls corresponding function from firebase file
-    fun blockUser(UserID: String) {
-        Firebase.blockUser(UserID)
-    }
-
-
-    //calls corresponding function from firebase file
-    fun reportUserPost(accusedID: String, complaintext: String, crn: String, classkey: String) {
-        Firebase.reportUserPost(accusedID, complaintext, crn, classkey)
-
-    }
-    //calls corresponding function from firebase file
-    fun reportUserComment(
-        accusedID: String,
-        complaintext: String,
-        crn: String,
-        classkey: String,
-        comKey: String
-    ) {
-        Firebase.reportUserComment(accusedID, complaintext, crn, classkey, comKey)
-
-    }
-    //calls corresponding function from firebase file
-    fun fetchCurrentUserName() = Firebase.fetchCurrentUserName()
-    //calls corresponding function from firebase file
-    fun currentUser() = Firebase.currentUser()
-
-
-    //calls corresponding function from firebase file
-    fun addUsersub(crn: String) {
-        Firebase.addUserSUB(crn)
-    }
-
+    //calls corresponding function from firebase file. Grabs data snapshot of subscribed classes and adds them to list
+    //puts that mutable list into live data to be observed.
     fun getsublist2(): MutableLiveData<MutableList<String>> {
         val subList: MutableList<String> = mutableListOf()
         Firebase.listenUserSub(object : FirebaseCallbackString {
@@ -399,12 +277,123 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         return userSUB
     }
 
+    //calls corresponding function from firebase file
+    fun noCommentsCheckForCommPosts(subject: String, Key: String, callback: FirebaseCallbackNoComments) =
+        Firebase.noCommentsCheckerForCommPosts(subject, Key, callback)
+
+    //calls corresponding function from firebase file
+    fun saveNewImgPosttoUser(title: String, text: String, CRN: String, uri: Uri, imagePost: Boolean) =
+        Firebase.saveNewImgPosttoUser(title, text, CRN, uri, imagePost)
+
+    //calls corresponding function from firebase file
+    fun newComment(PKey: String, Comment: String, Classkey: String, UserID: String, crn: String) {
+        Firebase.saveNewComment(Comment, PKey, Classkey, UserID, crn)
+    }
+
+    //calls corresponding function from firebase file
+    fun deleteNewPost(postKey: String, crn: String, userID: String) {
+        Firebase.deleteNewPost(postKey, crn, userID)
+    }
+
+    //calls corresponding function from firebase file
+    fun deleteNewCommentFromUserProfile(ClassKey: String, crn: String, comKey: String, userID: String) {
+        Firebase.deleteNewCommentFromUserProfile(ClassKey, crn, comKey, userID)
+    }
+
+    //calls corresponding function from firebase file
+    fun deleteNewCommentFromCommPosts(postKey: String, crn: String, classkey: String) {
+        Firebase.deleteNewCommentFromCommPosts(postKey, crn, classkey)
+    }
+
+    //calls corresponding function from firebase file
+    fun editNewComment(userID: String, usercomkey: String, ntext: String, crn: String, postKey: String) {
+        Firebase.editComment(userID, usercomkey, ntext, crn, postKey)
+    }
+
+    //calls corresponding function from firebase file
+    fun editPost(crn: String, postKey: String, ctext: String, ctitle: String, ntext: String, ntitle: String, userID: String) {
+        Firebase.editPost(crn, postKey, ctext, ctitle, ntext, ntitle, userID)
+    }
+
+    //calls corresponding function from firebase file
+    fun blockUser(UserID: String) {
+        Firebase.blockUser(UserID)
+    }
+
+    //Create Kotlin Flow of comments found in user profile with .asFlow(). Callback is used to travel the flow upstream to viewmodel
+    fun getUserProfileComments(userID: String, callbackComment: FirebaseCallbackCommentFlow){
+        Firebase.getUserProfileComments(userID, object: FirebaseCallbackComment{
+            override fun onFailure() {}
+
+            override fun onStart() {}
+
+            override fun onSuccess(data: DataSnapshot) {
+                val commdetail: Iterable<DataSnapshot> = data.children
+                val profileCommentList : MutableList<Comment> = mutableListOf()
+                for(n in commdetail){
+                    val newComment = Comment()
+                    newComment.let {
+                        it.text = n.child("text").value.toString()
+                        it.Classkey = n.child("Classkey").value.toString()
+                        it.PosterID = n.child("PosterID").value.toString()
+                        it.Postkey = n.child("Postkey").value.toString()
+                        it.ProfileComKey = n.child("ProfileComKey").value.toString()
+                        it.Ptime = n.child("Ptime").value.toString()
+                        it.UserComkey = n.child("UserComkey").value.toString()
+                        it.author = n.child("author").value.toString()
+                        it.crn = n.child("crn").value.toString()
+
+                        profileCommentList.add(newComment)
+                    }
+                }
+
+                val listCor : Flow<Comment> = profileCommentList.asFlow()
+                callbackComment.onCallback(listCor)
+            }
+        })
+    }
+
+    //calls corresponding function from firebase file
+    fun reportUserPost(accusedID: String, complaintext: String, crn: String, classkey: String) {
+        Firebase.reportUserPost(accusedID, complaintext, crn, classkey)
+
+    }
+
+    //calls corresponding function from firebase file
+    fun reportUserComment(
+        accusedID: String,
+        complaintext: String,
+        crn: String,
+        classkey: String,
+        comKey: String
+    ) {
+        Firebase.reportUserComment(accusedID, complaintext, crn, classkey, comKey)
+
+    }
+
+    //calls corresponding function from firebase file
+    fun fetchCurrentUserName() = Firebase.fetchCurrentUserName()
+
+    //calls corresponding function from firebase file
+    fun currentUser() = Firebase.currentUser()
+
+
+    //calls corresponding functions from firebase file
+    fun addUsersub(crn: String) {
+        Firebase.addUserSUB(crn)
+    }
+
+
+    //calls corresponding function from firebase file
     fun remUsersub(crn: String) {
         Firebase.removeUserSub(crn)
         Firebase.removeClassSub(crn)
     }
+
     //calls corresponding function from firebase file
     fun getclassnamesforusername() = Firebase.getclassnamesforusername()
+
+
     //calls corresponding function from firebase file
     fun sendClassnameForUsername() = Firebase.sendClassnameForUsername()
 
@@ -433,83 +422,26 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     fun fetchUsername(UserID: String, callbackItem: FirebaseCallbackItem) =
         Firebase.fetchUsername(UserID, callbackItem)
 
-    //calls corresponding function from firebase file
-    fun noPostsChecker(UserID: String, callbackBool: FirebaseCallbackBool) =
-        Firebase.noPostsChecker(UserID, callbackBool)
-
-    //calls corresponding function from firebase file
-    fun noCommentsChecker(UserID: String, callbackBool: FirebaseCallbackBool) =
-        Firebase.noCommentsChecker(UserID, callbackBool)
 
     //calls corresponding function from firebase file
     fun checkSubscription(className: String, callbacksubBool: FirebaseCallbacksubBool) =
         Firebase.checkSubscription(className,callbacksubBool)
 
 
+
     companion object {
         @Volatile
         private var instance: PostRepository? = null
 
+        //function is created to work with dagger injection in creating the viewmodel factories for the project. See InjectorUtils
         fun getInstance(firebasedata: FirebaseData) =
             instance ?: synchronized(this) {
                 instance ?: PostRepository(firebasedata).also { instance = it }
             }
     }
 
-//firebase interface used with data snapshots to move data in realtime through MVVM architechture
-    interface FirebaseCallbackPost {
 
-        fun onStart()
-        fun onFailure()
-        fun onSuccess(data: DataSnapshot)
-    }
 
-    interface FirebaseCallbacksubBool {
-        fun onStart()
-        fun onFailure()
-        fun onSuccess(data: DataSnapshot)
-    }
-
-    interface FirebaseCallbackBool {
-
-        fun onStart()
-        fun onFailure()
-        fun onSuccess(data: DataSnapshot): Boolean
-    }
-
-    interface FirebaseCallbackNoComments {
-        fun onEmpty(nocomlist: Boolean)
-        fun onFull(comlistpresent: Boolean)
-    }
-
-    interface FirebaseCallbackComment {
-        fun onStart()
-        fun onFailure()
-        fun onSuccess(data: DataSnapshot)
-    }
-    interface FirebaseCallbackSubs {
-        fun onFailure()
-        fun onStart()
-        fun onSuccess(data: List<String>)
-    }
-
-    interface FirebaseCallbackCRN {
-        fun onStart()
-        fun onFailure()
-        fun onSuccess(data: DataSnapshot)
-    }
-
-    interface FirebaseCallbackString {
-        fun onStart()
-        fun onFailure()
-        fun onSuccess(data: DataSnapshot)
-    }
-
-    interface FirebaseCallbackItem {
-        fun onStart()
-        fun onFailure()
-        fun onMessage(data: DataSnapshot): String
-    }
 
 
 }

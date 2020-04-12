@@ -7,9 +7,8 @@ import androidx.annotation.Nullable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.seniorproject.Dagger.InjectorUtils
+import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.Adapters.LatestMessageAdapter
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.LatestMessage
@@ -29,8 +28,9 @@ class FragmentLatestMessages : Fragment() {
         setHasOptionsMenu(true)
         activity?.title = "Messages"
         val view = inflater.inflate(R.layout.m_fragment_latest_messages, container, false)
-        val factory = InjectorUtils.provideMessagesFragmentViewModelFactory()
-        myViewModel = ViewModelProviders.of(this, factory).get(MessagesFragmentViewModel::class.java)
+        DaggerAppComponent.create().inject(this)
+
+        myViewModel = ViewModelProvider(this, factory).get(MessagesFragmentViewModel::class.java)
 
         view.recyclerView_latest_messages.layoutManager = LinearLayoutManager(context)
 

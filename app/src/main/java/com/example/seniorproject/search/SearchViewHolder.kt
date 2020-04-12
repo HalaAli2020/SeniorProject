@@ -14,7 +14,8 @@ import com.example.seniorproject.R
 import com.example.seniorproject.data.models.CRN
 import com.example.seniorproject.viewModels.SearchViewModel
 import kotlinx.android.synthetic.main.rv_list.view.*
-
+/* custom viewholder class to help bind each item in the recycler view and add additional functionality
+* in this view holder we add the functionality for the subscribe button  */
 class SearchViewHolder(parent: View) : RecyclerView.ViewHolder(parent) {
     fun bind(crn: CRN, mContext : Context, mViewModel: SearchViewModel) {
         val classes: String = crn.name
@@ -67,17 +68,3 @@ class SearchViewHolder(parent: View) : RecyclerView.ViewHolder(parent) {
         }
     }
 }
-/* itemView.post_title.text = post.title
- itemView.username.text = post.crn
- itemView.setOnClickListener {
-     val intent = Intent(mContext, ClickedPost::class.java)
-     intent.putExtra("Title", post.title)
-     intent.putExtra("Text", post.text)
-     intent.putExtra("Pkey", post.key)
-     intent.putExtra("Classkey", post.Classkey)
-     intent.putExtra("UserID", post.UserID)
-     intent.putExtra("Author", post.author)
-     intent.putExtra("crn", post.crn)
-     //val bundle = bundleOf()
-     mContext.startActivity(intent)
- }*/

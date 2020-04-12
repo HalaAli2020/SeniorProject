@@ -5,9 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.seniorproject.Dagger.InjectorUtils
+import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.Adapters.NewMessageAdapter
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.User
@@ -24,6 +23,7 @@ class NewMessage : AppCompatActivity() {
 
     private lateinit var searchview: SearchView
     lateinit var ada: NewMessageAdapter
+    //lateinit var binding : ActivityNewMessageBinding
     val context = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,9 +33,9 @@ class NewMessage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.m_activity_new_message)
 
-        val factory = InjectorUtils.provideNewMessageViewModelFactory()
-        myViewModel = ViewModelProviders.of(this, factory).get(NewMessageViewModel::class.java)
+        DaggerAppComponent.create().inject(this)
 
+        myViewModel = ViewModelProvider(this, factory).get(NewMessageViewModel::class.java)
         searchview = user_search
         setUpSearchView()
 

@@ -10,12 +10,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.seniorproject.Dagger.DaggerAppComponent
-import com.example.seniorproject.Dagger.InjectorUtils
-import com.example.seniorproject.MainForum.Adapters.CustomAdapter
 import com.example.seniorproject.MainForum.Fragments.ProfileCommentFragment
 import com.example.seniorproject.MainForum.Fragments.ProfilePostFragment
 import com.example.seniorproject.MainForum.Posts.EditProfileActivity
@@ -29,7 +26,6 @@ import javax.inject.Inject
 private const val TAG = "profileTAG"
 
 class UserProfileActivity : AppCompatActivity() {
-    private lateinit var adapter: CustomAdapter
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -45,10 +41,9 @@ class UserProfileActivity : AppCompatActivity() {
 
         //creating the dagger application component
         DaggerAppComponent.create().inject(this)
-        //initializing viewmodel factory
-        val factory = InjectorUtils.provideProfileViewModelFactory()
+
         //setting the profileViewmodel as the viewmodel for this activity
-        myViewModel = ViewModelProviders.of(this, factory).get(ProfileViewModel::class.java)
+        myViewModel = ViewModelProvider(this, factory).get(ProfileViewModel::class.java)
 
 
         //getting the Userid and author from the post the user selected to get to this activity

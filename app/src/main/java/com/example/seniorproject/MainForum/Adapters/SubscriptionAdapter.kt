@@ -11,6 +11,7 @@ import com.example.seniorproject.R
 import kotlinx.android.synthetic.main.rv_list.view.communityName_TV
 import kotlinx.android.synthetic.main.rv_subs.view.*
 
+//adapter displays user subscribed classes
 class SubsriptionAdapter(context: Context, private val classList: MutableList<String>?) : RecyclerView.Adapter<ListHolder12>() {
 
     val mContext: Context = context
@@ -23,6 +24,7 @@ class SubsriptionAdapter(context: Context, private val classList: MutableList<St
         return ListHolder12(cellForRow)
     }
 
+    //returns itemcount
     override fun getItemCount(): Int {
         return if(!classList.isNullOrEmpty())
             classList.size
@@ -36,7 +38,7 @@ class SubsriptionAdapter(context: Context, private val classList: MutableList<St
         val classes: String = classList!![position]
         holder.itemView.communityName_TV.text = classes
 
-
+//if a user clicks on a classname they will be redirected to community posts
         holder.itemView.subsListCV.setOnClickListener {
             val intent = Intent(mContext, CommunityPosts::class.java)
             intent.putExtra("ClassName", classes)
@@ -47,15 +49,3 @@ class SubsriptionAdapter(context: Context, private val classList: MutableList<St
 }
 
 class ListHolder12(v: View) : RecyclerView.ViewHolder(v)
-
-
-
-
-
-
-
-
-
-
-
-

@@ -24,10 +24,10 @@ class UpdatePost : AppCompatActivity() {
 
 
         DaggerAppComponent.create().inject(this)
-        myViewModel = ViewModelProviders.of(this, factory).get(NewPostFragmentViewModel::class.java)
+        myViewModel = ViewModelProvider(this, factory).get(NewPostFragmentViewModel::class.java)
         val binding: UpdatePostBinding = DataBindingUtil.setContentView(this,R.layout.update_post)
 
-
+//gets post information
         val text: String = intent.getStringExtra("text") ?: "no text"
         val title: String = intent.getStringExtra("title") ?: "no title"
         val postkey: String = intent.getStringExtra("Classkey") ?: "class key"
