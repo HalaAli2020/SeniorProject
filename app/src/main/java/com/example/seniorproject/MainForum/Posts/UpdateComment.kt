@@ -21,6 +21,9 @@ class UpdateComment  : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.update_comment)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        title = "Update Comment"
+
 
         //initialize inject of dagger app component and initializes view model with generic factory
         DaggerAppComponent.create().inject(this)
@@ -45,6 +48,11 @@ class UpdateComment  : AppCompatActivity() {
         binding.lifecycleOwner = this
 
 
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
 

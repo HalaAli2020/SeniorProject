@@ -21,6 +21,9 @@ class UpdatePost : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.update_post)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        title = "Update Post"
+
 
         //initialize inject of dagger app component and initializes view model with generic factory
         DaggerAppComponent.create().inject(this)
@@ -44,6 +47,11 @@ class UpdatePost : AppCompatActivity() {
         binding.newPostModel = myViewModel
         binding.lifecycleOwner = this
 
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
 }

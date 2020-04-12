@@ -57,9 +57,6 @@ class SearchViewHolder(parent: View) : RecyclerView.ViewHolder(parent) {
 
         }
 
-
-
-
         itemView.communityName_TV.setOnClickListener {
             val intent = Intent(mContext, CommunityPosts::class.java)
             intent.putExtra("ClassName", classes)
