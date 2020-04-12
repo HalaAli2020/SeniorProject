@@ -49,15 +49,3 @@ class SubsriptionAdapter(context: Context, private val classList: MutableList<St
 }
 
 class ListHolder12(v: View) : RecyclerView.ViewHolder(v)
-
-
-
-
-
-
-
-
-
-
-
-

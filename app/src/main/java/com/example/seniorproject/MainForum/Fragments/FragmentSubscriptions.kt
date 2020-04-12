@@ -8,9 +8,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.seniorproject.Dagger.InjectorUtils
+import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.Adapters.SubsriptionAdapter
 import com.example.seniorproject.R
 import com.example.seniorproject.viewModels.SubscriptionsViewModel
@@ -33,7 +32,7 @@ class FragmentSubscriptions : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity?.title = "Subscriptions"
-         factory = InjectorUtils.provideSubscriptionsPostViewModelFactory()
+        DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProvider(this, factory).get(SubscriptionsViewModel::class.java)
 
     }

@@ -3,8 +3,6 @@ package com.example.seniorproject.MainForum.Fragments
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,11 +14,9 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.DaggerAppComponent
-import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
 import com.example.seniorproject.MainForum.Adapters.ProfileCommAdapter
 import com.example.seniorproject.MainForum.Posts.UpdateComment
@@ -31,7 +27,6 @@ import com.example.seniorproject.Utils.SwipeHelper
 import com.example.seniorproject.data.interfaces.CommentListFromFlow
 import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.databinding.FragmentProfileCommentBinding
-import com.example.seniorproject.viewModels.ClickedPostViewModel
 import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_profile_comment.view.*
@@ -50,7 +45,6 @@ class ProfileCommentFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         DaggerAppComponent.create().inject(this)
-        factory = InjectorUtils.provideProfileViewModelFactory()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
