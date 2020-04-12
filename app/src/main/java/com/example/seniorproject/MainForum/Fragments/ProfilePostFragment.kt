@@ -44,7 +44,6 @@ import javax.inject.Inject
 class ProfilePostFragment : Fragment() {
 
     private lateinit var adapter: PostAdapter
-    private lateinit var deleteIcon: Drawable
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -68,6 +67,8 @@ class ProfilePostFragment : Fragment() {
         val binding: FragmentProfilePostBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile__post, container, false)
         val currentuser = FirebaseAuth.getInstance().currentUser?.uid ?: "null"
 
+        //grabs uid of the profile user you are viewing. If it is null, then that means you are viewing your own profile, so we convert
+        //to currentuser
         var iD = this.arguments?.getString("ID") ?: "null"
         if (iD == "null")
             iD = currentuser
@@ -75,12 +76,14 @@ class ProfilePostFragment : Fragment() {
 
         myViewModel.getUserProfilePosts(iD, object : PostListFromFlow {
             override fun onList(list: List<Post>) {
-
+                //this is where we grab the list of posts from the callback that converted the Flow of posts to list with .toList
+                //extenstion
                 //setting layout so newest comments load first
                 val linearLayoutManager = LinearLayoutManager(context)
                 linearLayoutManager.reverseLayout = true
                 linearLayoutManager.stackFromEnd = true
-                view.profile_post_recyclerView.adapter = PostAdapter(view.context, list, 0)
+                adapter = PostAdapter(view.context, list, 0)
+                view.profile_post_recyclerView.adapter = adapter
                 view.profile_post_recyclerView.layoutManager = linearLayoutManager
 
                 //settting refreshview UI
@@ -102,210 +105,103 @@ class ProfilePostFragment : Fragment() {
                     view.refreshView.isRefreshing = false
                 }
 
-                //delete icon for swipe UI
-                deleteIcon = ContextCompat.getDrawable(activity!!.applicationContext, R.drawable.ic_delete_24px)!!
+                if(iD == FirebaseAuth.getInstance().uid){
+                    object : SwipeHelper(context!!, view.profile_post_recyclerView, 200) {
+                        override fun initButton(
+                            viewHolders: RecyclerView.ViewHolder,
+                            buffer: MutableList<ProfileButton>
+                        ) {
+                            buffer.add(
+                                ProfileButton(context!!, "Delete", 30, 0, Color.parseColor
+                                    ("#FF0000"), object : ButtonClickListener {
+                                    override fun onClick(pos: Int) {
+                                        var postkey = " "
+                                        //if statement to cover image post case
+                                        if (adapter.getItemViewType(pos) == 1) {
+                                            postkey = adapter.removeItem(viewHolders as PostImageViewHolders)
+                                        } else if (adapter.getItemViewType(pos) == 0) {
 
-                object : SwipeHelper(context!!, view.profile_post_recyclerView, 200) {
-                    override fun initButton(
-                        viewHolders: RecyclerView.ViewHolder,
-                        buffer: MutableList<ProfileButton>
-                    ) {
-                        buffer.add(
-                            ProfileButton(context!!, "Delete", 30, 0, Color.parseColor
-                                ("#FF0000"), object : ButtonClickListener {
-                                override fun onClick(pos: Int) {
-                                    var postkey = " "
-                                    //if statement to cover image post case
-                                    if (adapter.getItemViewType(pos) == 1) {
-                                        postkey = adapter.removeItem(viewHolders as PostImageViewHolders)
-                                    } else if (adapter.getItemViewType(pos) == 0) {
+                                            postkey = adapter.removeItem(viewHolders as CustomViewHolders)
+                                        }
 
-                                        postkey = adapter.removeItem(viewHolders as CustomViewHolders)
-                                    }
+                                        val userkey: String? =
+                                            adapter.getUserKey(viewHolders)
 
-                                    val userkey: String? =
-                                        adapter.getUserKey(viewHolders)
+                                        val crnkey: String? =
+                                            adapter.getCrn(viewHolders)
 
-                                    val crnkey: String? =
-                                        adapter.getCrn(viewHolders)
-
-                                    //alert dialog setup
-                                    val builder = AlertDialog.Builder(
-                                        view.context,
-                                        R.style.AppTheme_AlertDialog
-                                    )
-                                    //creating message to stop user from deleting posts on accident
-                                    builder.setTitle("Are you sure?")
-                                    builder.setMessage("You cannot restore posts that have been deleted.")
-                                    builder.setPositiveButton("DELETE",
-                                        { dialogInterface: DialogInterface?, i: Int ->
+                                        //alert dialog setup
+                                        val builder = AlertDialog.Builder(
+                                            view.context,
+                                            R.style.AppTheme_AlertDialog
+                                        )
+                                        //creating message to stop user from deleting posts on accident
+                                        builder.setTitle("Are you sure?")
+                                        builder.setMessage("You cannot restore posts that have been deleted.")
+                                        builder.setPositiveButton("DELETE"
+                                        ) { _: DialogInterface?, _: Int ->
                                             myViewModel.deletePost(postkey!!, crnkey!!, userkey!!)
-                                        })
-                                    builder.setNegativeButton("CANCEL",
-                                        { dialogInterface: DialogInterface?, i: Int ->
+                                        }
+                                        builder.setNegativeButton("CANCEL"
+                                        ) { _: DialogInterface?, _: Int ->
                                             builder.setCancelable(true)
-                                        })
+                                        }
 
-                                    val msgdialog: AlertDialog = builder.create()
+                                        val msgdialog: AlertDialog = builder.create()
 
-                                    msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
+                                        msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
 
-                                    msgdialog.show()
+                                        msgdialog.show()
 
-                                }
-
-                            })
-                        )
-                        //adding an edit butto on onswipe
-                        buffer.add(
-                            ProfileButton(context!!, "Edit", 30, 0, Color.parseColor
-                                ("#D3D3D3"), object : ButtonClickListener {
-                                override fun onClick(pos: Int) {
-                                    val intent = Intent(context, UpdatePost::class.java)
-                                    var postkey = " "
-                                    //if statement to cover image post case
-                                    if (adapter.getItemViewType(pos) == 1) {
-                                        postkey = adapter.removeItem(viewHolders as PostImageViewHolders)
-                                    } else if (adapter.getItemViewType(pos) == 0) {
-
-                                        postkey = adapter.removeItem(viewHolders as CustomViewHolders)
                                     }
 
-                                    val userkey: String? =
-                                        adapter.getUserKey(viewHolders)
+                                })
+                            )
+                            //adding an edit butto on onswipe
+                            buffer.add(
+                                ProfileButton(context!!, "Edit", 30, 0, Color.parseColor
+                                    ("#D3D3D3"), object : ButtonClickListener {
+                                    override fun onClick(pos: Int) {
+                                        val intent = Intent(context, UpdatePost::class.java)
+                                        var postkey = " "
+                                        //if statement to cover image post case
+                                        if (adapter.getItemViewType(pos) == 1) {
+                                            postkey = adapter.removeItem(viewHolders as PostImageViewHolders)
+                                        } else if (adapter.getItemViewType(pos) == 0) {
 
-                                    val crnkey: String? =
-                                        adapter.getCrn(viewHolders)
+                                            postkey = adapter.removeItem(viewHolders as CustomViewHolders)
+                                        }
 
-                                    val titlekey: String? =
-                                        adapter.getTitle(viewHolders)
+                                        val userkey: String? =
+                                            adapter.getUserKey(viewHolders)
 
-                                    val textkey: String? =
-                                        adapter.getText(viewHolders)
-                                    //sending information and setting up edit post activity
-                                    intent.putExtra("crn", crnkey)
-                                    intent.putExtra("Classkey", postkey)
-                                    intent.putExtra("UserID", userkey)
-                                    intent.putExtra("title", titlekey)
-                                    intent.putExtra("text", textkey)
+                                        val crnkey: String? =
+                                            adapter.getCrn(viewHolders)
 
-                                    context!!.startActivity(intent)
-                                }
+                                        val titlekey: String? =
+                                            adapter.getTitle(viewHolders)
 
-                            })
-                        )
+                                        val textkey: String? =
+                                            adapter.getText(viewHolders)
+                                        //sending information and setting up edit post activity
+                                        intent.putExtra("crn", crnkey)
+                                        intent.putExtra("Classkey", postkey)
+                                        intent.putExtra("UserID", userkey)
+                                        intent.putExtra("title", titlekey)
+                                        intent.putExtra("text", textkey)
 
+                                        //open to update post screen
+                                        context!!.startActivity(intent)
+                                    }
+
+                                })
+                            )
+
+                        }
                     }
                 }
             }
         })
-
-        //checking if a user has no posts, the no post message is not swipable but all other posts are
-        myViewModel.noPostsChecker(FirebaseAuth.getInstance().currentUser?.uid ?: "null",
-            object : CheckCallback {
-                override fun check(chk: Boolean) {
-                    if (iD != FirebaseAuth.getInstance().currentUser?.uid || chk) {
-                        Log.d("wrong", "one")
-                    } else if (!chk) {
-                        //setting swipe UI
-                        object : SwipeHelper(context!!, view.profile_post_recyclerView, 200) {
-                            override fun initButton(
-                                viewHolders: RecyclerView.ViewHolder,
-                                buffer: MutableList<ProfileButton>
-                            ) {
-                                buffer.add(
-                                    ProfileButton(context!!, "Delete", 30, 0, Color.parseColor
-                                        ("#FF0000"), object : ButtonClickListener {
-                                        override fun onClick(pos: Int) {
-                                            var postkey = " "
-                                            //if statement to cover image post case
-                                            if (adapter.getItemViewType(pos) == 1) {
-                                                postkey = adapter.removeItem(viewHolders as PostImageViewHolders)
-                                            } else if (adapter.getItemViewType(pos) == 0) {
-
-                                                postkey = adapter.removeItem(viewHolders as CustomViewHolders)
-                                            }
-
-                                            val userkey: String? =
-                                                adapter.getUserKey(viewHolders)
-
-                                            val crnkey: String? =
-                                                adapter.getCrn(viewHolders)
-
-                                            //alert dialog setup
-                                            val builder = AlertDialog.Builder(
-                                                view.context,
-                                                R.style.AppTheme_AlertDialog
-                                            )
-                                            //creating message to stop user from deleting posts on accident
-                                            builder.setTitle("Are you sure?")
-                                            builder.setMessage("You cannot restore posts that have been deleted.")
-                                            builder.setPositiveButton("DELETE",
-                                                { dialogInterface: DialogInterface?, i: Int ->
-                                                    myViewModel.deletePost(postkey!!, crnkey!!, userkey!!)
-                                                })
-                                            builder.setNegativeButton("CANCEL",
-                                                { dialogInterface: DialogInterface?, i: Int ->
-                                                    builder.setCancelable(true)
-                                                })
-
-                                            val msgdialog: AlertDialog = builder.create()
-
-                                            msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
-
-                                            msgdialog.show()
-
-                                        }
-
-                                    })
-                                )
-                                //adding an edit butto on onswipe
-                                buffer.add(
-                                    ProfileButton(context!!, "Edit", 30, 0, Color.parseColor
-                                        ("#D3D3D3"), object : ButtonClickListener {
-                                        override fun onClick(pos: Int) {
-                                            val intent = Intent(context, UpdatePost::class.java)
-                                            var postkey = " "
-                                            //if statement to cover image post case
-                                            if (adapter.getItemViewType(pos) == 1) {
-                                                postkey = adapter.removeItem(viewHolders as PostImageViewHolders)
-                                            } else if (adapter.getItemViewType(pos) == 0) {
-
-                                                postkey = adapter.removeItem(viewHolders as CustomViewHolders)
-                                            }
-
-                                            val userkey: String? =
-                                                adapter.getUserKey(viewHolders)
-
-                                            val crnkey: String? =
-                                                adapter.getCrn(viewHolders)
-
-                                            val titlekey: String? =
-                                                adapter.getTitle(viewHolders)
-
-                                            val textkey: String? =
-                                                adapter.getText(viewHolders)
-                                            //sending information and setting up edit post activity
-                                            intent.putExtra("crn", crnkey)
-                                            intent.putExtra("Classkey", postkey)
-                                            intent.putExtra("UserID", userkey)
-                                            intent.putExtra("title", titlekey)
-                                            intent.putExtra("text", textkey)
-
-                                            context!!.startActivity(intent)
-                                        }
-
-                                    })
-                                )
-
-                            }
-                        }
-                    }
-
-                }
-
-            })
-
 
         binding.profViewModel = myViewModel
         binding.lifecycleOwner = this

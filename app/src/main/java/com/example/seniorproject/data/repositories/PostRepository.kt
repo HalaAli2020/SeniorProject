@@ -473,9 +473,6 @@ each class the user is subscribed to this uses coroutines */
     fun fetchUsername(UserID: String, callbackItem: FirebaseCallbackItem) =
         Firebase.fetchUsername(UserID, callbackItem)
 
-    //calls corresponding function from firebase file
-    fun noPostsChecker(UserID: String, callbackBool: FirebaseCallbackBool) =
-        Firebase.noPostsChecker(UserID, callbackBool)
 
     //calls corresponding function from firebase file
     fun checkSubscription(className: String, callbacksubBool: FirebaseCallbacksubBool) =

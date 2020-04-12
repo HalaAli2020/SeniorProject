@@ -656,32 +656,6 @@ class FirebaseData @Inject constructor() {
         FirebaseDatabase.getInstance().getReference("users/$uid/profileImageUrl").setValue("null")
     }
 
-    /*
-    Database query for getting all the posts a user has made, a callback located in the post repository
-    is used to get the posts in real time.
-     */
-
-
-/*
-Checks if a user has made any posts, a callback is implemented in the ProfileViewModel
- */
-    fun noPostsChecker(userID: String, callbackbool: FirebaseCallbackBool): Boolean {
-        val comref = FirebaseDatabase.getInstance().getReference("users/$userID")
-        comref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) { comref.removeEventListener(this) }
-            override fun onDataChange(p0: DataSnapshot) {
-                if (!p0.child("Posts").exists()) {
-                    callbackbool.onSuccess(p0)
-                    noPostsCheck = true
-                } else {
-                    callbackbool.onSuccess(p0)
-                    noPostsCheck = false
-                }
-                comref.removeEventListener(this)
-            }
-        })
-        return noPostsCheck
-    }
 
     /*
 Checks if a user has made any comments, a callback boolean is sent upstream into view layer of clicked post
@@ -705,27 +679,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
             }
         })
     }
-    //checks if the profile being opened belongs to the current user and gets the appropriate posts
 
-
-    /*
-    Saves user comment to the referenced paths
-     */
-    fun saveNewCommentC(
-        text: String, postID: String, crn: String
-    ) {
-
-        val userID = firebaseAuth.uid
-        val comment = Comment(text, "", userID, crn, postID)
-        //creates key for comments so they dont overwrite each other
-        val userKey = FirebaseDatabase.getInstance().getReference("/users/$userID/Post/$postID")
-            .child("Comments").push().key
-        //maps comment values to appropriate slots in database
-        val comementvalues = comment.toMap()
-        FirebaseDatabase.getInstance().getReference("users/$userID/Post/$postID")
-            .child("Comments/$userKey").setValue(comementvalues)
-
-    }
 
     //deletes a posts from all places that it appears, this can only be done from the user profile
     fun deleteNewPost(postKey: String, crn: String, userID: String) {
@@ -1868,10 +1822,6 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
             }
         })
     }
-
-
-
-
 
     companion object {
         @Volatile
