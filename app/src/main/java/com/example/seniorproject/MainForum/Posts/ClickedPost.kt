@@ -51,6 +51,7 @@ class ClickedPost : AppCompatActivity() {
 
         //initializing dagger app component and binding variable
         DaggerAppComponent.create().inject(this)
+
         val binding: ActivityClickedPostBinding = DataBindingUtil.setContentView(this, R.layout.activity_clicked_post)
         myViewModel = ViewModelProvider(this, factory).get(ClickedPostViewModel::class.java)
         //binded varibles and function can be found in the activity_clicked_post xml file
@@ -92,7 +93,7 @@ class ClickedPost : AppCompatActivity() {
                                 /*check varible checks is user is subscribed, the logic for this can be found in the viewmodel
                                 and the database query can be found in the corresponding checksubscription firebase function
                                  */
-                                if (Comment_textbox.text.isNotBlank() && chk == true) {
+                                if (Comment_textbox.text.isNotBlank() && chk) {
                                     myViewModel.newComment(Comment_textbox.text.toString())
                                     Toast.makeText(this@ClickedPost, "Your comment has been successfully posted!", Toast.LENGTH_LONG).show()
                                     Comment_textbox.text.clear()
@@ -276,14 +277,13 @@ class ClickedPost : AppCompatActivity() {
                                             /*check varible checks is user is subscribed, the logic for this can be found in the viewmodel
                                             and the database query can be found in the corresponding checksubscription firebase function
                                              */
-                                            if (Comment_textbox.text.isNotBlank() && chk == true) {
+                                            if (Comment_textbox.text.isNotBlank() && chk) {
                                                 myViewModel.newComment(Comment_textbox.text.toString())
                                                 Toast.makeText(this@ClickedPost, "Your comment has been successfully posted!", Toast.LENGTH_LONG)
                                                     .show()
                                                 Comment_textbox.text.clear()
                                                 val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                                                 inputMethodManager.hideSoftInputFromWindow(it.windowToken, 0)
-                                                myViewModel.newComment(Comment_textbox.text.toString())
                                             } else if (Comment_textbox.text.isNullOrBlank()) {
                                                 Toast.makeText(this@ClickedPost, "you cannot post an empty comment", Toast.LENGTH_LONG).show()
                                             } else if (Comment_textbox.text.isNotBlank() && chk == false) {

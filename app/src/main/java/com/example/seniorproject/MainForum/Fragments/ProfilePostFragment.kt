@@ -4,9 +4,7 @@ package com.example.seniorproject.MainForum.Fragments
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,25 +14,20 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.DaggerAppComponent
-import com.example.seniorproject.Dagger.InjectorUtils
-import com.example.seniorproject.MainForum.Adapters.CustomAdapter
 import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
 import com.example.seniorproject.MainForum.Adapters.PostAdapter
 import com.example.seniorproject.MainForum.Adapters.PostImageViewHolders
 import com.example.seniorproject.MainForum.Posts.UpdatePost
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
-import com.example.seniorproject.Utils.CheckCallback
 import com.example.seniorproject.Utils.ProfileButton
 import com.example.seniorproject.Utils.SwipeHelper
 import com.example.seniorproject.data.interfaces.PostListFromFlow
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.databinding.FragmentProfilePostBinding
-import com.example.seniorproject.viewModels.ClickedPostViewModel
 import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_profile__post.view.*
@@ -54,7 +47,6 @@ class ProfilePostFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         DaggerAppComponent.create().inject(this)
-        factory = InjectorUtils.provideProfileViewModelFactory()
 
     }
 

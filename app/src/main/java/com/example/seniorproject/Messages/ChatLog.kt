@@ -7,9 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.seniorproject.Dagger.InjectorUtils
+import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.Adapters.ChatLogAdapter
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.ChatMessage
@@ -37,7 +36,8 @@ class ChatLog : AppCompatActivity() {
 
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
-        val factory = InjectorUtils.provideChatLogViewModelFactory()
+        DaggerAppComponent.create().inject(this)
+
         myViewModel = ViewModelProvider(this, factory).get(ChatLogViewModel::class.java)
         val binding: MActivityChatLogBinding = DataBindingUtil.setContentView(this,R.layout.m_activity_chat_log)
 

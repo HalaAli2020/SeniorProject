@@ -9,12 +9,10 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.seniorproject.Dagger.DaggerAppComponent
-import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.EmailCallback
@@ -43,7 +41,7 @@ class EditProfileActivity : AppCompatActivity() {
 
         //initalization of the viewmodel and dagger app component
         DaggerAppComponent.create().inject(this)
-        val factory = InjectorUtils.provideProfileViewModelFactory()
+
          myViewModel = ViewModelProvider(this,factory).get(ProfileViewModel::class.java)
 
         //initialization of binding variable, binded variables are located in the corresponding XML file

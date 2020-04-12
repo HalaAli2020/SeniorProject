@@ -3,16 +3,14 @@ package com.example.seniorproject.search
 
 
 import android.os.Bundle
-import android.view.Menu
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.seniorproject.Dagger.InjectorUtils
+import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.CRN
 import com.example.seniorproject.databinding.ActivitySearchBinding
@@ -36,8 +34,10 @@ class SearchActivity: AppCompatActivity()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        factory = InjectorUtils.provideSearchViewModelFactory()
-        myViewModel = ViewModelProviders.of(this, factory).get(SearchViewModel::class.java)
+        //factory = InjectorUtils.provideSearchViewModelFactory()
+        DaggerAppComponent.create().inject(this)
+
+        myViewModel = ViewModelProvider(this, factory).get(SearchViewModel::class.java)
         binding  = DataBindingUtil.setContentView(this, R.layout.activity_search )
         myViewModel.getallclasses()
         ada = SearchAdapter(this.baseContext, myViewModel, myViewModel.sendlistf())

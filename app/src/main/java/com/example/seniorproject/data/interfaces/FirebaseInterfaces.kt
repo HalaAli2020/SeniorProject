@@ -38,10 +38,6 @@ interface FirebaseCallbackPostC {
     fun onCallback(PostL: PostLiveData)
 }
 
-interface FirebaseCallbackCommentC {
-    fun onCallback(CommentL: CommentLive)
-}
-
 interface FirebaseCallbackCommentFlow {
     fun onCallback(flow: Flow<Comment>)
 }
@@ -50,21 +46,6 @@ interface FirebaseCallbackPostFlow {
     fun onCallback(flow: Flow<Post>)
 }
 
-interface FirebaseCallbackCRNC {
-    fun onCallback(CRNL: MutableLiveData<MutableList<CRN>>)
-}
-
-interface FirebaseCallbackStringC {
-    fun onCallback(subs: MutableList<String>)
-}
-
-interface FirebaseCallbackItemC {
-    fun onCallback(Item: String)
-}
-
-interface FirebaseCallbackBoolC {
-    fun onCallback(Item: Boolean)
-}
 interface FirebaseCallbackPost {
 
     fun onStart()
@@ -78,13 +59,6 @@ interface FirebaseCallbacksubBool {
     fun onSuccess(data: DataSnapshot)
 }
 
-interface FirebaseCallbackBool {
-
-    fun onStart()
-    fun onFailure()
-    fun onSuccess(data: DataSnapshot): Boolean
-}
-
 interface FirebaseCallbackNoComments {
     fun onEmpty(nocomlist: Boolean)
 }
@@ -93,11 +67,6 @@ interface FirebaseCallbackComment {
     fun onStart()
     fun onFailure()
     fun onSuccess(data: DataSnapshot)
-}
-interface FirebaseCallbackSubs {
-    fun onFailure()
-    fun onStart()
-    fun onSuccess(data: List<String>)
 }
 
 interface FirebaseCallbackCRN {
