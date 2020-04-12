@@ -13,7 +13,6 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/LContainer"
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -36,8 +35,11 @@
                     android:layout_height="?attr/actionBarSize"
                     android:background="@drawable/titlebar_shadow"
                     android:elevation="10dp"
+                    app:contentInsetLeft="0dp"
                     app:contentInsetStart="0dp"
+                    app:contentInsetStartWithNavigation="0dp"
                     app:titleTextColor="@color/TextColor" />
+
             </FrameLayout>
 
 
@@ -55,8 +57,8 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
                 android:background="@color/colorPrimary"
-                app:itemTextColor="@color/TextColor"
                 app:itemIconTint="@color/TextColor"
+                app:itemTextColor="@color/TextColor"
                 app:menu="@menu/activity_main_drawer" />
 
         </androidx.drawerlayout.widget.DrawerLayout>
@@ -71,8 +73,7 @@
             app:itemTextColor="@menu/bottom_navigation_selected"
             app:labelVisibilityMode="unlabeled"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:menu="@menu/bottom_nav_menu"
-            tools:layout_editor_absoluteX="206dp" />
+            app:menu="@menu/bottom_nav_menu" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/FAB"

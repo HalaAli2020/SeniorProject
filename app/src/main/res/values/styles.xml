@@ -1,22 +1,29 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight">
-        <!-- Customize your theme here. -->
+    <!-- Base Application Theme-->
+    <style name="AppThemeMain" parent="Theme.AppCompat.DayNight">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/BackgroundColor</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/BackgroundColor</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
+    </style>
+
+    <!-- Fragments theme. -->
+    <style name="AppThemeFragment" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/BackgroundColor</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/BackgroundColor</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
     </style>
 
     <style name="AppTheme_AlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorPrimary">@color/black</item>
     </style>
 
-
-    <style name="PrimaryText" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/TextColor</item>
-    </style>
 
 
 </resources>

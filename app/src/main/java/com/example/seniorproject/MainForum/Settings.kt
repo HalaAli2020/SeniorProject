@@ -23,6 +23,8 @@ class Settings : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+        this.title = "Settings"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         OnRadioButtonClick()
         setRadioButton()
@@ -31,6 +33,7 @@ class Settings : AppCompatActivity() {
             val intent = Intent(this, MainForum::class.java)
             startActivity(intent)
         }
+
     }
 
     fun OnRadioButtonClick() {
@@ -65,4 +68,10 @@ class Settings : AppCompatActivity() {
     private fun saveAppTheme(theme: Int) = sharedPrefs.edit().putInt(KEY_THEME, theme).apply()
 
     private fun getSavedAppTheme() = sharedPrefs.getInt(KEY_THEME, THEME_LIGHT)
+
+    //setting up the back button to navigate to the previous screen
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
 }

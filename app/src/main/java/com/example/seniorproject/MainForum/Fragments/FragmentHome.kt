@@ -66,7 +66,7 @@ class FragmentHome : Fragment() {
 
                     //view?.post_recyclerView?.adapter = view?.context?.let { HomeAdapter(it, list, 0) }
                     Log.d("in callback", "invalidate")
-                    view!!.invalidate()
+                    view?.invalidate()
                     //view?.post_recyclerView?.swapAdapter(HomeAdapter(view!!.context, myViewModel.sendPosts(), 0), true)
 
                 }

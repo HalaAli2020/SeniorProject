@@ -1922,7 +1922,7 @@ Checks if a user has made any comments, a callback is implemented in the Profile
                         user.profileImageUrl = imageProfURL
                     }
 
-                    if (user.uid != null) {
+                    if (user.uid != null && user.uid!= FirebaseAuth.getInstance().currentUser?.uid) {
                         UserList.add(user)
                     }
                 }

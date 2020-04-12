@@ -16,4 +16,5 @@
     <color name="red">#FF0000</color>
     <color name="titlebar1">#30ECECEC</color>
     <color name="titlebar2">#30AFAFAF</color>
+    <color name="HintTextColor">#9e9e9e</color>
 </resources>

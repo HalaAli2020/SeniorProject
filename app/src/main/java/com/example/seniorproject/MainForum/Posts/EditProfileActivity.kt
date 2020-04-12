@@ -94,9 +94,12 @@ class EditProfileActivity : AppCompatActivity() {
 
 
             val intent = Intent(this, UserProfileActivity::class.java)
+
             val iD = FirebaseAuth.getInstance().currentUser?.uid
             intent.putExtra("UserID",iD).also {
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(it)
+                finish()
             }
         }
     }

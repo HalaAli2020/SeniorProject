@@ -22,20 +22,20 @@ class NewMessage : AppCompatActivity() {
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: NewMessageViewModel
 
-    private lateinit var searchview : SearchView
+    private lateinit var searchview: SearchView
     lateinit var ada: NewMessageAdapter
-    //lateinit var binding : ActivityNewMessageBinding
     val context = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val actionbar = supportActionBar
-        actionbar?.title = "New Message"
+        this.title = "New Message"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.m_activity_new_message)
 
         val factory = InjectorUtils.provideNewMessageViewModelFactory()
-
         myViewModel = ViewModelProviders.of(this, factory).get(NewMessageViewModel::class.java)
+
         searchview = user_search
         setUpSearchView()
 
@@ -61,5 +61,10 @@ class NewMessage : AppCompatActivity() {
                 return true
             }
         })
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }

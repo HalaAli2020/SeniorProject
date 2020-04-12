@@ -35,7 +35,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="comment">Comment</string>
     <string name="add_a_comment">Add a comment</string>
-    <string name="add_new_bio">Add new Bio</string>
+    <string name="add_new_bio">Add a short description</string>
     <string name="done">DONE</string>
     <string name="login">LOGIN</string>
     <string name="login_lowercase">Login</string>
@@ -63,6 +63,11 @@
     <string name="post_image">post image</string>
     <string name="post">Post</string>
     <string name="arrow">➤</string>
+    <string name="system_theme">System Theme</string>
+    <string name="light_theme">Light Theme</string>
+    <string name="dark_theme">Dark Theme</string>
+    <string name="set_theme">Set Theme</string>
+    <string name="themes">Themes</string>
 
 
 </resources>

@@ -9,13 +9,14 @@
 
     <TextView
         android:id="@+id/title"
-        style="@style/PrimaryText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="16dp"
         android:paddingTop="16dp"
         android:paddingEnd="16dp"
-        android:text="Themes"
+        android:textSize="20sp"
+        android:text="@string/themes"
+        android:textColor="@color/TextColor"
         app:layout_constraintTop_toTopOf="parent" />
 
     <RadioGroup
@@ -29,24 +30,24 @@
 
         <RadioButton
             android:id="@+id/themeDark"
-            style="@style/PrimaryText"
             android:layout_width="match_parent"
-
-            android:text="Dark Theme" />
+            android:layout_height="wrap_content"
+            android:text="@string/dark_theme"
+            android:textColor="@color/TextColor" />
 
         <RadioButton
             android:id="@+id/themeLight"
-            style="@style/PrimaryText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Light Theme" />
+            android:text="@string/light_theme"
+            android:textColor="@color/TextColor" />
 
         <RadioButton
             android:id="@+id/themeSystem"
-            style="@style/PrimaryText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="System Theme" />
+            android:text="@string/system_theme"
+            android:textColor="@color/TextColor" />
 
 
     </RadioGroup>
@@ -56,7 +57,7 @@
         android:layout_width="126dp"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_btn"
-        android:text="Set Theme"
+        android:text="@string/set_theme"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
