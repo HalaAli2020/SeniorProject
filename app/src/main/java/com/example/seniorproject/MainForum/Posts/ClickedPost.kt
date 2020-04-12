@@ -112,9 +112,8 @@ class ClickedPost : AppCompatActivity() {
                                                     override fun onClick(pos: Int) {
                                                         Log.d("soupv", "pos is $pos")
                                                         //userkey is collected from the recyclerview for the block user functionality
-                                                        val authorkey: String? =
-                                                            adapter.getAuthorKey(viewHolders)
-
+                                                        val authorkey: String? = adapter.getAuth(viewHolders)
+                                                        val userkey: String? = adapter.getUserKey(viewHolders)
                                                         val builder = AlertDialog.Builder(
                                                             this@ClickedPost,
                                                             R.style.AppTheme_AlertDialog
@@ -125,6 +124,7 @@ class ClickedPost : AppCompatActivity() {
                                                         builder.setPositiveButton("BLOCK"
                                                         ) { _: DialogInterface?, _: Int ->
                                                             myViewModel.blockUser(authorkey!!)
+                                                           //comment uid is still being stored, not comments author?
                                                             val toast = Toast.makeText(
                                                                 this@ClickedPost,
                                                                 "This user has been blocked",
@@ -157,7 +157,6 @@ class ClickedPost : AppCompatActivity() {
                                                          */
                                                         val comkey: String? =
                                                             adapter.removeItem(viewHolders)
-
                                                         val postkey: String? =
                                                             adapter.getPostKey(viewHolders)
 
@@ -169,6 +168,7 @@ class ClickedPost : AppCompatActivity() {
 
                                                         val textkey: String? = adapter.getText(viewHolders)
 
+                                                        Log.d("soupv", "yoooo")
                                                         val builder = AlertDialog.Builder(
                                                             this@ClickedPost,
                                                             R.style.AppTheme_AlertDialog
@@ -203,6 +203,7 @@ class ClickedPost : AppCompatActivity() {
                                                                 crnkey!!,
                                                                 postkey!!, comkey!!
                                                             )
+                                                            Log.d("soupv", "2yoooo")
 
                                                         }
                                                         builder.setNegativeButton("CANCEL"

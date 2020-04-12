@@ -333,6 +333,31 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         Firebase.blockUser(UserID)
     }
 
+    fun getBlockedUsers(callback: FirebaseData.FirebaseCallbackUserListFlow){
+        Firebase.getBlockedUsers(object: PostRepository.FirebaseCallbackString{
+            override fun onStart() {
+            }
+
+            override fun onFailure() {
+            }
+
+            override fun onSuccess(data: DataSnapshot) {
+                val blockedUserList : MutableList<String> = mutableListOf()
+                for(block in data.children){
+                    blockedUserList.add(block.value as String)
+                }
+                var listCor = blockedUserList.asFlow()
+                callback.onCallback(listCor)
+            }
+
+        })
+    }
+
+    fun removeBlockedUser(userID: String){
+        Firebase.removeBlockedUser(userID)
+    }
+
+
     fun getUserProfileComments(userID: String, callbackComment: FirebaseData.FirebaseCallbackCommentFlow){
         Firebase.getUserProfileComments(userID, object: FirebaseCallbackComment{
             override fun onFailure() {}

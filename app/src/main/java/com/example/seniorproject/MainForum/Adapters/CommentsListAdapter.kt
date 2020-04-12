@@ -175,10 +175,10 @@ class CommentsListAdapter(
         return commentkey!!
     }
 
-    fun getAuthorKey(holder: RecyclerView.ViewHolder): String {
+    fun getAuth(holder: RecyclerView.ViewHolder): String {
         val comment: Comment = Comments[holder.adapterPosition]
         val commentkey: String? = comment.author
-        //returns the comment poster ID at the selected position
+        //returns the comment author at the selected position
         return commentkey!!
     }
 

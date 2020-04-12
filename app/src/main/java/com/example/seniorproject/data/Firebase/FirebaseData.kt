@@ -986,7 +986,6 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
 
     //blocking user functionality, adds blocked userID in list stored under current user
     fun blockUser(UserID: String) {
-
         val userID = firebaseAuth.uid
         val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
         ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent(object : ValueEventListener {
@@ -1006,6 +1005,43 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
 
             override fun onCancelled(p0: DatabaseError) {
                     ref.removeEventListener(this)
+            }
+        })
+    }
+
+    fun getBlockedUsers(callback: PostRepository.FirebaseCallbackString) {
+        val userID = firebaseAuth.uid
+        val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
+        ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                callback.onSuccess(p0)
+            }
+            override fun onCancelled(p0: DatabaseError) {
+                ref.removeEventListener(this)
+            }
+        })
+    }
+
+    fun removeBlockedUser(UserID: String){
+        val userID = firebaseAuth.uid
+        val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
+        ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.exists() == false) {
+                    Log.d("soupfire", "There are no blocked users to be removed!")
+                }
+                if (p0.exists()) {
+                    for (block in p0.children) {
+                        if (block.value == UserID) {
+                            block.ref.removeValue()
+                        }
+                    }
+                }
+                ref.removeEventListener(this)
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                ref.removeEventListener(this)
             }
         })
     }
@@ -2125,6 +2161,10 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
 
     interface FirebaseCallbackPostFlow {
         fun onCallback(flow: Flow<Post>)
+    }
+
+    interface FirebaseCallbackUserListFlow {
+        fun onCallback(flow: Flow<String>)
     }
 
     interface FirebaseCallbackCRN {
