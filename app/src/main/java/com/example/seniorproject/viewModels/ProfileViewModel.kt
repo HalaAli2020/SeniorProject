@@ -169,28 +169,4 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
 
     fun saveUserbio(bio : String) = repository.saveUserbio(bio)
 
-    //fun fetchCurrentBio() = repository.fetchCurrentBio()
-
-    fun noPostsChecker(UserID: String, callback: CheckCallback) : Boolean
-    {
-        repository.noPostsChecker(UserID, object : FirebaseCallbackBool {
-            override fun onStart() {  }
-            override fun onFailure() {  }
-            override fun onSuccess(data: DataSnapshot) : Boolean {
-                if (!data.child("Posts").exists())
-                {
-                    noPostCheck = true
-                    callback.check(noPostCheck ?: false)
-                }
-                else
-                {
-                    callback.check(noPostCheck ?: false)
-                    noPostCheck = false //here
-                }
-                return  noPostCheck ?: false
-            }
-        })
-        return  noPostCheck ?: false
-    }
-
 }

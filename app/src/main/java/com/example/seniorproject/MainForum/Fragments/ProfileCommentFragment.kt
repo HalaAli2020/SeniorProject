@@ -41,13 +41,9 @@ class ProfileCommentFragment : Fragment() {
 
     private lateinit var adaptercomments: ProfileCommAdapter
 
-    var swipeBackground: ColorDrawable = ColorDrawable(Color.parseColor("#FF0000"))
-    private lateinit var deleteIcon: Drawable
-
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: ProfileViewModel
-    lateinit var viewModel: ProfileViewModel
 
     //initalization of the viewmodel and dagger app component
     //initialization of binding variable, binded variables are located in the corresponding XML file
@@ -64,17 +60,10 @@ class ProfileCommentFragment : Fragment() {
 
         val currentuser = FirebaseAuth.getInstance().currentUser?.uid ?: "null"
         var iD = this.arguments?.getString("ID") ?: "null"
+        //making sure id never equals null to avoid errors
         if (iD == "null")
             iD = currentuser
 
-
-        //making sure id never equals null to avoid errors
-
-        //setting the observer so comments appear in realtime
-        /*   myViewModel.comments.observe(this, androidx.lifecycle.Observer {
-               swap(iD)
-           } )*/
-        //setting recycleview adapter
 
         myViewModel.getUserProfileComments(iD, object: CommentListFromFlow {
             override fun onList(list: List<Comment>) {
@@ -107,8 +96,9 @@ class ProfileCommentFragment : Fragment() {
                     view.refreshView.isRefreshing = false
                 }
 
-                deleteIcon = ContextCompat.getDrawable(activity!!.applicationContext, R.drawable.ic_delete_24px)!!
-
+                //this if statement makes sure that if you travel to another user's profile, you can't edit and delete their posts/comments
+                //you can only delete and edit your own posts/comments
+                if(iD == FirebaseAuth.getInstance().uid){
                 object : SwipeHelper(context!!, view.profile_comment_recyclerView, 200) {
                     override fun initButton(
                         viewHolders: RecyclerView.ViewHolder,
@@ -138,24 +128,24 @@ class ProfileCommentFragment : Fragment() {
                                     //creating dialog box and message to stop user from deleting post on accident
                                     builder.setTitle("Are you sure?")
                                     builder.setMessage("You cannot restore comments that have been deleted.")
-                                    builder.setPositiveButton("DELETE",
-                                        { dialogInterface: DialogInterface?, i: Int ->
-                                            myViewModel.deleteCommentFromCommPosts(
-                                                postkeyUP!!,
-                                                crnkey!!,
-                                                classkey!!
-                                            )
-                                            myViewModel.deleteCommentFromUserProfile(
-                                                commentkey!!,
-                                                crnkey,
-                                                classprofilekey!!,
-                                                userkey!!
-                                            )
-                                        })
-                                    builder.setNegativeButton("CANCEL",
-                                        { dialogInterface: DialogInterface?, i: Int ->
-                                            builder.setCancelable(true)
-                                        })
+                                    builder.setPositiveButton("DELETE"
+                                    ) { _: DialogInterface?, _: Int ->
+                                        myViewModel.deleteCommentFromCommPosts(
+                                            postkeyUP!!,
+                                            crnkey!!,
+                                            classkey!!
+                                        )
+                                        myViewModel.deleteCommentFromUserProfile(
+                                            commentkey!!,
+                                            crnkey,
+                                            classprofilekey!!,
+                                            userkey!!
+                                        )
+                                    }
+                                    builder.setNegativeButton("CANCEL"
+                                    ) { _: DialogInterface?, _: Int ->
+                                        builder.setCancelable(true)
+                                    }
 
                                     val msgdialog: AlertDialog = builder.create()
                                     msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
@@ -198,6 +188,7 @@ class ProfileCommentFragment : Fragment() {
                     }
 
                 }
+                }
             }
         })
 
@@ -208,13 +199,6 @@ class ProfileCommentFragment : Fragment() {
 
         return view
     }
-
-    /*private fun swap(ID: String)
-    {
-        val ada = ProfileCommentsAdapter(view!!.context, myViewModel.getUserProfileComments(ID))
-        view!!.profile_comment_recyclerView.swapAdapter(ada, true)
-    }*/
-
 
     companion object {
         fun newInstance(ID: String): ProfileCommentFragment {
