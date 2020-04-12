@@ -22,12 +22,12 @@ class UpdatePost : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.update_post)
 
-
+        //initialize inject of dagger app component and initializes view model with generic factory
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProvider(this, factory).get(NewPostFragmentViewModel::class.java)
         val binding: UpdatePostBinding = DataBindingUtil.setContentView(this,R.layout.update_post)
 
-//gets post information
+        //gets post information
         val text: String = intent.getStringExtra("text") ?: "no text"
         val title: String = intent.getStringExtra("title") ?: "no title"
         val postkey: String = intent.getStringExtra("Classkey") ?: "class key"
@@ -40,6 +40,7 @@ class UpdatePost : AppCompatActivity() {
         myViewModel.crn = crn
         myViewModel.postKey = postkey
 
+        //sets data binding variable in xml to this view model
         binding.newPostModel = myViewModel
         binding.lifecycleOwner = this
 

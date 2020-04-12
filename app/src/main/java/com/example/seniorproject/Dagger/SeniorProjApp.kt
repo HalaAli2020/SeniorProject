@@ -9,9 +9,11 @@ class SeniorProjApp : Application(){
 
     override fun onCreate() {
         super.onCreate()
+        //call function that initializes the dagger app component
         appComponent = initDagger(this)
     }
 
+    //Dagger App component is built here
     private fun initDagger(app: SeniorProjApp): AppComponent =
         DaggerAppComponent.builder()
         .appModule(AppModule(app))

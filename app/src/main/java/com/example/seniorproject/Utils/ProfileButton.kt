@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.*
 
-
+//this is the class that creates the individual button on the swipe.
 class ProfileButton(private val context: Context, private val text: String, private val textSize: Int,
                     private val imageResId: Int, private val color: Int, private val listener: ButtonClickListener) {
 
@@ -14,7 +14,9 @@ class ProfileButton(private val context: Context, private val text: String, priv
 
 
     fun onClick(x: Float, y: Float): Boolean{
-
+        //this checks to see if the clickRegion(which is the space of anywhere inside the button that you click) is not null, that means
+        //that user has clicked and the x and y position of where they clicked exists, then the listener of interface ButtonClickListener
+        //is called and that means a click was made on the button.
         if(clickRegion !=null && clickRegion!!.contains(x,y))
         {
             listener.onClick(pos)
@@ -38,7 +40,8 @@ class ProfileButton(private val context: Context, private val text: String, priv
         p.textAlign= Paint.Align.LEFT
         p.getTextBounds(text, 0, text.length, r)
 
-
+        //this is the setup of width and height of profile button and holds position of where to draw the text if there is no image found
+        //in the button
         if(imageResId ==0)
         {
             val x=cWidth /2f-r.width() /2f-r.left.toFloat()

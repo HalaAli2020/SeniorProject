@@ -263,7 +263,7 @@ class MainForum : AppCompatActivity(),
         alert.show()
     }
 
-
+    //sets theme of main forum to dark or light mode or it follows system of app settings on mobile device
     private fun setTheme(){
         when (sharedPrefs.getInt(KEY_THEME, THEME_LIGHT)) {
             THEME_SYSTEM -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)

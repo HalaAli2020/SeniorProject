@@ -13,9 +13,6 @@ import javax.inject.Inject
 
 class UpdateComment  : AppCompatActivity() {
 
-    //private lateinit var adaptercomments: ProfileCommentsAdapter
-
-
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: ClickedPostViewModel
@@ -25,7 +22,7 @@ class UpdateComment  : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.update_comment)
 
-
+        //initialize inject of dagger app component and initializes view model with generic factory
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProvider(this, factory).get(ClickedPostViewModel::class.java)
         val binding: UpdateCommentBinding = DataBindingUtil.setContentView(this,R.layout.update_comment)
@@ -43,6 +40,7 @@ class UpdateComment  : AppCompatActivity() {
         myViewModel.usercrn = crn
         myViewModel.postukey = postkey
 
+        //sets data binding variable in xml to this view model
         binding.clickedModel = myViewModel
         binding.lifecycleOwner = this
 
