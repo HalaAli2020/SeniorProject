@@ -17,14 +17,16 @@ import com.example.seniorproject.Authentication.LoginActivity
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.Adapters.HomeAdapter
 import com.example.seniorproject.R
-import com.example.seniorproject.data.interfaces.listActivitycallback
+import com.example.seniorproject.data.interfaces.ListActivitycallback
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.User
 import com.example.seniorproject.databinding.FragmentHomeBinding
 import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_home.view.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -56,7 +58,7 @@ class FragmentHome : Fragment() {
 
         myViewModel = ViewModelProvider(this, factory).get(HomeFragmentViewModel::class.java)
         lifecycleScope.launch(Dispatchers.IO) {
-            myViewModel.getSubsP(object : listActivitycallback {
+            myViewModel.getSubsP(object : ListActivitycallback {
                 override fun onCallback(list: List<Post>) {
                     view!!.invalidate()
 

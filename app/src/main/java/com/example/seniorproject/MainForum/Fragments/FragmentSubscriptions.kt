@@ -41,7 +41,7 @@ class FragmentSubscriptions : Fragment() {
         activity?.title = "Subscriptions"
         val view = inflater.inflate(R.layout.fragment_subscriptions, container, false)
 
-        myViewModel.usersSubs?.observe(this, obse)
+        myViewModel.usersSubs?.observe(viewLifecycleOwner, obse)
         view.subs_recyclerView.layoutManager = LinearLayoutManager(context)
 
         val ada = myViewModel.getUserSub()?.let {

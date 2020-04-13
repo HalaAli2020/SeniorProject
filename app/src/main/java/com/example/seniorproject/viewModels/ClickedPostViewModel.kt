@@ -6,13 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.seniorproject.Utils.CheckCallback
 import com.example.seniorproject.Utils.PostListener
-import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.data.interfaces.CommentListFromFlow
 import com.example.seniorproject.data.interfaces.FirebaseCallbackCommentFlow
 import com.example.seniorproject.data.interfaces.FirebaseCallbackNoComments
 import com.example.seniorproject.data.interfaces.FirebaseCallbacksubBool
 import com.example.seniorproject.data.models.Comment
-import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.repositories.PostRepository
 import com.google.firebase.database.DataSnapshot
 import kotlinx.coroutines.flow.Flow
@@ -41,9 +39,6 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
     var boolsub : Boolean? = null
 
 
-    init {
-
-    }
     //calls corresponding function from post repository gets binded variable contents from clicked post xml file
     fun noCommentsCheckForCommPosts(callback: FirebaseCallbackNoComments){
       repository.noCommentsCheckForCommPosts(crn!!, classkey!!, callback)
@@ -60,7 +55,7 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
         repository.getPostComments(classkey!!, crn!!, object : FirebaseCallbackCommentFlow {
             override fun onCallback(flow: Flow<Comment>) {
                 viewModelScope.launch {
-                    var commflow = flow.toList()
+                    val commflow = flow.toList()
                     callback.onList(commflow)
                 }
             }
@@ -69,7 +64,16 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
     }
     //calls corresponding function from post repository
     fun editComment(){
-        repository.editNewComment(comuserid!!, usercomkey!!, comment!!, usercrn!!, postukey!!)
+        if (comment.isNullOrBlank()){
+            boolcom.value = false
+            return
+        }
+        else
+        {
+            repository.editNewComment(comuserid!!, usercomkey!!, comment!!, usercrn!!, postukey!!)
+            boolcom.value = true
+            return
+        }
     }
 
 /* This function is called when a user has created a new comment it will check to make sure it has the correct data in the
@@ -81,14 +85,15 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
         repository.newComment(pKey!!,comment, classkey!!, userID!!, crn!!)
     }
 
-    fun checkcomments() : Boolean
+    /*fun checkcomments() : Boolean
     {
         if(commentsList.size != -1)
         {
             return true
         }
         return false
-    }
+    }*/
+
     //calls corresponding function from post repository
     fun reportUserComment(accusedID: String, complaintext: String, crn: String, classkey: String, comKey: String){
         repository.reportUserComment(accusedID, complaintext, crn, classkey, comKey)

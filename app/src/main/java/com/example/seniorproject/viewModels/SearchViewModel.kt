@@ -5,23 +5,16 @@ package com.example.seniorproject.viewModels
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.seniorproject.Utils.FlowCallback
-import com.example.seniorproject.Utils.MutableListCallback
 import com.example.seniorproject.data.interfaces.FirebaseResult
 import com.example.seniorproject.data.models.CRN
-import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.repositories.SearchRepo
 import com.google.firebase.database.DataSnapshot
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(private val repository: SearchRepo) : ViewModel() {
     //var UsersSubs : MutableLiveData<MutableList<CRN>> = MutableLiveData()
-    var clist : MutableLiveData<MutableList<CRN>> = MutableLiveData()
-    var fullist : MutableLiveData<MutableList<CRN>> = MutableLiveData()
+    private var clist : MutableLiveData<MutableList<CRN>> = MutableLiveData()
+    private var fullist : MutableLiveData<MutableList<CRN>> = MutableLiveData()
 
 
 

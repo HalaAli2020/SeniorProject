@@ -5,7 +5,7 @@ import android.app.Application
 //base application component used to generate dagger app component
 class SeniorProjApp : Application(){
 
-    lateinit var appComponent: AppComponent
+    private lateinit var appComponent: AppComponent
 
     override fun onCreate() {
         super.onCreate()

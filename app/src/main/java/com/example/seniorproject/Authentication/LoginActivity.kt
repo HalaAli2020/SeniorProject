@@ -1,12 +1,10 @@
 package com.example.seniorproject.Authentication
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.MainForum
 import com.example.seniorproject.R

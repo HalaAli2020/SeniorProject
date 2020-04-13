@@ -14,7 +14,7 @@ import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.data.models.Comment
 import kotlinx.android.synthetic.main.rv_post_comment.view.*
 
-class ProfileCommAdapter(context: Context, var Comments: List<Comment>) :
+class ProfileCommAdapter(context: Context, private var Comments: List<Comment>) :
     RecyclerView.Adapter<CustomViewHolders>() {
     val mContext: Context = context
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolders {
@@ -25,7 +25,7 @@ class ProfileCommAdapter(context: Context, var Comments: List<Comment>) :
     }
 
     override fun getItemCount(): Int {
-        var size = 0
+        val size = 0
         if (!Comments.isNullOrEmpty()) {
             return Comments.size
         }
@@ -35,7 +35,7 @@ class ProfileCommAdapter(context: Context, var Comments: List<Comment>) :
 
     override fun onBindViewHolder(holder: CustomViewHolders, position: Int) {
         if (Comments[position] == null || itemCount == 0) {
-            holder.itemView.comment_text.text = "No Comments"
+            holder.itemView.comment_text.text = mContext.getString(R.string.no_com)
         } else {
             val comment: Comment = Comments[position]
             holder.itemView.comment_text.text = comment.text
@@ -78,7 +78,7 @@ class ProfileCommAdapter(context: Context, var Comments: List<Comment>) :
 
                 }
             } else {
-                holder.itemView.comment_text.text = "No Comments"
+                holder.itemView.comment_text.text = mContext.getString(R.string.no_com)
             }
 
         }
@@ -87,7 +87,7 @@ class ProfileCommAdapter(context: Context, var Comments: List<Comment>) :
 
     fun getCommentKey(customViewHolders: CustomViewHolders): String {
         val comment: Comment = Comments[customViewHolders.adapterPosition]
-        val commentkey: String? = comment.UserComkey
+        val commentkey: String? = comment.userComkey
 
 
         return commentkey!!
@@ -101,13 +101,13 @@ class ProfileCommAdapter(context: Context, var Comments: List<Comment>) :
 
     fun getClassKey(customViewHolders: CustomViewHolders): String {
         val comment: Comment = Comments[customViewHolders.adapterPosition]
-        val commentkey: String? = comment.Classkey
+        val commentkey: String? = comment.classkey
         return commentkey!!
     }
 
     fun getClassProfileKey(customViewHolders: CustomViewHolders): String {
         val comment: Comment = Comments[customViewHolders.adapterPosition]
-        val commentkey: String? = comment.ProfileComKey
+        val commentkey: String? = comment.profileComKey
         return commentkey!!
     }
 

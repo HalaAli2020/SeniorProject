@@ -48,7 +48,7 @@ class NewMessageAdapter(context: Context, private var UserList: List<User>) : Re
         holder.itemView.usernameTextview.text = user.username ?: ""
         Log.d("NewMessageAdapter", user.username)
 
-        if (user.profileImageUrl.toString().isNullOrBlank() || user.profileImageUrl.toString() == "null") {
+        if (user.profileImageUrl.toString().isBlank() || user.profileImageUrl.toString() == "null") {
             Glide.with(mContext) //1
                 .load(R.drawable.ic_account_circle_blue_24dp)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -73,7 +73,7 @@ class NewMessageAdapter(context: Context, private var UserList: List<User>) : Re
 
     //Display the search results
     fun onfilter(query: String?) {
-        var Nlist = mutableListOf<User>()
+        val nlist = mutableListOf<User>()
         if (query.isNullOrEmpty()) {
             filterlist = UserList as MutableList<User>
             notifyDataSetChanged()
@@ -83,10 +83,10 @@ class NewMessageAdapter(context: Context, private var UserList: List<User>) : Re
             for ((index, x) in UserList.withIndex()) {
                 // query.contains()
                 if (x.username!!.contains(query, true)) {
-                    Nlist.add(x)
+                    nlist.add(x)
                 }
             }
-            filterlist = Nlist
+            filterlist = nlist
             notifyDataSetChanged()
         }
 

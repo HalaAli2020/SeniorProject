@@ -2,7 +2,6 @@ package com.example.seniorproject.Messages
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -14,7 +13,6 @@ import com.example.seniorproject.MainForum.Adapters.ChatLogAdapter
 import com.example.seniorproject.MainForum.MainForum
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.ChatMessage
-import com.example.seniorproject.data.models.LatestMessage
 import com.example.seniorproject.databinding.MActivityChatLogBinding
 import com.example.seniorproject.viewModels.ChatLogViewModel
 import kotlinx.android.synthetic.main.m_activity_chat_log.*

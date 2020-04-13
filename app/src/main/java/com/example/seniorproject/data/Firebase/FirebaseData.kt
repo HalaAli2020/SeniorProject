@@ -2,16 +2,11 @@ package com.example.seniorproject.data.Firebase
 
 import android.net.Uri
 import android.util.Log
-import com.google.firebase.database.FirebaseDatabase
-import javax.inject.Inject
-import javax.inject.Singleton
 import androidx.lifecycle.MutableLiveData
 import com.example.seniorproject.Utils.Callback
 import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.data.interfaces.*
 import com.example.seniorproject.data.models.*
-import com.example.seniorproject.data.repositories.PostRepository
-import com.example.seniorproject.viewModels.SearchViewModel
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
@@ -20,14 +15,11 @@ import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.collections.HashMap
 
 
@@ -657,9 +649,9 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
 
 
 
-                            comment.Classkey = classKey
-                            comment.UserComkey = userKey
-                            comment.ProfileComKey = profileKey
+                            comment.classkey = classKey
+                            comment.userComkey = userKey
+                            comment.profileComKey = profileKey
                             comment.Postkey = postKey
 
                             //mapping comment values to database
@@ -779,7 +771,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
         val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
         ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
-                if (p0.exists() == false) {
+                if (!p0.exists()) {
                     ref.child("BlockedUsers").push().setValue(UserID)
                 }
                 if (p0.exists()) {
@@ -802,7 +794,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
     firebase does not allow database paths with the characters listed below
     this function is called in reportUserPost and repostUserComment to remove unnecessary characters
      */
-    fun RemoveInvalidCharacters(text : String) : String{
+    fun removeInvalidCharacters(text : String) : String{
         var newText = ""
         for (x in text){
             if (x != '.' && x != '#' && x != '$' && x != '[' && x != ']')
@@ -820,7 +812,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
 
         val accuserID = firebaseAuth.currentUser?.email
 
-        val parsedComplainText = RemoveInvalidCharacters(complaintext)
+        val parsedComplainText = removeInvalidCharacters(complaintext)
 
         val report = Reports(accuserID!!, accusedID, parsedComplainText, crn, classkey)
 
@@ -845,7 +837,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
      */
     fun reportUserComment(accusedID: String, complaintext: String, crn: String, classkey: String, comkey: String) {
 
-        val parsedComplainText = RemoveInvalidCharacters(complaintext)
+        val parsedComplainText = removeInvalidCharacters(complaintext)
 
         val accuserID = firebaseAuth.currentUser?.email
 
@@ -876,7 +868,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
     In order to do so, the clickedpost screen requires post values to be passed on to the next activity.
      */
     fun readPostValues(crn: String, postkey: String, callBack: Callback) {
-         var lit = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$postkey")
+         val lit = FirebaseDatabase.getInstance().getReference("Subjects/$crn/Posts/$postkey")
              lit.addValueEventListener(object :
             ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -1014,7 +1006,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
     * subscribed to earlier in the this coroutine */
     fun getOneClass( sub : String, call : FirebaseValuecallback)
     {
-        var ref = FirebaseDatabase.getInstance().getReference("Subjects/$sub/Posts").orderByChild("Ptime")
+        val ref = FirebaseDatabase.getInstance().getReference("Subjects/$sub/Posts").orderByChild("Ptime")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
@@ -1227,7 +1219,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
     }
 
 /*using the uid of the user this function makes a database query to get the posts the user has posted that are stored in users section of the database*/
-    fun listenForUserProfilePosts(uid: String, callbackPost: FirebaseCallbackPost) {
+private fun listenForUserProfilePosts(uid: String, callbackPost: FirebaseCallbackPost) {
         val reference = FirebaseDatabase.getInstance().getReference("users/$uid").child("Posts")
         callbackPost.onStart()
         reference.addValueEventListener(object : ValueEventListener {
