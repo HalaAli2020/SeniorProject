@@ -775,20 +775,29 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
                     ref.child("BlockedUsers").push().setValue(UserID)
                 }
                 if (p0.exists()) {
+                    var blockedIDNotExist = false
                     for (block in p0.children) {
-                        if (block.value != UserID) {
-                            ref.child("BlockedUsers").push().setValue(UserID)
+                        if (block.value == UserID) {
+
+                        }
+                        else{
+                            blockedIDNotExist = true
                         }
                     }
+
+                    if(blockedIDNotExist){
+                        ref.child("BlockedUsers").push().setValue(UserID)
+                    }
                 }
-                    ref.removeEventListener(this)
+                ref.removeEventListener(this)
             }
 
             override fun onCancelled(p0: DatabaseError) {
-                    ref.removeEventListener(this)
+                ref.removeEventListener(this)
             }
         })
     }
+
 
     /*
     firebase does not allow database paths with the characters listed below
