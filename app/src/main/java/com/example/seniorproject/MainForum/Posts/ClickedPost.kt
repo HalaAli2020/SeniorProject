@@ -111,50 +111,49 @@ class ClickedPost : AppCompatActivity() {
                                             comment_RecyclerView.adapter = adapter
                                             comment_RecyclerView.layoutManager = LinearLayoutManager(this@ClickedPost)
 
-                                            object : SwipeHelper(applicationContext, comment_RecyclerView, 200) {
-                                                override fun initButton(
-                                                    viewHolders: RecyclerView.ViewHolder,
-                                                    buffer: MutableList<ProfileButton>
-                                                ) {
-                                                    val userk: String? = adapter.getUserKey(viewHolders)
-                                                    if (FirebaseAuth.getInstance().currentUser?.uid == userk) {
-                                                        //a user cannot block or report themselves
-                                                    } else {
-                                                        buffer.add(
-                                                            ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
-                                                                ("#FF0000"), object : ButtonClickListener {
-                                                                override fun onClick(pos: Int) {
-                                                                    Log.d("soupv", "pos is $pos")
-                                                                    //userkey is collected from the recyclerview for the block user functionality
-                                                                    val userkey: String? =
-                                                                        adapter.getUserKey(viewHolders)
+                                object : SwipeHelper(applicationContext, comment_RecyclerView, 200) {
+                                    override fun initButton(
+                                        viewHolders: RecyclerView.ViewHolder,
+                                        buffer: MutableList<ProfileButton>
+                                    ) {
+                                        val userk: String? = adapter.getUserKey(viewHolders)
+                                        if (FirebaseAuth.getInstance().currentUser?.uid == userk){
+                                            //a user cannot block or report themselves
+                                        }
+                                        else {
+                                            buffer.add(
+                                                ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
+                                                    ("#FF0000"), object : ButtonClickListener {
+                                                    override fun onClick(pos: Int) {
+                                                        Log.d("soupv", "pos is $pos")
+                                                        //userkey is collected from the recyclerview for the block user functionality
+                                                        val authorkey: String? = adapter.getAuth(viewHolders)
+                                                        val userkey: String? = adapter.getUserKey(viewHolders)
+                                                        val builder = AlertDialog.Builder(
+                                                            this@ClickedPost,
+                                                            R.style.AppTheme_AlertDialog
+                                                        )
+                                                        //building the dialog box to stop users from blocking people by mistake
+                                                        builder.setTitle("Are you sure?")
+                                                        builder.setMessage("You won't see posts or comments from this user.")
+                                                        builder.setPositiveButton("BLOCK"
+                                                        ) { _: DialogInterface?, _: Int ->
+                                                            myViewModel.blockUser(authorkey!!)
+                                                           //comment uid is still being stored, not comments author?
+                                                            val toast = Toast.makeText(
+                                                                this@ClickedPost,
+                                                                "This user has been blocked",
+                                                                Toast.LENGTH_SHORT
+                                                            )
+                                                            toast.show()
+                                                            onBackPressed(crn)
+                                                        }
+                                                        builder.setNegativeButton("CANCEL"
+                                                        ) { _: DialogInterface?, _: Int ->
+                                                            builder.setCancelable(true)
+                                                        }
 
-                                                                    val builder = AlertDialog.Builder(
-                                                                        this@ClickedPost,
-                                                                        R.style.AppTheme_AlertDialog
-                                                                    )
-                                                                    //building the dialog box to stop users from blocking people by mistake
-                                                                    builder.setTitle("Are you sure?")
-                                                                    builder.setMessage("You won't see posts or comments from this user.")
-                                                                    builder.setPositiveButton(
-                                                                        "BLOCK"
-                                                                    ) { _: DialogInterface?, _: Int ->
-                                                                        myViewModel.blockUser(userkey!!)
-                                                                        val toast = Toast.makeText(
-                                                                            this@ClickedPost,
-                                                                            "This user has been blocked",
-                                                                            Toast.LENGTH_SHORT
-                                                                        )
-                                                                        toast.show()
-                                                                        onBackPressed(crn)
-                                                                    }
-                                                                    builder.setNegativeButton(
-                                                                        "CANCEL"
-                                                                    ) { _: DialogInterface?, _: Int ->
-                                                                        builder.setCancelable(true)
-                                                                    }
-
-                                                                    val msgdialog: AlertDialog = builder.create()
+                                                        val msgdialog: AlertDialog = builder.create()
 
                                                                     msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
 
@@ -177,13 +176,13 @@ class ClickedPost : AppCompatActivity() {
                                                                     val postkey: String? =
                                                                         adapter.getPostKey(viewHolders)
 
-                                                                    val userkey: String? =
-                                                                        adapter.getUserKey(viewHolders)
+                                                        val userkey: String? =
+                                                            adapter.getUserKey(viewHolders)
 
-                                                                    val crnkey: String? =
-                                                                        adapter.getCrn(viewHolders)
+                                                        val crnkey: String? =
+                                                            adapter.getCrn(viewHolders)
 
-                                                                    val textkey: String? = adapter.getText(viewHolders)
+                                                        val textkey: String? = adapter.getText(viewHolders)
 
                                                                     val builder = AlertDialog.Builder(
                                                                         this@ClickedPost,

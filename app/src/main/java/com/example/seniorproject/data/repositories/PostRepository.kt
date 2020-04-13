@@ -324,7 +324,28 @@ private fun getPostperclass(f : Int) : Int
         Firebase.blockUser(UserID)
     }
 
-    //Create Kotlin Flow of comments found in user profile with .asFlow(). Callback is used to travel the flow upstream to viewmodel
+
+    fun getBlockedUsers(callback: FirebaseCallbackUserListFlow){
+        Firebase.getBlockedUsers(object: FirebaseCallbackString{
+            override fun onStart() {
+            }
+
+            override fun onFailure() {
+            }
+
+            override fun onSuccess(data: DataSnapshot) {
+                val blockedUserList : MutableList<String> = mutableListOf()
+                for(block in data.children){
+                    blockedUserList.add(block.value as String)
+                }
+                var listCor = blockedUserList.asFlow()
+                callback.onFlow(listCor)
+            }
+
+        })
+    }
+
+
     fun getUserProfileComments(userID: String, callbackComment: FirebaseCallbackCommentFlow){
         Firebase.getUserProfileComments(userID, object: FirebaseCallbackComment{
             override fun onFailure() {}

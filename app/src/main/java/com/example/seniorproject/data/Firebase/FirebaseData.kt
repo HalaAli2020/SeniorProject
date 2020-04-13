@@ -7,6 +7,7 @@ import com.example.seniorproject.Utils.Callback
 import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.data.interfaces.*
 import com.example.seniorproject.data.models.*
+import com.example.seniorproject.data.repositories.PostRepository
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
@@ -771,7 +772,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
         val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
         ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
-                if (!p0.exists()) {
+                if (p0.exists() == false) {
                     ref.child("BlockedUsers").push().setValue(UserID)
                 }
                 if (p0.exists()) {
@@ -794,6 +795,19 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
 
             override fun onCancelled(p0: DatabaseError) {
                 ref.removeEventListener(this)
+            }
+        })
+    }
+
+    fun getBlockedUsers(callback: FirebaseCallbackString) {
+        val userID = firebaseAuth.uid
+        val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
+        ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                callback.onSuccess(p0)
+            }
+            override fun onCancelled(p0: DatabaseError) {
+                    ref.removeEventListener(this)
             }
         })
     }

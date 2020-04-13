@@ -81,4 +81,9 @@ internal abstract class Multibindingmodule{
     @IntoMap
     @ViewModelKey(NewMessageViewModel::class)
     abstract fun bindNewMessageViewModel(viewModel: NewMessageViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SettingsViewModel::class)
+    abstract fun bindSettingsViewModel(viewModel: SettingsViewModel): ViewModel
 }

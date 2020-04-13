@@ -92,8 +92,8 @@ class CommunityPosts : AppCompatActivity() {
                                     //this onClick listener is triggered when user hits button
                                     override fun onClick(pos: Int) {
 
-                                        val userkey: String? =
-                                            adapter.getUserKey(viewHolders)
+                                      //  val userkey: String? =
+                                      //      adapter.getUserKey(viewHolders)
 
                                         val authkey: String? =
                                             adapter.getAuthor(viewHolders)
@@ -108,7 +108,7 @@ class CommunityPosts : AppCompatActivity() {
                                         builder.setMessage("You won't see posts or comments from this user.")
                                         builder.setPositiveButton("BLOCK"
                                         ) { _: DialogInterface?, _: Int ->
-                                            myViewModel.blockUser(userkey!!)
+                                            myViewModel.blockUser(authkey!!)
                                             val toast = Toast.makeText(
                                                 this@CommunityPosts,
                                                 "This user has been blocked",

@@ -86,6 +86,11 @@ interface FirebaseResult {
     fun onSuccess(data: DataSnapshot, uid: String)
     fun onFailure(message: String)
 }
+
+interface FirebaseCallbackUserListFlow {
+    fun onFlow(flow: Flow<String>)
+}
+
 interface CommentListFromFlow {
     fun onList(list: List<Comment>)
 }

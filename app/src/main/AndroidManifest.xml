@@ -1,63 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.seniorproject">
+xmlns:tools="http://schemas.android.com/tools"
+package="com.example.seniorproject">
 
-    <uses-permission android:name="android.Manifest.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+<uses-permission android:name="android.Manifest.permission.READ_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <application
-        android:name=".Dagger.SeniorProjApp"
-        android:allowBackup="true"
-        android:fullBackupContent="@xml/backup_descriptor"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppThemeMain"
-        tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainForum.Settings" />
-        <activity
-            android:name=".MainForum.NewPost.NewPost"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".Messages.ChatLog"
-            android:windowSoftInputMode="adjustPan|stateVisible" />
-        <activity
-            android:name=".Messages.NewMessage"
-            android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".MainForum.Posts.EditProfileActivity" />
-        <activity android:name=".MainForum.Posts.CommunityPosts" />
-        <activity android:name=".MainForum.UserProfileActivity" />
-        <activity android:name=".MainForum.Posts.ClickedPost" />
-        <activity android:name=".MainForum.Posts.UpdatePost" />
-        <activity android:name=".MainForum.Posts.UpdateComment" />
-        <activity android:name=".search.SearchActivity"
-            android:windowSoftInputMode="adjustPan|stateVisible"/>
-        <activity
-            android:name=".MainForum.MainForum"
-            android:theme="@style/AppThemeFragment"
-            android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".Authentication.LoginActivity"
-            android:exported="true"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".Authentication.PasswordResetActivity"
-            android:exported="true"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
-            android:name=".Authentication.RegisterActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="adjustResize" />
-    </application>
+<application
+    android:name=".Dagger.SeniorProjApp"
+    android:allowBackup="true"
+    android:fullBackupContent="@xml/backup_descriptor"
+    android:icon="@mipmap/ic_launcher"
+    android:label="@string/app_name"
+    android:roundIcon="@mipmap/ic_launcher_round"
+    android:supportsRtl="true"
+    android:theme="@style/AppThemeMain"
+    tools:ignore="GoogleAppIndexingWarning">
+    <activity android:name=".MainForum.Settings" />
+    <activity
+        android:name=".MainForum.NewPost.NewPost"
+        android:windowSoftInputMode="adjustPan" />
+    <activity
+        android:name=".Messages.ChatLog"
+        android:windowSoftInputMode="adjustPan|stateVisible" />
+    <activity
+        android:name=".Messages.NewMessage"
+        android:windowSoftInputMode="adjustPan" />
+    <activity android:name=".MainForum.Posts.EditProfileActivity" />
+    <activity android:name=".MainForum.Posts.CommunityPosts" />
+    <activity android:name=".MainForum.UserProfileActivity" />
+    <activity android:name=".MainForum.Posts.ClickedPost" />
+    <activity android:name=".MainForum.Posts.UpdatePost" />
+    <activity android:name=".MainForum.Posts.UpdateComment" />
+    <activity android:name=".MainForum.UnblockUserActivity" />
+    <activity android:name=".search.SearchActivity"
+        android:windowSoftInputMode="adjustPan|stateVisible"/>
+    <activity
+        android:name=".MainForum.MainForum"
+        android:theme="@style/AppThemeFragment"
+        android:windowSoftInputMode="adjustPan">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+    <activity
+        android:name=".Authentication.LoginActivity"
+        android:exported="true"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:windowSoftInputMode="adjustResize" />
+    <activity
+        android:name=".Authentication.PasswordResetActivity"
+        android:exported="true"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+    <activity
+        android:name=".Authentication.RegisterActivity"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:windowSoftInputMode="adjustResize" />
+</application>
 
 </manifest>
