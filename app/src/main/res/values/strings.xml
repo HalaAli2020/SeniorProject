@@ -68,6 +68,12 @@
     <string name="enter_edited_comment">Enter edited comment…</string>
     <string name="enter_edited_text">Enter edited text…</string>
     <string name="enter_edited_title">Enter edited title…</string>
+    <string name="about">About</string>
+    <string name="display_name">Display Name</string>
+    <string name="username">username</string>
+    <string name="email_text">email</string>
+    <string name="add_a_bio">Add a bio...</string>
+    <string name="no_com">No Comments</string>
 
 
 </resources>

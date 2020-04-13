@@ -164,7 +164,7 @@ class CommentsListAdapter(
     //the functions below are used to get information about comments in the recyclerview
     fun removeItem(holder: RecyclerView.ViewHolder): String {
         val comment: Comment = Comments[holder.adapterPosition]
-        val commentkey: String? = comment.Classkey
+        val commentkey: String? = comment.classkey
         //returns comment classkey at selected position
         return commentkey!!
     }

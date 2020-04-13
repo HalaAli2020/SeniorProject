@@ -85,14 +85,15 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
         repository.newComment(pKey!!,comment, classkey!!, userID!!, crn!!)
     }
 
-    fun checkcomments() : Boolean
+    /*fun checkcomments() : Boolean
     {
         if(commentsList.size != -1)
         {
             return true
         }
         return false
-    }
+    }*/
+
     //calls corresponding function from post repository
     fun reportUserComment(accusedID: String, complaintext: String, crn: String, classkey: String, comKey: String){
         repository.reportUserComment(accusedID, complaintext, crn, classkey, comKey)

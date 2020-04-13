@@ -649,9 +649,9 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
 
 
 
-                            comment.Classkey = classKey
-                            comment.UserComkey = userKey
-                            comment.ProfileComKey = profileKey
+                            comment.classkey = classKey
+                            comment.userComkey = userKey
+                            comment.profileComKey = profileKey
                             comment.Postkey = postKey
 
                             //mapping comment values to database

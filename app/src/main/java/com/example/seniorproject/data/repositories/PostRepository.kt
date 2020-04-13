@@ -199,12 +199,12 @@ private fun getPostperclass(f : Int) : Int
 
                     newComment.let {
                         it.text = n.child("text").value.toString()
-                        it.Classkey = n.child("Classkey").value.toString()
+                        it.classkey = n.child("Classkey").value.toString()
                         it.PosterID = n.child("PosterID").value.toString()
                         it.Postkey = n.child("Postkey").value.toString()
-                        it.ProfileComKey = n.child("ProfileComKey").value.toString()
+                        it.profileComKey = n.child("ProfileComKey").value.toString()
                         it.Ptime = n.child("Ptime").value.toString()
-                        it.UserComkey = n.child("UserComkey").value.toString()
+                        it.userComkey = n.child("UserComkey").value.toString()
                         it.author = n.child("author").value.toString()
                         it.crn = n.child("crn").value.toString()
 
@@ -338,12 +338,12 @@ private fun getPostperclass(f : Int) : Int
                     val newComment = Comment()
                     newComment.let {
                         it.text = n.child("text").value.toString()
-                        it.Classkey = n.child("Classkey").value.toString()
+                        it.classkey = n.child("Classkey").value.toString()
                         it.PosterID = n.child("PosterID").value.toString()
                         it.Postkey = n.child("Postkey").value.toString()
-                        it.ProfileComKey = n.child("ProfileComKey").value.toString()
+                        it.profileComKey = n.child("ProfileComKey").value.toString()
                         it.Ptime = n.child("Ptime").value.toString()
-                        it.UserComkey = n.child("UserComkey").value.toString()
+                        it.userComkey = n.child("UserComkey").value.toString()
                         it.author = n.child("author").value.toString()
                         it.crn = n.child("crn").value.toString()
 
