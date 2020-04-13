@@ -353,10 +353,6 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
         })
     }
 
-    fun removeBlockedUser(userID: String){
-        Firebase.removeBlockedUser(userID)
-    }
-
 
     fun getUserProfileComments(userID: String, callbackComment: FirebaseData.FirebaseCallbackCommentFlow){
         Firebase.getUserProfileComments(userID, object: FirebaseCallbackComment{

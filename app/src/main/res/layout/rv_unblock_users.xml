@@ -46,7 +46,7 @@
             android:background="@drawable/circle_border"
             android:padding="2dp"
             android:textSize="10sp"
-            android:text="Unsubscribe"
+            android:text="Unblock"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

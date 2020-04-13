@@ -1,12 +1,15 @@
 package com.example.seniorproject.MainForum.Adapters
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.InjectorUtils
+import com.example.seniorproject.MainForum.UnblockUserActivity
+import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.viewModels.SettingsViewModel
@@ -24,7 +27,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import androidx.lifecycle.ViewModelProvider as ViewModelProvider1
 
-class BlockedUsersAdapter(context: Context, var blockedUsersList: List<String>) :
+class BlockedUsersAdapter(var context: Context, var blockedUsersList: List<String>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -44,19 +47,20 @@ class BlockedUsersAdapter(context: Context, var blockedUsersList: List<String>) 
         holder.itemView.blockedUserName.text = blockedUsersList[position]
 
         holder.itemView.Unblock.setOnClickListener {
-            //this firebase function will be shifted back into data layer, but is here now for testing purposes
             val userID = FirebaseAuth.getInstance().uid
             val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
             ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(p0: DataSnapshot) {
-                    if (p0.exists() == false) {
-                        Log.d("soupfire", "There are no blocked users to be removed!")
+                    if (!p0.exists()) {
                     }
                     if (p0.exists()) {
                         for (block in p0.children) {
                             if (block.value == holder.itemView.blockedUserName.text) {
                                 block.ref.removeValue()
                                 val toast = Toast.makeText(it.context, "This user is removed from your blocked list.", Toast.LENGTH_SHORT)
+                                val intent = Intent(context, UnblockUserActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                context.startActivity(intent)
                                 toast.show()
                             }
                         }

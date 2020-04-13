@@ -22,10 +22,6 @@ class SettingsViewModel @Inject constructor(private val repository: PostReposito
             }
         })
     }
-
-    fun removeBlockedUser(){
-        repository.removeBlockedUser("tina") //fixed for now, will be changed to dynamic
-    }
 }
 
 interface BlockedUserListCallback{

@@ -170,6 +170,11 @@ class MainForum : AppCompatActivity(),
                     startActivity(intent)
                     //open settings
                 }
+                R.id.nav_blocked_user_list -> {
+                    val intent = Intent(this, UnblockUserActivity::class.java)
+                    startActivity(intent)
+                    //open settings
+                }
                 R.id.nav_logout -> {
                     Toast.makeText(this, "User is Logged out.", Toast.LENGTH_LONG).show()
                     FirebaseAuth.getInstance().signOut()

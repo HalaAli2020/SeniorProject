@@ -8,27 +8,6 @@
     tools:context=".MainForum.Settings">
 
     <TextView
-        android:id="@+id/usersblocked"
-        style="@style/PrimaryText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingTop="16dp"
-        android:paddingEnd="16dp"
-        android:text="View Blocked Users"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="409dp"
-        android:layout_height="1dp"
-        android:layout_marginTop="34dp"
-        android:background="@color/blue_theme"
-        app:layout_constraintBottom_toTopOf="@+id/title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/usersblocked" />
-
-    <TextView
         android:id="@+id/title"
         style="@style/PrimaryText"
         android:layout_width="match_parent"

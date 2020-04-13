@@ -31,11 +31,6 @@ class Settings : AppCompatActivity() {
             val intent = Intent(this, MainForum::class.java)
             startActivity(intent)
         }
-
-        usersblocked.setOnClickListener {
-            val intent = Intent(this, UnblockUserActivity::class.java)
-            startActivity(intent)
-        }
     }
 
     fun OnRadioButtonClick() {
