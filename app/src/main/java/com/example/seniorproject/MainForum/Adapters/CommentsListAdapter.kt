@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.seniorproject.MainForum.Posts.CommunityPosts
 import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
 import com.example.seniorproject.data.models.Comment
@@ -22,13 +23,13 @@ import kotlinx.android.synthetic.main.rv_post_header.view.*
 
 class CommentsListAdapter(
     var mContext: Context,
-    var Comments: List<Comment>,
+    private var Comments: List<Comment>,
     var title: String,
     var text: String,
     var author: String,
     var crn: String,
-    var asUserID: String,
-    var ptime: String,
+    private var asUserID: String,
+    private var ptime: String,
     var uri: String
 
 ) :
@@ -64,7 +65,7 @@ class CommentsListAdapter(
 
     //returns the item count
     override fun getItemCount(): Int {
-        var size = 0
+        val size = 0
         if (!Comments.isNullOrEmpty()) {
             return Comments.size
         }
@@ -74,7 +75,7 @@ class CommentsListAdapter(
 
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        var params = holder.itemView.layoutParams as RecyclerView.LayoutParams
+        val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
         Log.d("CommentsAdapter:", "" + position)
         if (holder is CustomViewHoldersHeader) {
             //adds post information to the custom viewholder
@@ -92,6 +93,13 @@ class CommentsListAdapter(
             }
 
             holder.itemView.posts_timestamp.text = ptime
+            //clicking on the forum name links to the corresponding class forum
+            holder.itemView.community_name_TV.setOnClickListener{
+                val intentcom = Intent(mContext, CommunityPosts::class.java)
+                intentcom.putExtra("ClassName", crn)
+                mContext.startActivity(intentcom)
+            }
+
             //clicking on the authorname will redirect the user to that users profile
             holder.itemView.author_name_TV.setOnClickListener {
                 val intent = Intent(mContext, UserProfileActivity::class.java)
@@ -122,7 +130,7 @@ class CommentsListAdapter(
                                 //on block recreate the fragment
                             }
                         }
-                        if (check == true) {
+                        if (check) {
                             holder.itemView.comment_text.text = comment.text
                             holder.itemView.authcom.text = comment.author
                             holder.itemView.comment_timestamp.text = comment.Ptime

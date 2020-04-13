@@ -7,10 +7,14 @@ import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.Utils.FlowCallback
 import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.data.interfaces.*
-import com.example.seniorproject.data.models.*
+import com.example.seniorproject.data.models.Comment
+import com.example.seniorproject.data.models.Post
 import com.google.firebase.database.DataSnapshot
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,11 +36,11 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 /*This Function is called from getSubsP in HomeframentViewModel it uses the list of subs gotten for the current user to grab the recent posts from
 each class the user is subscribed to this uses coroutines */
     suspend fun getSubscribedPosts(value : List<String>) : Flow<Post> = flow {
-        var postL : MutableList<Post> = mutableListOf()
-        var limit = getPostperclass(value.size)
-        var onSuccessJob : Job? = null
+        val postL : MutableList<Post> = mutableListOf()
+        val limit = getPostperclass(value.size)
+        val onSuccessJob : Job? = null
 
-        var job = CoroutineScope(Dispatchers.IO).launch {
+        val job = CoroutineScope(Dispatchers.IO).launch {
             for (n in value)
             {
                 Firebase.getOneClass(n, object : FirebaseValuecallback
@@ -55,7 +59,7 @@ each class the user is subscribed to this uses coroutines */
 
                             for (n in data.children.reversed())
                             {
-                                var p = Post()
+                                val p = Post()
 
                                 p.let {
                                     it.title = n.child("title").getValue(String::class.java)
@@ -101,9 +105,9 @@ each class the user is subscribed to this uses coroutines */
 /*This function gets the users list of subs from the firebase database by using the FirebaseData function getUserSub  and then once all the values are gotten it will emit the results using kotlin flow to create a
 * cold flow pipeline so that the calling function getSubsP in HomeFragmentViewModel can then use those values to get the post for those specific classes */
    suspend fun getUsersSubs() : Flow<String> = flow {
-        var SubList : MutableList<String> = mutableListOf()
+        val subList : MutableList<String> = mutableListOf()
        var ob : Job? = null
-      var send = object : FirebaseValuecallback {
+      val send = object : FirebaseValuecallback {
            override fun onFailure() {
 
            }
@@ -117,27 +121,27 @@ each class the user is subscribed to this uses coroutines */
                val sublist = data.children
                for (x in sublist) {
                    Log.d("usersub", x.getValue(String::class.java)!!)
-                   SubList.add(x.getValue(String::class.java)!!)
+                   subList.add(x.getValue(String::class.java)!!)
 
                }
 
            }
        }
-      var job = CoroutineScope(Dispatchers.IO). launch {
+      val job = CoroutineScope(Dispatchers.IO). launch {
          var ob = Firebase.getUserSub(send)
 
           kotlinx.coroutines.delay(1000)
         }
        job.join()
-            Log.d("Before For", SubList.size.toString())
-            for (n in SubList) {
+            Log.d("Before For", subList.size.toString())
+            for (n in subList) {
                 Log.d("emitting", n)
                 emit(n)
             }
     }
 
 /*This function is used to find out how many posts per class the application should grab based on the number of communities the user is a part of  */
-    fun getPostperclass(f : Int) : Int
+private fun getPostperclass(f : Int) : Int
     {
         if(f <= 2)
         {
@@ -188,7 +192,7 @@ each class the user is subscribed to this uses coroutines */
             override fun onSuccess(data: DataSnapshot) {
                 val commdetail: Iterable<DataSnapshot> = data.children
                 val profileCommentList : MutableList<Comment> = mutableListOf()
-                var comment = Comment("no comment", "", "", "", "")
+                val comment = Comment("no comment", "", "", "", "")
                 profileCommentList.add(comment)
                 for(n in commdetail){
                     val newComment = Comment()

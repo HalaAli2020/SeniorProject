@@ -2,7 +2,6 @@ package com.example.seniorproject.search
 
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData

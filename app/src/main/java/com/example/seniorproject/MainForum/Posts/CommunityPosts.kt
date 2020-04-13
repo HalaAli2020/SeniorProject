@@ -3,13 +3,11 @@ package com.example.seniorproject.MainForum.Posts
 import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,8 +22,6 @@ import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.viewModels.CommunityPostViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_community_posts.*
-import kotlinx.android.synthetic.main.rv_post.view.*
-import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
 
 class CommunityPosts : AppCompatActivity() {
@@ -103,7 +99,7 @@ class CommunityPosts : AppCompatActivity() {
                                             adapter.getAuthor(viewHolders)
 
                                         //initialize builder
-                                        var builder = AlertDialog.Builder(
+                                        val builder = AlertDialog.Builder(
                                             this@CommunityPosts,
                                             R.style.AppTheme_AlertDialog
                                         )
@@ -113,7 +109,7 @@ class CommunityPosts : AppCompatActivity() {
                                         builder.setPositiveButton("BLOCK"
                                         ) { _: DialogInterface?, _: Int ->
                                             myViewModel.blockUser(userkey!!)
-                                            var toast = Toast.makeText(
+                                            val toast = Toast.makeText(
                                                 this@CommunityPosts,
                                                 "This user has been blocked",
                                                 Toast.LENGTH_SHORT
@@ -157,13 +153,13 @@ class CommunityPosts : AppCompatActivity() {
 
                                         val textkey: String? = adapter.getText(viewHolders)
 
-                                        var builder = AlertDialog.Builder(
+                                        val builder = AlertDialog.Builder(
                                             this@CommunityPosts,
                                             R.style.AppTheme_AlertDialog
                                         )
                                         //sets up alert dialog with following reasons user could choose from to explain why they are
                                         //reporting
-                                        var listreason = arrayOf(
+                                        val listreason = arrayOf(
                                             "This is spam",
                                             "This is abusive or harassing",
                                             "Other issues"
@@ -176,7 +172,7 @@ class CommunityPosts : AppCompatActivity() {
                                         }
                                         builder.setPositiveButton("SUBMIT"
                                         ) { _: DialogInterface?, _: Int ->
-                                            var toast = Toast.makeText(
+                                            val toast = Toast.makeText(
                                                 this@CommunityPosts,
                                                 "We've received your report.",
                                                 Toast.LENGTH_SHORT

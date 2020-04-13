@@ -73,7 +73,7 @@ class NewMessageAdapter(context: Context, private var UserList: List<User>) : Re
 
     //Display the search results
     fun onfilter(query: String?) {
-        var Nlist = mutableListOf<User>()
+        val nlist = mutableListOf<User>()
         if (query.isNullOrEmpty()) {
             filterlist = UserList as MutableList<User>
             notifyDataSetChanged()
@@ -83,10 +83,10 @@ class NewMessageAdapter(context: Context, private var UserList: List<User>) : Re
             for ((index, x) in UserList.withIndex()) {
                 // query.contains()
                 if (x.username!!.contains(query, true)) {
-                    Nlist.add(x)
+                    nlist.add(x)
                 }
             }
-            filterlist = Nlist
+            filterlist = nlist
             notifyDataSetChanged()
         }
 

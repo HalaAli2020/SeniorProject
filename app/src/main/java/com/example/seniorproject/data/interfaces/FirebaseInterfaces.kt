@@ -1,9 +1,7 @@
 package com.example.seniorproject.data.interfaces
 
-import androidx.lifecycle.MutableLiveData
 import com.example.seniorproject.data.models.*
 import com.google.firebase.database.DataSnapshot
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.Flow
 
 /* This is a file for all the interfaces used in the application for callbacks */
@@ -19,7 +17,7 @@ interface FirebaseValue{
     suspend fun onSuccess(data : DataSnapshot)
 }
 
-interface listActivitycallback{
+interface ListActivitycallback{
     fun onCallback(list : List<Post>)
 }
 interface FirebaseCallback {

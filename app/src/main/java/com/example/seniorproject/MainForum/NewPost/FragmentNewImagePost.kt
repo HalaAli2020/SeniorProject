@@ -12,12 +12,10 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.MainForum
-import com.example.seniorproject.MainForum.Fragments.FragmentList
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.CheckCallback
 import com.example.seniorproject.viewModels.NewPostFragmentViewModel
@@ -77,13 +75,13 @@ class FragmentNewImagePost : Fragment() {
                 .into(img)
 //text post is created on button clock text and title fields have text are filled and the user is subscribed to the forum
            view!!.new_image_post.setOnClickListener{
-                   var classname = view!!.spinner3.selectedItem.toString()
+                   val classname = view!!.spinner3.selectedItem.toString()
                    viewModel.checkSubscriptions(classname, object : CheckCallback {
                        override fun check(chk: Boolean) {
                            /*check varible checks is user is subscribed, the logic for this can be found in the viewmodel
                             and the database query can be found in the corresponding checksubscription firebase function
                             */
-                           if (view!!.img_post_title.text.isNotBlank() && view!!.img_post_text.text.isNotBlank() && chk == true) {
+                           if (view!!.img_post_title.text.isNotBlank() && view!!.img_post_text.text.isNotBlank() && chk) {
                                viewModel.saveNewImgPosttoUser(view!!.img_post_title.text.toString(), view!!.img_post_text.text.toString(), classname, selectedPhotoUri!!, true)
                                Toast.makeText(context, "Your post has been successfully posted!", Toast.LENGTH_LONG).show()
                                val intent = Intent(context, MainForum::class.java)
@@ -93,7 +91,7 @@ class FragmentNewImagePost : Fragment() {
                            else if ((view!!.img_post_title.text.isNullOrBlank() || view!!.img_post_text.text.isNullOrBlank())) {
                                Toast.makeText(context, "please enter a title and post body", Toast.LENGTH_LONG).show()
                            }
-                           else if (view!!.img_post_title.text.isNotBlank() && view!!.img_post_text.text.isNotBlank() && chk == false) {
+                           else if (view!!.img_post_title.text.isNotBlank() && view!!.img_post_text.text.isNotBlank() && !chk) {
                                Toast.makeText(context, "Subscribe to $classname in order to create a post", Toast.LENGTH_SHORT).show()
                            }
                        }

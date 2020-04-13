@@ -26,7 +26,7 @@ class Settings : AppCompatActivity() {
         this.title = "Settings"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        OnRadioButtonClick()
+        onRadioButtonClick()
         setRadioButton()
         //this is triggered once you change the theme and pick an option
         nextActivity.setOnClickListener {
@@ -38,7 +38,7 @@ class Settings : AppCompatActivity() {
 
     //user has option of light mode, night mode, or to follow the system of whatever mode is currently running on the settings of your
     //mobile device
-    fun OnRadioButtonClick() {
+    fun onRadioButtonClick() {
         themeGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.themeLight -> setAppTheme(AppCompatDelegate.MODE_NIGHT_NO, THEME_LIGHT)

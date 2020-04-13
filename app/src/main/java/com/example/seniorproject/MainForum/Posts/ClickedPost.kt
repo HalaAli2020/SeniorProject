@@ -13,7 +13,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.DaggerAppComponent
@@ -26,13 +25,11 @@ import com.example.seniorproject.Utils.SwipeHelper
 import com.example.seniorproject.data.interfaces.CommentListFromFlow
 import com.example.seniorproject.data.interfaces.FirebaseCallbackNoComments
 import com.example.seniorproject.data.models.Comment
-import com.example.seniorproject.data.repositories.PostRepository
 import com.example.seniorproject.databinding.ActivityClickedPostBinding
 import com.example.seniorproject.viewModels.ClickedPostViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_clicked_post.*
 import javax.inject.Inject
-import kotlin.reflect.typeOf
 
 class ClickedPost : AppCompatActivity() {
 
@@ -79,11 +76,11 @@ class ClickedPost : AppCompatActivity() {
             override fun onEmpty(nocomlist: Boolean) {
                 if(nocomlist){
                     //load adapter with empty comment for recyclerview layout to load
-                    var comment = Comment("no comment", "", "", "", "")
-                    var Comments: ArrayList<Comment> = arrayListOf()
-                    Comments.add(comment)
+                    val comment = Comment("no comment", "", "", "", "")
+                    val comments: ArrayList<Comment> = arrayListOf()
+                    comments.add(comment)
                     nocommadapter = CommentsListAdapter(
-                        this@ClickedPost, Comments, title, text, author, crn,
+                        this@ClickedPost, comments, title, text, author, crn,
                         intent.getStringExtra("UserID").toString(), ptime, uri
                     )
                     comment_RecyclerView.adapter = nocommadapter
@@ -250,7 +247,7 @@ class ClickedPost : AppCompatActivity() {
                                     })
                                 } else if (Comment_textbox.text.isNullOrBlank()) {
                                     Toast.makeText(this@ClickedPost, "you cannot post an empty comment", Toast.LENGTH_LONG).show()
-                                } else if (Comment_textbox.text.isNotBlank() && chk == false) {
+                                } else if (Comment_textbox.text.isNotBlank() && !chk) {
                                     Toast.makeText(this@ClickedPost, "Subscribe to $crn in order to create a post", Toast.LENGTH_SHORT).show()
                                 }
                             }

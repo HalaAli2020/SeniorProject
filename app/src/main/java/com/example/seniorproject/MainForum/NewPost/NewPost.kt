@@ -1,10 +1,8 @@
 package com.example.seniorproject.MainForum.NewPost
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.seniorproject.MainForum.MainForum
 import com.example.seniorproject.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 

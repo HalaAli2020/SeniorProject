@@ -4,10 +4,8 @@ package com.example.seniorproject.viewModels
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.seniorproject.Utils.CheckCallback
 import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.Utils.PostListener
-import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.data.interfaces.*
 import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.Post
@@ -22,7 +20,7 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(private val repository: PostRepository) : ViewModel(){
 
     private var postKey : String? = null
-    val commentListener : PostListener? = null
+    private val commentListener : PostListener? = null
     var otherEmail : String = "no email available"
     var currentUsername : String = "no username available"
     var otherBio : String = "no bio available"
@@ -35,7 +33,7 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
         repository.getUserProfilePosts(UserID, object: FirebaseCallbackPostFlow {
             override fun onCallback(flow: Flow<Post>) {
                 viewModelScope.launch {
-                    var postFlow = flow.toList()
+                    val postFlow = flow.toList()
                     callback.onList(postFlow)
                 }
             }
@@ -50,7 +48,7 @@ class ProfileViewModel @Inject constructor(private val repository: PostRepositor
         repository.getUserProfileComments(UserID, object: FirebaseCallbackCommentFlow {
             override fun onCallback(flow: Flow<Comment>) {
                 viewModelScope.launch {
-                    var commentflow = flow.toList()
+                    val commentflow = flow.toList()
                     callback.onList(commentflow)
                 }
             }

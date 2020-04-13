@@ -14,7 +14,7 @@ import com.example.seniorproject.data.Firebase.FirebaseData
 import com.example.seniorproject.data.models.Comment
 import kotlinx.android.synthetic.main.rv_post_comment.view.*
 
-class ProfileCommAdapter(context: Context, var Comments: List<Comment>) :
+class ProfileCommAdapter(context: Context, private var Comments: List<Comment>) :
     RecyclerView.Adapter<CustomViewHolders>() {
     val mContext: Context = context
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolders {
@@ -25,7 +25,7 @@ class ProfileCommAdapter(context: Context, var Comments: List<Comment>) :
     }
 
     override fun getItemCount(): Int {
-        var size = 0
+        val size = 0
         if (!Comments.isNullOrEmpty()) {
             return Comments.size
         }

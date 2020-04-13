@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.rv_post.view.post_title
 import kotlinx.android.synthetic.main.rv_post.view.username
 import kotlinx.android.synthetic.main.rv_post_image.view.*
 
-class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int) :
+class PostAdapter(context: Context, private var savedPostList: List<Post>, var type: Int) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val mContext: Context = context
 
@@ -65,7 +65,7 @@ class PostAdapter(context: Context, var savedPostList: List<Post>, var type: Int
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        var params = holder.itemView.layoutParams as RecyclerView.LayoutParams
+        val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
         val post: Post = savedPostList[position]
         if (holder is PostImageViewHolders) {
             val post: Post = savedPostList[position]
