@@ -452,6 +452,8 @@ private fun getPostperclass(f : Int) : Int
     fun checkSubscription(className: String, callbacksubBool: FirebaseCallbacksubBool) =
         Firebase.checkSubscription(className,callbacksubBool)
 
+    //calls corresponding function from firebase file
+    fun unblockUser(username : String ) = Firebase.unblockUser(username)
 
 
     companion object {

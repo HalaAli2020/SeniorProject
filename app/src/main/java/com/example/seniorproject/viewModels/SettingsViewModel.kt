@@ -23,6 +23,7 @@ class SettingsViewModel @Inject constructor(private val repository: PostReposito
             }
         })
     }
+    fun unblockUser(username : String ) = repository.unblockUser(username)
 }
 
 interface BlockedUserListCallback{

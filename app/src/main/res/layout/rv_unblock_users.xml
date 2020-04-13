@@ -30,27 +30,8 @@
             android:layout_marginStart="20dp"
             android:textColor="@color/TextColor"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/Unblock"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/blockedUserImage"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/Unblock"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="80dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginEnd="12dp"
-            android:layout_marginBottom="6dp"
-            android:background="@drawable/circle_border"
-            android:padding="2dp"
-            android:textSize="10sp"
-            android:text="Unblock"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

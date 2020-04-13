@@ -765,6 +765,29 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
         })
     }
 
+    fun unblockUser(username : String ){
+        val userID = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
+        ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                if (!p0.exists()) {
+                }
+                if (p0.exists()) {
+                    for (block in p0.children) {
+                        if (block.value == username) {
+                            block.ref.removeValue()
+                        }
+                    }
+                }
+                ref.removeEventListener(this)
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                ref.removeEventListener(this)
+            }
+        })
+    }
+
     //blocking user functionality, adds blocked userID in list stored under current user.
     fun blockUser(UserID: String) {
 

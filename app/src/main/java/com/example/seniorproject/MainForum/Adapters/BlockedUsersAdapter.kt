@@ -35,33 +35,10 @@ class BlockedUsersAdapter(var context: Context, var blockedUsersList: List<Strin
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         holder.itemView.blockedUserName.text = blockedUsersList[position]
 
-        holder.itemView.Unblock.setOnClickListener {
-            val userID = FirebaseAuth.getInstance().uid
-            val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
-            ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(p0: DataSnapshot) {
-                    if (!p0.exists()) {
-                    }
-                    if (p0.exists()) {
-                        for (block in p0.children) {
-                            if (block.value == holder.itemView.blockedUserName.text) {
-                                block.ref.removeValue()
-                                val toast = Toast.makeText(it.context, "This user is removed from your blocked list.", Toast.LENGTH_SHORT)
-                                val intent = Intent(context, UnblockUserActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                context.startActivity(intent)
-                                toast.show()
-                            }
-                        }
-                    }
-                    ref.removeEventListener(this)
-                }
-
-                override fun onCancelled(p0: DatabaseError) {
-                    ref.removeEventListener(this)
-                }
-            })
-        }
     }
-
+    
+    fun removeItem(holder: RecyclerView.ViewHolder): String {
+        val user: String = blockedUsersList[holder.adapterPosition]
+        return user
+    }
 }
