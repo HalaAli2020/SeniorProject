@@ -21,6 +21,7 @@ import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
 import com.example.seniorproject.MainForum.Adapters.PostAdapter
 import com.example.seniorproject.MainForum.Adapters.PostImageViewHolders
 import com.example.seniorproject.MainForum.Posts.UpdatePost
+import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
 import com.example.seniorproject.Utils.ProfileButton
@@ -133,6 +134,9 @@ class ProfilePostFragment : Fragment() {
                                         builder.setPositiveButton("DELETE"
                                         ) { _: DialogInterface?, _: Int ->
                                             myViewModel.deletePost(postkey!!, crnkey!!, userkey!!)
+                                            val intent = Intent(view?.context, UserProfileActivity::class.java)
+                                            //restarts user profile activity
+                                            startActivity(intent)
                                         }
                                         builder.setNegativeButton("CANCEL"
                                         ) { _: DialogInterface?, _: Int ->

@@ -20,6 +20,7 @@ import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
 import com.example.seniorproject.MainForum.Adapters.ProfileCommAdapter
 import com.example.seniorproject.MainForum.Posts.UpdateComment
+import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
 import com.example.seniorproject.Utils.ProfileButton
@@ -135,6 +136,10 @@ class ProfileCommentFragment : Fragment() {
                                             classprofilekey!!,
                                             userkey!!
                                         )
+                                        val intent = Intent(view?.context, UserProfileActivity::class.java)
+                                        //restarts user profile activity
+                                        startActivity(intent)
+
                                     }
                                     builder.setNegativeButton("CANCEL"
                                     ) { _: DialogInterface?, _: Int ->
