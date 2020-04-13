@@ -51,6 +51,7 @@ class UpdateComment  : AppCompatActivity() {
             if (it == true ){
                 Toast.makeText(this , "Your comment has been successfully changed!", Toast.LENGTH_LONG).show()
                 val intent = Intent(this, UserProfileActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 startActivity(intent)
             }
             else if (it == false)
