@@ -48,11 +48,11 @@ class HomeAdapter(context: Context, private var savedPosts: List<Post>, var type
 
         if (viewType == 1) {
             val cellForRow = layoutInflater.inflate(R.layout.rv_post_image, parent, false)
-            return PostListImageViewHolders(cellForRow)
+            return PostImageViewHolders(cellForRow)
             //inflate and show image cardview
         }else {
             val cellForRow = layoutInflater.inflate(R.layout.rv_post, parent, false)
-            return CustomListViewHolders(cellForRow)
+            return CustomViewHolders(cellForRow)
             //inflate and show text cardview
         }
 
@@ -70,7 +70,7 @@ class HomeAdapter(context: Context, private var savedPosts: List<Post>, var type
         val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
         //declare parameter variable later user for blocked users
         val post: Post = savedPosts[position]
-        if (holder is PostListImageViewHolders) {
+        if (holder is PostImageViewHolders) {
             val post: Post = savedPosts[position]
             val userID = FirebaseAuth.getInstance().uid
              //set text and image views of the image post cardview

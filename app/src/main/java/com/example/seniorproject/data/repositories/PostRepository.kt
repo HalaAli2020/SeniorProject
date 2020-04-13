@@ -325,8 +325,8 @@ private fun getPostperclass(f : Int) : Int
     }
 
 
-    fun getBlockedUsers(callback: FirebaseData.FirebaseCallbackUserListFlow){
-        Firebase.getBlockedUsers(object: PostRepository.FirebaseCallbackString{
+    fun getBlockedUsers(callback: FirebaseCallbackUserListFlow){
+        Firebase.getBlockedUsers(object: FirebaseCallbackString{
             override fun onStart() {
             }
 
@@ -339,14 +339,14 @@ private fun getPostperclass(f : Int) : Int
                     blockedUserList.add(block.value as String)
                 }
                 var listCor = blockedUserList.asFlow()
-                callback.onCallback(listCor)
+                callback.onFlow(listCor)
             }
 
         })
     }
 
 
-    fun getUserProfileComments(userID: String, callbackComment: FirebaseData.FirebaseCallbackCommentFlow){
+    fun getUserProfileComments(userID: String, callbackComment: FirebaseCallbackCommentFlow){
         Firebase.getUserProfileComments(userID, object: FirebaseCallbackComment{
             override fun onFailure() {}
 

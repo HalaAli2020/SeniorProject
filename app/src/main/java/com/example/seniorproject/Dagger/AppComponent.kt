@@ -8,6 +8,7 @@ import com.example.seniorproject.MainForum.MainForum
 import com.example.seniorproject.MainForum.NewPost.FragmentNewImagePost
 import com.example.seniorproject.MainForum.NewPost.FragmentNewPost
 import com.example.seniorproject.MainForum.Posts.*
+import com.example.seniorproject.MainForum.UnblockUserActivity
 import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.Messages.ChatLog
 import com.example.seniorproject.Messages.FragmentLatestMessages
@@ -46,5 +47,6 @@ interface AppComponent {
     fun inject(activity: ChatLog)
     fun inject(activity: NewMessage)
     fun inject(fragment: FragmentLatestMessages)
+    fun inject(activity: UnblockUserActivity)
 
 }

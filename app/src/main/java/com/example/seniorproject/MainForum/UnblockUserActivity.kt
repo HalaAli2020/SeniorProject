@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.seniorproject.Dagger.InjectorUtils
+import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.Adapters.BlockedUsersAdapter
 import com.example.seniorproject.MainForum.Adapters.CommentsListAdapter
 import com.example.seniorproject.MainForum.Adapters.PostAdapter
@@ -33,23 +33,28 @@ class UnblockUserActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_unblock_users)
 
-        val factory = InjectorUtils.provideSettingsViewModelFactory()
+        DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProvider(this, factory).get(SettingsViewModel::class.java)
 
         myViewModel.getBlockedUsersList(object: BlockedUserListCallback{
             override fun onList(list: List<String>) {
-
-                blocked_list_recyclerview.layoutManager = LinearLayoutManager(applicationContext)
-                adapter = BlockedUsersAdapter(applicationContext, list)
-                blocked_list_recyclerview.adapter = adapter
-
-                refreshViewBlockedUsers.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(applicationContext, R.color.blue_theme))
-                refreshViewBlockedUsers.setColorSchemeColors(ContextCompat.getColor(applicationContext, R.color.white))
-
-                refreshViewBlockedUsers.setOnRefreshListener {
-                    refreshViewBlockedUsers.isRefreshing = false
+                if(list.isEmpty()){
+                    val toast = Toast.makeText(applicationContext, "You have no blocked users", Toast.LENGTH_SHORT)
+                    toast.show()
+                }
+                else{
+                    blocked_list_recyclerview.layoutManager = LinearLayoutManager(applicationContext)
                     adapter = BlockedUsersAdapter(applicationContext, list)
                     blocked_list_recyclerview.adapter = adapter
+
+                    refreshViewBlockedUsers.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(applicationContext, R.color.blue_theme))
+                    refreshViewBlockedUsers.setColorSchemeColors(ContextCompat.getColor(applicationContext, R.color.white))
+
+                    refreshViewBlockedUsers.setOnRefreshListener {
+                        refreshViewBlockedUsers.isRefreshing = false
+                        adapter = BlockedUsersAdapter(applicationContext, list)
+                        blocked_list_recyclerview.adapter = adapter
+                    }
                 }
             }
         })

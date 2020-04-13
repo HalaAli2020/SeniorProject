@@ -7,6 +7,7 @@ import com.example.seniorproject.Utils.Callback
 import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.data.interfaces.*
 import com.example.seniorproject.data.models.*
+import com.example.seniorproject.data.repositories.PostRepository
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
@@ -775,6 +776,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
                     ref.child("BlockedUsers").push().setValue(UserID)
                 }
                 if (p0.exists()) {
+                    var blockedIDNotExist = false
                     for (block in p0.children) {
                         if (block.value == UserID) {
 
@@ -797,7 +799,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
         })
     }
 
-    fun getBlockedUsers(callback: PostRepository.FirebaseCallbackString) {
+    fun getBlockedUsers(callback: FirebaseCallbackString) {
         val userID = firebaseAuth.uid
         val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
         ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent(object : ValueEventListener {

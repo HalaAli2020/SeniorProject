@@ -43,11 +43,11 @@ class PostAdapter(context: Context, private var savedPostList: List<Post>, var t
 
         if (viewType == 1) {
             val cellForRow = layoutInflater.inflate(R.layout.rv_post_image, parent, false)
-            return PostListImageViewHolders(cellForRow)
+            return PostImageViewHolders(cellForRow)
         }
 
         val cellForRow = layoutInflater.inflate(R.layout.rv_post, parent, false)
-        return CustomListViewHolders(cellForRow)
+        return CustomViewHolders(cellForRow)
     }
 
     override fun getItemCount(): Int {
@@ -67,7 +67,7 @@ class PostAdapter(context: Context, private var savedPostList: List<Post>, var t
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
         val post: Post = savedPostList[position]
-        if (holder is PostListImageViewHolders) {
+        if (holder is PostImageViewHolders) {
             val post: Post = savedPostList[position]
             holder.itemView.username.text = post.author
             holder.itemView.post_timestamp.text = post.Ptime

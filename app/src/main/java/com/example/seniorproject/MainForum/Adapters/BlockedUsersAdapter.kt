@@ -2,30 +2,19 @@ package com.example.seniorproject.MainForum.Adapters
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.UnblockUserActivity
-import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
-import com.example.seniorproject.data.models.Post
-import com.example.seniorproject.viewModels.SettingsViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.rv_unblock_users.*
 import kotlinx.android.synthetic.main.rv_unblock_users.view.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import javax.inject.Inject
-import androidx.lifecycle.ViewModelProvider as ViewModelProvider1
+
 
 class BlockedUsersAdapter(var context: Context, var blockedUsersList: List<String>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -33,7 +22,7 @@ class BlockedUsersAdapter(var context: Context, var blockedUsersList: List<Strin
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val cellForRow = layoutInflater.inflate(R.layout.rv_unblock_users, parent, false)
-        return CustomListViewHolders(cellForRow)
+        return CustomViewHolders(cellForRow)
     }
 
     override fun getItemCount(): Int {
