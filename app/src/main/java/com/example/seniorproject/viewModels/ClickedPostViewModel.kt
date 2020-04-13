@@ -69,7 +69,16 @@ class ClickedPostViewModel @Inject constructor(private val repository : PostRepo
     }
     //calls corresponding function from post repository
     fun editComment(){
-        repository.editNewComment(comuserid!!, usercomkey!!, comment!!, usercrn!!, postukey!!)
+        if (comment.isNullOrBlank()){
+            boolcom.value = false
+            return
+        }
+        else
+        {
+            repository.editNewComment(comuserid!!, usercomkey!!, comment!!, usercrn!!, postukey!!)
+            boolcom.value = true
+            return
+        }
     }
 
 /* This function is called when a user has created a new comment it will check to make sure it has the correct data in the

@@ -168,7 +168,7 @@ class ClickedPost : AppCompatActivity() {
                                                         )
 
                                                         buffer.add(
-                                                            ProfileButton(applicationContext, "Report Post", 30, 0, Color.parseColor
+                                                            ProfileButton(applicationContext, "Report Comment", 30, 0, Color.parseColor
                                                                 ("#D3D3D3"), object : ButtonClickListener {
                                                                 override fun onClick(pos: Int) {
                                                                     /*the following information is collected from the recyclerview for the report post
@@ -359,7 +359,7 @@ class ClickedPost : AppCompatActivity() {
                                         )
 
                                         buffer.add(
-                                            ProfileButton(applicationContext, "Report Post", 30, 0, Color.parseColor
+                                            ProfileButton(applicationContext, "Report Comment", 30, 0, Color.parseColor
                                                 ("#D3D3D3"), object : ButtonClickListener {
                                                 override fun onClick(pos: Int) {
                                                     /*the following information is collected from the recyclerview for the report post

@@ -23,7 +23,16 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
 
     //calls corresponding function from post repository takes binded variable information from edit xml file
     fun editPost(){
-        repository.editPost(crn!!, postKey!!, ctext!!, ctitle!!, textPost!!, titlePost!!, userID!!)
+        if (titlePost.isNullOrBlank() || textPost.isNullOrBlank()){
+            bool.value = false
+            return
+        }
+        else
+        {
+            repository.editPost(crn!!, postKey!!, ctext!!, ctitle!!, textPost!!, titlePost!!, userID!!)
+            bool.value = true
+            return
+        }
     }
 
     //takes classname and searches for a match in the users subscriptions
