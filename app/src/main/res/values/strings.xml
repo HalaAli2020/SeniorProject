@@ -35,8 +35,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="comment">Comment</string>
     <string name="add_a_comment">Add a comment</string>
-    <string name="add_new_bio">Add new Bio</string>
-    <string name="done">DONE</string>
+    <string name="add_new_bio">Add a short description</string>
+    <string name="done">Save</string>
     <string name="login">LOGIN</string>
     <string name="login_lowercase">Login</string>
     <string name="register_for_an_account">Register for an account</string>
@@ -53,16 +53,27 @@
     <string name="enter_a_title">Enter a title…</string>
     <string name="enter_some_text">Enter some text…</string>
     <string name="enter_message">Enter message…</string>
-    <string name="username">Username</string>
-    <string name="latest_message">Latest Message</string>
     <string name="posts_">Posts</string>
     <string name="comments">Comments</string>
-    <string name="search">search</string>
     <string name="enter_new_displayname">Enter new displayname</string>
     <string name="profile_image">profile image</string>
     <string name="post_image">post image</string>
     <string name="post">Post</string>
     <string name="arrow">➤</string>
+    <string name="system_theme">System Theme</string>
+    <string name="light_theme">Light Theme</string>
+    <string name="dark_theme">Dark Theme</string>
+    <string name="set_theme">Set Theme</string>
+    <string name="themes">Themes</string>
+    <string name="enter_edited_comment">Enter edited comment…</string>
+    <string name="enter_edited_text">Enter edited text…</string>
+    <string name="enter_edited_title">Enter edited title…</string>
+    <string name="about">About</string>
+    <string name="display_name">Display Name</string>
+    <string name="username">username</string>
+    <string name="email_text">email</string>
+    <string name="add_a_bio">Add a bio...</string>
+    <string name="no_com">No Comments</string>
 
 
 </resources>

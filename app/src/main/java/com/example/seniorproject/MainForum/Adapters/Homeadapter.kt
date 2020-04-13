@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.rv_post.view.post_title
 import kotlinx.android.synthetic.main.rv_post.view.username
 import kotlinx.android.synthetic.main.rv_post_image.view.*
 
-class HomeAdapter(context: Context, var savedPosts: List<Post>, var type: Int) :
+class HomeAdapter(context: Context, private var savedPosts: List<Post>, var type: Int) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val mContext: Context = context
 
@@ -67,7 +67,7 @@ class HomeAdapter(context: Context, var savedPosts: List<Post>, var type: Int) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        var params = holder.itemView.layoutParams as RecyclerView.LayoutParams
+        val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
         //declare parameter variable later user for blocked users
         val post: Post = savedPosts[position]
         if (holder is PostListImageViewHolders) {

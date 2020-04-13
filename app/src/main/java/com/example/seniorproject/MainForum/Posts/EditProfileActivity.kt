@@ -9,12 +9,10 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.seniorproject.Dagger.DaggerAppComponent
-import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.EmailCallback
@@ -36,6 +34,7 @@ class EditProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         //setting actionbar title
         val actionbar = supportActionBar
@@ -43,7 +42,7 @@ class EditProfileActivity : AppCompatActivity() {
 
         //initalization of the viewmodel and dagger app component
         DaggerAppComponent.create().inject(this)
-        val factory = InjectorUtils.provideProfileViewModelFactory()
+
          myViewModel = ViewModelProvider(this,factory).get(ProfileViewModel::class.java)
 
         //initialization of binding variable, binded variables are located in the corresponding XML file
@@ -57,6 +56,7 @@ class EditProfileActivity : AppCompatActivity() {
             }
         })
 
+        //sets data binding variable in xml to this view model
         binding.profileEditViewModel = myViewModel
         binding.lifecycleOwner = this
 
@@ -94,9 +94,12 @@ class EditProfileActivity : AppCompatActivity() {
 
 
             val intent = Intent(this, UserProfileActivity::class.java)
+
             val iD = FirebaseAuth.getInstance().currentUser?.uid
             intent.putExtra("UserID",iD).also {
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(it)
+                finish()
             }
         }
     }
@@ -106,7 +109,7 @@ class EditProfileActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 0 && resultCode == Activity.RESULT_OK && data !=null)
         {
-            //choosing and saving new image
+            //choosing and saving new image using Glide library
             val img : ImageButton = findViewById(R.id.img_button)
 
             selectedPhotoUri= data.data
@@ -120,8 +123,14 @@ class EditProfileActivity : AppCompatActivity() {
                 .apply(RequestOptions().circleCrop())//4
                 .into(img)
 
+            //saves profile image to database
             myViewModel.uploadUserProfileImage(selectedPhotoUri ?: Uri.EMPTY)
 
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }

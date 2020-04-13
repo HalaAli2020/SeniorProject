@@ -12,6 +12,8 @@ class NewPost : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_post)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
 //initialization of post type navigation bar
         val bottomNavigation: BottomNavigationView = findViewById(R.id.post_bottom_navigation)
 //text post fragment will show up first
@@ -40,4 +42,8 @@ class NewPost : AppCompatActivity() {
         fragmentTransaction.commit()
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
 }

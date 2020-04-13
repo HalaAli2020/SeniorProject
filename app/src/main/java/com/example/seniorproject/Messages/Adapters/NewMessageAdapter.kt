@@ -14,13 +14,10 @@ import com.example.seniorproject.R
 import com.example.seniorproject.data.models.User
 import kotlinx.android.synthetic.main.m_rv_new_message.view.*
 
+//Display Users to Message on NewMessage.kt
+class NewMessageAdapter(context: Context, private var UserList: List<User>) : RecyclerView.Adapter<UserListHolder>() {
 
-class NewMessageAdapter(
-    context: Context,
-    private var UserList: List<User>
-) :
-    RecyclerView.Adapter<UserListHolder>() {
-
+    //Initialized Variables
     val mContext: Context = context
     private var filterlist : MutableList<User> = UserList as MutableList<User>
 
@@ -30,28 +27,28 @@ class NewMessageAdapter(
         val USER_PROF = "USER_PROF"
     }
 
+    //Display using new message format for RecyclerView
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserListHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val cellForRow = layoutInflater.inflate(R.layout.m_rv_new_message, parent, false)
         return UserListHolder(cellForRow)
     }
 
+    //Find item count
     override fun getItemCount(): Int {
-
-        if (!filterlist.isNullOrEmpty()) {
+        if (!filterlist.isNullOrEmpty())
             return filterlist.size
-        }
-
         return 0
     }
 
+    //Bind data of new messages to the layout and set an OnClickListener for each one
     override fun onBindViewHolder(holder: UserListHolder, position: Int) {
         val user: User = filterlist[position]
 
-        holder.itemView.usernameTextview.text = user.username ?: "no username"
+        holder.itemView.usernameTextview.text = user.username ?: ""
         Log.d("NewMessageAdapter", user.username)
 
-        if (user.profileImageUrl.toString().isNullOrBlank() || user.profileImageUrl.toString() == "null") {
+        if (user.profileImageUrl.toString().isBlank() || user.profileImageUrl.toString() == "null") {
             Glide.with(mContext) //1
                 .load(R.drawable.ic_account_circle_blue_24dp)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -74,8 +71,9 @@ class NewMessageAdapter(
         }
     }
 
+    //Display the search results
     fun onfilter(query: String?) {
-        var Nlist = mutableListOf<User>()
+        val nlist = mutableListOf<User>()
         if (query.isNullOrEmpty()) {
             filterlist = UserList as MutableList<User>
             notifyDataSetChanged()
@@ -85,10 +83,10 @@ class NewMessageAdapter(
             for ((index, x) in UserList.withIndex()) {
                 // query.contains()
                 if (x.username!!.contains(query, true)) {
-                    Nlist.add(x)
+                    nlist.add(x)
                 }
             }
-            filterlist = Nlist
+            filterlist = nlist
             notifyDataSetChanged()
         }
 

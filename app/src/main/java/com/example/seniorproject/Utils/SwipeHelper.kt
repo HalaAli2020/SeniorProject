@@ -14,20 +14,28 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
+/*
+* This abstract class was designed to complete the swiping functionality for the posts and comments using an itemTouchHelper callback.
+* This was originally in the views, but a need to isolate them and create a helper function, so that multiple views can reference the
+* same itemtouch helper and to avoid code duplication across many views.
+* */
 abstract class SwipeHelper(context: Context, private val recyclerView: RecyclerView, private var buttonWidth: Int):
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+    //itemtouchhelper left means that you can only drag the swipe left
 
+    //abstract function that will be implemented across community posts, clicked posts, and both fragments in user profile
+    //initalizes profile buttons
     abstract fun initButton(viewHolders: RecyclerView.ViewHolder, buffer: MutableList<ProfileButton>)
 
     private lateinit var gestureDetector: GestureDetector
     private lateinit var buttonQueue: LinkedList<Int>
 
-    var buttonBuffer: MutableMap<Int, MutableList<ProfileButton>>
+    private var buttonBuffer: MutableMap<Int, MutableList<ProfileButton>>
     private var buttonList: MutableList<ProfileButton>? = null
-    var swipePosition = -1
-    var swipeThreshold =0.5f
+    private var swipePosition = -1
+    private var swipeThreshold =0.5f
 
-
+    //detects gestures of swiping. swiping cannot be tapped upwards to initialize. they are clicked with ontouchlistener
     private val gestureListener = object: GestureDetector.SimpleOnGestureListener(){
         override fun onSingleTapUp(e: MotionEvent?): Boolean {
             for(button in buttonList!!)
@@ -39,11 +47,13 @@ abstract class SwipeHelper(context: Context, private val recyclerView: RecyclerV
         }
     }
 
+
     private val onTouchListener = View.OnTouchListener{ _, motionEvent ->
         if(swipePosition < 0) return@OnTouchListener false
         val point= Point (motionEvent.rawX.toInt(), motionEvent.rawY.toInt())
         val swipeViewHolder = recyclerView.findViewHolderForAdapterPosition(swipePosition)
         val swipedItem = swipeViewHolder!!.itemView
+        //create rectangle here
         val rect= Rect()
         swipedItem.getGlobalVisibleRect(rect)
 
@@ -71,6 +81,7 @@ abstract class SwipeHelper(context: Context, private val recyclerView: RecyclerV
 
     }
 
+    //initializes the onTouchListeners and other variables needed to use Swipe Helper
     init {
         this.recyclerView.setOnTouchListener(onTouchListener)
         this.gestureDetector = GestureDetector(context, gestureListener)
@@ -78,9 +89,11 @@ abstract class SwipeHelper(context: Context, private val recyclerView: RecyclerV
         this.buttonList = ArrayList()
         this.buttonQueue = IntLinkedList()
 
+        //itemtouchhelper is attached to the following recyclerview and interacts with all its view holders.
         val itemTouchHelper = ItemTouchHelper(this)
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
+
 
     class IntLinkedList : LinkedList<Int>(){
         override fun contains(element: Int): Boolean {
@@ -106,6 +119,7 @@ abstract class SwipeHelper(context: Context, private val recyclerView: RecyclerV
         }
     }
 
+    //this is false because we are not moving the viewHolder or the swipe. we just want to swipe
     override fun onMove(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
@@ -114,6 +128,7 @@ abstract class SwipeHelper(context: Context, private val recyclerView: RecyclerV
         return false
     }
 
+    //this funciton is called after the user swipes on a post or comment
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val pos = viewHolder.adapterPosition
         if(swipePosition !=pos)
@@ -148,6 +163,7 @@ abstract class SwipeHelper(context: Context, private val recyclerView: RecyclerV
         return 5.0f*defaultValue
     }
 
+    //this function is responsible for drawing the button
     override fun onChildDraw(
         c: Canvas,
         recyclerView: RecyclerView,
@@ -167,6 +183,7 @@ abstract class SwipeHelper(context: Context, private val recyclerView: RecyclerV
         }
         if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE)
         {
+            //if statement dx<0 is when user swipes in left direction
             if(dX < 0)
             {
                 var buffer: MutableList<ProfileButton> = ArrayList()
@@ -197,6 +214,7 @@ abstract class SwipeHelper(context: Context, private val recyclerView: RecyclerV
         var right = itemView.right.toFloat()
         val dButtonWidth = -1*translationX/buffer.size
         for(button in buffer){
+            //this draws the button dimensions in each of the buttons in buffer
             val left= right - dButtonWidth
             button.onDraw(c, RectF(left, itemView.top.toFloat(), right, itemView.bottom.toFloat()), pos)
             right=left

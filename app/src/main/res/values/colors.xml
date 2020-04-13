@@ -6,7 +6,6 @@
     <color name="TextColor">#000000</color>
     <color name="GreyText">#828385</color>
     <color name="ChatBackground">#efefef</color>
-
     <color name="FAB">#FFFFFF</color>
     <color name="CommentGrey">#E6E4E4</color>
     <color name="white">#FFFFFF</color>
@@ -14,5 +13,7 @@
     <color name="grey">#E6E4E4</color>
     <color name="darkergrey">#A3A3A3</color>
     <color name="black">#000000</color>
-    <color name="red">#FF0000</color>
+    <color name="titlebar1">#30ECECEC</color>
+    <color name="titlebar2">#30AFAFAF</color>
+    <color name="HintTextColor">#9e9e9e</color>
 </resources>

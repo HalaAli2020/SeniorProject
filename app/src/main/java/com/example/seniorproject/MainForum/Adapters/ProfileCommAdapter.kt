@@ -15,13 +15,13 @@ import com.example.seniorproject.data.models.Comment
 import kotlinx.android.synthetic.main.rv_post_comment.view.*
 
 class ProfileCommAdapter(context: Context, var Comments: List<Comment>) :
-    RecyclerView.Adapter<CustomListViewHolders>() {
+    RecyclerView.Adapter<CustomViewHolders>() {
     val mContext: Context = context
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomListViewHolders {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolders {
         val layoutInflater = LayoutInflater.from(parent.context)
         val cellForRow = layoutInflater.inflate(R.layout.rv_post_comment, parent, false)
         itemCount
-        return CustomListViewHolders(cellForRow)
+        return CustomViewHolders(cellForRow)
     }
 
     override fun getItemCount(): Int {
@@ -33,9 +33,9 @@ class ProfileCommAdapter(context: Context, var Comments: List<Comment>) :
         return size
     }
 
-    override fun onBindViewHolder(holder: CustomListViewHolders, position: Int) {
+    override fun onBindViewHolder(holder: CustomViewHolders, position: Int) {
         if (Comments[position] == null || itemCount == 0) {
-            holder.itemView.comment_text.text = "No Comments"
+            holder.itemView.comment_text.text = mContext.getString(R.string.no_com)
         } else {
             val comment: Comment = Comments[position]
             holder.itemView.comment_text.text = comment.text
@@ -78,52 +78,52 @@ class ProfileCommAdapter(context: Context, var Comments: List<Comment>) :
 
                 }
             } else {
-                holder.itemView.comment_text.text = "No Comments"
+                holder.itemView.comment_text.text = mContext.getString(R.string.no_com)
             }
 
         }
     }
 
 
-    fun getCommentKey(customViewHolders: CustomListViewHolders): String {
+    fun getCommentKey(customViewHolders: CustomViewHolders): String {
         val comment: Comment = Comments[customViewHolders.adapterPosition]
-        val commentkey: String? = comment.UserComkey
+        val commentkey: String? = comment.userComkey
 
 
         return commentkey!!
     }
 
-    fun getUserKey(customViewHolders: CustomListViewHolders): String {
+    fun getUserKey(customViewHolders: CustomViewHolders): String {
         val comment: Comment = Comments[customViewHolders.adapterPosition]
         val commentkey: String? = comment.PosterID
         return commentkey!!
     }
 
-    fun getClassKey(customViewHolders: CustomListViewHolders): String {
+    fun getClassKey(customViewHolders: CustomViewHolders): String {
         val comment: Comment = Comments[customViewHolders.adapterPosition]
-        val commentkey: String? = comment.Classkey
+        val commentkey: String? = comment.classkey
         return commentkey!!
     }
 
-    fun getClassProfileKey(customViewHolders: CustomListViewHolders): String {
+    fun getClassProfileKey(customViewHolders: CustomViewHolders): String {
         val comment: Comment = Comments[customViewHolders.adapterPosition]
-        val commentkey: String? = comment.ProfileComKey
+        val commentkey: String? = comment.profileComKey
         return commentkey!!
     }
 
-    fun pkeyUserProfile(customViewHolders: CustomListViewHolders): String {
+    fun pkeyUserProfile(customViewHolders: CustomViewHolders): String {
         val comment: Comment = Comments[customViewHolders.adapterPosition]
         val commentkey: String? = comment.Postkey
         return commentkey!!
     }
 
-    fun getCrn(customViewHolders: CustomListViewHolders): String {
+    fun getCrn(customViewHolders: CustomViewHolders): String {
         val comment: Comment = Comments[customViewHolders.adapterPosition]
         val commentkey: String? = comment.crn
         return commentkey!!
     }
 
-    fun getText(customViewHolders: CustomListViewHolders): String {
+    fun getText(customViewHolders: CustomViewHolders): String {
         val comment: Comment = Comments[customViewHolders.adapterPosition]
         val commentkey: String? = comment.text
         return commentkey!!

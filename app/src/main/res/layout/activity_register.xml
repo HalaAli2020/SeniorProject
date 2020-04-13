@@ -20,7 +20,7 @@
         tools:layout_editor_absoluteY="81dp">
 
         <ImageView
-            android:id="@+id/imageView5"
+            android:id="@+id/unitLogo"
             android:layout_width="125dp"
             android:layout_height="125dp"
             android:layout_marginTop="28dp"
@@ -41,7 +41,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+            app:layout_constraintTop_toBottomOf="@+id/unitLogo" />
 
 
         <EditText
@@ -51,18 +51,20 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="24dp"
-            android:background="@drawable/login_screen_background"
+            android:background="@drawable/registration_rounded_edittext"
             android:ems="10"
             android:hint="@string/name"
+            android:importantForAutofill="no"
             android:inputType="textPersonName"
-            android:paddingStart="10dp"
-            android:paddingEnd="0dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             android:text="@={AuthViewModel.username}"
+            android:textColor="@color/TextColor"
+            android:textColorHint="@color/HintTextColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
-            android:importantForAutofill="no" />
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <EditText
             android:id="@+id/email_signup_editText"
@@ -71,18 +73,20 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="24dp"
-            android:background="@drawable/login_screen_background"
+            android:background="@drawable/registration_rounded_edittext"
             android:ems="10"
             android:hint="@string/email"
+            android:importantForAutofill="no"
             android:inputType="textEmailAddress"
-            android:paddingStart="10dp"
-            android:paddingEnd="0dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             android:text="@={AuthViewModel.email}"
+            android:textColor="@color/TextColor"
+            android:textColorHint="@color/HintTextColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/username_signup_editext"
-            android:importantForAutofill="no" />
+            app:layout_constraintTop_toBottomOf="@+id/username_signup_editext" />
 
 
         <EditText
@@ -95,20 +99,22 @@
             android:layout_marginEnd="24dp"
             android:layout_marginRight="24dp"
             android:layout_marginBottom="212dp"
-            android:background="@drawable/login_screen_background"
+            android:background="@drawable/registration_rounded_edittext"
             android:ems="10"
             android:hint="@string/password"
+            android:importantForAutofill="no"
             android:inputType="textPassword"
-            android:paddingStart="10dp"
-            android:paddingEnd="0dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             android:text="@={AuthViewModel.password}"
+            android:textColor="@color/TextColor"
+            android:textColorHint="@color/HintTextColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/email_signup_editText"
-            app:layout_constraintVertical_bias="0.0"
-            android:importantForAutofill="no" />
+            app:layout_constraintVertical_bias="0.0" />
 
 
         <Button

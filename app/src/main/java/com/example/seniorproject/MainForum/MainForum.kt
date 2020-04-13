@@ -24,7 +24,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.seniorproject.Authentication.LoginActivity
@@ -268,7 +267,7 @@ class MainForum : AppCompatActivity(),
         alert.show()
     }
 
-
+    //sets theme of main forum to dark or light mode or it follows system of app settings on mobile device
     private fun setTheme(){
         when (sharedPrefs.getInt(KEY_THEME, THEME_LIGHT)) {
             THEME_SYSTEM -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
@@ -276,6 +275,5 @@ class MainForum : AppCompatActivity(),
             else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
     }
-
 
 }

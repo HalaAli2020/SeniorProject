@@ -23,17 +23,22 @@ class Settings : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+        this.title = "Settings"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        OnRadioButtonClick()
+        onRadioButtonClick()
         setRadioButton()
-
+        //this is triggered once you change the theme and pick an option
         nextActivity.setOnClickListener {
             val intent = Intent(this, MainForum::class.java)
             startActivity(intent)
         }
+
     }
 
-    fun OnRadioButtonClick() {
+    //user has option of light mode, night mode, or to follow the system of whatever mode is currently running on the settings of your
+    //mobile device
+    fun onRadioButtonClick() {
         themeGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.themeLight -> setAppTheme(AppCompatDelegate.MODE_NIGHT_NO, THEME_LIGHT)
@@ -57,6 +62,7 @@ class Settings : AppCompatActivity() {
         }
     }
 
+    //sets to night mode
     private fun setAppTheme(themeMode: Int, prefsMode: Int) {
         AppCompatDelegate.setDefaultNightMode(themeMode)
         saveAppTheme(prefsMode)
@@ -65,4 +71,10 @@ class Settings : AppCompatActivity() {
     private fun saveAppTheme(theme: Int) = sharedPrefs.edit().putInt(KEY_THEME, theme).apply()
 
     private fun getSavedAppTheme() = sharedPrefs.getInt(KEY_THEME, THEME_LIGHT)
+
+    //setting up the back button to navigate to the previous screen
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
 }

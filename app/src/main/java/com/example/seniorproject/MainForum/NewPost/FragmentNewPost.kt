@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.MainForum.MainForum
 import com.example.seniorproject.R
@@ -34,13 +34,13 @@ class FragmentNewPost : Fragment() {
 
         //text post is created on button clock text and title fields have text are filled and the user is subscribed to the forum
         view.new_post_btn.setOnClickListener {
-                var classname = view.spinner2.selectedItem.toString()
+                val classname = view.spinner2.selectedItem.toString()
                 viewModel.checkSubscriptions(classname, object : CheckCallback {
                     override fun check(chk: Boolean) {
                         /*check varible checks is user is subscribed, the logic for this can be found in the viewmodel
                         and the database query can be found in the corresponding checksubscription firebase function
                          */
-                        if (view.new_post_text.text.isNotBlank() && view.new_post_title.text.isNotBlank() && chk == true) {
+                        if (view.new_post_text.text.isNotBlank() && view.new_post_title.text.isNotBlank() && chk) {
                             viewModel.savePostToDatabase(view.new_post_text.text.toString(),view.new_post_title.text.toString(),classname)
                             Toast.makeText(context, "Your post has been successfully posted!", Toast.LENGTH_LONG).show()
                             val intent = Intent(context, MainForum::class.java)
@@ -49,7 +49,7 @@ class FragmentNewPost : Fragment() {
                         else if ((view.new_post_text.text.isNullOrBlank() || view.new_post_title.text.isNullOrBlank())) {
                             Toast.makeText(context, "please enter a title and post body", Toast.LENGTH_LONG).show()
                         }
-                        else if (view.new_post_text.text.isNotBlank() && view.new_post_title.text.isNotBlank() && chk == false) {
+                        else if (view.new_post_text.text.isNotBlank() && view.new_post_title.text.isNotBlank() && !chk) {
                             Toast.makeText(context, "Subscribe to $classname in order to create a post", Toast.LENGTH_SHORT).show()
                         }
                     }

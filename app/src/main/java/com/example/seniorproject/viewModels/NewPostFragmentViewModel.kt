@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.seniorproject.Utils.CheckCallback
+import com.example.seniorproject.data.interfaces.FirebaseCallbacksubBool
 import com.example.seniorproject.data.repositories.PostRepository
 import com.google.firebase.database.DataSnapshot
 import javax.inject.Inject
@@ -22,13 +23,22 @@ class NewPostFragmentViewModel @Inject constructor(private val repository: PostR
 
     //calls corresponding function from post repository takes binded variable information from edit xml file
     fun editPost(){
-        repository.editPost(crn!!, postKey!!, ctext!!, ctitle!!, textPost!!, titlePost!!, userID!!)
+        if (titlePost.isNullOrBlank() || textPost.isNullOrBlank()){
+            bool.value = false
+            return
+        }
+        else
+        {
+            repository.editPost(crn!!, postKey!!, ctext!!, ctitle!!, textPost!!, titlePost!!, userID!!)
+            bool.value = true
+            return
+        }
     }
 
     //takes classname and searches for a match in the users subscriptions
     fun checkSubscriptions(classname : String, checkCallback: CheckCallback)
     {
-        repository.checkSubscription(classname,object : PostRepository.FirebaseCallbacksubBool {
+        repository.checkSubscription(classname,object : FirebaseCallbacksubBool {
             override fun onStart() { TODO("not implemented") }
             override fun onFailure() { TODO("not implemented") }
 

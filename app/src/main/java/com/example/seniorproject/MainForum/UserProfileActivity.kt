@@ -10,11 +10,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.seniorproject.Dagger.DaggerAppComponent
-import com.example.seniorproject.Dagger.InjectorUtils
 import com.example.seniorproject.MainForum.Fragments.ProfileCommentFragment
 import com.example.seniorproject.MainForum.Fragments.ProfilePostFragment
 import com.example.seniorproject.MainForum.Posts.EditProfileActivity
@@ -39,13 +37,11 @@ class UserProfileActivity : AppCompatActivity() {
 
 
         //setting the actionbar title
-        val actionbar = supportActionBar
-        actionbar!!.title = "Profile"
+        this.title = "Profile"
 
         //creating the dagger application component
         DaggerAppComponent.create().inject(this)
-        //initializing viewmodel factory
-        val factory = InjectorUtils.provideProfileViewModelFactory()
+
         //setting the profileViewmodel as the viewmodel for this activity
         myViewModel = ViewModelProvider(this, factory).get(ProfileViewModel::class.java)
 
@@ -103,7 +99,7 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
         //UI settings for the actionbar and navigation
-        actionbar.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         pro_bottom_navigation.setIconVisibility(false)
         pro_bottom_navigation.enableAnimation(false)
         pro_bottom_navigation.setTextSize(20F)
@@ -132,6 +128,7 @@ class UserProfileActivity : AppCompatActivity() {
 
 
         val image: ImageView = findViewById(com.example.seniorproject.R.id.in_profile_image)
+        //if author is null, that means you're on your own profile, so set image to what you have stored in database
         if (author == "null") {
             val id = FirebaseAuth.getInstance().currentUser?.uid ?: test
             myViewModel.readPhotoValue(id, object : EmailCallback {
@@ -184,8 +181,6 @@ class UserProfileActivity : AppCompatActivity() {
     //setting up the back button to navigate to the previous screen
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
-        val intent = Intent(this, MainForum::class.java)
-        startActivity(intent)
         return true
     }
 

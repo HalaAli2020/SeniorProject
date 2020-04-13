@@ -1,94 +1,69 @@
 package com.example.seniorproject.search
 
-
-
+import android.content.Context
 import android.os.Bundle
-import android.view.Menu
-import android.widget.SearchView
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.seniorproject.Dagger.InjectorUtils
+import com.example.seniorproject.Dagger.DaggerAppComponent
 import com.example.seniorproject.R
-import com.example.seniorproject.data.models.CRN
-import com.example.seniorproject.databinding.ActivitySearchBinding
 import com.example.seniorproject.viewModels.SearchViewModel
 import kotlinx.android.synthetic.main.activity_search.*
 import javax.inject.Inject
 
-class SearchActivity: AppCompatActivity()
-{
+
+class SearchActivity : AppCompatActivity() {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: SearchViewModel
-    private lateinit var searchview : SearchView
-    // lateinit var lit : RecyclerView
-    private lateinit var lt :RecyclerView
-    lateinit var ada : SearchAdapter
-    //lateinit var mnu : MenuItem
-    lateinit var binding : ActivitySearchBinding
-
-
-
+    private lateinit var searchview: SearchView
+    lateinit var adapter: SearchAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        //Change title bar text, add back button, and enable keyboard
+        this.title = "Search"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
+
+        //Set up layout, dagger dependency, and viewmodel
         super.onCreate(savedInstanceState)
-        factory = InjectorUtils.provideSearchViewModelFactory()
-        myViewModel = ViewModelProviders.of(this, factory).get(SearchViewModel::class.java)
-        binding  = DataBindingUtil.setContentView(this, R.layout.activity_search )
+        setContentView(R.layout.activity_search)
+        DaggerAppComponent.create().inject(this)
+        myViewModel = ViewModelProvider(this, factory).get(SearchViewModel::class.java)
         myViewModel.getallclasses()
-        ada = SearchAdapter(this.baseContext, myViewModel, myViewModel.sendlistf())
-        this.title = ""
-        //searchview = binding.SearchR
-        lt = binding.SearchL
-        val obse = Observer<MutableList<CRN>> {
-            swap(lt)
-        }
+
+        //Set up search view
         searchview = search_in
         setupsearchview()
-        val lin : LinearLayoutManager = LinearLayoutManager(this)
-        lt.layoutManager = lin
-        lt.adapter = ada
 
-        // lt = findViewById<RecyclerView>(R.id.Search_L)
-        //setupsearchview()
-        //searchview =findViewById<SearchView>(R.id.Search_R)
-        myViewModel.fullist.observe(this, obse)
-
-
-
-
-    }
-    private fun swap(lt : RecyclerView)
-    {
-        ada = SearchAdapter(this.baseContext, myViewModel, myViewModel.sendlistf())
-        lt.swapAdapter(ada, true)
+        //Set up RecyclerView and its adapter
+        Search_L.layoutManager = LinearLayoutManager(this)
+        adapter = SearchAdapter(this.baseContext, myViewModel, myViewModel.sendlistf())
+        Search_L.adapter = adapter
     }
 
-    private fun setupsearchview()
-    {
-        searchview.isIconifiedByDefault = false
-        searchview.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+    //Search View is being set up to search data
+    private fun setupsearchview() {
+        searchview.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String?): Boolean {
-
-                ada.onfilter(newText)
-
+                adapter.onfilter(newText)
                 return false
-
             }
 
             override fun onQueryTextSubmit(query: String?): Boolean {
-                // ada.onfilter(query)
                 return true
             }
         })
-        searchview.isSubmitButtonEnabled = true
-        searchview.queryHint = "Search Here"
+    }
+
+    //Set up back button on title bar
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
 }
