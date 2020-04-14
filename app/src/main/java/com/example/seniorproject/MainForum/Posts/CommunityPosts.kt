@@ -22,6 +22,7 @@ import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.viewModels.CommunityPostViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_community_posts.*
+import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
 
 class CommunityPosts : AppCompatActivity() {
@@ -32,6 +33,7 @@ class CommunityPosts : AppCompatActivity() {
     lateinit var factory: ViewModelProvider.Factory
     lateinit var myViewModel: CommunityPostViewModel
 
+    @InternalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_community_posts)

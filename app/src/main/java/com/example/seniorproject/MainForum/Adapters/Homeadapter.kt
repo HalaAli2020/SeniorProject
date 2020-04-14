@@ -62,6 +62,7 @@ class HomeAdapter(context: Context, private var savedPosts: List<Post>, var type
         if (!savedPosts.isNullOrEmpty()) {
             return savedPosts.size
         } else
+            Log.d("empty", "empty")
             return 0
         //return the amount of posts sent to the recyclerview
     }
@@ -261,6 +262,12 @@ class HomeAdapter(context: Context, private var savedPosts: List<Post>, var type
 
 
         return posttext!!
+    }
+    fun reload(list :List<Post>)
+    {
+        Log.d("reload " ,"in reload ")
+        savedPosts = list
+        notifyDataSetChanged()
     }
 
 }

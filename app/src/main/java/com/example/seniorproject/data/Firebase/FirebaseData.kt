@@ -22,6 +22,7 @@ import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.collections.HashMap
+import kotlin.properties.Delegates
 
 
 private const val TAG = "MyLogTag"
@@ -1303,6 +1304,22 @@ private fun listenForUserProfilePosts(uid: String, callbackPost: FirebaseCallbac
     /*this function is passed the key for the class the user is looking up and passes it to the listenforclasscomments function to make the database query*/
     fun getClassComments(Key: String, subject: String, call: FirebaseCallbackComment) {
         listenForClassComments(Key, subject, call)
+    }
+    fun getsubsize() : Long
+    {
+        val uid = FirebaseAuth.getInstance().uid
+        var size by Delegates.notNull<Long>()
+        val ref = FirebaseDatabase.getInstance().getReference("$uid/Sublist")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+               size = p0.childrenCount
+            }
+        })
+        return size
     }
 
     /*

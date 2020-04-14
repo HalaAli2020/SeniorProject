@@ -10,11 +10,8 @@ import com.example.seniorproject.data.interfaces.*
 import com.example.seniorproject.data.models.Comment
 import com.example.seniorproject.data.models.Post
 import com.google.firebase.database.DataSnapshot
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,6 +20,7 @@ import javax.inject.Singleton
 class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     val post: Post? = null
     var userSUB: MutableLiveData<MutableList<String>> = MutableLiveData()
+    var Subsize : Long = 0
 
     //calls corresponding function from firebase file
     fun saveNewPost(text: String, title: String, CRN: String) = Firebase.saveNewPosttoUser(text, title, CRN)
@@ -31,6 +29,14 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     ////calls corresponding function from firebase file
     fun uploadUserProfileImage(selectedPhotoUri: Uri) =
         Firebase.uploadImageToFirebaseStorage(selectedPhotoUri)
+
+    suspend fun getsubsize()
+    {
+        var job = CoroutineScope(Dispatchers.IO).async{
+            Subsize = Firebase.getsubsize()
+        }.await()
+
+    }
 
 
 /*This Function is called from getSubsP in HomeframentViewModel it uses the list of subs gotten for the current user to grab the recent posts from
@@ -99,6 +105,74 @@ each class the user is subscribed to this uses coroutines */
         for (n in postL)
         {
             emit(n)
+        }
+    }
+    suspend fun getSubscribedPosts2(value : String, subC : Long) : Flow<Post> = flow {
+        val postL : MutableList<Post> = mutableListOf()
+        val limit = 3
+        val onSuccessJob : Job? = null
+
+        val job = CoroutineScope(Dispatchers.IO).launch {
+
+                Firebase.getOneClass(value, object : FirebaseValuecallback
+                {
+                    override fun onFailure() {
+
+                    }
+
+                    override fun onStart() {
+
+                    }
+
+                    override fun onSuccess(data: DataSnapshot)  {
+                        launch(Dispatchers.Default) {
+                            var count = 0
+
+                            for (n in data.children.reversed())
+                            {
+                                val p = Post()
+
+                                p.let {
+                                    it.title = n.child("title").getValue(String::class.java)
+                                    //Log.d("Community post", data.child("title").getValue(String::class.java))
+                                    it.text = n.child("text").getValue(String::class.java)
+                                    //newPost.author = pos.child("author").getValue(String::class.java)
+                                    //it.subject = className
+                                    Log.d("What", n.child("title").getValue(String::class.java)!!)
+                                    Log.d("Count", count.toString())
+                                    it.subject = n.child("subject").getValue(String::class.java)
+                                    it.Ptime =  n.child("Timestamp").getValue(String::class.java)
+                                    it.key = n.child("key").getValue(String::class.java)
+                                    it.Ptime = n.child("Ptime").getValue(String::class.java)
+                                    it.Classkey = n.child("Classkey").getValue(String::class.java)
+                                    it.UserID = n.child("UserID").getValue(String::class.java)
+                                    it.author = n.child("author").getValue(String::class.java)
+                                    it.uri = n.child("uri").getValue(String::class.java)
+                                }
+                                postL.add(p)
+                                count++
+                                if(count >= limit)
+                                {
+                                    break
+                                }
+                            }
+                        }
+                    }
+                })
+
+
+            //kotlinx.coroutines.delay(1000)
+
+        }
+
+        job.join()
+        onSuccessJob?.join()
+        if(Subsize == subC)
+        {
+            for (n in postL)
+            {
+                emit(n)
+            }
         }
     }
 

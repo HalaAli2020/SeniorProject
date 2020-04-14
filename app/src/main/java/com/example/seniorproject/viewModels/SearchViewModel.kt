@@ -17,7 +17,7 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
     private var fullist : MutableLiveData<MutableList<CRN>> = MutableLiveData()
 
 
-
+/*this function grabs all of the classes available for the search function and set it so the it will populate the full list */
     fun getallclasses() {
         val listC : MutableList<CRN> = mutableListOf()
         repository.getallclasses(object : FirebaseResult {
@@ -62,7 +62,7 @@ class SearchViewModel @Inject constructor(private val repository: SearchRepo) : 
         fullist.value = listC
     }
 
-
+/*this function sends the full list forward to the activity so it can be set to the adapter and used to filter the classes */
     fun sendlistf() : MutableLiveData<MutableList<CRN>>
     {
         clist.value = fullist.value

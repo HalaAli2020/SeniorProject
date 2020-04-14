@@ -16,6 +16,9 @@ interface FirebaseValue{
     fun onFailure()
     suspend fun onSuccess(data : DataSnapshot)
 }
+interface sizecall{
+    fun onCallback(i : Int)
+}
 
 interface ListActivitycallback{
     fun onCallback(list : List<Post>)

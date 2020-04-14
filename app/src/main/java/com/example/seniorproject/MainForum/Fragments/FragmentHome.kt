@@ -1,5 +1,6 @@
 package com.example.seniorproject.MainForum.Fragments
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -24,9 +25,7 @@ import com.example.seniorproject.databinding.FragmentHomeBinding
 import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_home.view.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 
@@ -35,12 +34,12 @@ class FragmentHome : Fragment() {
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
+    @InternalCoroutinesApi
     lateinit var myViewModel: HomeFragmentViewModel
+    lateinit var adapter : HomeAdapter
 
-    private var obse =  Observer<MutableList<Post>> {
 
-        swap()
-    }
+
 
 
     companion object {
@@ -48,6 +47,7 @@ class FragmentHome : Fragment() {
     }
 
     //lifecycleScope coroutines body was launched and list of posts was grabbed using a callback.
+    @ExperimentalCoroutinesApi
     @InternalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,17 +57,26 @@ class FragmentHome : Fragment() {
         DaggerAppComponent.create().inject(this)
 
         myViewModel = ViewModelProvider(this, factory).get(HomeFragmentViewModel::class.java)
-        lifecycleScope.launch(Dispatchers.IO) {
-            myViewModel.getSubsP(object : ListActivitycallback {
+
+        //adapter = HomeAdapter(context!!, myViewModel.sendPosts(), 0)
+      CoroutineScope(Dispatchers.Main.immediate).launch {
+            var job = myViewModel.getSubsP(object : ListActivitycallback {
                 override fun onCallback(list: List<Post>) {
-                    view?.invalidate()
+                    //view!!.invalidate()
+                    Log.d("callback", "in")
+                    view?.post_recyclerView?.adapter = HomeAdapter(view?.context!!, list, 0)
+                    //view?.post_recyclerView?.scrollToPosition(0)
+                    //adapter = HomeAdapter(context!!, list, 0)
+                    //view?.post_recyclerView?.adapter = adapter
 
                 }
             })
+
         }
 
     }
 
+    @ExperimentalCoroutinesApi
     @InternalCoroutinesApi
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,45 +84,65 @@ class FragmentHome : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         activity?.title = "Home"
-        val binding: FragmentHomeBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        //val binding: FragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        val viem = inflater.inflate(R.layout.fragment_home, container, false)
 
         val linearLayoutManager = LinearLayoutManager(context)
         //now the two newest posts show up in home fragment of each subscribed forum
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true
-        view.post_recyclerView.layoutManager = linearLayoutManager
+        viem.post_recyclerView.layoutManager = linearLayoutManager
+        myViewModel.live.observe(this.viewLifecycleOwner, Observer {
 
-        //initalize recyclerview adapter with list
-        view.post_recyclerView.adapter = HomeAdapter(view.context, myViewModel.sendPosts(), 0)
+            this.view!!.post_recyclerView.swapAdapter(HomeAdapter(this.context!!, myViewModel.sendPosts(), 0), true)
+            //this.view!!.post_recyclerView.smoothScrollToPosition(0)
+        })
+        //adapter = HomeAdapter(context!!, myViewModel.sendPosts(), 0)
+        adapter = HomeAdapter(context!!, myViewModel.sendPosts(), 0)
+        //adapter = HomeAdapter(context!!, myViewModel.sendPosts(), 0)
+        /*myViewModel.getSubsP(object : ListActivitycallback {
+            override fun onCallback(list: List<Post>) {
+                Log.d("reload", "reload")
 
+                adapter = HomeAdapter(context!!, list, 1)
+                view.post_recyclerView.swapAdapter(adapter, true)
+                //view.post_recyclerView.smoothScrollToPosition(-1)
+                //adapter.reload(list)
+
+                //view.post_recyclerView!!.adapter = adapter
+
+
+
+            }
+        })*/
         if (FirebaseAuth.getInstance().uid != null)
-            view.post_recyclerView.adapter = HomeAdapter(view.context, myViewModel.sendPosts(), 0)
+            viem.post_recyclerView?.adapter = adapter
 
         Log.d("list size", myViewModel.sendPosts().size.toString())
 
 
-        view.refreshView.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.blue_theme))
-        view.refreshView.setColorSchemeColors(ContextCompat.getColor(view.context, R.color.white))
+        viem.refreshView?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(viem.context, R.color.blue_theme))
+        viem.refreshView?.setColorSchemeColors(ContextCompat.getColor(viem.context, R.color.white))
 
 
-        view.refreshView.setOnRefreshListener {
-            view.refreshView.isRefreshing = false
-            view.post_recyclerView.adapter = HomeAdapter(view.context, myViewModel.sendPosts(), 0)
+        viem.refreshView?.setOnRefreshListener {
+            viem.refreshView?.isRefreshing = false
+            viem.post_recyclerView?.adapter = HomeAdapter(context!!, myViewModel.sendPosts(), 0)
         }
 
-        binding.homeFragmentViewModel = myViewModel
-        binding.lifecycleOwner = this
+        ////binding.homeFragmentViewModel = myViewModel
+       // binding.lifecycleOwner = this
 
-        binding.executePendingBindings()
+       // binding.executePendingBindings()
+        //initalize recyclerview adapter with list
 
-        return view
+
+        return viem
 
     }
 
     //swap recyclerview with new items when retrieving list of posts
+    @InternalCoroutinesApi
     private fun swap()
     {
         val ada = HomeAdapter(view!!.context, myViewModel.sendPosts(), 0)
@@ -130,7 +159,7 @@ class FragmentHome : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        view?.post_recyclerView?.swapAdapter(HomeAdapter(view!!.context, myViewModel.sendPosts(), 0), true)
+
 
     }
 
@@ -141,7 +170,7 @@ class FragmentHome : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        view?.post_recyclerView?.adapter = HomeAdapter(view!!.context, myViewModel.sendPosts(), 0)
+
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
