@@ -316,7 +316,7 @@ class ClickedPost : AppCompatActivity() {
                                                 override fun onClick(pos: Int) {
                                                     //userkey is collected from the recyclerview for the block user functionality
                                                     val userkey: String? =
-                                                        adapter.getUserKey(viewHolders)
+                                                        adapter.getAuth(viewHolders)
 
                                                     val builder = AlertDialog.Builder(
                                                         this@ClickedPost,
