@@ -2,6 +2,7 @@ package com.example.seniorproject.Messages
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -31,10 +32,24 @@ class ChatLog : AppCompatActivity() {
         setContentView(R.layout.m_activity_chat_log)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+
+
+        val layoutChangeListener = View.OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            if (oldBottom != 0) {
+                //when softkeyboard opens, the height of layout get's small, and when softkeyboa
+                //-rd closes the height grows back(gets larger).We can find the change of height
+                // by doing oldBotton - bottom, and the result of subtraction is how much we nee
+                //-d to scroll. Change of height is positive if keyboard is opened, and negative
+                //if it's closed.
+                val pixelsToScrollVertically = oldBottom - bottom
+                recycler_view_chatLog.scrollBy(0, pixelsToScrollVertically)
+            }
+        }
+
         //Grab information sent from intent to set up chat log and set title bar title equal to the username
         val username = intent.getStringExtra("USERNAME")
         val toID = intent.getStringExtra("USER_KEY")
-        //val profileURI = intent.getStringExtra("USER_PROF")
+        val profileImageUrl = intent.getStringExtra("USER_PROF")
         title = username
 
         //inject dagger app component, initialize viewmodel, and set up binding
@@ -45,8 +60,9 @@ class ChatLog : AppCompatActivity() {
         //Send data to viewmodel about the user
         myViewModel.toID = toID
         myViewModel.username = username ?: "no username"
-        //myViewModel.profileURI = profileURI
+        myViewModel.profileImageUrl = profileImageUrl
 
+        recycler_view_chatLog.setHasFixedSize(true)
         recycler_view_chatLog.layoutManager = LinearLayoutManager(context)
 
         //Grab all messages between two users
@@ -68,13 +84,13 @@ class ChatLog : AppCompatActivity() {
             editText_chatLog.text.clear()
         }
 
+        recycler_view_chatLog.addOnLayoutChangeListener(layoutChangeListener)
+
     }
 
     //Allows back button to be pressed to previous activity
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
-        val intent = Intent(this, MainForum::class.java)
-        startActivity(intent)
         return true
     }
 }

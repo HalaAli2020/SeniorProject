@@ -12,6 +12,7 @@ import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
 import com.example.seniorproject.databinding.UpdatePostBinding
 import com.example.seniorproject.viewModels.NewPostFragmentViewModel
+import kotlinx.android.synthetic.main.update_post.*
 import javax.inject.Inject
 
 class UpdatePost : AppCompatActivity() {
@@ -31,7 +32,7 @@ class UpdatePost : AppCompatActivity() {
         //initialize inject of dagger app component and initializes view model with generic factory
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProvider(this, factory).get(NewPostFragmentViewModel::class.java)
-        val binding: UpdatePostBinding = DataBindingUtil.setContentView(this,R.layout.update_post)
+        val binding: UpdatePostBinding = DataBindingUtil.setContentView(this, R.layout.update_post)
 
         //gets post information
         val text: String = intent.getStringExtra("text") ?: "no text"
@@ -41,8 +42,8 @@ class UpdatePost : AppCompatActivity() {
         val crn: String = intent.getStringExtra("crn") ?: "no crn"
 
         myViewModel.ctext = text
-        myViewModel.ctitle=title
-        myViewModel.userID= userid
+        myViewModel.ctitle = title
+        myViewModel.userID = userid
         myViewModel.crn = crn
         myViewModel.postKey = postkey
 
@@ -61,6 +62,9 @@ class UpdatePost : AppCompatActivity() {
 
         })
 
+
+        myViewModel.titlePost = title
+        myViewModel.textPost = text
 
         //sets data binding variable in xml to this view model
         binding.newPostModel = myViewModel

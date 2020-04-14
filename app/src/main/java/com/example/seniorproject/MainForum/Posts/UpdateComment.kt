@@ -12,9 +12,10 @@ import com.example.seniorproject.MainForum.UserProfileActivity
 import com.example.seniorproject.R
 import com.example.seniorproject.databinding.UpdateCommentBinding
 import com.example.seniorproject.viewModels.ClickedPostViewModel
+import kotlinx.android.synthetic.main.update_comment.*
 import javax.inject.Inject
 
-class UpdateComment  : AppCompatActivity() {
+class UpdateComment : AppCompatActivity() {
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -31,20 +32,21 @@ class UpdateComment  : AppCompatActivity() {
         //initialize inject of dagger app component and initializes view model with generic factory
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProvider(this, factory).get(ClickedPostViewModel::class.java)
-        val binding: UpdateCommentBinding = DataBindingUtil.setContentView(this,R.layout.update_comment)
+        val binding: UpdateCommentBinding = DataBindingUtil.setContentView(this, R.layout.update_comment)
 
         //gets comment information
         val text: String = intent.getStringExtra("text") ?: "no text"
         val usercomkey: String = intent.getStringExtra("ProfileComKey") ?: "no comkey"
         val userid: String = intent.getStringExtra("PosterID") ?: "no id"
         val crn: String = intent.getStringExtra("crn") ?: "no crn"
-        val postkey: String= intent.getStringExtra("Postkey") ?: "no postkey"
+        val postkey: String = intent.getStringExtra("Postkey") ?: "no postkey"
 
         myViewModel.ctext = text
-        myViewModel.usercomkey=usercomkey
-        myViewModel.comuserid= userid
+        myViewModel.usercomkey = usercomkey
+        myViewModel.comuserid = userid
         myViewModel.usercrn = crn
         myViewModel.postukey = postkey
+        myViewModel.comment = text
 
         //boolcom is an observed variable that controls the comment toast messages
         myViewModel.boolcom.observe(this, Observer<Boolean> {
