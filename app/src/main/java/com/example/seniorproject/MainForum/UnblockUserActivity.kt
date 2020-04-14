@@ -110,11 +110,6 @@ class UnblockUserActivity: AppCompatActivity() {
                                                         toast.show()
                                                     }
                                                 })
-                                                /*GlobalScope.launch {
-                                                   //put all of this in onsuccess
-                                                    delay(200)
-
-                                                }*/
                                             }
                                             builder.setNegativeButton(
                                                 "CANCEL"
