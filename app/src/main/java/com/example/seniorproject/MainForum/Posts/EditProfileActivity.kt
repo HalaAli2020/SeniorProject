@@ -4,8 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -19,6 +21,7 @@ import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.databinding.ActivityEditProfileBinding
 import com.example.seniorproject.viewModels.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
 import kotlinx.android.synthetic.main.activity_edit_profile.*
 import javax.inject.Inject
 
@@ -83,7 +86,7 @@ class EditProfileActivity : AppCompatActivity() {
 
         //button to click that saves the users profile changes
         doneButton.setOnClickListener {
-
+            clearGlideCache()
             val newUsername : EditText = findViewById(R.id.in_profile_username)
             val newBio : EditText = findViewById(R.id.in_edit_bio)
             if (newUsername.text.toString() != myViewModel.currentUser()?.displayName)
@@ -92,9 +95,7 @@ class EditProfileActivity : AppCompatActivity() {
             }
             myViewModel.saveUserbio(newBio.text.toString())
 
-
             val intent = Intent(this, UserProfileActivity::class.java)
-
             val iD = FirebaseAuth.getInstance().currentUser?.uid
             intent.putExtra("UserID",iD).also {
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -132,5 +133,14 @@ class EditProfileActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    fun clearGlideCache() {
+        object : Thread() {
+            override fun run() {
+                Glide.get(this@EditProfileActivity).clearDiskCache()
+            }
+        }.start()
+        Glide.get(this@EditProfileActivity).clearMemory()
     }
 }

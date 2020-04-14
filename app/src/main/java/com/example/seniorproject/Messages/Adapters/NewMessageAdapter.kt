@@ -22,9 +22,9 @@ class NewMessageAdapter(context: Context, private var UserList: List<User>) : Re
     private var filterlist : MutableList<User> = UserList as MutableList<User>
 
     companion object {
-        val USER_KEY = "USER_KEY"
-        val USERNAME = "USERNAME"
-        val USER_PROF = "USER_PROF"
+        const val USER_KEY = "USER_KEY"
+        const val USERNAME = "USERNAME"
+        const val USER_PROF = "USER_PROF"
     }
 
     //Display using new message format for RecyclerView
@@ -64,6 +64,7 @@ class NewMessageAdapter(context: Context, private var UserList: List<User>) : Re
 
         holder.itemView.newMessageUser.setOnClickListener {
             val intent = Intent(mContext, ChatLog::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             intent.putExtra(USER_KEY, user.uid)
             intent.putExtra(USERNAME, user.username)
             intent.putExtra(USER_PROF, user.profileImageUrl)

@@ -41,6 +41,7 @@ import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_main_forum.*
 import kotlinx.android.synthetic.main.side_nav_header.*
 import javax.inject.Inject

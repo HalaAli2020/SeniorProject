@@ -60,7 +60,7 @@ class FragmentHome : Fragment() {
         lifecycleScope.launch(Dispatchers.IO) {
             myViewModel.getSubsP(object : ListActivitycallback {
                 override fun onCallback(list: List<Post>) {
-                    view!!.invalidate()
+                    view?.invalidate()
 
                 }
             })

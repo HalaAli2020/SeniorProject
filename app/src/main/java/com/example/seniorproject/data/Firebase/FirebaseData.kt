@@ -1433,7 +1433,7 @@ private fun listenForUserProfilePosts(uid: String, callbackPost: FirebaseCallbac
     }
 
     //sends message to another user
-    fun sendMessage(message: String?, toID: String?, username: String?) {
+    fun sendMessage(message: String?, toID: String?, username: String?, profileImageUrl: String?) {
 
         val fromID = FirebaseAuth.getInstance().uid
 
@@ -1443,10 +1443,10 @@ private fun listenForUserProfilePosts(uid: String, callbackPost: FirebaseCallbac
         val toReference = FirebaseDatabase.getInstance().getReference("/user-messages/$toID/$fromID").push()
 
         val chatMessage = ChatMessage(
-            reference.key!!,
+            reference.key,
             message,
-            fromID!!,
-            toID!!,
+            fromID,
+            toID,
             System.currentTimeMillis() / 1000
         )
 
@@ -1457,20 +1457,22 @@ private fun listenForUserProfilePosts(uid: String, callbackPost: FirebaseCallbac
         toReference.setValue(chatMessage)
 
         val latestChatMessage = LatestMessage(
-            reference.key!!,
+            reference.key,
             message,
             fromID,
             toID,
             username,
+            profileImageUrl,
             1 - (System.currentTimeMillis() / 1000)
         )
 
         val latestChatMessage2 = LatestMessage(
-            reference.key!!,
+            reference.key,
             message,
             fromID,
             toID,
             FirebaseAuth.getInstance().currentUser?.displayName,
+            FirebaseAuth.getInstance().currentUser?.photoUrl.toString(),
             1 - (System.currentTimeMillis() / 1000)
         )
 

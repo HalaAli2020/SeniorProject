@@ -34,7 +34,11 @@ class FragmentLatestMessages : Fragment() {
         myViewModel = ViewModelProvider(this, factory).get(MessagesFragmentViewModel::class.java)
 
         //Set up RecylerView layout manager
-        view.recyclerView_latest_messages.layoutManager = LinearLayoutManager(context)
+        val linearLayoutManager = LinearLayoutManager(context)
+        //newest posts appear first
+        linearLayoutManager.reverseLayout = true
+        linearLayoutManager.stackFromEnd = false
+        view.recyclerView_latest_messages.layoutManager = linearLayoutManager
 
         //Listener to grab recent messages
         myViewModel.getRecentMessages().observe(viewLifecycleOwner, object : Observer<List<LatestMessage>> {
