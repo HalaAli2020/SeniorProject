@@ -22,6 +22,10 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
     init {
         //getSubsP()
     }
+    fun clearLive()
+    {
+        live.value = mutableListOf()
+    }
 
     @ExperimentalCoroutinesApi
     @InternalCoroutinesApi
