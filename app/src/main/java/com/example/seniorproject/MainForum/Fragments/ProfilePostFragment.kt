@@ -105,7 +105,7 @@ class ProfilePostFragment : Fragment() {
                             buffer: MutableList<ProfileButton>
                         ) {
                             buffer.add(
-                                ProfileButton(context!!, "Delete", 30, 0, Color.parseColor
+                                ProfileButton(context!!, "Delete", 45, 0, Color.parseColor
                                     ("#FF0000"), object : ButtonClickListener {
                                     override fun onClick(pos: Int) {
                                         var postkey = " "
@@ -135,6 +135,7 @@ class ProfilePostFragment : Fragment() {
                                         ) { _: DialogInterface?, _: Int ->
                                             myViewModel.deletePost(postkey!!, crnkey!!, userkey!!)
                                             val intent = Intent(view?.context, UserProfileActivity::class.java)
+                                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                                             //restarts user profile activity
                                             startActivity(intent)
                                         }
@@ -155,8 +156,8 @@ class ProfilePostFragment : Fragment() {
                             )
                             //adding an edit butto on onswipe
                             buffer.add(
-                                ProfileButton(context!!, "Edit", 30, 0, Color.parseColor
-                                    ("#D3D3D3"), object : ButtonClickListener {
+                                ProfileButton(context!!, "Edit", 45, 0, Color.parseColor
+                                    ("#2b99fd"), object : ButtonClickListener {
                                     override fun onClick(pos: Int) {
                                         val intent = Intent(context, UpdatePost::class.java)
                                         var postkey = " "
