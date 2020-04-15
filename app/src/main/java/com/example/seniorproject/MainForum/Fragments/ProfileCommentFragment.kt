@@ -137,6 +137,7 @@ class ProfileCommentFragment : Fragment() {
                                             userkey!!
                                         )
                                         val intent = Intent(view?.context, UserProfileActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                                         //restarts user profile activity
                                         startActivity(intent)
 
