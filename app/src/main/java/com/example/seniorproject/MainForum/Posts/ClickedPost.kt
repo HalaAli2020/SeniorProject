@@ -5,7 +5,9 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -35,6 +37,10 @@ class ClickedPost : AppCompatActivity() {
 
     private lateinit var nocommadapter: CommentsListAdapter
     private lateinit var adapter: CommentsListAdapter
+
+    var clickedscreen=1
+    var isLoading = false
+    val limit =10
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
@@ -111,49 +117,49 @@ class ClickedPost : AppCompatActivity() {
                                             comment_RecyclerView.adapter = adapter
                                             comment_RecyclerView.layoutManager = LinearLayoutManager(this@ClickedPost)
 
-                                object : SwipeHelper(applicationContext, comment_RecyclerView, 200) {
-                                    override fun initButton(
-                                        viewHolders: RecyclerView.ViewHolder,
-                                        buffer: MutableList<ProfileButton>
-                                    ) {
-                                        val userk: String? = adapter.getUserKey(viewHolders)
-                                        if (FirebaseAuth.getInstance().currentUser?.uid == userk){
-                                            //a user cannot block or report themselves
-                                        }
-                                        else {
-                                            buffer.add(
-                                                ProfileButton(applicationContext, "Block", 45, 0, Color.parseColor
-                                                    ("#FF0000"), object : ButtonClickListener {
-                                                    override fun onClick(pos: Int) {
-                                                        Log.d("soupv", "pos is $pos")
-                                                        //userkey is collected from the recyclerview for the block user functionality
-                                                        val authorkey: String? = adapter.getAuth(viewHolders)
-                                                        val userkey: String? = adapter.getUserKey(viewHolders)
-                                                        val builder = AlertDialog.Builder(
-                                                            this@ClickedPost,
-                                                            R.style.AppTheme_AlertDialog
-                                                        )
-                                                        //building the dialog box to stop users from blocking people by mistake
-                                                        builder.setTitle("Are you sure?")
-                                                        builder.setMessage("You won't see posts or comments from this user.")
-                                                        builder.setPositiveButton("BLOCK"
-                                                        ) { _: DialogInterface?, _: Int ->
-                                                            myViewModel.blockUser(authorkey!!)
-                                                           //comment uid is still being stored, not comments author?
-                                                            val toast = Toast.makeText(
-                                                                this@ClickedPost,
-                                                                "This user has been blocked",
-                                                                Toast.LENGTH_SHORT
-                                                            )
-                                                            toast.show()
-                                                            onBackPressed(crn)
-                                                        }
-                                                        builder.setNegativeButton("CANCEL"
-                                                        ) { _: DialogInterface?, _: Int ->
-                                                            builder.setCancelable(true)
-                                                        }
+                                            object : SwipeHelper(applicationContext, comment_RecyclerView, 200) {
+                                                override fun initButton(
+                                                    viewHolders: RecyclerView.ViewHolder,
+                                                    buffer: MutableList<ProfileButton>
+                                                ) {
+                                                    val userk: String? = adapter.getUserKey(viewHolders)
+                                                    if (FirebaseAuth.getInstance().currentUser?.uid == userk){
+                                                        //a user cannot block or report themselves
+                                                    }
+                                                    else {
+                                                        buffer.add(
+                                                            ProfileButton(applicationContext, "Block", 45, 0, Color.parseColor
+                                                                ("#FF0000"), object : ButtonClickListener {
+                                                                override fun onClick(pos: Int) {
+                                                                    Log.d("soupv", "pos is $pos")
+                                                                    //userkey is collected from the recyclerview for the block user functionality
+                                                                    val authorkey: String? = adapter.getAuth(viewHolders)
+                                                                    val userkey: String? = adapter.getUserKey(viewHolders)
+                                                                    val builder = AlertDialog.Builder(
+                                                                        this@ClickedPost,
+                                                                        R.style.AppTheme_AlertDialog
+                                                                    )
+                                                                    //building the dialog box to stop users from blocking people by mistake
+                                                                    builder.setTitle("Are you sure?")
+                                                                    builder.setMessage("You won't see posts or comments from this user.")
+                                                                    builder.setPositiveButton("BLOCK"
+                                                                    ) { _: DialogInterface?, _: Int ->
+                                                                        myViewModel.blockUser(authorkey!!)
+                                                                        //comment uid is still being stored, not comments author?
+                                                                        val toast = Toast.makeText(
+                                                                            this@ClickedPost,
+                                                                            "This user has been blocked",
+                                                                            Toast.LENGTH_SHORT
+                                                                        )
+                                                                        toast.show()
+                                                                        onBackPressed(crn)
+                                                                    }
+                                                                    builder.setNegativeButton("CANCEL"
+                                                                    ) { _: DialogInterface?, _: Int ->
+                                                                        builder.setCancelable(true)
+                                                                    }
 
-                                                        val msgdialog: AlertDialog = builder.create()
+                                                                    val msgdialog: AlertDialog = builder.create()
 
                                                                     msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
 
@@ -164,7 +170,7 @@ class ClickedPost : AppCompatActivity() {
                                                         )
 
                                                         buffer.add(
-                                                            ProfileButton(applicationContext, "Report", 45, 0, Color.parseColor
+                                                            ProfileButton(applicationContext, "Report Comment", 45, 0, Color.parseColor
                                                                 ("#2b99fd"), object : ButtonClickListener {
                                                                 override fun onClick(pos: Int) {
                                                                     /*the following information is collected from the recyclerview for the report post
@@ -176,13 +182,13 @@ class ClickedPost : AppCompatActivity() {
                                                                     val postkey: String? =
                                                                         adapter.getPostKey(viewHolders)
 
-                                                        val userkey: String? =
-                                                            adapter.getUserKey(viewHolders)
+                                                                    val userkey: String? =
+                                                                        adapter.getUserKey(viewHolders)
 
-                                                        val crnkey: String? =
-                                                            adapter.getCrn(viewHolders)
+                                                                    val crnkey: String? =
+                                                                        adapter.getCrn(viewHolders)
 
-                                                        val textkey: String? = adapter.getText(viewHolders)
+                                                                    val textkey: String? = adapter.getText(viewHolders)
 
                                                                     val builder = AlertDialog.Builder(
                                                                         this@ClickedPost,
@@ -257,25 +263,77 @@ class ClickedPost : AppCompatActivity() {
                 }
                 else{
                     //this means that there are comments already present in the post. don't have to load with an empty adapter to recyclerview
-                        myViewModel.getClassComments(object: CommentListFromFlow{
-                            override fun onList(list: List<Comment>) {
-                                for(item in list){
-                                    val getext= item.text
+                    myViewModel.getClassComments(object: CommentListFromFlow{
+                        override fun onList(list: List<Comment>) {
+
+                            if(list.size<=11){ //load functionality not enabled because list of comments is too small
+                                adapter = CommentsListAdapter(
+                                    this@ClickedPost,
+                                    list,
+                                    title,
+                                    text,
+                                    author,
+                                    crn,
+                                    intent.getStringExtra("UserID").toString(),
+                                    ptime,
+                                    uri
+                                )
+                                val linearLayoutManager = LinearLayoutManager(this@ClickedPost)
+                                comment_RecyclerView.adapter = adapter
+                                comment_RecyclerView.layoutManager = linearLayoutManager
+                                load.visibility=View.INVISIBLE
+                            }else{ //load functionality begins here
+                                var lastpositionviewed=11
+                                load.visibility=View.VISIBLE
+                                //if a post has over 10 comments, only show the latest 10 comments. make user hit load button to load more comments
+                                adapter = CommentsListAdapter(this@ClickedPost, list.subList(0,lastpositionviewed), title, text, author, crn,
+                                    intent.getStringExtra("UserID").toString(), ptime, uri)
+                                val linearLayoutManager = LinearLayoutManager(this@ClickedPost)
+                                comment_RecyclerView.adapter = adapter
+                                comment_RecyclerView.layoutManager = linearLayoutManager
+
+                                if((list.size%10<10 || list.size%10==0) && list.size>10){ //if list is 26 or list is 50, all applies
+                                    var lastload=list.size%10 //returns modulus: ex 26%10=6
+                                    var count= list.size/10
+                                    Log.d("soupv", "load button clicked $count times")
+                                    for(i in 0..count){
+                                        load.setOnClickListener {
+                                            if(list.size < (lastpositionviewed+10)){ //if list is in teen values it can't be loading 10 comments,
+                                                //so just display the remainder of the list
+                                                adapter = CommentsListAdapter(
+                                                    this@ClickedPost, list, title, text, author, crn,
+                                                    intent.getStringExtra("UserID").toString(), ptime, uri
+                                                )
+                                                val linearLayoutManager = LinearLayoutManager(this@ClickedPost)
+                                                comment_RecyclerView.adapter = adapter
+                                                comment_RecyclerView.layoutManager = linearLayoutManager
+                                                comment_RecyclerView.scrollToPosition(list.size-1) //scroll to bottom of list
+                                                count--
+                                            }else{ //if list is in the 20s 50s 90s 1000s, load 10 comments at a time
+                                                adapter = CommentsListAdapter(
+                                                    this@ClickedPost, list.subList(0,lastpositionviewed+10), title, text, author, crn,
+                                                    intent.getStringExtra("UserID").toString(), ptime, uri
+                                                )
+                                                lastpositionviewed += 10
+                                                val linearLayoutManager = LinearLayoutManager(this@ClickedPost)
+                                                comment_RecyclerView.adapter = adapter
+                                                comment_RecyclerView.layoutManager = linearLayoutManager
+                                                comment_RecyclerView.scrollToPosition(list.size/2) //scroll to center of list
+                                                count--
+                                            }
+
+                                            if (count == 0) {
+                                                //lets user know that no more comments can be viewed because they are all present
+                                                Toast.makeText(this@ClickedPost, "No more comments to load", Toast.LENGTH_LONG)
+                                                    .show()
+                                            }
+                                        }
+                                    }
+
+                                }
                             }
 
-                            adapter = CommentsListAdapter(
-                                this@ClickedPost,
-                                list,
-                                title,
-                                text,
-                                author,
-                                crn,
-                                intent.getStringExtra("UserID").toString(),
-                                ptime,
-                                uri
-                            )
-                            comment_RecyclerView.adapter = adapter
-                            comment_RecyclerView.layoutManager = LinearLayoutManager(this@ClickedPost)
+
 
                             Comment_button.setOnClickListener {
                                 myViewModel.checkSubscriptions(crn, object : CheckCallback {
@@ -291,13 +349,15 @@ class ClickedPost : AppCompatActivity() {
                                             val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                                             inputMethodManager.hideSoftInputFromWindow(it.windowToken, 0)
                                         } else if (Comment_textbox.text.isNullOrBlank()) {
-                                            Toast.makeText(this@ClickedPost, "you cannot post an empty comment", Toast.LENGTH_LONG).show()
-                                            } else if (Comment_textbox.text.isNotBlank() && !chk) {
+                                            Toast.makeText(this@ClickedPost, "you cannot post an empty comment", Toast.LENGTH_SHORT).show()
+                                        } else if (Comment_textbox.text.isNotBlank() && !chk) {
                                             Toast.makeText(this@ClickedPost, "Subscribe to $crn in order to create a post", Toast.LENGTH_SHORT)
                                                 .show()
                                         }
                                     }
                                 })
+
+
                             }
 
                             //on swipe a user can block or report another user
@@ -346,7 +406,7 @@ class ClickedPost : AppCompatActivity() {
 
                                                     val msgdialog: AlertDialog = builder.create()
 
-                                                    msgdialog.window?.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
+                                                    msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
 
                                                     msgdialog.show()
                                                 }

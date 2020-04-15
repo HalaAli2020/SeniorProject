@@ -112,6 +112,14 @@ class CommentsListAdapter(
         } else {
             //holder.itemView.post_title.text = comment.title
             val comment: Comment = Comments[position]
+            holder.itemView.comment_text.text = comment.text
+            holder.itemView.authcom.text = comment.author
+            holder.itemView.comment_timestamp.text = comment.Ptime
+
+            if(holder.itemView.authcom.text == ""){
+                holder.itemView.visibility = View.INVISIBLE
+            }
+
             //if the users is blocked the comment text will show up as blocked
             val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
             ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent(object :
@@ -136,11 +144,6 @@ class CommentsListAdapter(
                             holder.itemView.comment_timestamp.text = comment.Ptime
                         }
 
-                    }
-                    else {
-                        holder.itemView.comment_text.text = comment.text
-                        holder.itemView.authcom.text = comment.author
-                        holder.itemView.comment_timestamp.text = comment.Ptime
                     }
                 }
 
