@@ -4,6 +4,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -13,16 +14,25 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seniorproject.Dagger.DaggerAppComponent
-import com.example.seniorproject.MainForum.Adapters.BlockedUsersAdapter
-import com.example.seniorproject.MainForum.Adapters.CustomViewHolders
-import com.example.seniorproject.MainForum.Adapters.PostImageViewHolders
+import com.example.seniorproject.MainForum.Adapters.*
+import com.example.seniorproject.MainForum.Posts.UpdatePost
 import com.example.seniorproject.R
 import com.example.seniorproject.Utils.ButtonClickListener
+import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.Utils.ProfileButton
 import com.example.seniorproject.Utils.SwipeHelper
+import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.viewModels.BlockedUserListCallback
+import com.example.seniorproject.viewModels.CommunityPostViewModel
 import com.example.seniorproject.viewModels.SettingsViewModel
+import kotlinx.android.synthetic.main.activity_community_posts.*
 import kotlinx.android.synthetic.main.activity_unblock_users.*
+import kotlinx.android.synthetic.main.fragment_profile__post.view.*
+import kotlinx.android.synthetic.main.rv_unblock_users.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class UnblockUserActivity : AppCompatActivity() {
@@ -92,18 +102,20 @@ class UnblockUserActivity : AppCompatActivity() {
                                             "Unblock"
                                         ) { _: DialogInterface?, _: Int ->
                                             //call function
-                                            myViewModel.unblockUser(username)
-                                            val toast = Toast.makeText(
-                                                this@UnblockUserActivity,
-                                                "This user is removed from your blocked list",
-                                                Toast.LENGTH_SHORT
-                                            )
-                                            finish()
-                                            intent = Intent(this@UnblockUserActivity, UnblockUserActivity::class.java)
-                                            //startActivity(intent)
-                                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                                            startActivity(intent)
-                                            toast.show()
+                                            myViewModel.unblockUser(username, object : EmailCallback {
+                                                override fun getEmail(string: String) {
+                                                    finish()
+                                                    intent = Intent(this@UnblockUserActivity, UnblockUserActivity::class.java)
+                                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                                    startActivity(intent)
+                                                    val toast = Toast.makeText(
+                                                        this@UnblockUserActivity,
+                                                        "This user is removed from your blocked list",
+                                                        Toast.LENGTH_SHORT
+                                                    )
+                                                    toast.show()
+                                                }
+                                            })
                                         }
                                         builder.setNegativeButton(
                                             "CANCEL"

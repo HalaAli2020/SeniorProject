@@ -765,7 +765,8 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
         })
     }
 
-    fun unblockUser(username : String ){
+
+    fun unblockUser(username : String , callbacknav: FirebaseCallbackItem){
         val userID = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
         ref.child("BlockedUsers").orderByValue().addListenerForSingleValueEvent(object : ValueEventListener {
@@ -776,6 +777,7 @@ Checks if a user has made any comments, a callback boolean is sent upstream into
                     for (block in p0.children) {
                         if (block.value == username) {
                             block.ref.removeValue()
+                            callbacknav.onMessage(p0)
                         }
                     }
                 }
