@@ -211,6 +211,7 @@ class MainForum : AppCompatActivity(),
 
         replaceFragment(FragmentHome())
 
+        onRestart()
     }
 
 //replace fragment boilderplate code
@@ -282,6 +283,23 @@ class MainForum : AppCompatActivity(),
             THEME_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+
+        val navigationView: NavigationView = findViewById(R.id.nav_view)
+        val headerview = navigationView.getHeaderView(0)
+        val imageView: ImageView = headerview.findViewById(R.id.profile_image)
+
+        Glide.with(this) //1
+            .load(FirebaseAuth.getInstance().currentUser?.photoUrl)
+            .placeholder(R.drawable.ic_account_circle_blue_24dp)
+            .error(R.drawable.ic_account_circle_blue_24dp)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .circleCrop().fitCenter()
+            .into(imageView)
+
     }
 
 }
