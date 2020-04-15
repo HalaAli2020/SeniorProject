@@ -26,7 +26,7 @@ class UpdateComment : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.update_comment)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        title = "Update Comment"
+        title = "Edit Comment"
 
 
         //initialize inject of dagger app component and initializes view model with generic factory

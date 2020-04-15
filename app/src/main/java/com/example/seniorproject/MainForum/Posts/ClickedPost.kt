@@ -122,7 +122,7 @@ class ClickedPost : AppCompatActivity() {
                                         }
                                         else {
                                             buffer.add(
-                                                ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
+                                                ProfileButton(applicationContext, "Block", 45, 0, Color.parseColor
                                                     ("#FF0000"), object : ButtonClickListener {
                                                     override fun onClick(pos: Int) {
                                                         Log.d("soupv", "pos is $pos")
@@ -164,8 +164,8 @@ class ClickedPost : AppCompatActivity() {
                                                         )
 
                                                         buffer.add(
-                                                            ProfileButton(applicationContext, "Report Comment", 30, 0, Color.parseColor
-                                                                ("#D3D3D3"), object : ButtonClickListener {
+                                                            ProfileButton(applicationContext, "Report", 45, 0, Color.parseColor
+                                                                ("#2b99fd"), object : ButtonClickListener {
                                                                 override fun onClick(pos: Int) {
                                                                     /*the following information is collected from the recyclerview for the report post
                                                                     functionality
@@ -311,7 +311,7 @@ class ClickedPost : AppCompatActivity() {
                                         //a user cannot block or report themselves
                                     } else {
                                         buffer.add(
-                                            ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
+                                            ProfileButton(applicationContext, "Block", 45, 0, Color.parseColor
                                                 ("#FF0000"), object : ButtonClickListener {
                                                 override fun onClick(pos: Int) {
                                                     //userkey is collected from the recyclerview for the block user functionality
@@ -346,7 +346,7 @@ class ClickedPost : AppCompatActivity() {
 
                                                     val msgdialog: AlertDialog = builder.create()
 
-                                                    msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
+                                                    msgdialog.window?.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
 
                                                     msgdialog.show()
                                                 }
@@ -355,8 +355,8 @@ class ClickedPost : AppCompatActivity() {
                                         )
 
                                         buffer.add(
-                                            ProfileButton(applicationContext, "Report Comment", 30, 0, Color.parseColor
-                                                ("#D3D3D3"), object : ButtonClickListener {
+                                            ProfileButton(applicationContext, "Report", 45, 0, Color.parseColor
+                                                ("#2b99fd"), object : ButtonClickListener {
                                                 override fun onClick(pos: Int) {
                                                     /*the following information is collected from the recyclerview for the report post
                                                     functionality

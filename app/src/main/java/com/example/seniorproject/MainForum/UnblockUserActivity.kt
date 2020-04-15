@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-class UnblockUserActivity: AppCompatActivity() {
+class UnblockUserActivity : AppCompatActivity() {
 
     private lateinit var adapter: BlockedUsersAdapter
     @Inject
@@ -46,11 +46,13 @@ class UnblockUserActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_unblock_users)
+        this.title = "Blocked Users"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProvider(this, factory).get(SettingsViewModel::class.java)
 
-        myViewModel.getBlockedUsersList(object: BlockedUserListCallback{
+        myViewModel.getBlockedUsersList(object : BlockedUserListCallback {
             override fun onList(list: List<String>) {
                 if (list.isEmpty()) {
                     val toast = Toast.makeText(applicationContext, "You have no blocked users", Toast.LENGTH_SHORT)
@@ -71,63 +73,75 @@ class UnblockUserActivity: AppCompatActivity() {
 
 
                     object : SwipeHelper(this@UnblockUserActivity, blocked_list_recyclerview, 200) {
-                            override fun initButton(
-                                viewHolders: RecyclerView.ViewHolder,
-                                buffer: MutableList<ProfileButton>
-                            ) {
-                                buffer.add(
-                                    ProfileButton(this@UnblockUserActivity, "Unblock", 30, 0, Color.parseColor
-                                        ("#FF0000"), object : ButtonClickListener {
-                                        override fun onClick(pos: Int) {
-                                            var username = " "
-                                            //if statement to cover image post case
-                                            if (adapter.getItemViewType(pos) == 1) {
-                                                username = adapter.removeItem(viewHolders as PostImageViewHolders)
-                                            } else if (adapter.getItemViewType(pos) == 0) {
+                        override fun initButton(
+                            viewHolders: RecyclerView.ViewHolder,
+                            buffer: MutableList<ProfileButton>
+                        ) {
+                            buffer.add(
+                                ProfileButton(this@UnblockUserActivity, "Unblock", 45, 0, Color.parseColor
+                                    ("#2b99fd"), object : ButtonClickListener {
+                                    override fun onClick(pos: Int) {
+                                        var username = " "
+                                        //if statement to cover image post case
+                                        if (adapter.getItemViewType(pos) == 1) {
+                                            username = adapter.removeItem(viewHolders as PostImageViewHolders)
+                                        } else if (adapter.getItemViewType(pos) == 0) {
 
-                                                username = adapter.removeItem(viewHolders as CustomViewHolders)
-                                            }
-
-                                            //alert dialog setup
-                                            val builder = AlertDialog.Builder(
-                                                this@UnblockUserActivity,
-                                                R.style.AppTheme_AlertDialog
-                                            )
-                                            //creating message to stop user from deleting posts on accident
-                                            builder.setTitle("Are you sure?")
-                                            builder.setMessage("this user will be unblocked")
-                                            builder.setPositiveButton(
-                                                "Unblock"
-                                            ) { _: DialogInterface?, _: Int ->
-                                                //call function
-                                                myViewModel.unblockUser(username , object : EmailCallback {
-                                                    override fun getEmail(string: String) {
-                                                        finish()
-                                                        intent = Intent(this@UnblockUserActivity, UnblockUserActivity::class.java)
-                                                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                                        startActivity(intent)
-                                                        val toast = Toast.makeText(this@UnblockUserActivity, "This user is removed from your blocked list", Toast.LENGTH_SHORT)
-                                                        toast.show()
-                                                    }
-                                                })
-                                            }
-                                            builder.setNegativeButton(
-                                                "CANCEL"
-                                            ) { _: DialogInterface?, _: Int ->
-                                                builder.setCancelable(true)
-                                            }
-
-                                            val msgdialog: AlertDialog = builder.create()
-
-                                            msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
-
-                                            msgdialog.show()
-
+                                            username = adapter.removeItem(viewHolders as CustomViewHolders)
                                         }
 
-                                    })
-                                )
-                            }
+                                        //alert dialog setup
+                                        val builder = AlertDialog.Builder(
+                                            this@UnblockUserActivity,
+                                            R.style.AppTheme_AlertDialog
+                                        )
+                                        //creating message to stop user from deleting posts on accident
+                                        builder.setTitle("Are you sure?")
+                                        builder.setMessage("this user will be unblocked")
+                                        builder.setPositiveButton(
+                                            "Unblock"
+                                        ) { _: DialogInterface?, _: Int ->
+                                            //call function
+                                            myViewModel.unblockUser(username, object : EmailCallback {
+                                                override fun getEmail(string: String) {
+                                                    finish()
+                                                    intent = Intent(this@UnblockUserActivity, UnblockUserActivity::class.java)
+                                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                                    startActivity(intent)
+                                                    val toast = Toast.makeText(
+                                                        this@UnblockUserActivity,
+                                                        "This user is removed from your blocked list",
+                                                        Toast.LENGTH_SHORT
+                                                    )
+                                                    toast.show()
+                                                }
+                                            })
+                                        }
+                                        builder.setNegativeButton(
+                                            "CANCEL"
+                                        ) { _: DialogInterface?, _: Int ->
+                                            builder.setCancelable(true)
+                                        }
+
+                                        val msgdialog: AlertDialog = builder.create()
+
+                                        msgdialog.window!!.setType(WindowManager.LayoutParams.TYPE_APPLICATION_PANEL)
+
+                                        msgdialog.show()
+
+                                    }
+
+                                })
+                            )
+                        }
                     }
-                }}})
-    }}
+                }
+            }
+        })
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+}
