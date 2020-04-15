@@ -94,6 +94,7 @@ class ProfileCommentFragment : Fragment() {
                 //this if statement makes sure that if you travel to another user's profile, you can't edit and delete their posts/comments
                 //you can only delete and edit your own posts/comments
                 if(iD == FirebaseAuth.getInstance().uid){
+
                 object : SwipeHelper(context!!, view.profile_comment_recyclerView, 200) {
                     override fun initButton(
                         viewHolders: RecyclerView.ViewHolder,

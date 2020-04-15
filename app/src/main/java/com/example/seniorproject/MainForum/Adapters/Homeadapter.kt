@@ -89,7 +89,7 @@ class HomeAdapter(context: Context, private var savedPosts: List<Post>, var type
                     override fun onDataChange(p0: DataSnapshot) {
                         if (p0.exists()) {
                             for (block in p0.children) {
-                                if (block.value == post.UserID) {
+                                if (block.value == post.author) {
                                     params.height = 0
                                     params.width = 0
                                     holder.itemView.layoutParams = params
@@ -150,7 +150,7 @@ class HomeAdapter(context: Context, private var savedPosts: List<Post>, var type
                 override fun onDataChange(p0: DataSnapshot) {
                     if (p0.exists()) {
                         for (block in p0.children) {
-                            if (block.value == post.UserID) {
+                            if (block.value == post.author) {
                                 params.height = 0
                                 params.width = 0
                                 holder.itemView.layoutParams = params
