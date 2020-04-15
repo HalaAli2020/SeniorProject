@@ -94,17 +94,6 @@ class FragmentHome : Fragment() {
         Log.d("list size", myViewModel.sendPosts().size.toString())
 
 
-        viem.refreshView?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(viem.context, R.color.blue_theme))
-        viem.refreshView?.setColorSchemeColors(ContextCompat.getColor(viem.context, R.color.white))
-
-
-        viem.refreshView?.setOnRefreshListener {
-            viem.refreshView?.isRefreshing = false
-            viem.post_recyclerView?.adapter = HomeAdapter(context!!, myViewModel.sendPosts(), 0)
-        }
-
-
-
         return viem
 
     }
