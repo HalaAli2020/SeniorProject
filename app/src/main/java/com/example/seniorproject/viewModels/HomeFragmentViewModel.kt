@@ -1,48 +1,84 @@
 package com.example.seniorproject.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.seniorproject.data.interfaces.ListActivitycallback
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.repositories.PostRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.buffer
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.toList
 import javax.inject.Inject
 
 
+@ExperimentalCoroutinesApi
+@InternalCoroutinesApi
 class HomeFragmentViewModel @Inject constructor(private val repository: PostRepository) :
     ViewModel() {
 
     var p: MutableList<Post> = mutableListOf()
+    var live : MutableLiveData<MutableList<Post>> = MutableLiveData()
+    init {
+        //getSubsP()
+    }
+    fun clearLive()
+    {
+        live.value = mutableListOf()
+    }
 
     @ExperimentalCoroutinesApi
     @InternalCoroutinesApi
-    fun getSubsP( call : ListActivitycallback)
+    //call : ListActivitycallback
+    suspend  fun getSubsP( call : ListActivitycallback)
+    {
+        var subs : MutableList<String> = mutableListOf()
+        p = mutableListOf()
+
+         var subjob = viewModelScope.async (Dispatchers.IO) {
+             val subF = repository.getUsersSubs()
+             subs = subF.toList() as MutableList<String>
+         }.await()
+        viewModelScope.async (Dispatchers.IO) {
+            val flow = repository.getSubscribedPosts(subs)
+            flow.buffer().collect(object : FlowCollector<Post>
+            {
+                override suspend fun emit(value: Post) {
+                    p.add(value)
+                }
+
+            })
+        }.await()
+
+             live.value = p
+            //call.onCallback(p)
+
+    }
+    @InternalCoroutinesApi
+    fun getSubsP2(call : ListActivitycallback)
     {
         val subs : MutableList<String> = mutableListOf()
         p = mutableListOf()
-
-         var subjob = viewModelScope.launch(Dispatchers.IO) {
+        var count : Long = 0
+        var subjob = viewModelScope.launch(Dispatchers.IO) {
+            repository.getsubsize()
             val subF = repository.getUsersSubs()
             subF.buffer().collect(object : FlowCollector<String> {
                 override suspend fun emit(value: String) {
-                    subs.add(value)
+                    count++
+                    val flow = repository.getSubscribedPosts2(value, count)
+                    flow.buffer().collect(object : FlowCollector<Post> {
+                        override suspend fun emit(value: Post) {
+                            p.add(value)
+                        }
+
+                    })
                 }
             })
-             val flow = repository.getSubscribedPosts(subs)
-             flow.buffer().collect(object : FlowCollector<Post>
-             {
-                 override suspend fun emit(value: Post) {
-                     p.add(value)
-                 }
 
-             })
-             call.onCallback(p)
-
+            call.onCallback(p)
         }
+
 
     }
 

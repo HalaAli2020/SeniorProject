@@ -44,6 +44,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_main_forum.*
 import kotlinx.android.synthetic.main.side_nav_header.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
 
 private const val TAG = "MyLogTag"
@@ -53,6 +55,8 @@ class MainForum : AppCompatActivity(),
 
 //observes users authentication state
     private var obse: Observer<User>? = null
+    @ExperimentalCoroutinesApi
+    @InternalCoroutinesApi
     override fun onAuthStateChanged(p0: FirebaseAuth) {
         val currentUser = myViewModel.user
         if (currentUser != null) {
@@ -66,6 +70,7 @@ class MainForum : AppCompatActivity(),
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
+    @InternalCoroutinesApi
     lateinit var myViewModel: HomeFragmentViewModel
     private lateinit var mDrawerLayout: DrawerLayout
 
@@ -88,11 +93,11 @@ class MainForum : AppCompatActivity(),
                     //navigates user to subscription fragment
                 }
                 R.id.newPost -> {
-                    FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.blue_theme))
-                    FAB.setImageResource(R.drawable.ic_create_blue_24dp)
+                    FAB.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.TextColor))
+                    FAB.setImageResource(R.drawable.ic_create_black_24dp)
                     val intent = Intent(this, NewPost::class.java)
                     startActivity(intent)
-                    return@OnNavigationItemSelectedListener true
+                    //return@OnNavigationItemSelectedListener true
                     //navigates user to new post activity
                 }
                 R.id.list -> {
@@ -116,6 +121,7 @@ class MainForum : AppCompatActivity(),
         }
 
 
+    @InternalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         loginVerification()
         super.onCreate(savedInstanceState)

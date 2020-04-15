@@ -1,5 +1,6 @@
 package com.example.seniorproject.MainForum.Fragments
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -20,27 +21,23 @@ import com.example.seniorproject.R
 import com.example.seniorproject.data.interfaces.ListActivitycallback
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.models.User
-import com.example.seniorproject.databinding.FragmentHomeBinding
 import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_home.view.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
-
+@ExperimentalCoroutinesApi
+@InternalCoroutinesApi
 class FragmentHome : Fragment() {
 
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
+
+    @InternalCoroutinesApi
     lateinit var myViewModel: HomeFragmentViewModel
-
-    private var obse =  Observer<MutableList<Post>> {
-
-        swap()
-    }
+    lateinit var adapter: HomeAdapter
 
 
     companion object {
@@ -48,6 +45,7 @@ class FragmentHome : Fragment() {
     }
 
     //lifecycleScope coroutines body was launched and list of posts was grabbed using a callback.
+    @ExperimentalCoroutinesApi
     @InternalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,17 +55,10 @@ class FragmentHome : Fragment() {
         DaggerAppComponent.create().inject(this)
 
         myViewModel = ViewModelProvider(this, factory).get(HomeFragmentViewModel::class.java)
-        lifecycleScope.launch(Dispatchers.IO) {
-            myViewModel.getSubsP(object : ListActivitycallback {
-                override fun onCallback(list: List<Post>) {
-                    view?.invalidate()
-
-                }
-            })
-        }
 
     }
 
+    @ExperimentalCoroutinesApi
     @InternalCoroutinesApi
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,50 +66,49 @@ class FragmentHome : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         activity?.title = "Home"
-        val binding: FragmentHomeBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        val viem = inflater.inflate(R.layout.fragment_home, container, false)
+        CoroutineScope(Dispatchers.Main.immediate).launch {
 
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
+            var job = myViewModel.getSubsP(object : ListActivitycallback {
+                override fun onCallback(list: List<Post>) {
+
+                    view?.post_recyclerView?.adapter = HomeAdapter(view?.context!!, list, 0)
+
+
+                }
+            })
+
+        }
 
         val linearLayoutManager = LinearLayoutManager(context)
         //now the two newest posts show up in home fragment of each subscribed forum
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true
-        view.post_recyclerView.layoutManager = linearLayoutManager
+        viem.post_recyclerView.layoutManager = linearLayoutManager
 
-        //initalize recyclerview adapter with list
-        view.post_recyclerView.adapter = HomeAdapter(view.context, myViewModel.sendPosts(), 0)
+        adapter = HomeAdapter(context!!, myViewModel.sendPosts(), 0)
 
         if (FirebaseAuth.getInstance().uid != null)
-            view.post_recyclerView.adapter = HomeAdapter(view.context, myViewModel.sendPosts(), 0)
+            viem.post_recyclerView?.adapter = adapter
 
         Log.d("list size", myViewModel.sendPosts().size.toString())
 
 
-        view.refreshView.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.blue_theme))
-        view.refreshView.setColorSchemeColors(ContextCompat.getColor(view.context, R.color.white))
+        viem.refreshView?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(viem.context, R.color.blue_theme))
+        viem.refreshView?.setColorSchemeColors(ContextCompat.getColor(viem.context, R.color.white))
 
 
-        view.refreshView.setOnRefreshListener {
-            view.refreshView.isRefreshing = false
-            view.post_recyclerView.adapter = HomeAdapter(view.context, myViewModel.sendPosts(), 0)
+        viem.refreshView?.setOnRefreshListener {
+            viem.refreshView?.isRefreshing = false
+            viem.post_recyclerView?.adapter = HomeAdapter(context!!, myViewModel.sendPosts(), 0)
         }
 
-        binding.homeFragmentViewModel = myViewModel
-        binding.lifecycleOwner = this
 
-        binding.executePendingBindings()
 
-        return view
+        return viem
 
     }
 
-    //swap recyclerview with new items when retrieving list of posts
-    private fun swap()
-    {
-        val ada = HomeAdapter(view!!.context, myViewModel.sendPosts(), 0)
-        view!!.post_recyclerView.swapAdapter(ada, true)
-    }
 
 
     private fun loginVerification() {
@@ -128,28 +118,84 @@ class FragmentHome : Fragment() {
         }
     }
 
+    @ExperimentalCoroutinesApi
+    @InternalCoroutinesApi
     override fun onStart() {
         super.onStart()
-        view?.post_recyclerView?.swapAdapter(HomeAdapter(view!!.context, myViewModel.sendPosts(), 0), true)
+        view?.refreshView?.isRefreshing = true
+        myViewModel.live.observe(this.viewLifecycleOwner, Observer {
+            view?.refreshView?.isRefreshing = false
+            this.view!!.post_recyclerView.swapAdapter(HomeAdapter(this.context!!, myViewModel.sendPosts(), 0), true)
+
+            view?.post_recyclerView?.visibility = View.VISIBLE
+        })
+        CoroutineScope(Dispatchers.Main.immediate).launch {
+
+
+             myViewModel.getSubsP(object : ListActivitycallback {
+                override fun onCallback(list: List<Post>) {
+                    Log.d("callback", "in")
+                    view?.post_recyclerView?.adapter = HomeAdapter(view?.context!!, list, 0)
+                    view?.post_recyclerView?.visibility = View.VISIBLE
+
+
+                }
+            })
+
+        }
+
 
     }
 
+    @ExperimentalCoroutinesApi
+    @InternalCoroutinesApi
     override fun onPause() {
         super.onPause()
+        view?.post_recyclerView!!.adapter = HomeAdapter(context!!, mutableListOf(), 0)
+        myViewModel.clearLive()
 
     }
 
+    override fun onStop() {
+        super.onStop()
+        view?.refreshView?.isRefreshing = true
+    }
+
+    @ExperimentalCoroutinesApi
+    @InternalCoroutinesApi
     override fun onResume() {
         super.onResume()
-        view?.post_recyclerView?.adapter = HomeAdapter(view!!.context, myViewModel.sendPosts(), 0)
+        view?.refreshView?.isRefreshing = true
+        myViewModel.live.observe(this.viewLifecycleOwner, Observer {
+            view?.refreshView?.isRefreshing = false
+            this.view!!.post_recyclerView.swapAdapter(HomeAdapter(this.context!!, myViewModel.sendPosts(), 0), true)
+
+            view?.post_recyclerView?.visibility = View.VISIBLE
+        })
+        CoroutineScope(Dispatchers.Main.immediate).launch {
+            //myViewModel.clearRepoList()
+
+            myViewModel.getSubsP(object : ListActivitycallback {
+                override fun onCallback(list: List<Post>) {
+
+                    Log.d("callback", "in")
+                    view?.post_recyclerView?.adapter = HomeAdapter(view?.context!!, list, 0)
+                    view?.post_recyclerView?.visibility = View.VISIBLE
+
+
+                }
+            })
+
+        }
+
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
+        view?.refreshView?.isRefreshing = true
     }
-
-
 }
+
 
 
 
