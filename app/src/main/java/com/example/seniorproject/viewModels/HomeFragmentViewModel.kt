@@ -47,7 +47,7 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
         }.await()
 
              live.value = p
-
+            //call.onCallback(p)
 
     }
     @InternalCoroutinesApi

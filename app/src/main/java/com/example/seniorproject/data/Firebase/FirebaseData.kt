@@ -1305,7 +1305,7 @@ private fun listenForUserProfilePosts(uid: String, callbackPost: FirebaseCallbac
     fun getClassComments(Key: String, subject: String, call: FirebaseCallbackComment) {
         listenForClassComments(Key, subject, call)
     }
-    fun getsubsize() : Long
+    fun getsubsize(call : sizecall)
     {
         val uid = FirebaseAuth.getInstance().uid
         var size by Delegates.notNull<Long>()
@@ -1317,9 +1317,10 @@ private fun listenForUserProfilePosts(uid: String, callbackPost: FirebaseCallbac
 
             override fun onDataChange(p0: DataSnapshot) {
                size = p0.childrenCount
+                call.onCallback(size)
             }
         })
-        return size
+
     }
 
     /*

@@ -17,7 +17,7 @@ interface FirebaseValue{
     suspend fun onSuccess(data : DataSnapshot)
 }
 interface sizecall{
-    fun onCallback(i : Int)
+    fun onCallback(i : Long)
 }
 
 interface ListActivitycallback{

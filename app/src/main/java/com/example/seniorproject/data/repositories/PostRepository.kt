@@ -21,6 +21,7 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     val post: Post? = null
     var userSUB: MutableLiveData<MutableList<String>> = MutableLiveData()
     var Subsize : Long = 0
+    var postL : MutableList<Post> = mutableListOf()
 
     //calls corresponding function from firebase file
     fun saveNewPost(text: String, title: String, CRN: String) = Firebase.saveNewPosttoUser(text, title, CRN)
@@ -30,11 +31,21 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
     fun uploadUserProfileImage(selectedPhotoUri: Uri) =
         Firebase.uploadImageToFirebaseStorage(selectedPhotoUri)
 
-    suspend fun getsubsize()
+    fun clearlist()
+    {
+        postL.clear()
+    }
+
+    suspend fun getsubsize() : Long
     {
         var job = CoroutineScope(Dispatchers.IO).async{
-            Subsize = Firebase.getsubsize()
+           Firebase.getsubsize(object : sizecall{
+                override fun onCallback(i: Long) {
+                    Subsize = i
+                }
+            })
         }.await()
+        return Subsize
 
     }
 
@@ -108,7 +119,7 @@ each class the user is subscribed to this uses coroutines */
         }
     }
     suspend fun getSubscribedPosts2(value : String, subC : Long) : Flow<Post> = flow {
-        val postL : MutableList<Post> = mutableListOf()
+        //val postL : MutableList<Post> = mutableListOf()
         val limit = 3
         val onSuccessJob : Job? = null
 
@@ -161,7 +172,7 @@ each class the user is subscribed to this uses coroutines */
                 })
 
 
-            //kotlinx.coroutines.delay(1000)
+           // kotlinx.coroutines.delay(1000)
 
         }
 

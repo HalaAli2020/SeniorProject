@@ -34,12 +34,10 @@ class FragmentHome : Fragment() {
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
+
     @InternalCoroutinesApi
     lateinit var myViewModel: HomeFragmentViewModel
-    lateinit var adapter : HomeAdapter
-
-
-
+    lateinit var adapter: HomeAdapter
 
 
     companion object {
@@ -59,7 +57,35 @@ class FragmentHome : Fragment() {
         myViewModel = ViewModelProvider(this, factory).get(HomeFragmentViewModel::class.java)
 
         //adapter = HomeAdapter(context!!, myViewModel.sendPosts(), 0)
-      CoroutineScope(Dispatchers.Main.immediate).launch {
+        /* CoroutineScope(Dispatchers.Main.immediate).launch {
+            var job = myViewModel.getSubsP(object : ListActivitycallback {
+                override fun onCallback(list: List<Post>) {
+                    //view!!.invalidate()
+                    Log.d("callback", "in")
+                    view?.post_recyclerView?.adapter = HomeAdapter(view?.context!!, list, 0)
+                    //view?.post_recyclerView?.scrollToPosition(0)
+                    //adapter = HomeAdapter(context!!, list, 0)
+                    //view?.post_recyclerView?.adapter = adapter
+
+                }
+            })
+
+        }*/
+
+    }
+
+    @ExperimentalCoroutinesApi
+    @InternalCoroutinesApi
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        activity?.title = "Home"
+        //val binding: FragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        val viem = inflater.inflate(R.layout.fragment_home, container, false)
+        CoroutineScope(Dispatchers.Main.immediate).launch {
+            // myViewModel.clearRepoList()
             var job = myViewModel.getSubsP(object : ListActivitycallback {
                 override fun onCallback(list: List<Post>) {
                     //view!!.invalidate()
@@ -74,29 +100,16 @@ class FragmentHome : Fragment() {
 
         }
 
-    }
-
-    @ExperimentalCoroutinesApi
-    @InternalCoroutinesApi
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        activity?.title = "Home"
-        //val binding: FragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-        val viem = inflater.inflate(R.layout.fragment_home, container, false)
-
         val linearLayoutManager = LinearLayoutManager(context)
         //now the two newest posts show up in home fragment of each subscribed forum
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true
         viem.post_recyclerView.layoutManager = linearLayoutManager
-        myViewModel.live.observe(this.viewLifecycleOwner, Observer {
+        /*myViewModel.live.observe(this.viewLifecycleOwner, Observer {
 
             this.view!!.post_recyclerView.swapAdapter(HomeAdapter(this.context!!, myViewModel.sendPosts(), 0), true)
             //this.view!!.post_recyclerView.smoothScrollToPosition(0)
-        })
+        })*/
         //adapter = HomeAdapter(context!!, myViewModel.sendPosts(), 0)
         adapter = HomeAdapter(context!!, myViewModel.sendPosts(), 0)
         //adapter = HomeAdapter(context!!, myViewModel.sendPosts(), 0)
@@ -131,9 +144,9 @@ class FragmentHome : Fragment() {
         }
 
         ////binding.homeFragmentViewModel = myViewModel
-       // binding.lifecycleOwner = this
+        // binding.lifecycleOwner = this
 
-       // binding.executePendingBindings()
+        // binding.executePendingBindings()
         //initalize recyclerview adapter with list
 
 
@@ -143,8 +156,7 @@ class FragmentHome : Fragment() {
 
     //swap recyclerview with new items when retrieving list of posts
     @InternalCoroutinesApi
-    private fun swap()
-    {
+    private fun swap() {
         val ada = HomeAdapter(view!!.context, myViewModel.sendPosts(), 0)
         view!!.post_recyclerView.swapAdapter(ada, true)
     }
@@ -157,28 +169,80 @@ class FragmentHome : Fragment() {
         }
     }
 
+    @ExperimentalCoroutinesApi
+    @InternalCoroutinesApi
     override fun onStart() {
         super.onStart()
+        view?.refreshView?.isRefreshing = true
+        myViewModel.live.observe(this.viewLifecycleOwner, Observer {
+            view?.refreshView?.isRefreshing = false
+            this.view!!.post_recyclerView.swapAdapter(HomeAdapter(this.context!!, myViewModel.sendPosts(), 0), true)
+
+            view?.post_recyclerView?.visibility = View.VISIBLE
+        })
+        CoroutineScope(Dispatchers.Main.immediate).launch {
+
+
+             myViewModel.getSubsP(object : ListActivitycallback {
+                override fun onCallback(list: List<Post>) {
+                    Log.d("callback", "in")
+                    view?.post_recyclerView?.adapter = HomeAdapter(view?.context!!, list, 0)
+                    view?.post_recyclerView?.visibility = View.VISIBLE
+
+
+                }
+            })
+
+        }
 
 
     }
 
     override fun onPause() {
         super.onPause()
+        view?.post_recyclerView!!.adapter = HomeAdapter(context!!, mutableListOf(), 0)
 
     }
 
+    override fun onStop() {
+        super.onStop()
+        view!!.invalidate()
+    }
+
+    @ExperimentalCoroutinesApi
+    @InternalCoroutinesApi
     override fun onResume() {
         super.onResume()
+        view?.refreshView?.isRefreshing = true
+        myViewModel.live.observe(this.viewLifecycleOwner, Observer {
+            view?.refreshView?.isRefreshing = false
+            this.view!!.post_recyclerView.swapAdapter(HomeAdapter(this.context!!, myViewModel.sendPosts(), 0), true)
+
+            view?.post_recyclerView?.visibility = View.VISIBLE
+        })
+        CoroutineScope(Dispatchers.Main.immediate).launch {
+            //myViewModel.clearRepoList()
+
+            myViewModel.getSubsP(object : ListActivitycallback {
+                override fun onCallback(list: List<Post>) {
+
+                    Log.d("callback", "in")
+                    view?.post_recyclerView?.adapter = HomeAdapter(view?.context!!, list, 0)
+                    view?.post_recyclerView?.visibility = View.VISIBLE
+
+
+                }
+            })
+
+        }
 
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
     }
-
-
 }
+
 
 
 
