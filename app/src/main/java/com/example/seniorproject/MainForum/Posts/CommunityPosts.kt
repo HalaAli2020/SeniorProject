@@ -87,7 +87,7 @@ class CommunityPosts : AppCompatActivity() {
                             //the profile button Block User is added into the buffer that holds the list of buttons.
                             buffer.add(
                                 //BlockUser text appears inside button with community posts context and with color Red.
-                                ProfileButton(applicationContext, "Block User", 30, 0, Color.parseColor
+                                ProfileButton(applicationContext, "Block", 45, 0, Color.parseColor
                                     ("#FF0000"), object : ButtonClickListener {
                                     //this onClick listener is triggered when user hits button
                                     override fun onClick(pos: Int) {
@@ -138,8 +138,8 @@ class CommunityPosts : AppCompatActivity() {
                             //the profile button Report Post is added into the buffer that holds the list of buttons.
                             buffer.add(
                                 //ReportPost text appears inside button with community posts context and with color Gray.
-                                ProfileButton(applicationContext, "Report Post", 30, 0, Color.parseColor
-                                    ("#D3D3D3"), object : ButtonClickListener {
+                                ProfileButton(applicationContext, "Report", 45, 0, Color.parseColor
+                                    ("#2b99fd"), object : ButtonClickListener {
                                     //this onClick listener is triggered when user hits button
                                     override fun onClick(pos: Int) {
                                         val postkey: String? =

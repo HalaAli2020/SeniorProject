@@ -26,7 +26,7 @@ class UpdatePost : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.update_post)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        title = "Update Post"
+        title = "Edit Post"
 
 
         //initialize inject of dagger app component and initializes view model with generic factory

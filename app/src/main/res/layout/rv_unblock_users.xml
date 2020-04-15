@@ -17,20 +17,19 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="12dp"
+            android:contentDescription="@string/title_Image_post"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_account_circle_blue_24dp"
-            android:contentDescription="@string/title_Image_post" />
+            app:srcCompat="@drawable/ic_account_circle_blue_24dp" />
 
         <TextView
             android:id="@+id/blockedUserName"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="12dp"
             android:textColor="@color/TextColor"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/blockedUserImage"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

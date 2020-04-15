@@ -100,7 +100,7 @@ class ProfileCommentFragment : Fragment() {
                         buffer: MutableList<ProfileButton>
                     ) {
                         buffer.add(
-                            ProfileButton(context!!, "Delete", 30, 0, Color.parseColor
+                            ProfileButton(context!!, "Delete", 45, 0, Color.parseColor
                                 ("#FF0000"), object : ButtonClickListener {
                                 override fun onClick(pos: Int) {
                                     val postkeyUP: String? = adaptercomments.pkeyUserProfile(viewHolders as CustomViewHolders)
@@ -156,8 +156,8 @@ class ProfileCommentFragment : Fragment() {
                         )
 
                         buffer.add(
-                            ProfileButton(context!!, "Edit", 30, 0, Color.parseColor
-                                ("#D3D3D3"), object : ButtonClickListener {
+                            ProfileButton(context!!, "Edit", 45, 0, Color.parseColor
+                                ("#2b99fd"), object : ButtonClickListener {
                                 override fun onClick(pos: Int) {
                                     Log.d("soupprof", "can you see me")
                                     val userkey: String? = adaptercomments.getUserKey(viewHolders as CustomViewHolders)
