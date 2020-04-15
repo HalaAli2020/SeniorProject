@@ -121,7 +121,7 @@ class FragmentHome : Fragment() {
         CoroutineScope(Dispatchers.Main.immediate).launch {
 
 
-             myViewModel.getSubsP(object : ListActivitycallback {
+            myViewModel.getSubsP(object : ListActivitycallback {
                 override fun onCallback(list: List<Post>) {
                     Log.d("callback", "in")
                     view?.post_recyclerView?.adapter = HomeAdapter(view?.context!!, list, 0)
@@ -184,8 +184,6 @@ class FragmentHome : Fragment() {
         view?.refreshView?.isRefreshing = true
     }
 }
-
-
 
 
 
