@@ -119,7 +119,7 @@ class PostAdapter(context: Context, private var savedPostList: List<Post>, var t
                 }
 
             }
-        } else {
+        } else{
             val userID = FirebaseAuth.getInstance().uid
             holder.itemView.post_title.text = post.title
             val ref = FirebaseDatabase.getInstance().getReference("users/$userID")
