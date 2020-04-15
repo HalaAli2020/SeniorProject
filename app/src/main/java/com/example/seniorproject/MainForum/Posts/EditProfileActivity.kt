@@ -89,9 +89,12 @@ class EditProfileActivity : AppCompatActivity() {
             clearGlideCache()
             val newUsername : EditText = findViewById(R.id.in_profile_username)
             val newBio : EditText = findViewById(R.id.in_edit_bio)
-            if (newUsername.text.toString() != myViewModel.currentUser()?.displayName)
+            if (newUsername.text.toString() != myViewModel.currentUser()?.displayName && newUsername.text.toString()!="")
             {
                 myViewModel.saveNewUsername(newUsername.text.toString())
+            }
+            if(newUsername.text.toString()==""){
+                Toast.makeText(this, "Please enter a username", Toast.LENGTH_SHORT).show()
             }
             myViewModel.saveUserbio(newBio.text.toString())
 

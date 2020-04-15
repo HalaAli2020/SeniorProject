@@ -275,7 +275,7 @@ private fun getPostperclass(f : Int) : Int
             }
 
             override fun onSuccess(data: DataSnapshot) {
-                val commdetail: Iterable<DataSnapshot> = data.children
+                val commdetail: Iterable<DataSnapshot> = data.children.reversed()
                 val profileCommentList : MutableList<Comment> = mutableListOf()
                 val comment = Comment("no comment", "", "", "", "")
                 profileCommentList.add(comment)
