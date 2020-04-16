@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
@@ -65,7 +66,7 @@ class MainForum : AppCompatActivity(),
     override fun onAuthStateChanged(p0: FirebaseAuth) {
         val currentUser = myViewModel.user
         if (currentUser != null) {
-            myViewModel.fetchCurrentUserName()
+            Log.d(TAG, "authlistener returned not null")
         } else {
             Log.d(TAG, "authlistener returned null")
         }
@@ -205,6 +206,14 @@ class MainForum : AppCompatActivity(),
 
         val headerview = navigationView.getHeaderView(0)
         val imageView: ImageView = headerview.findViewById(R.id.profile_image)
+        val textView: TextView = headerview.findViewById(R.id.username_display)
+
+        myViewModel.fetchUsername(FirebaseAuth.getInstance().currentUser?.uid ?: "no username",
+            object : EmailCallback {
+                override fun getEmail(string: String) {
+                    textView.text = string
+                }
+            })
 
 //load profile image
         Glide.with(this) //1
@@ -303,6 +312,14 @@ class MainForum : AppCompatActivity(),
         val navigationView: NavigationView = findViewById(R.id.nav_view)
         val headerview = navigationView.getHeaderView(0)
         val imageView: ImageView = headerview.findViewById(R.id.profile_image)
+        val textView: TextView = headerview.findViewById(R.id.username_display)
+
+        myViewModel.fetchUsername(FirebaseAuth.getInstance().currentUser?.uid ?: "no username",
+            object : EmailCallback {
+                override fun getEmail(string: String) {
+                    textView.text = string
+                }
+            })
 
         Glide.with(this) //1
             .load(FirebaseAuth.getInstance().currentUser?.photoUrl)
@@ -311,7 +328,6 @@ class MainForum : AppCompatActivity(),
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .circleCrop().fitCenter()
             .into(imageView)
-
     }
 
 

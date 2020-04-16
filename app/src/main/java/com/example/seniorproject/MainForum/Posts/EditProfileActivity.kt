@@ -119,7 +119,7 @@ class EditProfileActivity : AppCompatActivity() {
             selectedPhotoUri= data.data
 
             Glide.with(this) //1
-                .load(selectedPhotoUri)
+                .load(data.data)
                 .placeholder(R.drawable.ic_account_circle_blue_24dp)
                 .error(R.drawable.ic_account_circle_blue_24dp)
                 .skipMemoryCache(true) //2
