@@ -75,6 +75,7 @@ class ClickedPost : AppCompatActivity() {
         myViewModel.text = text
         myViewModel.crn = crn
 
+        var endList:Boolean = false
 
         //checks to see if there are no comments in a new post that was created. If no comments then enter code in onEmpty
         var checkForComments = myViewModel.noCommentsCheckForCommPosts(object :
@@ -281,16 +282,35 @@ class ClickedPost : AppCompatActivity() {
                                 val linearLayoutManager = LinearLayoutManager(this@ClickedPost)
                                 comment_RecyclerView.adapter = adapter
                                 comment_RecyclerView.layoutManager = linearLayoutManager
-                                load.visibility=View.INVISIBLE
-                            }else{ //load functionality begins here
+                                load.visibility=View.GONE
+                            }
+                            else{ //load functionality begins here
                                 var lastpositionviewed=11
-                                load.visibility=View.VISIBLE
+
+
                                 //if a post has over 10 comments, only show the latest 10 comments. make user hit load button to load more comments
                                 adapter = CommentsListAdapter(this@ClickedPost, list.subList(0,lastpositionviewed), title, text, author, crn,
                                     intent.getStringExtra("UserID").toString(), ptime, uri)
                                 val linearLayoutManager = LinearLayoutManager(this@ClickedPost)
                                 comment_RecyclerView.adapter = adapter
                                 comment_RecyclerView.layoutManager = linearLayoutManager
+
+
+
+                                comment_RecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+
+                                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+
+                                        if (dy < 0)
+                                            load.visibility=View.GONE
+
+                                        else if(linearLayoutManager.findLastVisibleItemPosition() == linearLayoutManager.itemCount-1 && !endList)
+                                            load.visibility=View.VISIBLE
+
+
+                                        super.onScrolled(recyclerView, dx, dy)
+                                    }
+                                })
 
                                 if((list.size%10<10 || list.size%10==0) && list.size>10){ //if list is 26 or list is 50, all applies
                                     var lastload=list.size%10 //returns modulus: ex 26%10=6
@@ -324,8 +344,9 @@ class ClickedPost : AppCompatActivity() {
 
                                             if (count == 0) {
                                                 //lets user know that no more comments can be viewed because they are all present
-                                                Toast.makeText(this@ClickedPost, "No more comments to load", Toast.LENGTH_LONG)
-                                                    .show()
+                                                Toast.makeText(this@ClickedPost, "All comments loaded.", Toast.LENGTH_LONG).show()
+                                                load.visibility=View.GONE
+                                                endList = true
                                             }
                                         }
                                     }

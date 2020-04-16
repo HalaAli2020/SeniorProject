@@ -17,16 +17,21 @@
         android:background="@color/BackgroundColor"
         tools:context=".MainForum.Posts.ClickedPost">
 
+
         <Button
             android:id="@+id/load"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="260dp"
-            android:layout_marginBottom="150dp"
-            android:text="Load"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/constraintLayout2" />
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="2dp"
+            android:background="@color/blue_theme"
+            android:visibility="gone"
+            android:text="View More Comments"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout2"
@@ -64,34 +69,29 @@
                 android:background="@android:color/transparent"
                 android:ems="10"
                 android:hint="@string/add_a_comment"
+                android:importantForAutofill="no"
                 android:inputType="textMultiLine|textCapSentences"
-                android:paddingTop="10dp"
                 android:maxLength="1000"
+                android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:textColor="@color/TextColor"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/Comment_button"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:importantForAutofill="no" />
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/refreshView"
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/comment_RecyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="4dp"
-            app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
+            android:layout_marginBottom="2dp"
+            app:layout_constraintBottom_toTopOf="@+id/load"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/comment_RecyclerView"
-                android:layout_width="0dp"
-                android:layout_height="0dp" />
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
