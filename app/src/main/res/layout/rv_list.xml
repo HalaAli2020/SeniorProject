@@ -29,7 +29,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/ic_account_circle_blue_24dp" />
+            android:src="@drawable/unitlogopropernav" />
 
         <TextView
             android:id="@+id/communityName_TV"
