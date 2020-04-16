@@ -4,9 +4,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.seniorproject.Utils.EmailCallback
+import com.example.seniorproject.data.interfaces.FirebaseCallbackItem
 import com.example.seniorproject.data.interfaces.ListActivitycallback
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.repositories.PostRepository
+import com.google.firebase.database.DataSnapshot
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.buffer
@@ -20,6 +22,7 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
     ViewModel() {
 
     var p: MutableList<Post> = mutableListOf()
+    var currentUsername : String = "no username available"
     var live : MutableLiveData<MutableList<Post>> = MutableLiveData()
     init {
         //getSubsP()
@@ -92,7 +95,24 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
     }
 
     //these functions call their corresponding functions in the repository
-    fun fetchCurrentUserName() = repository.fetchCurrentUserName()
+    //used in UserProfileActivity to get the current users username in real time
+    fun fetchUsername(UserID: String, callback : EmailCallback){
+        repository.fetchUsername(UserID, object : FirebaseCallbackItem {
+            override fun onStart() {
+
+            }
+
+            override fun onFailure() {
+
+            }
+
+            override fun onMessage(data: DataSnapshot){
+                val email = data.child("Username").getValue(String::class.java)
+                currentUsername = email ?: "no email in success"
+                callback.getEmail(currentUsername)
+            }
+        })
+    }
 
     var user = repository.currentUser()
 
