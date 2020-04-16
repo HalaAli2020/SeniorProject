@@ -99,7 +99,7 @@ To run this application locally follow these steps.
 * []() open your firebase console from https://firebase.google.com/.
 * []() select your project. 
 * []() select your database. 
-* []() select the three dot in the right hand corner of the database window. 
+* []() select the three dots in the right hand corner of the database window. 
 * []() select import JSON and import the file.
 
 <strong>Add Firebase to Android Studio</strong>
