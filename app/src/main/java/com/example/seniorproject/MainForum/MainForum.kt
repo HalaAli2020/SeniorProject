@@ -129,8 +129,7 @@ class MainForum : AppCompatActivity(),
         loginVerification()
         super.onCreate(savedInstanceState)
 
-        if (FirebaseDatabase.getInstance().reference == null)
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+        DatabaseUtil.getDatabase()
 
         setTheme()
 //initialized dagger app component and viewmodel
@@ -303,6 +302,21 @@ class MainForum : AppCompatActivity(),
             .circleCrop().fitCenter()
             .into(imageView)
 
+    }
+
+
+    class DatabaseUtil {
+        companion object {
+            private val firebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
+
+            init {
+                firebaseDatabase.setPersistenceEnabled(true)
+            }
+
+            fun getDatabase() : FirebaseDatabase {
+                return firebaseDatabase
+            }
+        }
     }
 
 }
