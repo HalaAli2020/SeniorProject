@@ -127,7 +127,7 @@ class MainForum : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         loginVerification()
         super.onCreate(savedInstanceState)
-        //FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
 
         setTheme()
 //initialized dagger app component and viewmodel
