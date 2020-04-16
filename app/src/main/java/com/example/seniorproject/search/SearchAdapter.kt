@@ -28,8 +28,8 @@ class SearchAdapter(context: Context, ViewModel: SearchViewModel, Clist : Mutabl
 
     //Get number of items in data
     override fun getItemCount(): Int {
-        if (!classlist?.value.isNullOrEmpty())
-            return classlist?.value?.size!!
+        if (!classlist.value.isNullOrEmpty())
+            return classlist.value?.size!!
         return 0
     }
 

@@ -46,6 +46,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_main_forum.*
+import kotlinx.android.synthetic.main.rv_list.*
 import kotlinx.android.synthetic.main.side_nav_header.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -56,8 +57,9 @@ private const val TAG = "MyLogTag"
 class MainForum : AppCompatActivity(),
     FirebaseAuth.AuthStateListener {
 
-//observes users authentication state
+    //observes users authentication state
     private var obse: Observer<User>? = null
+
     @ExperimentalCoroutinesApi
     @InternalCoroutinesApi
     override fun onAuthStateChanged(p0: FirebaseAuth) {
@@ -69,15 +71,16 @@ class MainForum : AppCompatActivity(),
         }
     }
 
-    private val sharedPrefs by lazy {  getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
+    private val sharedPrefs by lazy { getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
+
     @InternalCoroutinesApi
     lateinit var myViewModel: HomeFragmentViewModel
     private lateinit var mDrawerLayout: DrawerLayout
 
-//botton navigation view initialization
+    //botton navigation view initialization
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -108,7 +111,7 @@ class MainForum : AppCompatActivity(),
                     FAB.setImageResource(R.drawable.ic_create_black_24dp)
                     val intent = Intent(this, SearchActivity::class.java)
                     startActivity(intent)
-                   //navigates user to search activity
+                    //navigates user to search activity
 
                 }
                 R.id.messages -> {
@@ -124,6 +127,7 @@ class MainForum : AppCompatActivity(),
         }
 
 
+    @ExperimentalCoroutinesApi
     @InternalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         loginVerification()
@@ -135,7 +139,7 @@ class MainForum : AppCompatActivity(),
 //initialized dagger app component and viewmodel
         DaggerAppComponent.create().inject(this)
         myViewModel = ViewModelProvider(this, factory).get(HomeFragmentViewModel::class.java)
-    //initializes binding variable all binded variables can be found in the correlating xml file
+        //initializes binding variable all binded variables can be found in the correlating xml file
         val binding: ActivityMainForumBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_main_forum)
         bottom_navigation.onNavigationItemSelectedListener = mOnNavigationItemSelectedListener
@@ -216,13 +220,14 @@ class MainForum : AppCompatActivity(),
         onRestart()
     }
 
-//replace fragment boilderplate code
+    //replace fragment boilderplate code
     private fun replaceFragment(fragment: Fragment) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragmentContainer, fragment)
         fragmentTransaction.commit()
     }
-//verifies login
+
+    //verifies login
     private fun loginVerification() {
         val uid = FirebaseAuth.getInstance().uid
         if (uid == null) {
@@ -232,12 +237,13 @@ class MainForum : AppCompatActivity(),
         }
     }
 
-//inflates menu
+    //inflates menu
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.top_nav_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
-//opens hamburger menu
+
+    //opens hamburger menu
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
@@ -246,7 +252,8 @@ class MainForum : AppCompatActivity(),
         }
         return super.onOptionsItemSelected(item)
     }
-//checks weather the device has an internet connection
+
+    //checks weather the device has an internet connection
     private fun checkNetworkState(context: Context): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -263,7 +270,8 @@ class MainForum : AppCompatActivity(),
             return nwInfo.isConnected
         }
     }
-//opens no internet alert dialog
+
+    //opens no internet alert dialog
     private fun noInternetAlertDialog() {
         val dialogBuilder = AlertDialog.Builder(this)
 
@@ -279,13 +287,15 @@ class MainForum : AppCompatActivity(),
     }
 
     //sets theme of main forum to dark or light mode or it follows system of app settings on mobile device
-    private fun setTheme(){
+    private fun setTheme() {
         when (sharedPrefs.getInt(KEY_THEME, THEME_LIGHT)) {
             THEME_SYSTEM -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
             THEME_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
     }
+
+
 
     override fun onRestart() {
         super.onRestart()

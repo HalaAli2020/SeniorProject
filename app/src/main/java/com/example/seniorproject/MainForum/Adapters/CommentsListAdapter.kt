@@ -128,7 +128,7 @@ class CommentsListAdapter(
                     if (p0.exists()) {
                         var check = true
                         for (block in p0.children) {
-                            if (block.getValue() == comment.author) {
+                            if (block.value == comment.author) {
                                 params.height = 0
                                 params.width = 0
                                 holder.itemView.layoutParams = params
@@ -207,14 +207,10 @@ class CommentsListAdapter(
         return commentkey!!
     }
 
-    class CustomViewHolders(v: View) : RecyclerView.ViewHolder(v) {
-
-    }
+    class CustomViewHolders(v: View) : RecyclerView.ViewHolder(v)
 
 
-    class CustomViewHoldersHeader(v: View) : RecyclerView.ViewHolder(v) {
-
-    }
+    class CustomViewHoldersHeader(v: View) : RecyclerView.ViewHolder(v)
 
 
 }

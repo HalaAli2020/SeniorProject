@@ -54,12 +54,13 @@ class PostRepository @Inject constructor(private val Firebase: FirebaseData) {
 each class the user is subscribed to this uses coroutines */
     suspend fun getSubscribedPosts(value : List<String>) : Flow<Post> = flow {
         val postL : MutableList<Post> = mutableListOf()
-        val limit = getPostperclass(value.size)
+        var limit = getPostperclass(value.size.toLong())
         val onSuccessJob : Job? = null
 
         val job = CoroutineScope(Dispatchers.IO).launch {
             for (n in value)
             {
+
                 Firebase.getOneClass(n, object : FirebaseValuecallback
                 {
                     override fun onFailure() {
@@ -73,6 +74,10 @@ each class the user is subscribed to this uses coroutines */
                     override fun onSuccess(data: DataSnapshot)  {
                       launch(Dispatchers.Default) {
                           var count = 0
+                          if(data.childrenCount >= limit)
+                          {
+                              limit = data.childrenCount
+                          }
 
                             for (n in data.children.reversed())
                             {
@@ -141,6 +146,7 @@ each class the user is subscribed to this uses coroutines */
 
                             for (n in data.children.reversed())
                             {
+
                                 val p = Post()
 
                                 p.let {
@@ -213,6 +219,7 @@ each class the user is subscribed to this uses coroutines */
            }
        }
       val job = CoroutineScope(Dispatchers.IO). launch {
+
          var ob = Firebase.getUserSub(send)
 
           kotlinx.coroutines.delay(1000)
@@ -226,7 +233,7 @@ each class the user is subscribed to this uses coroutines */
     }
 
 /*This function is used to find out how many posts per class the application should grab based on the number of communities the user is a part of  */
-private fun getPostperclass(f : Int) : Int
+private fun getPostperclass(f : Long) : Long
     {
         if(f <= 2)
         {
