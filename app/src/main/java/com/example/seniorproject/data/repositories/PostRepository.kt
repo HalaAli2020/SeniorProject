@@ -74,7 +74,7 @@ each class the user is subscribed to this uses coroutines */
                     override fun onSuccess(data: DataSnapshot)  {
                       launch(Dispatchers.Default) {
                           var count = 0
-                          if(data.childrenCount >= limit)
+                          if(data.childrenCount <= limit)
                           {
                               limit = data.childrenCount
                           }
