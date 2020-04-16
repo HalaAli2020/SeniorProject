@@ -40,7 +40,7 @@
         android:contentDescription="@string/add_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_account_circle_blue_24dp" />
+        app:srcCompat="@drawable/unitlogopropernav" />
 
     <TextView
         android:id="@+id/post_timestamp"
