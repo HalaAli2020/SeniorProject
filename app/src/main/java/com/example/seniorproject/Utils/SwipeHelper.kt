@@ -40,7 +40,7 @@ abstract class SwipeHelper(context: Context, private val recyclerView: RecyclerV
         override fun onSingleTapUp(e: MotionEvent?): Boolean {
             for(button in buttonList!!)
             {
-                if(button.onClick(e!!.x, e!!.y))
+                if(button.onClick(e!!.x, e.y))
                     break
             }
             return true

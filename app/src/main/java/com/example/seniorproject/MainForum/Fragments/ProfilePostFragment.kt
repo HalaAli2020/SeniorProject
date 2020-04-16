@@ -114,7 +114,7 @@ class ProfilePostFragment : Fragment() {
                                         builder.setMessage("You cannot restore posts that have been deleted.")
                                         builder.setPositiveButton("DELETE"
                                         ) { _: DialogInterface?, _: Int ->
-                                            myViewModel.deletePost(postkey!!, crnkey!!, userkey!!)
+                                            myViewModel.deletePost(postkey, crnkey!!, userkey!!)
                                             val intent = Intent(view?.context, UserProfileActivity::class.java)
                                             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                                             //restarts user profile activity

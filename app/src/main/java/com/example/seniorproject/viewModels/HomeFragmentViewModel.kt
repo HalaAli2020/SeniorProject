@@ -1,4 +1,5 @@
 package com.example.seniorproject.viewModels
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,7 +26,8 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
     }
     fun clearLive()
     {
-        live.value = mutableListOf()
+        live.value?.clear()
+        p.clear()
     }
 
     @ExperimentalCoroutinesApi
@@ -36,10 +38,11 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
         var subs : MutableList<String> = mutableListOf()
         p = mutableListOf()
 
-         var subjob = viewModelScope.async (Dispatchers.IO) {
-             val subF = repository.getUsersSubs()
-             subs = subF.toList() as MutableList<String>
-         }.await()
+        withContext(viewModelScope.coroutineContext + Dispatchers.IO) {
+
+            val subF = repository.getUsersSubs()
+            subs = subF.toList() as MutableList<String>
+        }
         viewModelScope.async (Dispatchers.IO) {
             val flow = repository.getSubscribedPosts(subs)
             flow.buffer().collect(object : FlowCollector<Post>

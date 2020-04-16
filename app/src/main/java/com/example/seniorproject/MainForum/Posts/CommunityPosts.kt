@@ -110,7 +110,7 @@ class CommunityPosts : AppCompatActivity() {
                                             )
                                             finish()
                                             //completes community posts activity
-                                            startActivity(getIntent())
+                                            startActivity(intent)
                                             //reloads community posts activity with blocked users content gone.
                                             toast.show()
                                         }
