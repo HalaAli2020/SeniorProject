@@ -16,16 +16,16 @@
 
 
     <string-array name="class_list">
-        <item>BIO1030</item>
-        <item>BIO1510</item>
-        <item>BIO2200</item>
-        <item>BIO3070</item>
-        <item>BIO5440</item>
-        <item>CSC1000</item>
-        <item>CSC1500</item>
-        <item>CSC2110</item>
-        <item>CSC3020</item>
-        <item>CSC4996</item>
+        <item>CodingTips</item>
+        <item>MCATHelp</item>
+        <item>FitnessLifestyle</item>
+        <item>NoSleepTeam</item>
+        <item>PsychRocks</item>
+        <item>ProgrammingLife</item>
+        <item>CollegeSurvivalGuide</item>
+        <item>ArmyWarriors</item>
+        <item>Beta Thau</item>
+        <item>Alpha Kappa Psi</item>
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
