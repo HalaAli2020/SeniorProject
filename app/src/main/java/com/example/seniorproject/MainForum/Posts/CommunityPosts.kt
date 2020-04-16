@@ -62,14 +62,6 @@ class CommunityPosts : AppCompatActivity() {
                 adapter = PostAdapter(this@CommunityPosts, list, 1)
                 classes_post_RV.adapter = adapter
 
-                refreshView.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(this@CommunityPosts, R.color.blue_theme))
-                refreshView.setColorSchemeColors(ContextCompat.getColor(this@CommunityPosts, R.color.white))
-
-                refreshView.setOnRefreshListener {
-                    refreshView.isRefreshing = false
-                    classes_post_RV.adapter = PostAdapter(this@CommunityPosts, list, 1)
-                }
-
                 //swipe functionality for swiping every post in community posts with options to report and block
                 object : SwipeHelper(applicationContext, classes_post_RV, 200) {
                     //initButton creates the buffer which holds ProfileButtons that we can add and those buttons will be drawn

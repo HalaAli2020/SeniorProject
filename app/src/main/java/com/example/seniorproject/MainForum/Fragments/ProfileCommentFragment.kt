@@ -71,25 +71,6 @@ class ProfileCommentFragment : Fragment() {
                 view.profile_comment_recyclerView.adapter = adaptercomments
                 view.profile_comment_recyclerView.layoutManager = linearLayoutManager
 
-                //settting refreshview UI
-                view.refreshView.setProgressBackgroundColorSchemeColor(
-                    ContextCompat.getColor(
-                        view.context,
-                        R.color.blue_theme
-                    )
-                )
-                view.refreshView.setColorSchemeColors(
-                    ContextCompat.getColor(
-                        view.context,
-                        R.color.white
-                    )
-                )
-
-                view.refreshView.setOnRefreshListener {
-                    view.profile_comment_recyclerView.adapter =
-                        ProfileCommAdapter(view.context, list)
-                    view.refreshView.isRefreshing = false
-                }
 
                 //this if statement makes sure that if you travel to another user's profile, you can't edit and delete their posts/comments
                 //you can only delete and edit your own posts/comments

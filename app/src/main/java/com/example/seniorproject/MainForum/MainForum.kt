@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -33,6 +34,7 @@ import com.example.seniorproject.MainForum.Fragments.FragmentSubscriptions
 import com.example.seniorproject.MainForum.NewPost.NewPost
 import com.example.seniorproject.Messages.FragmentLatestMessages
 import com.example.seniorproject.R
+import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.data.models.User
 import com.example.seniorproject.databinding.ActivityMainForumBinding
 import com.example.seniorproject.databinding.SideNavHeaderBinding
@@ -197,7 +199,6 @@ class MainForum : AppCompatActivity(),
 
         val headerview = navigationView.getHeaderView(0)
         val imageView: ImageView = headerview.findViewById(R.id.profile_image)
-
 
 //load profile image
         Glide.with(this) //1

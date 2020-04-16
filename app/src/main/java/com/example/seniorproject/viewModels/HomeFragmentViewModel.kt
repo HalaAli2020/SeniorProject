@@ -2,6 +2,7 @@ package com.example.seniorproject.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.seniorproject.Utils.EmailCallback
 import com.example.seniorproject.data.interfaces.ListActivitycallback
 import com.example.seniorproject.data.models.Post
 import com.example.seniorproject.data.repositories.PostRepository
@@ -91,6 +92,10 @@ class HomeFragmentViewModel @Inject constructor(private val repository: PostRepo
     fun fetchCurrentUserName() = repository.fetchCurrentUserName()
 
     var user = repository.currentUser()
+
+    fun readPhotoValue(useridm: String, callback: EmailCallback) {
+        repository.readPhotoValue(useridm, callback)
+    }
 
 
 
