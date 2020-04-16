@@ -79,25 +79,6 @@ class ProfilePostFragment : Fragment() {
                 view.profile_post_recyclerView.adapter = adapter
                 view.profile_post_recyclerView.layoutManager = linearLayoutManager
 
-                //settting refreshview UI
-                view.refreshView.setProgressBackgroundColorSchemeColor(
-                    ContextCompat.getColor(
-                        view.context,
-                        R.color.blue_theme
-                    )
-                )
-                view.refreshView.setColorSchemeColors(
-                    ContextCompat.getColor(
-                        view.context,
-                        R.color.white
-                    )
-                )
-
-                view.refreshView.setOnRefreshListener {
-                    view.profile_post_recyclerView.adapter = PostAdapter(view.context, list, 0)
-                    view.refreshView.isRefreshing = false
-                }
-
                 if(iD == FirebaseAuth.getInstance().uid){
                     object : SwipeHelper(context!!, view.profile_post_recyclerView, 200) {
                         override fun initButton(

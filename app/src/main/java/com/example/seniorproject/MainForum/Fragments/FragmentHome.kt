@@ -94,17 +94,6 @@ class FragmentHome : Fragment() {
         Log.d("list size", myViewModel.sendPosts().size.toString())
 
 
-        viem.refreshView?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(viem.context, R.color.blue_theme))
-        viem.refreshView?.setColorSchemeColors(ContextCompat.getColor(viem.context, R.color.white))
-
-
-        viem.refreshView?.setOnRefreshListener {
-            viem.refreshView?.isRefreshing = false
-            viem.post_recyclerView?.adapter = HomeAdapter(context!!, myViewModel.sendPosts(), 0)
-        }
-
-
-
         return viem
 
     }
@@ -132,7 +121,7 @@ class FragmentHome : Fragment() {
         CoroutineScope(Dispatchers.Main.immediate).launch {
 
 
-             myViewModel.getSubsP(object : ListActivitycallback {
+            myViewModel.getSubsP(object : ListActivitycallback {
                 override fun onCallback(list: List<Post>) {
                     Log.d("callback", "in")
                     view?.post_recyclerView?.adapter = HomeAdapter(view?.context!!, list, 0)
@@ -195,8 +184,6 @@ class FragmentHome : Fragment() {
         view?.refreshView?.isRefreshing = true
     }
 }
-
-
 
 
 
