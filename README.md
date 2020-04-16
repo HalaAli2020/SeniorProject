@@ -95,12 +95,12 @@ To run this application locally follow these steps.
 * []()Create a project using directions given on the site.  
 
 <strong>Import The Unit Database</strong> 
-* []() download the following JSON file : https://github.com/HalaAli2020/SeniorProject/blob/master/university-social-media-export%20(1).json.
-* []() open your firebase console from https://firebase.google.com/.
-* []() select your project. 
-* []() select your database. 
-* []() select the three dots in the right hand corner of the database window. 
-* []() select import JSON and import the file.
+* []() Download the following JSON file : https://github.com/HalaAli2020/SeniorProject/blob/master/university-social-media-export%20(1).json.
+* []() Open your firebase console from https://firebase.google.com/.
+* []() Select your project. 
+* []() Select your database. 
+* []() Select the three dots in the right hand corner of the database window. 
+* []() Select import JSON and import the file.
 
 <strong>Add Firebase to Android Studio</strong>
 * []()Go to https://firebase.google.com/docs/android/setup and follow steps, use option two. 
