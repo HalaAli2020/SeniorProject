@@ -13,7 +13,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_account_circle_blue_24dp"
+        android:src="@drawable/unitlogopropernav"
         android:contentDescription="@string/menu_profile" />
 
     <TextView
