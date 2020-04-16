@@ -42,6 +42,7 @@ import com.example.seniorproject.search.SearchActivity
 import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_main_forum.*
@@ -127,7 +128,9 @@ class MainForum : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         loginVerification()
         super.onCreate(savedInstanceState)
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+
+        if (FirebaseDatabase.getInstance().reference == null)
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true)
 
         setTheme()
 //initialized dagger app component and viewmodel
