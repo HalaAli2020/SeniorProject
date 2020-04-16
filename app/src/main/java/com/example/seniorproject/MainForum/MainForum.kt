@@ -42,6 +42,7 @@ import com.example.seniorproject.search.SearchActivity
 import com.example.seniorproject.viewModels.HomeFragmentViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_main_forum.*
@@ -127,7 +128,8 @@ class MainForum : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         loginVerification()
         super.onCreate(savedInstanceState)
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+
+        DatabaseUtil.getDatabase()
 
         setTheme()
 //initialized dagger app component and viewmodel
@@ -300,6 +302,21 @@ class MainForum : AppCompatActivity(),
             .circleCrop().fitCenter()
             .into(imageView)
 
+    }
+
+
+    class DatabaseUtil {
+        companion object {
+            private val firebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
+
+            init {
+                firebaseDatabase.setPersistenceEnabled(true)
+            }
+
+            fun getDatabase() : FirebaseDatabase {
+                return firebaseDatabase
+            }
+        }
     }
 
 }
