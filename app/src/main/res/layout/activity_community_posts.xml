@@ -8,25 +8,16 @@
     tools:context=".MainForum.Posts.CommunityPosts"
     tools:ignore="Overdraw">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/refreshView"
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/classes_post_RV"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/classes_post_RV"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <ImageView
         android:id="@+id/imageView3"
@@ -34,10 +25,10 @@
         android:layout_height="50dp"
         android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
+        android:contentDescription="@string/menu_profile"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_account_circle_blue_24dp"
-        android:contentDescription="@string/menu_profile" />
+        app:srcCompat="@drawable/unitlogopropernav" />
 
     <TextView
         android:id="@+id/post_list_community_name_TV"

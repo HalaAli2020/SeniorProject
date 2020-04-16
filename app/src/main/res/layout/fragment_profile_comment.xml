@@ -19,21 +19,10 @@
         android:background="@color/BackgroundColor"
         tools:context=".MainForum.Fragments.ProfileCommentFragment">
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/refreshView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/profile_comment_recyclerView"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent" />
-
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
     </FrameLayout>
 
