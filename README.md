@@ -2,7 +2,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/HalaAli2020/SeniorProject">
-    <img src="https://github.com/HalaAli2020/SeniorProject/blob/master/app/src/main/res/drawable/unitlogoproper.png" alt="Logo" width="80" height="80"> </a>
+    <img src="https://github.com/HalaAli2020/SeniorProject/blob/master/app/src/main/res/drawable/unitlogoproper.png" alt="Logo" width="100" height="100"> </a>
 <h1 align="center"><strong>UNIT</strong></h1>
   
   <p align="center">
