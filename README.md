@@ -8,7 +8,7 @@
   <p align="center">
     Unit is a collaborative forum application to give students an easy way to interact with their peers. 
     <br />
-    <a href="https://github.com/HalaAli2020/SeniorProject"><strong>View the docs»</strong></a>
+    <a href="https://github.com/HalaAli2020/SeniorProject/tree/master/Documentation/Documents"><strong>View the docs»</strong></a>
   </p>
 </p>
 
