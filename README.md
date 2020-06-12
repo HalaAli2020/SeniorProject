@@ -6,7 +6,7 @@
 <h1 align="center"><strong>UNIT</strong></h1>
   
   <p align="center">
-    Unit is a Collaborative forum application to give students an easy way to interact with their peers 
+    Unit is a collaborative forum application to give students an easy way to interact with their peers. 
     <br />
     <a href="https://github.com/HalaAli2020/SeniorProject"><strong>View the docs»</strong></a>
   </p>
